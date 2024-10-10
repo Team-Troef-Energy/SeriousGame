@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.example.serious-game' is invalid and this project uses 'com.example.serious_game' instead.
+* The original package name 'nl.hu.serious-game' is invalid and this project uses 'nl.hu.serious_game' instead.
 
 # Getting Started
 

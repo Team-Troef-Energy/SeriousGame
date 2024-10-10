@@ -1,4 +1,4 @@
-package com.example.serious_game;
+package nl.hu.serious_game;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

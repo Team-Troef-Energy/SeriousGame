@@ -1,4 +1,4 @@
-package com.example.serious_game;
+package nl.hu.serious_game;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
