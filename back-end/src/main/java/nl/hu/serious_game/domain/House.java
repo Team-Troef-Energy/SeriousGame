@@ -8,6 +8,6 @@ public class House {
     private boolean hasHeatpump;
     private boolean hasElectricVehicle;
     private float totalSolarpanels;
-    private ArrayList<Accu> accus;
+    private ArrayList<Battery> batteries;
     private DayProfile dayProfile;
 }
