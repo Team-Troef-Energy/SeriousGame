@@ -1,6 +1,6 @@
 package nl.hu.serious_game.domain;
 
-public class Accu {
+public class Battery {
     private float output;
     private float currentCharge;
     private float capacity;
