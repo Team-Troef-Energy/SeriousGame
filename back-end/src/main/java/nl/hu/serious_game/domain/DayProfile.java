@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class DayProfile {
     private Season season;
-    private Map<Integer, Map<String, Double>> hourData;
+    private Map<Integer, Map<String, Float>> hourData;
 
     public DayProfile(Season season) {
         this.season = season;
@@ -16,28 +16,28 @@ public class DayProfile {
     }
 
     private void initializeData() {
-        double[] solarPanelProduction = {
-                0, 0, 0, 0, 0, 0, 0, 0, 0.017857143, 0.107142857, 0.160714286, 0.178571429,
-                0.196428571, 0.196428571, 0.196428571, 0.178571429, 0.160714286, 0.107142857,
-                0.017857143, 0, 0, 0, 0, 0
+        float[] solarPanelProduction = {
+                0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.017857143f, 0.107142857f, 0.160714286f, 0.178571429f,
+                0.196428571f, 0.196428571f, 0.196428571f, 0.178571429f, 0.160714286f, 0.107142857f,
+                0.017857143f, 0f, 0f, 0f, 0f, 0f
         };
 
-        double[] houseBaseConsumption = {
-                0.277, 0.277, 0.277, 0.277, 0.277, 0.277, 0.277, 0.277, 0.39, 0.39, 0.39, 0.39,
-                0.39, 0.39, 0.39, 0.39, 0.39, 0.39, 0.39, 0.39, 0.39, 0.39, 0.39, 0.277
+        float[] houseBaseConsumption = {
+                0.277f, 0.277f, 0.277f, 0.277f, 0.277f, 0.277f, 0.277f, 0.277f, 0.39f, 0.39f, 0.39f, 0.39f,
+                0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.277f
         };
 
         for (int hour = 0; hour < 24; hour++) {
-            Map<String, Double> data = new HashMap<>();
+            Map<String, Float> data = new HashMap<>();
             data.put("SolarPanelProduction", solarPanelProduction[hour]);
             data.put("HouseBaseConsumption", houseBaseConsumption[hour]);
             hourData.put(hour, data);
         }
     }
 
-    public double getValue(int hour, String column) {
+    public float getValue(int hour, String column) {
         if (hourData.containsKey(hour) && hourData.get(hour).containsKey(column)) {
-            double value = hourData.get(hour).get(column);
+            float value = hourData.get(hour).get(column);
 
             // Apply relevant season factors for each column
             if (column.equals("SolarPanelProduction")) {
@@ -48,7 +48,7 @@ public class DayProfile {
 
             // Round to 4 decimals
             BigDecimal roundedValue = new BigDecimal(value).setScale(4, RoundingMode.HALF_UP);
-            return roundedValue.doubleValue();
+            return roundedValue.floatValue();
         }
         throw new IllegalArgumentException("Invalid hour or column");
     }

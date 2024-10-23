@@ -1,24 +1,24 @@
 package nl.hu.serious_game.domain;
 
 public enum Season {
-    SPRING(0.89, 1.25),
-    SUMMER(1, 1),
-    AUTUMN(0.54, 1.25),
-    WINTER(0.27, 1.5);
+    SPRING(0.89f, 1.25f),
+    SUMMER(1f, 1f),
+    AUTUMN(0.54f, 1.25f),
+    WINTER(0.27f, 1.5f);
 
-    private final double solarPanelFactor;
-    private final double houseBaseConsumptionFactor;
+    private final float solarPanelFactor;
+    private final float houseBaseConsumptionFactor;
 
-    Season(double solarPanelFactor, double houseBaseConsumptionFactor) {
+    Season(float solarPanelFactor, float houseBaseConsumptionFactor) {
         this.solarPanelFactor = solarPanelFactor;
         this.houseBaseConsumptionFactor = houseBaseConsumptionFactor;
     }
 
-    public double getSolarPanelFactor() {
+    public float getSolarPanelFactor() {
         return solarPanelFactor;
     }
 
-    public double getHouseBaseConsumptionFactor() {
+    public float getHouseBaseConsumptionFactor() {
         return houseBaseConsumptionFactor;
     }
 }
