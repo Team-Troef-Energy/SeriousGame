@@ -1,5 +1,6 @@
 package nl.hu.serious_game.presentation;
 
+import nl.hu.serious_game.application.GameService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/scores")
 public class GameController {
     private final GameService gameService;
-    public GameController(GameService gameService) {
-        this.scoreService = scoreService;
+    public GameController(GameService gameService, GameService gameService1) {
+        this.gameService = gameService1;
     }
 }
