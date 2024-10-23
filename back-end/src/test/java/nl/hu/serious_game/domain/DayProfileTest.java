@@ -93,4 +93,37 @@ public class DayProfileTest {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
         assertThrows(IllegalArgumentException.class, () -> dayProfile.getValue(13, "RandomColumnNameThatDoesntExist"));
     }
+
+    // Test for checking value of 08:00 for a house base consumption during summer
+    // Base House production value at 08:00 is documented to be: 0.39
+    // Summer factor is: 1
+    // Expected value is: 0.39
+    @Test
+    @DisplayName("Summer Test with house base consumption 08:00")
+    public void SummerTestHouseBaseConsumptionHour8() {
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+        assertEquals(0.39, dayProfile.getValue(8, "HouseBaseConsumption"));
+    }
+
+    // Test for checking value of 23:00 for a house base consumption during summer
+    // Base House production value at 23:00 is documented to be: 0.277
+    // Summer factor is: 1
+    // Expected value is: 0.277
+    @Test
+    @DisplayName("Summer Test with house base consumption 23:00")
+    public void SummerTestHouseBaseConsumptionHour23() {
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+        assertEquals(0.277, dayProfile.getValue(23, "HouseBaseConsumption"));
+    }
+
+    // Test for checking value of 23:00 for a house base consumption during winter
+    // Base House production value at 23:00 is documented to be: 0.277
+    // Winter factor is: 1.5
+    // Expected value is: 0.4155
+    @Test
+    @DisplayName("Winter Test with house base consumption 23:00")
+    public void WinterTestHouseBaseConsumptionHour23() {
+        DayProfile dayProfile = new DayProfile(Season.WINTER);
+        assertEquals(0.4155, dayProfile.getValue(23, "HouseBaseConsumption"));
+    }
 }
