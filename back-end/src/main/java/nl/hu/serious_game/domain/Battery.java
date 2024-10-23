@@ -1,9 +1,15 @@
 package nl.hu.serious_game.domain;
 
+import lombok.Getter;
+
 public class Battery {
+    @Getter
     private float chargeSpeed;
+    @Getter
     private float dischargeSpeed;
+    @Getter
     private float currentCharge;
+    @Getter
     private float capacity;
     private int coinValue;
 
