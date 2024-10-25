@@ -34,6 +34,9 @@ public class DayProfile {
     }
 
     public float getValue(int hour, String column) {
+        if (hour < 0 || hour > 23) {
+            throw new IllegalArgumentException("Hour must be between 0 and 23");
+        }
         if (hourData.containsKey(hour) && hourData.get(hour).containsKey(column)) {
             float value = hourData.get(hour).get(column);
 
