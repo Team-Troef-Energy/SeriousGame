@@ -28,4 +28,14 @@ public class House {
     public float getConsumption(int hour) {
         return dayProfile.getValue(hour, "HouseBaseConsumption");
     }
+
+    public Electricity getCurrent(int hour) {
+        float production = getSolarPanelOutput(hour);
+        float consumption = getConsumption(hour);
+        if (production > consumption) {
+            return new Electricity(production - consumption, Direction.PRODUCTION);
+        } else {
+            return new Electricity(consumption - production, Direction.DEMAND);
+        }
+    }
 }
