@@ -1,18 +1,17 @@
 package nl.hu.serious_game.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Transformer {
-    private float currentBalance;
+    private float powerBalance;
     Boolean hasCongestion;
     private float capacity;
-    private ArrayList<House> houses;
-    private ArrayList<Windmill> windmills;
+    private List<House> houses;
     private Battery batteries;
 
-    Transformer(ArrayList<House> houses, ArrayList<Windmill> windmills, float capacity, int batteries, Boolean hasCongestion) {
+    Transformer(List<House> houses, float capacity, int batteries, Boolean hasCongestion) {
         this.houses = houses;
-        this.windmills = windmills;
         this.capacity = capacity;
         this.batteries = new Battery(batteries);
         this.hasCongestion = hasCongestion;
@@ -22,7 +21,7 @@ public class Transformer {
         float demand = 0;
         float production = 0;
         for (House house : houses) {
-            Electricity current = house.getCurrent();
+            Electricity current = house.getCurrent(hour);
             if (current.direction() == Direction.DEMAND) {
                 demand += current.amount();
             } else if (current.direction() == Direction.PRODUCTION) {
