@@ -22,10 +22,10 @@ public class House {
     }
 
     public float getSolarPanelOutput(int hour) {
-        if (hour < 0 || hour > 23) {
-            throw new IllegalArgumentException("Hour must be between 0 and 23");
-        }
-
         return totalSolarPanels * dayProfile.getValue(hour, "SolarPanelProduction");
+    }
+
+    public float getConsumption(int hour) {
+        return dayProfile.getValue(hour, "HouseBaseConsumption");
     }
 }
