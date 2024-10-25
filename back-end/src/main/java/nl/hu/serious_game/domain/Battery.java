@@ -10,11 +10,11 @@ public class Battery {
     @Getter
     private float currentCharge;
     @Getter
-    private float capacity;
+    private float maxCharge;
     private int coinValue;
 
     Battery(int amount) {
-        capacity = 13.5f * amount;
+        maxCharge = 13.5f * amount;
         chargeSpeed = 5 * amount;
         dischargeSpeed = 11.5f * amount;
     }
@@ -32,12 +32,11 @@ public class Battery {
             return new Electricity(electricity.amount() - flow, Direction.DEMAND);
         }
         if (electricity.direction() == Direction.PRODUCTION) {
-            float available = Math.min(this.chargeSpeed, this.capacity - this.currentCharge);
+            float available = Math.min(this.chargeSpeed, this.maxCharge - this.currentCharge);
             float flow = Math.min(available, electricity.amount());
             this.currentCharge += flow;
             return new Electricity(electricity.amount() - flow, Direction.PRODUCTION);
         }
         throw new RuntimeException("Unreachable");
      }
-
 }
