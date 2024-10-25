@@ -1,7 +1,5 @@
 package nl.hu.serious_game.domain;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,9 +44,7 @@ public class DayProfile {
                 value *= season.getHouseBaseConsumptionFactor();
             }
 
-            // Round to 4 decimals
-            BigDecimal roundedValue = new BigDecimal(value).setScale(4, RoundingMode.HALF_UP);
-            return roundedValue.floatValue();
+            return value;
         }
         throw new IllegalArgumentException("Invalid hour or column");
     }
