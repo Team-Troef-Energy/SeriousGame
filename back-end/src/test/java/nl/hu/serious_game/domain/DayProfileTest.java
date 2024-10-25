@@ -20,7 +20,7 @@ public class DayProfileTest {
     @DisplayName("Summer Test with one solar panel 08:00")
     public void SummerTestOneSolarPanelHour8() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        assertEquals(0.0179f, dayProfile.getValue(8, "SolarPanelProduction"));
+        assertEquals(0.017857143f, dayProfile.getValue(8, "SolarPanelProduction"));
     }
 
     // Test for checking value of 07:00 for a single solar panel during summer
@@ -42,7 +42,7 @@ public class DayProfileTest {
     @DisplayName("Summer Test with one solar panel 13:00")
     public void SummerTestOneSolarPanelHour13() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        assertEquals(0.1964f, dayProfile.getValue(13, "SolarPanelProduction"));
+        assertEquals(0.196428571f, dayProfile.getValue(13, "SolarPanelProduction"));
     }
 
     // Test for checking value of 13:00 for a single solar panel during winter
@@ -53,7 +53,7 @@ public class DayProfileTest {
     @DisplayName("Winter Test with one solar panel 13:00")
     public void WinterTestOneSolarPanelHour13() {
         DayProfile dayProfile = new DayProfile(Season.WINTER);
-        assertEquals(0.0530f, dayProfile.getValue(13, "SolarPanelProduction"));
+        assertEquals(0.05303571417f, dayProfile.getValue(13, "SolarPanelProduction"));
     }
 
     // Test for checking value of 13:00 for a single solar panel during spring
@@ -64,7 +64,7 @@ public class DayProfileTest {
     @DisplayName("Spring Test with one solar panel 13:00")
     public void SpringTestOneSolarPanelHour13() {
         DayProfile dayProfile = new DayProfile(Season.SPRING);
-        assertEquals(0.1748f, dayProfile.getValue(13, "SolarPanelProduction"));
+        assertEquals(0.17482142819f, dayProfile.getValue(13, "SolarPanelProduction"));
     }
 
     // Test for checking value of 13:00 for a single solar panel during autumn
@@ -75,7 +75,7 @@ public class DayProfileTest {
     @DisplayName("Autumn Test with one solar panel 13:00")
     public void AutumnTestOneSolarPanelHour13() {
         DayProfile dayProfile = new DayProfile(Season.AUTUMN);
-        assertEquals(0.1061f, dayProfile.getValue(13, "SolarPanelProduction"));
+        assertEquals(0.10607142834f, dayProfile.getValue(13, "SolarPanelProduction"));
     }
 
     // Invalid hour throws exception
@@ -124,6 +124,6 @@ public class DayProfileTest {
     @DisplayName("Winter Test with house base consumption 23:00")
     public void WinterTestHouseBaseConsumptionHour23() {
         DayProfile dayProfile = new DayProfile(Season.WINTER);
-        assertEquals(0.4155f, dayProfile.getValue(23, "HouseBaseConsumption"));
+        assertEquals(0.41550002f, dayProfile.getValue(23, "HouseBaseConsumption"));
     }
 }

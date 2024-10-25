@@ -1,7 +1,5 @@
 package nl.hu.serious_game.domain;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +34,9 @@ public class DayProfile {
     }
 
     public float getValue(int hour, String column) {
+        if (hour < 0 || hour > 23) {
+            throw new IllegalArgumentException("Hour must be between 0 and 23");
+        }
         if (hourData.containsKey(hour) && hourData.get(hour).containsKey(column)) {
             float value = hourData.get(hour).get(column);
 
@@ -46,9 +47,7 @@ public class DayProfile {
                 value *= season.getHouseBaseConsumptionFactor();
             }
 
-            // Round to 4 decimals
-            BigDecimal roundedValue = new BigDecimal(value).setScale(4, RoundingMode.HALF_UP);
-            return roundedValue.floatValue();
+            return value;
         }
         throw new IllegalArgumentException("Invalid hour or column");
     }

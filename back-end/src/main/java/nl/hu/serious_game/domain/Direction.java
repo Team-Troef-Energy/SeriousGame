@@ -1,6 +1,6 @@
 package nl.hu.serious_game.domain;
 
-enum Direction {
+public enum Direction {
     DEMAND,
     PRODUCTION,
 }
