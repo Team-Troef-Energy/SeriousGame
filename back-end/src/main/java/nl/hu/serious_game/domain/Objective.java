@@ -11,4 +11,12 @@ public class Objective {
         this.maxCo2 = maxCo2;
         this.maxCoins = maxCoins;
     }
+
+    public int getMaxCo2() {
+        return maxCo2;
+    }
+
+    public int getMaxCoins() {
+        return maxCoins;
+    }
 }
