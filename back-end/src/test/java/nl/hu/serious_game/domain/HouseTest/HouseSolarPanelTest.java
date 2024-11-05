@@ -87,4 +87,41 @@ public class HouseSolarPanelTest {
         House house = new House(1, 1, dayProfile);
         assertThrows(IllegalArgumentException.class, () -> house.getSolarPanelOutput(24));
     }
+
+    // Adding a negative amount of solar panels throws an IllegalArgumentException
+    @Test
+    @DisplayName("Add Negative Solar Panel Amount Test")
+    public void AddNegativeSolarPanelAmountTest() {
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+        House house = new House(1, 1, dayProfile);
+        assertThrows(IllegalArgumentException.class, () -> house.addSolarPanel(-1));
+    }
+
+    // Removing a negative amount of solar panels throws an IllegalArgumentException
+    @Test
+    @DisplayName("Remove Negative Solar Panel Amount Test")
+    public void RemoveNegativeSolarPanelAmountTest() {
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+        House house = new House(1, 1, dayProfile);
+        assertThrows(IllegalArgumentException.class, () -> house.removeSolarPanel(-1));
+    }
+
+    // Removing more solar panels than there are throws an IllegalArgumentException
+    @Test
+    @DisplayName("Remove More Solar Panels Than There Are Test")
+    public void RemoveMoreSolarPanelsThanThereAreTest() {
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+        House house = new House(1, 1, dayProfile);
+        assertThrows(IllegalArgumentException.class, () -> house.removeSolarPanel(2));
+    }
+
+    // Removing 1 solar panel from a house with 1 solar panel should result in 0 solar panels
+    @Test
+    @DisplayName("Remove Right Amount Of Solar Panels Test")
+    public void RemoveRightAmountOfSolarPanelsTest() {
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+        House house = new House(1, 1, dayProfile);
+        house.removeSolarPanel(1);
+        assertEquals(0, house.getTotalSolarPanels());
+    }
 }
