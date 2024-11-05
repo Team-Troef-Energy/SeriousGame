@@ -17,6 +17,23 @@ public class House {
         this.dayProfile = dayProfile;
     }
 
+    public void addSolarPanel(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot add a negative amount of solar panels");
+        }
+        totalSolarPanels += amount;
+    }
+
+    public void removeSolarPanel(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot remove a negative amount of solar panels");
+        }
+        if (totalSolarPanels < amount) {
+            throw new IllegalArgumentException("Cannot remove more solar panels than there are");
+        }
+        totalSolarPanels -= amount;
+    }
+
     public DayProfile getDayProfile() {
         return dayProfile;
     }
@@ -37,5 +54,9 @@ public class House {
         } else {
             return new Electricity(consumption - production, Direction.DEMAND);
         }
+    }
+
+    public int getTotalSolarPanels() {
+        return totalSolarPanels;
     }
 }
