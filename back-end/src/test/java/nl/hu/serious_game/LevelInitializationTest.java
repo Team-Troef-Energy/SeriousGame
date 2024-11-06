@@ -1,14 +1,18 @@
-package nl.hu.serious_game.application;
+package nl.hu.serious_game;
 
 import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class LevelInitializationTest {
 
     private Season season;
@@ -38,10 +42,11 @@ public class LevelInitializationTest {
         transformers.add(mockTransformer);
     }
 
+    // Test level initialization separate from the runner
     @Test
     @DisplayName("Test level initialization")
     public void testLevelInitialization() {
-        Level level = new Level(season, startTime, endTime, objective, (ArrayList<Transformer>) transformers);
+        Level level = new Level(season, startTime, endTime, objective, (List<Transformer>) transformers);
 
         assertNotNull(level.getObjective(), "Objective should be initialized");
         assertEquals(objective, level.getObjective(), "Objective should match the provided value");
@@ -53,5 +58,24 @@ public class LevelInitializationTest {
         Transformer transformer = level.getTransformers().get(0);
         assertNotNull(transformer.getHouses(), "Transformer should have a list of houses initialized");
         assertFalse(transformer.getHouses().isEmpty(), "Transformer should have at least one house");
+    }
+
+    // Test level initialization through the runner
+    @Autowired
+    private Runner runner;
+
+    @Test
+    @DisplayName("Test createLevel1 method of runner")
+    void testCreateLevel1() throws Exception {
+        runner.run();
+        Level level = runner.getLevel1();
+
+        assertNotNull(level, "Level should not be null");
+        assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");
+        assertEquals(12, level.getStartTime(), "Start time should be 12");
+        assertEquals(15, level.getEndTime(), "End time should be 15");
+        assertEquals(2, level.getObjective().getMaxCo2(), "Max CO2 should be 2");
+        assertEquals(5, level.getObjective().getMaxCoins(), "Max coins should be 5");
+        assertEquals(1, level.getTransformers().size(), "There should be one transformer");
     }
 }

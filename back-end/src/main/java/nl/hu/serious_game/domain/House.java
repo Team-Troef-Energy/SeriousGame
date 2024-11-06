@@ -2,7 +2,7 @@ package nl.hu.serious_game.domain;
 
 import java.util.ArrayList;
 
-public class House {
+public class House implements Cloneable {
     private int id;
     private float maxCurrent;
     private boolean hasHeatpump;
@@ -58,5 +58,19 @@ public class House {
 
     public int getTotalSolarPanels() {
         return totalSolarPanels;
+    }
+
+    @Override
+    public House clone() {
+        try {
+            House clone = (House) super.clone();
+            clone.batteries = new ArrayList<>();
+            for (Battery battery : this.batteries) {
+                clone.batteries.add(battery.clone());
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Cloning failed");
+        }
     }
 }

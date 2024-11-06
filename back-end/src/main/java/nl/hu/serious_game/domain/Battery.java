@@ -2,7 +2,7 @@ package nl.hu.serious_game.domain;
 
 import lombok.Getter;
 
-public class Battery {
+public class Battery implements Cloneable {
     @Getter
     private float chargeSpeed;
     @Getter
@@ -38,5 +38,13 @@ public class Battery {
             return new Electricity(electricity.amount() - flow, Direction.PRODUCTION);
         }
         throw new RuntimeException("Unreachable");
+     }
+
+     public Battery clone() {
+         try {
+             return (Battery) super.clone();
+         } catch (CloneNotSupportedException e) {
+             throw new RuntimeException("Cloning failed");
+         }
      }
 }
