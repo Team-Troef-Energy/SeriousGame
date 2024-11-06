@@ -21,4 +21,24 @@ public class Level {
             throw new IllegalArgumentException("transformers is empty");
         }
     }
+
+    public Objective getObjective() {
+        return objective;
+    }
+
+    public List<Transformer> getTransformers() {
+        return transformers;
+    }
+
+    public Season getSeason() {
+        return season;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
 }

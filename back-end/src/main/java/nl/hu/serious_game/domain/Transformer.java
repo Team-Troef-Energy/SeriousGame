@@ -45,4 +45,8 @@ public class Transformer {
             return new Electricity(Math.min(electricity.amount(), this.capacity), direction);
         }
     }
+
+    public List<House> getHouses() {
+        return houses;
+    }
 }
