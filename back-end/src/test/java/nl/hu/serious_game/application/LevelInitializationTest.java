@@ -2,6 +2,7 @@ package nl.hu.serious_game.application;
 
 import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class LevelInitializationTest {
     }
 
     @Test
+    @DisplayName("Test level initialization")
     public void testLevelInitialization() {
         Level level = new Level(season, startTime, endTime, objective, (ArrayList<Transformer>) transformers);
 
