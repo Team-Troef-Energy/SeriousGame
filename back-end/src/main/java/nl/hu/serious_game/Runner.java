@@ -8,6 +8,8 @@ import java.util.List;
 
 @Component
 public class Runner implements CommandLineRunner {
+    private Level level1;
+
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Runner started!");
@@ -29,9 +31,13 @@ public class Runner implements CommandLineRunner {
         // Create a single transformer
         Transformer transformer = new Transformer(List.of(house, house2), 10, 1, false);
 
-        Level level = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
+        this.level1 = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
 
         System.out.println("Level 1 created!");
-        System.out.println(level);
+        System.out.println(level1);
+    }
+
+    public Level getLevel1() {
+        return level1;
     }
 }
