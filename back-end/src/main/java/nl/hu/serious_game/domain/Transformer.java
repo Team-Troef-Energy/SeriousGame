@@ -9,7 +9,7 @@ public class Transformer {
     private List<House> houses;
     private Battery batteries;
 
-    Transformer(List<House> houses, float capacity, int batteries, Boolean hasCongestion) {
+    public Transformer(List<House> houses, float capacity, int batteries, Boolean hasCongestion) {
         this.houses = houses;
         this.capacity = capacity;
         this.batteries = new Battery(batteries);
@@ -44,5 +44,9 @@ public class Transformer {
         } else {
             return new Electricity(Math.min(electricity.amount(), this.capacity), direction);
         }
+    }
+
+    public List<House> getHouses() {
+        return houses;
     }
 }

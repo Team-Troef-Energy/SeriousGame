@@ -1,6 +1,9 @@
 package nl.hu.serious_game.domain;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
+
 
 public class Level {
     private Season season;
@@ -21,4 +24,11 @@ public class Level {
         }
     }
 
+    public Objective getObjective() {
+        return objective;
+    }
+
+    public ArrayList<Transformer> getTransformers() {
+        return transformers;
+    }
 }
