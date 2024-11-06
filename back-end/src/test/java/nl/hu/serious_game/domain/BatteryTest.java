@@ -79,7 +79,7 @@ public class BatteryTest {
     public void constructorTest() {
         Battery battery = new Battery(1);
         Battery battery2 = new Battery(2);
-        assertEquals(battery.getCapacity() * 2, battery2.getCapacity());
+        assertEquals(battery.getMaxCharge() * 2, battery2.getMaxCharge());
         assertEquals(battery.getChargeSpeed() * 2, battery2.getChargeSpeed());
         assertEquals(battery.getDischargeSpeed() * 2, battery2.getDischargeSpeed());
     }
