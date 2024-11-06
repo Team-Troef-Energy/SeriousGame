@@ -29,4 +29,16 @@ public class Level {
     public List<Transformer> getTransformers() {
         return transformers;
     }
+
+    public Season getSeason() {
+        return season;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
 }
