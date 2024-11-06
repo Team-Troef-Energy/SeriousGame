@@ -1,8 +1,9 @@
 package nl.hu.serious_game.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Transformer {
+public class Transformer implements Cloneable {
     private float powerBalance;
     Boolean hasCongestion;
     private float capacity;
@@ -48,5 +49,20 @@ public class Transformer {
 
     public List<House> getHouses() {
         return houses;
+    }
+
+    @Override
+    public Transformer clone() {
+        try {
+            Transformer clone = (Transformer) super.clone();
+            clone.houses = new ArrayList<>();
+            for (House house : this.houses) {
+                clone.houses.add(house.clone());
+            }
+            clone.batteries = this.batteries.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Cloning failed");
+        }
     }
 }
