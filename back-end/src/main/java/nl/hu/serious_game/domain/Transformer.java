@@ -1,6 +1,5 @@
 package nl.hu.serious_game.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Transformer {
@@ -17,7 +16,7 @@ public class Transformer {
         this.hasCongestion = hasCongestion;
     }
 
-    Electricity getLevtoverCurrent(int hour) {
+    Electricity getLeftoverCurrent(int hour) {
         float demand = 0;
         float production = 0;
         for (House house : houses) {

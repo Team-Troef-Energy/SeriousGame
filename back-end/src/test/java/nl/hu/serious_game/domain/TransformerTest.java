@@ -26,8 +26,8 @@ public class TransformerTest {
         houses.add(mockHouse);
 
         Transformer transformer = new Transformer(houses, 0, 0, false);
-        assertEquals(expected1, transformer.getLevtoverCurrent(1));
-        assertEquals(expected2, transformer.getLevtoverCurrent(2));
+        assertEquals(expected1, transformer.getLeftoverCurrent(1));
+        assertEquals(expected2, transformer.getLeftoverCurrent(2));
     }
 
     @Test
@@ -47,8 +47,8 @@ public class TransformerTest {
         // because all 6 of the first getcurrent would go into the battery.
         Transformer transformer = new Transformer(houses, 0, 1, false);
 
-        assertEquals(expected1, transformer.getLevtoverCurrent(1));
-        assertEquals(expected2, transformer.getLevtoverCurrent(2));
+        assertEquals(expected1, transformer.getLeftoverCurrent(1));
+        assertEquals(expected2, transformer.getLeftoverCurrent(2));
     }
 
     @Test
@@ -78,11 +78,11 @@ public class TransformerTest {
         Transformer transformer = new Transformer(houses, 0, 0, false);
 
         // Checks if production and demand get compensated for eachother.
-        assertEquals(expected1, transformer.getLevtoverCurrent(1));
-        assertEquals(expected2, transformer.getLevtoverCurrent(2));
+        assertEquals(expected1, transformer.getLeftoverCurrent(1));
+        assertEquals(expected2, transformer.getLeftoverCurrent(2));
         // Checks if the values get added when the direction is the same.
-        assertEquals(expected3, transformer.getLevtoverCurrent(3));
-        assertEquals(expected4, transformer.getLevtoverCurrent(4));
+        assertEquals(expected3, transformer.getLeftoverCurrent(3));
+        assertEquals(expected4, transformer.getLeftoverCurrent(4));
     }
 
     @Test
@@ -103,6 +103,6 @@ public class TransformerTest {
 
         Transformer transformer = new Transformer(houses, 0, 1, false);
 
-        assertEquals(expected, transformer.getLevtoverCurrent(1));
+        assertEquals(expected, transformer.getLeftoverCurrent(1));
     }
 }
