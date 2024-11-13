@@ -8,9 +8,23 @@
 <script>
 export default {
   name: 'HelloWorld',
+  data() {
+    return {
+      jsonData: null
+    };
+  },
   methods: {
-    handleClick() {
-      console.log('Button clicked!');
+    async handleClick() {
+      try {
+        const response = await fetch('link'); //Link needs to be updated once the controller is made
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        this.jsonData = await response.json();
+        console.log(this.jsonData);
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
     }
   }
 }
