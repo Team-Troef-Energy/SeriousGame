@@ -83,7 +83,7 @@ public class HouseBatteryTest {
 
     // A house with 14 solar panels should produce 0 kW in 1 hour at 19:00 during summer
     // A house should consume 0.39 kW in 1 hour at 19:00 during summer
-    // 1 battery can store up to 5 kW
+    // 1 battery can store 13.5 kW in total
     // If the battery has 5 kW stored, the house should consume 0.39 kW from the battery,
     // leaving 4.61 kW in the battery. House has 0 kW of current left as everything can be consumed
     // from the battery.
@@ -93,10 +93,49 @@ public class HouseBatteryTest {
         this.house.setBattery(1);
         // "Mock" the battery to have 5 kW stored already
         this.house.getBattery().use(new Electricity(5f, Direction.PRODUCTION));
-        Electricity electricity = house.getCurrent(19);
         assertAll(
-                () -> assertEquals(0f, electricity.amount()),
+                () -> assertEquals(0f, house.getCurrent(19).amount()),
                 () -> assertEquals(4.61f, house.getBattery().getCurrentCharge(), 0.000001f)
         );
     }
+
+    // A house with 14 solar panels should produce 2.75 kW at 12:00 during summer
+    // A house with 14 solar panels should produce 2.75 kW at 13:00 during summer
+    // A house should consume 0.39 kW at 12:00 during summer
+    // A house should consume 0.39 kW at 13:00 during summer
+    // 1 battery should store up to 5 kW in 1 hour
+    // The house should produce 2.75 kW with its solar panels each of the houses, consume 0.39 kW at each of those too
+    // and then store 2 * 2.36 kW in the battery. House has 0 kW of current left as everything can be stored.
+    @Test
+    @DisplayName("Battery can store everything and leaves house with 0 kW of current, also after another hour")
+    public void batteryCanStoreEverythingOver2HoursTest() {
+        this.house.setBattery(1);
+        assertAll(
+                () -> assertEquals(0f, house.getCurrent(12).amount()),
+                () -> assertEquals(2.36f, house.getBattery().getCurrentCharge(), 0.000001f),
+                () -> assertEquals(0f, house.getCurrent(13).amount()),
+                () -> assertEquals(4.72f, house.getBattery().getCurrentCharge(), 0.000001f)
+        );
+    }
+
+    // A house should consume 0.39 kW at 19:00 during summer
+    // A house should consume 0.39 kW at 20:00 during summer
+    // 1 battery can store up to 13.5 kW in total
+    // If the battery has 5 kW stored, the house should consume 0.39 kW from the battery for the first hour,
+    // leaving 4.61 kW in the battery. After another hour, it should be leaving 4.22 kW in the battery.
+    // House has 0 kW of current left as everything can be consumed from the battery.
+    @Test
+    @DisplayName("House can consume everything from battery and leaves house with 0 kW of current, also after another hour")
+    public void houseCanConsumeEverythingFromBatteryOver2HoursTest() {
+        this.house.setBattery(1);
+        // "Mock" the battery to have 5 kW stored already
+        this.house.getBattery().use(new Electricity(5f, Direction.PRODUCTION));
+        assertAll(
+                () -> assertEquals(0f, house.getCurrent(19).amount()),
+                () -> assertEquals(4.61f, house.getBattery().getCurrentCharge(), 0.000001f),
+                () -> assertEquals(0f, house.getCurrent(20).amount()),
+                () -> assertEquals(4.22f, house.getBattery().getCurrentCharge(), 0.000001f)
+        );
+    }
+
 }
