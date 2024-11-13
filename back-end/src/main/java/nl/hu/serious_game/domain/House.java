@@ -1,14 +1,12 @@
 package nl.hu.serious_game.domain;
 
-import java.util.ArrayList;
-
 public class House implements Cloneable {
     private int id;
     private float maxCurrent;
     private boolean hasHeatpump;
     private boolean hasElectricVehicle;
     private int totalSolarPanels;
-    private ArrayList<Battery> batteries;
+    private Battery battery;
     private DayProfile dayProfile;
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile) {
