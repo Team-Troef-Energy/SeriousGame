@@ -25,8 +25,8 @@ public class Runner implements CommandLineRunner {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create a house
-        House house = new House(1, 4, dayProfile);
-        House house2 = new House(2, 8, dayProfile);
+        House house = new House(1, 4, dayProfile, new HouseOptions());
+        House house2 = new House(2, 8, dayProfile, new HouseOptions());
 
         // Create a single transformer
         Transformer transformer = new Transformer(List.of(house, house2), 10, 1, false);

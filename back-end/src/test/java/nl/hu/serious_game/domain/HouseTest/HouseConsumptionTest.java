@@ -2,6 +2,7 @@ package nl.hu.serious_game.domain.HouseTest;
 
 import nl.hu.serious_game.domain.DayProfile;
 import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.HouseOptions;
 import nl.hu.serious_game.domain.Season;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,8 @@ public class HouseConsumptionTest {
     @Test
     @DisplayName("House Consumption Test 12:00")
     public void HouseConsumptionTestHour12() {
-        House house = new House(1, 1, new DayProfile(Season.SUMMER));
-        assertEquals(0.39f, house.getConsumption(12));
+        House house = new House(1, 1, new DayProfile(Season.SUMMER), new HouseOptions());
+        assertEquals(0.39f, house.getBaseConsumption(12));
     }
 
     // Parameterized test for checking the house consumption for different seasons and hours
@@ -36,8 +37,8 @@ public class HouseConsumptionTest {
     @DisplayName("Season Test house consumption")
     @MethodSource("provideHouseConsumptionSeasonAndTimeExamples")
     public void SeasonTestHouseConsumption(Season season, int hour, float expectedOutput) {
-        House house = new House(1, 1, new DayProfile(season));
-        assertEquals(expectedOutput, house.getConsumption(hour));
+        House house = new House(1, 1, new DayProfile(season), new HouseOptions());
+        assertEquals(expectedOutput, house.getBaseConsumption(hour));
     }
 
     // Source of arguments for the parameterized test, containing: Season, Hour, Expected output

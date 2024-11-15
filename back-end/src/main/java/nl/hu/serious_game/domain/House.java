@@ -5,16 +5,16 @@ import java.util.ArrayList;
 public class House implements Cloneable {
     private int id;
     private float maxCurrent;
-    private boolean hasHeatpump;
-    private boolean hasElectricVehicle;
     private int totalSolarPanels;
     private ArrayList<Battery> batteries;
     private DayProfile dayProfile;
+    private HouseOptions houseOptions;
 
-    public House (int id, int totalSolarPanels, DayProfile dayProfile) {
+    public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
         this.totalSolarPanels = totalSolarPanels;
         this.dayProfile = dayProfile;
+        this.houseOptions = houseOptions;
     }
 
     public void addSolarPanel(int amount) {
