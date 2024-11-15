@@ -26,8 +26,9 @@ public class DayProfile {
         };
 
         float[] heatPumpConsumption = {
-                4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f,
-                4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f, 4.38f
+                0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f,
+                0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f,
+                0.1825f, 0.1825f, 0.1825f, 0.1825f
         };
 
         float[] electricVehicleConsumption = {
@@ -40,7 +41,7 @@ public class DayProfile {
             data.put("SolarPanelProduction", solarPanelProduction[hour]);
             data.put("HouseBaseConsumption", houseBaseConsumption[hour]);
             data.put("HeatPumpConsumption", heatPumpConsumption[hour]);
-            data.put("ElectricVehicleConsumptionHour", electricVehicleConsumption[hour]);
+            data.put("ElectricVehicleConsumption", electricVehicleConsumption[hour]);
             hourData.put(hour, data);
         }
     }
