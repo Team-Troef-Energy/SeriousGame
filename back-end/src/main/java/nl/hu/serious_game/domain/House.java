@@ -64,7 +64,7 @@ public class House implements Cloneable {
         }
     }
 
-    private float getTotalConsumptionOfHour(int hour) {
+    public float getTotalConsumptionOfHour(int hour) {
         float total = getBaseConsumption(hour);
         total += houseOptions.hasHeatpump() ? getHeatPumpConsumption(hour) : 0;
         total += houseOptions.hasElectricVehicle() ? getElectricVehicleConsumption(hour) : 0;
