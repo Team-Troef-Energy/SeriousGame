@@ -1,12 +1,10 @@
 package nl.hu.serious_game.domain;
 
-import java.util.ArrayList;
-
 public class House implements Cloneable {
     private int id;
     private float maxCurrent;
     private int totalSolarPanels;
-    private ArrayList<Battery> batteries;
+    private Battery battery;
     private DayProfile dayProfile;
     private HouseOptions houseOptions;
 
@@ -34,6 +32,13 @@ public class House implements Cloneable {
         totalSolarPanels -= amount;
     }
 
+    public void setBattery(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot add a negative amount of batteries");
+        }
+        this.battery = new Battery(amount);
+    }
+
     public DayProfile getDayProfile() {
         return dayProfile;
     }
@@ -57,11 +62,20 @@ public class House implements Cloneable {
     public Electricity getCurrent(int hour) {
         float production = getSolarPanelOutput(hour);
         float consumption = getTotalConsumptionOfHour(hour);
+        float amount;
+        Direction direction;
         if (production > consumption) {
-            return new Electricity(production - consumption, Direction.PRODUCTION);
+            amount = production - consumption;
+            direction = Direction.PRODUCTION;
         } else {
-            return new Electricity(consumption - production, Direction.DEMAND);
+            amount = consumption - production;
+            direction = Direction.DEMAND;
         }
+
+        if (battery != null) {
+            return battery.use(new Electricity(amount, direction));
+        }
+        return new Electricity(amount, direction);
     }
 
     public float getTotalConsumptionOfHour(int hour) {
@@ -75,13 +89,16 @@ public class House implements Cloneable {
         return totalSolarPanels;
     }
 
+    public Battery getBattery() {
+        return battery;
+    }
+
     @Override
     public House clone() {
         try {
             House clone = (House) super.clone();
-            clone.batteries = new ArrayList<>();
-            for (Battery battery : this.batteries) {
-                clone.batteries.add(battery.clone());
+            if (battery != null) {
+                clone.battery = battery.clone();
             }
             return clone;
         } catch (CloneNotSupportedException e) {
