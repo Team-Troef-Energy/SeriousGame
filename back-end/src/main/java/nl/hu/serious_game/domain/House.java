@@ -5,16 +5,16 @@ import java.util.ArrayList;
 public class House implements Cloneable {
     private int id;
     private float maxCurrent;
-    private boolean hasHeatpump;
-    private boolean hasElectricVehicle;
     private int totalSolarPanels;
     private ArrayList<Battery> batteries;
     private DayProfile dayProfile;
+    private HouseOptions houseOptions;
 
-    public House (int id, int totalSolarPanels, DayProfile dayProfile) {
+    public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
         this.totalSolarPanels = totalSolarPanels;
         this.dayProfile = dayProfile;
+        this.houseOptions = houseOptions;
     }
 
     public void addSolarPanel(int amount) {
@@ -42,18 +42,33 @@ public class House implements Cloneable {
         return totalSolarPanels * dayProfile.getValue(hour, "SolarPanelProduction");
     }
 
-    public float getConsumption(int hour) {
+    public float getBaseConsumption(int hour) {
         return dayProfile.getValue(hour, "HouseBaseConsumption");
+    }
+
+    public float getHeatPumpConsumption(int hour) {
+        return dayProfile.getValue(hour, "HeatPumpConsumption");
+    }
+
+    public float getElectricVehicleConsumption(int hour) {
+        return dayProfile.getValue(hour, "ElectricVehicleConsumption");
     }
 
     public Electricity getCurrent(int hour) {
         float production = getSolarPanelOutput(hour);
-        float consumption = getConsumption(hour);
+        float consumption = getTotalConsumptionOfHour(hour);
         if (production > consumption) {
             return new Electricity(production - consumption, Direction.PRODUCTION);
         } else {
             return new Electricity(consumption - production, Direction.DEMAND);
         }
+    }
+
+    public float getTotalConsumptionOfHour(int hour) {
+        float total = getBaseConsumption(hour);
+        total += houseOptions.hasHeatpump() ? getHeatPumpConsumption(hour) : 0;
+        total += houseOptions.hasElectricVehicle() ? getElectricVehicleConsumption(hour) : 0;
+        return total;
     }
 
     public int getTotalSolarPanels() {
