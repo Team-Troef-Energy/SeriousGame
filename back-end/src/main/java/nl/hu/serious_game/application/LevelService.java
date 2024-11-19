@@ -20,6 +20,8 @@ public class LevelService {
         switch (levelNumber) {
             case 1:
                 return runner.getLevel1();
+            case 2:
+                return runner.getLevel2();
             default:
                 throw new IllegalArgumentException("Invalid level number");
         }

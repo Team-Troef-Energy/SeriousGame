@@ -1,9 +1,6 @@
 package nl.hu.serious_game.domain.HouseTest;
 
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.Direction;
-import nl.hu.serious_game.domain.House;
-import nl.hu.serious_game.domain.Season;
+import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +21,7 @@ public class HouseCurrentTest {
     @DisplayName("Summer Test with 14 solar panels, house producing more than consuming")
     public void SummerTest14SolarPanels() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 14, dayProfile);
+        House house = new House(1, 14, dayProfile, new HouseOptions());
 
         assertAll(
             () -> assertEquals(Direction.PRODUCTION, house.getCurrent(12).direction()),
@@ -40,7 +37,7 @@ public class HouseCurrentTest {
     @DisplayName("Summer Test with 1 solar panel, house consuming more than producing")
     public void SummerTest1SolarPanel() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile);
+        House house = new House(1, 1, dayProfile, new HouseOptions());
 
         assertAll(
             () -> assertEquals(Direction.DEMAND, house.getCurrent(12).direction()),

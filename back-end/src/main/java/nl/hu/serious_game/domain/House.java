@@ -3,16 +3,16 @@ package nl.hu.serious_game.domain;
 public class House implements Cloneable {
     private int id;
     private float maxCurrent;
-    private boolean hasHeatpump;
-    private boolean hasElectricVehicle;
     private int totalSolarPanels;
     private Battery battery;
     private DayProfile dayProfile;
+    private HouseOptions houseOptions;
 
-    public House (int id, int totalSolarPanels, DayProfile dayProfile) {
+    public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
         this.totalSolarPanels = totalSolarPanels;
         this.dayProfile = dayProfile;
+        this.houseOptions = houseOptions;
     }
 
     public void addSolarPanel(int amount) {
@@ -47,16 +47,23 @@ public class House implements Cloneable {
         return totalSolarPanels * dayProfile.getValue(hour, "SolarPanelProduction");
     }
 
-    public float getConsumption(int hour) {
+    public float getBaseConsumption(int hour) {
         return dayProfile.getValue(hour, "HouseBaseConsumption");
+    }
+
+    public float getHeatPumpConsumption(int hour) {
+        return dayProfile.getValue(hour, "HeatPumpConsumption");
+    }
+
+    public float getElectricVehicleConsumption(int hour) {
+        return dayProfile.getValue(hour, "ElectricVehicleConsumption");
     }
 
     public Electricity getCurrent(int hour) {
         float production = getSolarPanelOutput(hour);
-        float consumption = getConsumption(hour);
+        float consumption = getTotalConsumptionOfHour(hour);
         float amount;
         Direction direction;
-
         if (production > consumption) {
             amount = production - consumption;
             direction = Direction.PRODUCTION;
@@ -69,6 +76,13 @@ public class House implements Cloneable {
             return battery.use(new Electricity(amount, direction));
         }
         return new Electricity(amount, direction);
+    }
+
+    public float getTotalConsumptionOfHour(int hour) {
+        float total = getBaseConsumption(hour);
+        total += houseOptions.hasHeatpump() ? getHeatPumpConsumption(hour) : 0;
+        total += houseOptions.hasElectricVehicle() ? getElectricVehicleConsumption(hour) : 0;
+        return total;
     }
 
     public int getTotalSolarPanels() {
