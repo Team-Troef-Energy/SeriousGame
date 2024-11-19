@@ -1,0 +1,20 @@
+{
+  "transformers": [
+    {
+      "id": 1,
+      "houses": [
+        {
+        "id": 1,
+        "batteries": 0,
+        "solarpanels": 6
+        },
+        {
+          "id": 2,
+          "batteries": 0,
+          "solarpanels": 8
+        }
+      ],
+      "batteries": 0
+    }
+  ]
+}
