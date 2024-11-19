@@ -43,10 +43,6 @@ public class House implements Cloneable {
         return dayProfile;
     }
 
-    public ArrayList<Battery> getBatteries() {
-        return batteries;
-    }
-
     public float getSolarPanelOutput(int hour) {
         return totalSolarPanels * dayProfile.getValue(hour, "SolarPanelProduction");
     }

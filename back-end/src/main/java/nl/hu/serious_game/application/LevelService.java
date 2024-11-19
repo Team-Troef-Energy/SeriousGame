@@ -39,17 +39,19 @@ public class LevelService {
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
                 Electricity electricity = transformer.getLeftoverCurrent(hour);
+                CurrentDTO current = new CurrentDTO(
+                        electricity.amount(),
+                        electricity.direction()
+                );
+                BatteryDTO batteryDTO = transformer.getBatteries() != null
+                    ? new BatteryDTO(transformer.getBatteries().getAmount(), transformer.getBatteries().getCurrentCharge())
+                    : new BatteryDTO(0, 0);
+
                 transformerDTOs.add(new TransformerDTO(
-                        transformerId, // Use the index as the transformer ID
-                        new CurrentDTO(
-                                electricity.amount(),
-                                electricity.direction()
-                        ),
-                        houseDTOs,
-                        new BatteryDTO(
-                                0, // TODO: compare with JSON model, amount confusing
-                                transformer.getBatteries().getCurrentCharge()
-                        )
+                    transformerId, // Use the index as the transformer ID
+                    current,
+                    houseDTOs,
+                    batteryDTO
                 ));
             }
             hours.add(new HourDTO(hour, transformerDTOs));
@@ -65,28 +67,21 @@ public class LevelService {
         ArrayList<HouseDTO> houseDTOs = new ArrayList<>();
         for (int houseIndex = 0; houseIndex < transformer.getHouses().size(); houseIndex++) { // Loop through each house
             House house = transformer.getHouses().get(houseIndex);
-            Electricity current = house.getCurrent(hour); // Get the current for the house
-
-            ArrayList<BatteryDTO> batteries = new ArrayList<>();
-            for (Battery battery : house.getBatteries()) { // Loop through each battery
-                batteries.add(
-                        new BatteryDTO(
-                                0, // TODO: amount meaning in JSON model confusing
-                                battery.getCurrentCharge() // Get the current charge of the battery
-                        )
-                );
-            }
-            houseDTOs.add(
-                    new HouseDTO(
-                            houseIndex, // Use the index as the house ID
-                            new CurrentDTO(
-                                    current.amount(), // Set the current amount
-                                    current.direction() // Set the current direction
-                            ),
-                            batteries, // Add the battery DTOs
-                            house.getTotalSolarPanels() // Get the total solar panels of the house
-                    )
+            Electricity electricity = house.getCurrent(hour); // Get the current for the house
+            CurrentDTO currentDTO = new CurrentDTO(
+                    electricity.amount(),
+                    electricity.direction()
             );
+            BatteryDTO batteryDTO = house.getBattery() != null
+                ? new BatteryDTO(house.getBattery().getAmount(), house.getBattery().getCurrentCharge())
+                : new BatteryDTO(0, 0);
+
+            houseDTOs.add(new HouseDTO(
+                houseIndex, // Use the index as the house ID
+                currentDTO,
+                batteryDTO,
+                house.getTotalSolarPanels() // Get the total solar panels of the house
+            ));
         }
         return houseDTOs; // Return the list of HouseDTOs
     }
