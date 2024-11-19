@@ -13,7 +13,7 @@ public class Battery implements Cloneable {
     private float maxCharge;
     private int coinValue;
 
-    Battery(int amount) {
+    public Battery(int amount) {
         maxCharge = 13.5f * amount;
         chargeSpeed = 5 * amount;
         dischargeSpeed = 11.5f * amount;
