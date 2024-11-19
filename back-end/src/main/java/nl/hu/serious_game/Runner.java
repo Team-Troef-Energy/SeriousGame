@@ -50,7 +50,7 @@ public class Runner implements CommandLineRunner {
         // Create a house
         House house = new House(1, 4, dayProfile, new HouseOptions(true, false));
         House house2 = new House(2, 8, dayProfile, new HouseOptions(false, true));
-        House house3 = new House(2, 8, dayProfile, new HouseOptions(true, true));
+        House house3 = new House(3, 8, dayProfile, new HouseOptions(true, true));
 
         // Create a single transformer
         Transformer transformer = new Transformer(List.of(house, house2, house3), 10, 1, false);
