@@ -25,10 +25,23 @@ public class DayProfile {
                 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.39f, 0.277f
         };
 
+        float[] heatPumpConsumption = {
+                0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f,
+                0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f, 0.1825f,
+                0.1825f, 0.1825f, 0.1825f, 0.1825f
+        };
+
+        float[] electricVehicleConsumption = {
+                0.36f, 0.36f, 0.36f, 0.36f, 0.36f, 0.36f, 0.36f, 0.36f, 0f, 0f, 0f, 0f,
+                0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.36f, 0.36f, 0.36f, 0.36f, 0.36f
+        };
+
         for (int hour = 0; hour < 24; hour++) {
             Map<String, Float> data = new HashMap<>();
             data.put("SolarPanelProduction", solarPanelProduction[hour]);
             data.put("HouseBaseConsumption", houseBaseConsumption[hour]);
+            data.put("HeatPumpConsumption", heatPumpConsumption[hour]);
+            data.put("ElectricVehicleConsumption", electricVehicleConsumption[hour]);
             hourData.put(hour, data);
         }
     }
@@ -41,10 +54,13 @@ public class DayProfile {
             float value = hourData.get(hour).get(column);
 
             // Apply relevant season factors for each column
-            if (column.equals("SolarPanelProduction")) {
-                value *= season.getSolarPanelFactor();
-            } else if (column.equals("HouseBaseConsumption")) {
-                value *= season.getHouseBaseConsumptionFactor();
+            switch (column) {
+                case "SolarPanelProduction" -> value *= season.getSolarPanelFactor();
+                case "HouseBaseConsumption" -> value *= season.getHouseBaseConsumptionFactor();
+                case "HeatPumpConsumption" -> value *= season.getHeatPumpConsumptionFactor();
+                case "ElectricVehicleConsumption" -> {
+                    return value;
+                }
             }
 
             return value;

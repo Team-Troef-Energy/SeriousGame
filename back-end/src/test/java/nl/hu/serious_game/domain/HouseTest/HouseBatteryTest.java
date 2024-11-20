@@ -13,7 +13,7 @@ public class HouseBatteryTest {
 
     @BeforeEach
     public void setUp() {
-        this.house = new House(1, 14, new DayProfile(Season.SUMMER));
+        this.house = new House(1, 14, new DayProfile(Season.SUMMER), new HouseOptions());
     }
 
     // One battery can be added to a house

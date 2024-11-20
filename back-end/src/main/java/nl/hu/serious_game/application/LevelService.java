@@ -25,6 +25,9 @@ public class LevelService {
             case 1:
                 level = runner.getLevel1();
                 break;
+            case 2:
+                level = runner.getLevel2();
+                break;
             default:
                 throw new IllegalArgumentException("Invalid level number");
         }
