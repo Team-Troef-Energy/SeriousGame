@@ -4,10 +4,7 @@ import nl.hu.serious_game.application.LevelService;
 import nl.hu.serious_game.application.dto.out.LevelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/levels")
@@ -26,6 +23,17 @@ public class LevelController {
             LevelDTO level = levelService.startLevel(levelNumber);
             System.out.println("levelNumber = " + levelNumber);
             return ResponseEntity.ok(level);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/update/{levelNumber}")
+    public ResponseEntity<LevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody LevelDTO levelDTO) {
+        try {
+            LevelDTO updatedLevel = levelService.updateLevel(levelNumber, levelDTO);
+            System.out.println("levelNumber = " + levelNumber);
+            return ResponseEntity.ok(updatedLevel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
