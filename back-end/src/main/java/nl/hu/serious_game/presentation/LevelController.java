@@ -1,6 +1,7 @@
 package nl.hu.serious_game.presentation;
 
 import nl.hu.serious_game.application.LevelService;
+import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.LevelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,9 @@ public class LevelController {
     }
 
     @PostMapping("/update/{levelNumber}")
-    public ResponseEntity<LevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody LevelDTO levelDTO) {
+    public ResponseEntity<LevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody LevelUpdateDTO levelUpdateDTO) {
         try {
-            LevelDTO updatedLevel = levelService.updateLevel(levelNumber, levelDTO);
+            LevelDTO updatedLevel = levelService.updateLevel(levelNumber, levelUpdateDTO);
             System.out.println("levelNumber = " + levelNumber);
             return ResponseEntity.ok(updatedLevel);
         } catch (IllegalArgumentException e) {

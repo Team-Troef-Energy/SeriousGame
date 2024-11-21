@@ -1,6 +1,7 @@
 package nl.hu.serious_game.application;
 
 import nl.hu.serious_game.Runner;
+import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.*;
 import nl.hu.serious_game.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class LevelService {
     }
 
     //TODO: Added for method in LevelController. Implement this method later on, see Task 128 on azure.
-    public LevelDTO updateLevel(int levelNumber, LevelDTO levelDTO) {
+    public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
         return null;
     }
 }
