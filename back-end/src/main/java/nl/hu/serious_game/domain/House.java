@@ -1,7 +1,7 @@
 package nl.hu.serious_game.domain;
 
 public class House implements Cloneable {
-    private int id;
+    private final int id;
     private float maxCurrent;
     private int totalSolarPanels;
     private Battery battery;
@@ -20,6 +20,13 @@ public class House implements Cloneable {
             throw new IllegalArgumentException("Cannot add a negative amount of solar panels");
         }
         totalSolarPanels += amount;
+    }
+
+    public void setTotalSolarPanels(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot set amount of solar panels to negative number");
+        }
+        this.totalSolarPanels = amount;
     }
 
     public void removeSolarPanel(int amount) {
@@ -104,5 +111,9 @@ public class House implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Cloning failed");
         }
+    }
+
+    public int getId() {
+        return id;
     }
 }

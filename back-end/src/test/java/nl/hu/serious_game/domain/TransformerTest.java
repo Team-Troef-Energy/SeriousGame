@@ -25,7 +25,7 @@ public class TransformerTest {
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
 
-        Transformer transformer = new Transformer(houses, 0, 0, false);
+        Transformer transformer = new Transformer(1, houses, 0, 0, false);
         assertEquals(expected1, transformer.getLeftoverCurrent(1));
         assertEquals(expected2, transformer.getLeftoverCurrent(2));
     }
@@ -45,7 +45,7 @@ public class TransformerTest {
 
         // Adding a second battery would break the test
         // because all 6 of the first getcurrent would go into the battery.
-        Transformer transformer = new Transformer(houses, 0, 1, false);
+        Transformer transformer = new Transformer(1, houses, 0, 1, false);
 
         assertEquals(expected1, transformer.getLeftoverCurrent(1));
         assertEquals(expected2, transformer.getLeftoverCurrent(2));
@@ -75,7 +75,7 @@ public class TransformerTest {
         Electricity expected3 = new Electricity(9F, Direction.DEMAND);
         Electricity expected4 = new Electricity(9F, Direction.PRODUCTION);
 
-        Transformer transformer = new Transformer(houses, 0, 0, false);
+        Transformer transformer = new Transformer(1, houses, 0, 0, false);
 
         // Checks if production and demand get compensated for eachother.
         assertEquals(expected1, transformer.getLeftoverCurrent(1));
@@ -101,7 +101,7 @@ public class TransformerTest {
         // 5 goes into the battery and 1 is left over.
         Electricity expected = new Electricity(1F, Direction.PRODUCTION);
 
-        Transformer transformer = new Transformer(houses, 0, 1, false);
+        Transformer transformer = new Transformer(1, houses, 0, 1, false);
 
         assertEquals(expected, transformer.getLeftoverCurrent(1));
     }

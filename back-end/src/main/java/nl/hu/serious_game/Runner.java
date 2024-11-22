@@ -31,7 +31,7 @@ public class Runner implements CommandLineRunner {
         House house2 = new House(2, 8, dayProfile, new HouseOptions());
 
         // Create a single transformer
-        Transformer transformer = new Transformer(List.of(house, house2), 10, 1, false);
+        Transformer transformer = new Transformer(1, List.of(house, house2), 10, 1, false);
 
         this.level1 = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
 
@@ -53,7 +53,7 @@ public class Runner implements CommandLineRunner {
         House house3 = new House(3, 8, dayProfile, new HouseOptions(true, true));
 
         // Create a single transformer
-        Transformer transformer = new Transformer(List.of(house, house2, house3), 10, 1, false);
+        Transformer transformer = new Transformer(1, List.of(house, house2, house3), 10, 1, false);
 
         this.level2 = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
 
