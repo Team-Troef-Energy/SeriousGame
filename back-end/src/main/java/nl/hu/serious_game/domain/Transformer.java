@@ -51,19 +51,19 @@ public class Transformer implements Cloneable {
         }
     }
 
-    public void setHouseSolarPanels(int houseId, int solarPanels) {
+    void setHouseSolarPanels(int houseId, int solarPanels) {
         houses.stream().filter(house -> house.getId() == houseId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setTotalSolarPanels(solarPanels);
     }
 
-    public void setHouseBattery(int houseId, int batteries) {
+    void setHouseBattery(int houseId, int batteries) {
         houses.stream().filter(house -> house.getId() == houseId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setBattery(batteries);
     }
 
-    public void setBattery(int amount) {
+    void setBattery(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount of batteries");
         }
