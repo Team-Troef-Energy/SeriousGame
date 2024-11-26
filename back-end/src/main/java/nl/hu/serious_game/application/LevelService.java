@@ -26,38 +26,7 @@ public class LevelService {
             case 2 -> runner.getLevel2();
             default -> throw new IllegalArgumentException("Invalid level number");
         };
-
-        List<HourDTO> hours = new ArrayList<>();
-        for (int hour = level.getStartTime(); hour <= level.getEndTime(); hour++) { // Loop through each hour in the level
-            List<TransformerDTO> transformerDTOs = new ArrayList<>();
-            for (int transformerId = 0; transformerId < level.getTransformers().size(); transformerId++) { // Loop through each transformer
-
-                Transformer transformer = level.getTransformers().get(transformerId);
-
-                ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
-
-                Electricity electricity = transformer.getLeftoverCurrent(hour);
-                CurrentDTO current = new CurrentDTO(
-                        electricity.amount(),
-                        electricity.direction()
-                );
-                BatteryDTO batteryDTO = transformer.getBatteries() != null
-                    ? new BatteryDTO(transformer.getBatteries().getAmount(), transformer.getBatteries().getCurrentCharge())
-                    : new BatteryDTO(0, 0);
-
-                transformerDTOs.add(new TransformerDTO(
-                    transformerId, // Use the index as the transformer ID
-                    current,
-                    houseDTOs,
-                    batteryDTO
-                ));
-            }
-            hours.add(new HourDTO(hour, transformerDTOs));
-        }
-        Season season = level.getSeason();
-        ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
-
-        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective); // Return the LevelDTO
+        return runLevel(level);
     }
 
 
@@ -86,6 +55,54 @@ public class LevelService {
 
     //TODO: Added for method in LevelController. Implement this method later on, see Task 128 on azure.
     public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
-        return null;
+        Level level = switch (levelNumber) {
+            case 1 -> runner.getLevel1();
+            case 2 -> runner.getLevel2();
+            default -> throw new IllegalArgumentException("Invalid level number");
+        };
+
+        levelUpdateDTO.transformers().forEach(transformer -> {
+            level.setTransformerBattery(transformer.id(), transformer.batteries());
+
+            transformer.houses().forEach(house -> {
+                level.setHouseBattery(transformer.id(), house.id(), house.batteries());
+                level.setHouseSolarPanels(transformer.id(), house.id(), house.solarpanels());
+            });
+        });
+        return runLevel(level);
+    }
+
+    private LevelDTO runLevel(Level level) {
+        List<HourDTO> hours = new ArrayList<>();
+        for (int hour = level.getStartTime(); hour <= level.getEndTime(); hour++) { // Loop through each hour in the level
+            List<TransformerDTO> transformerDTOs = new ArrayList<>();
+            for (int transformerId = 0; transformerId < level.getTransformers().size(); transformerId++) { // Loop through each transformer
+
+                Transformer transformer = level.getTransformers().get(transformerId);
+
+                ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
+
+                Electricity electricity = transformer.getLeftoverCurrent(hour);
+                CurrentDTO current = new CurrentDTO(
+                        electricity.amount(),
+                        electricity.direction()
+                );
+                BatteryDTO batteryDTO = transformer.getBatteries() != null
+                        ? new BatteryDTO(transformer.getBatteries().getAmount(), transformer.getBatteries().getCurrentCharge())
+                        : new BatteryDTO(0, 0);
+
+                transformerDTOs.add(new TransformerDTO(
+                        transformerId, // Use the index as the transformer ID
+                        current,
+                        houseDTOs,
+                        batteryDTO
+                ));
+            }
+            hours.add(new HourDTO(hour, transformerDTOs));
+        }
+        Season season = level.getSeason();
+        ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
+
+        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective); // Return the LevelDTO
     }
 }
