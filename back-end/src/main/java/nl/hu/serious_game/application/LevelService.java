@@ -1,6 +1,7 @@
 package nl.hu.serious_game.application;
 
 import nl.hu.serious_game.Runner;
+import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.*;
 import nl.hu.serious_game.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +21,11 @@ public class LevelService {
     }
 
     public LevelDTO startLevel(int levelNumber) {
-        Level level;
-        switch (levelNumber) {
-            case 1:
-                level = runner.getLevel1();
-                break;
-            case 2:
-                level = runner.getLevel2();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid level number");
-        }
+        Level level = switch (levelNumber) {
+            case 1 -> runner.getLevel1();
+            case 2 -> runner.getLevel2();
+            default -> throw new IllegalArgumentException("Invalid level number");
+        };
 
         List<HourDTO> hours = new ArrayList<>();
         for (int hour = level.getStartTime(); hour <= level.getEndTime(); hour++) { // Loop through each hour in the level
@@ -87,5 +82,10 @@ public class LevelService {
             ));
         }
         return houseDTOs; // Return the list of HouseDTOs
+    }
+
+    //TODO: Added for method in LevelController. Implement this method later on, see Task 128 on azure.
+    public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
+        return null;
     }
 }
