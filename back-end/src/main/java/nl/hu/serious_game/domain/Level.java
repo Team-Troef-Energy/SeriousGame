@@ -1,5 +1,7 @@
 package nl.hu.serious_game.domain;
 
+import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,24 @@ public class Level implements Cloneable {
         } else {
             throw new IllegalArgumentException("transformers is empty");
         }
+    }
+
+    public void setHouseSolarPanels(int transformerId, int houseId, int amount) {
+        transformers.stream().filter(transformer -> transformer.getId() == transformerId)
+                .findFirst().orElseThrow(DoesNotExistException::new)
+                .setHouseSolarPanels(houseId, amount);
+    }
+
+    public void setHouseBattery(int transformerId, int houseId, int amount) {
+        transformers.stream().filter(transformer -> transformer.getId() == transformerId)
+                .findFirst().orElseThrow(DoesNotExistException::new)
+                .setHouseBattery(houseId, amount);
+    }
+
+    public void setTransformerBattery(int transformerId, int amount) {
+        transformers.stream().filter(transformer -> transformer.getId() == transformerId)
+                .findFirst().orElseThrow(DoesNotExistException::new)
+                .setBattery(amount);
     }
 
     public Objective getObjective() {
