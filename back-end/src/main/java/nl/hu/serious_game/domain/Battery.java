@@ -12,11 +12,14 @@ public class Battery implements Cloneable {
     @Getter
     private float maxCharge;
     private int coinValue;
+    @Getter
+    private int amount;
 
     public Battery(int amount) {
         maxCharge = 13.5f * amount;
         chargeSpeed = 5 * amount;
         dischargeSpeed = 11.5f * amount;
+        this.amount = amount;
     }
 
     // Takes the electricity that needs to be handled.
