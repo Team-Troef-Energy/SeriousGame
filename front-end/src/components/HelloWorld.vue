@@ -16,7 +16,7 @@ export default {
   methods: {
     async handleClick() {
       try {
-        const response = await fetch('link'); //Link needs to be updated once the controller is made
+        const response = await fetch('http://localhost:8080/levels/start/1'); //Start level 1
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
