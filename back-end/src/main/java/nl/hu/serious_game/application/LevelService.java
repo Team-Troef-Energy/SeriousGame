@@ -53,7 +53,6 @@ public class LevelService {
         return houseDTOs; // Return the list of HouseDTOs
     }
 
-    //TODO: Added for method in LevelController. Implement this method later on, see Task 128 on azure.
     public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
         Level level = switch (levelNumber) {
             case 1 -> runner.getLevel1();

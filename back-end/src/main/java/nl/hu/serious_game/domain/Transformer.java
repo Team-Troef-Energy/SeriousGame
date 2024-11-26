@@ -75,7 +75,7 @@ public class Transformer implements Cloneable {
     }
 
     public Battery getBatteries() {
-        return batteries;
+        return battery;
     }
 
     @Override
