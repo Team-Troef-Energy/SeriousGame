@@ -39,7 +39,7 @@ public class House implements Cloneable {
         totalSolarPanels -= amount;
     }
 
-    void setBattery(int amount) {
+    public void setBattery(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount of batteries");
         }
