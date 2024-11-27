@@ -1,19 +1,23 @@
 package nl.hu.serious_game.domain;
 
+import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Transformer implements Cloneable {
+    private final int id;
     private float powerBalance;
     Boolean hasCongestion;
     private float capacity;
     private List<House> houses;
-    private Battery batteries;
+    private Battery battery;
 
-    public Transformer(List<House> houses, float capacity, int batteries, Boolean hasCongestion) {
+    public Transformer(int id, List<House> houses, float capacity, int batteries, Boolean hasCongestion) {
+        this.id = id;
         this.houses = houses;
         this.capacity = capacity;
-        this.batteries = new Battery(batteries);
+        this.battery = new Battery(batteries);
         this.hasCongestion = hasCongestion;
     }
 
@@ -38,7 +42,7 @@ public class Transformer implements Cloneable {
             direction = Direction.PRODUCTION;
         }
 
-        Electricity electricity = batteries.use(new Electricity(total, direction));
+        Electricity electricity = battery.use(new Electricity(total, direction));
 
         if (!hasCongestion) {
             return electricity;
@@ -47,12 +51,31 @@ public class Transformer implements Cloneable {
         }
     }
 
+    void setHouseSolarPanels(int houseId, int solarPanels) {
+        houses.stream().filter(house -> house.getId() == houseId)
+                .findFirst().orElseThrow(DoesNotExistException::new)
+                .setTotalSolarPanels(solarPanels);
+    }
+
+    void setHouseBattery(int houseId, int batteries) {
+        houses.stream().filter(house -> house.getId() == houseId)
+                .findFirst().orElseThrow(DoesNotExistException::new)
+                .setBattery(batteries);
+    }
+
+    void setBattery(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot add a negative amount of batteries");
+        }
+        this.battery = new Battery(amount);
+    }
+
     public List<House> getHouses() {
         return houses;
     }
 
     public Battery getBatteries() {
-        return batteries;
+        return battery;
     }
 
     @Override
@@ -63,10 +86,14 @@ public class Transformer implements Cloneable {
             for (House house : this.houses) {
                 clone.houses.add(house.clone());
             }
-            clone.batteries = this.batteries.clone();
+            clone.battery = this.battery.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Cloning failed");
         }
+    }
+
+    int getId() {
+        return id;
     }
 }
