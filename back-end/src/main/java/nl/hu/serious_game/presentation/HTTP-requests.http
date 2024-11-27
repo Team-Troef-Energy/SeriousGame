@@ -1,0 +1,29 @@
+### Start level 1
+GET http://localhost:8080/levels/start/1
+
+### Start level 2
+GET http://localhost:8080/levels/start/2
+
+### Update level 1
+POST http://localhost:8080/levels/update/1
+
+{
+  "transformers": [
+    {
+      "id": 1,
+      "houses": [
+        {
+          "id": 1,
+          "batteries": 0,
+          "solarpanels": 6
+        },
+        {
+          "id": 2,
+          "batteries": 0,
+          "solarpanels": 8
+        }
+      ],
+      "batteries": 0
+    }
+  ]
+}
