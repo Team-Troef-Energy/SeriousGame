@@ -21,7 +21,7 @@ public class Transformer implements Cloneable {
         this.hasCongestion = hasCongestion;
     }
 
-    Electricity getLeftoverCurrent(int hour) {
+    public Electricity getLeftoverCurrent(int hour) {
         float demand = 0;
         float production = 0;
         for (House house : houses) {
@@ -72,6 +72,10 @@ public class Transformer implements Cloneable {
 
     public List<House> getHouses() {
         return houses;
+    }
+
+    public Battery getBatteries() {
+        return battery;
     }
 
     @Override
