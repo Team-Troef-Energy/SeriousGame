@@ -2,11 +2,11 @@ package nl.hu.serious_game.domain;
 
 public class House implements Cloneable {
     private final int id;
-    private float maxCurrent;
     private int totalSolarPanels;
     private Battery battery;
     private DayProfile dayProfile;
     private HouseOptions houseOptions;
+    private Electricity excessCurrent;
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
@@ -78,11 +78,20 @@ public class House implements Cloneable {
             amount = consumption - production;
             direction = Direction.DEMAND;
         }
+        Electricity electricity = new Electricity(amount, direction);
 
         if (battery != null) {
-            return battery.use(new Electricity(amount, direction));
+            electricity = battery.use(electricity);
         }
-        return new Electricity(amount, direction);
+
+        if (houseOptions.hasCongestion() && electricity.amount() > houseOptions.maxCurrent()) {
+            excessCurrent = new Electricity(electricity.amount() - houseOptions.maxCurrent(), direction);
+            electricity = new Electricity(houseOptions.maxCurrent(), direction);
+        } else {
+            // Direction is not important here.
+            excessCurrent = new Electricity(0f, direction);
+        }
+        return electricity;
     }
 
     public float getTotalConsumptionOfHour(int hour) {
@@ -98,6 +107,10 @@ public class House implements Cloneable {
 
     public Battery getBattery() {
         return battery;
+    }
+
+    public Electricity getExcessCurrent() {
+        return excessCurrent;
     }
 
     @Override

@@ -8,17 +8,23 @@ import java.util.List;
 public class Transformer implements Cloneable {
     private final int id;
     private float powerBalance;
-    Boolean hasCongestion;
-    private float capacity;
+    private Congestion congestion;
     private List<House> houses;
     private Battery battery;
+    private Electricity excessCurrent;
 
-    public Transformer(int id, List<House> houses, float capacity, int batteries, Boolean hasCongestion) {
+    public Transformer(int id, List<House> houses, int batteries) {
         this.id = id;
         this.houses = houses;
-        this.capacity = capacity;
         this.battery = new Battery(batteries);
-        this.hasCongestion = hasCongestion;
+        this.congestion = new Congestion(false, 0f);
+    }
+
+    public Transformer(int id, List<House> houses, int batteries, Congestion congestion) {
+        this.id = id;
+        this.houses = houses;
+        this.battery = new Battery(batteries);
+        this.congestion = congestion;
     }
 
     public Electricity getLeftoverCurrent(int hour) {
@@ -44,11 +50,13 @@ public class Transformer implements Cloneable {
 
         Electricity electricity = battery.use(new Electricity(total, direction));
 
-        if (!hasCongestion) {
-            return electricity;
+        if (congestion.hasCongestion() && electricity.amount() > congestion.maxCurrent()) {
+            excessCurrent = new Electricity(electricity.amount() - congestion.maxCurrent(), direction);
+            electricity = new Electricity(congestion.maxCurrent(), direction);
         } else {
-            return new Electricity(Math.min(electricity.amount(), this.capacity), direction);
+            excessCurrent = new Electricity(0f, direction);
         }
+        return electricity;
     }
 
     void setHouseSolarPanels(int houseId, int solarPanels) {
@@ -78,6 +86,10 @@ public class Transformer implements Cloneable {
         return battery;
     }
 
+    public Electricity getExcessCurrent() {
+        return excessCurrent;
+    }
+
     @Override
     public Transformer clone() {
         try {
@@ -96,4 +108,6 @@ public class Transformer implements Cloneable {
     int getId() {
         return id;
     }
+
+
 }
