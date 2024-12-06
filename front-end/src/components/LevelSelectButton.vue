@@ -1,5 +1,5 @@
 <template>
-  <v-btn color="red" @click="handleClick"> level: {{ this.level }} </v-btn>
+  <v-btn @click="handleClick"> level: {{ this.level }} </v-btn>
 </template>
 
 <script>
