@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { fetchData, fetchStartLevel1 } from '../utils/api';
+import { fetchStartLevel } from '../utils/api';
 
 export default {
   name: 'HelloWorld',
