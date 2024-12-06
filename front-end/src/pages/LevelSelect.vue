@@ -1,16 +1,19 @@
 <template>
   <div class="level-select">
-    <div>test</div>
-    <div>test2</div>
+    <LevelSelectButton level="1" />
+    <LevelSelectButton level="2" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent } from "vue";
+import LevelSelectButton from "../components/LevelSelectButton.vue";
 
 export default defineComponent({
   name: "Level",
-  components: {},
+  components: {
+    LevelSelectButton,
+  },
 });
 </script>
 
