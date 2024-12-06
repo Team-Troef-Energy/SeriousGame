@@ -57,7 +57,7 @@
           </div>
 
           <!-- Zonnepanelen -->
-          <div class="section solar-section mt-4">
+          <div v-if="type !== 'transformator'" class="section solar-section mt-4">
             <v-row class="align-center">
               <v-col cols="4">
                 <v-btn
