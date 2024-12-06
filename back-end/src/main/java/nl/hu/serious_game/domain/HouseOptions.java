@@ -5,15 +5,24 @@ import java.util.Objects;
 public class HouseOptions {
     private boolean hasHeatPump;
     private boolean hasElectricVehicle;
+    private Congestion congestion;
 
     public HouseOptions() {
         this.hasHeatPump = false;
         this.hasElectricVehicle = false;
+        this.congestion = new Congestion(false, 0f);
     }
 
     public HouseOptions(boolean hasHeatPump, boolean hasElectricVehicle) {
         this.hasHeatPump = hasHeatPump;
         this.hasElectricVehicle = hasElectricVehicle;
+        this.congestion = new Congestion(false, 0f);
+    }
+
+    public HouseOptions(boolean hasHeatPump, boolean hasElectricVehicle, Congestion congestion) {
+        this.hasHeatPump = hasHeatPump;
+        this.hasElectricVehicle = hasElectricVehicle;
+        this.congestion = congestion;
     }
 
     public boolean hasHeatpump() {
@@ -22,6 +31,14 @@ public class HouseOptions {
 
     public boolean hasElectricVehicle() {
         return hasElectricVehicle;
+    }
+
+    public boolean hasCongestion() {
+        return congestion.hasCongestion();
+    }
+
+    public float maxCurrent() {
+        return congestion.maxCurrent();
     }
 
     @Override
