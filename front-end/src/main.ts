@@ -4,10 +4,11 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import TestPage from "./pages/TestPage.vue";
 import "./style.css";
 import App from "./App.vue";
+import LevelSelectPage from "./pages/LevelSelectPage.vue";
 
 const routes = [
   { path: "/", component: App },
-  { path: "/test", component: TestPage },
+  { path: "/test", component: LevelSelectPage },
 ];
 
 const router = createRouter({
