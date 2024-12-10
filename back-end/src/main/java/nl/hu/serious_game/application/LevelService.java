@@ -47,7 +47,9 @@ public class LevelService {
                 houseIndex, // Use the index as the house ID
                 currentDTO,
                 batteryDTO,
-                house.getTotalSolarPanels() // Get the total solar panels of the house
+                house.getTotalSolarPanels(), // Get the total solar panels of the house
+                house.getSolarPanelOutput(hour),
+                house.getTotalConsumptionOfHour(hour)
             ));
         }
         return houseDTOs; // Return the list of HouseDTOs
