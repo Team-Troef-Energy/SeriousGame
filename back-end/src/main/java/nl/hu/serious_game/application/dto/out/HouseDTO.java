@@ -4,6 +4,8 @@ public record HouseDTO(
         int id,
         CurrentDTO current,
         BatteryDTO batteries,
-        int solarpanels
+        int solarpanels,
+        float production,
+        float consumption
 ) {
 }
