@@ -6,7 +6,7 @@
   <nav>
     <RouterLink to="/">Go to Home</RouterLink>
     <br />
-    <RouterLink to="/test">Go to About</RouterLink>
+    <RouterLink to="/test">Go to test</RouterLink>
   </nav>
   <main>
     <RouterView />
