@@ -2,10 +2,7 @@ package nl.hu.serious_game.application;
 
 import nl.hu.serious_game.Runner;
 import nl.hu.serious_game.application.dto.out.LevelDTO;
-import nl.hu.serious_game.domain.Level;
-import nl.hu.serious_game.domain.Objective;
-import nl.hu.serious_game.domain.Season;
-import nl.hu.serious_game.domain.Transformer;
+import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,8 +56,6 @@ public class LevelServiceTest {
     @Test
     @DisplayName("Starting level 1 provides a DTO where the startTime is 8 and the endTime is 18")
     public void startLevelWithCorrectTimesTest() {
-        // Given
-
         // When
         LevelDTO levelDTO = this.levelService.startLevel(1);
 
