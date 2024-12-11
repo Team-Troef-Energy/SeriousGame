@@ -47,6 +47,7 @@ import Transformer from '../components/Transformer.vue';
 import House from '../components/House.vue';
 import ConnectionLine from '../components/ConnectionLine.vue';
 import PopupComponent from '../components/PopupComponent.vue';
+import { fetchStartLevel, fetchUpdateLevel } from '../utils/api';
 
 export default defineComponent({
   name: 'Level',
@@ -60,7 +61,7 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, houses: { id: number, energyProduction: number, energyConsumption: number, heatPumps: number, electricCars: number, solarPanels: number, batteries: number }[] }[]>([]);
+    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number }[] }[]>([]);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
@@ -80,24 +81,36 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, energyProduction: number, energyConsumption: number, heatPumps: number, electricCars: number, solarPanels: number, batteries: number }) => {
+    const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number }) => {
       popupTitle.value = `Huis ${house.id}`;
-      popupEnergyProduction.value = house.energyProduction;
-      popupEnergyConsumption.value = house.energyConsumption;
-      popupHeatPumps.value = house.heatPumps;
-      popupElectricCars.value = house.electricCars;
-      popupSolarPanels.value = house.solarPanels;
+      popupEnergyProduction.value = house.production;
+      popupEnergyConsumption.value = house.consumption;
+      popupHeatPumps.value = 0; // Example value
+      popupElectricCars.value = 0; // Example value
+      popupSolarPanels.value = house.solarpanels;
       popupBatteries.value = house.batteries;
       isPopupOpen.value = true;
     };
 
-    onMounted(async () => {
-      const response = await fetch('/LevelDummyData.json');
-      const data = await response.json();
+    const submitChanges = async () => {
+      try {
+        const data = await fetchUpdateLevel('1', { transformers: transformers.value });
+        transformers.value = data.transformers;
+      } catch (error) {
+        console.error('Failed to submit changes:', error);
+      }
+    };
 
-      transformerPositions.value = generatePositions(data.transformers.length, 20);
-      housePositions.value = generatePositions(data.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
-      transformers.value = data.transformers;
+    onMounted(async () => {
+      try {
+        const data = await fetchStartLevel('1');
+        const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
+        transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
+        housePositions.value = generatePositions(lastHourData.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
+        transformers.value = lastHourData.transformers;
+      } catch (error) {
+        console.error('Failed to fetch initial level data:', error);
+      }
     });
 
     return {
