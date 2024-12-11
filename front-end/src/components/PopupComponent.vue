@@ -131,11 +131,13 @@
       },
       energyProduction: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
       },
       energyConsumption: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
       },
       heatPumps: {
         type: Number,
