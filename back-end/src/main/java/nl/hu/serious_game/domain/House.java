@@ -7,6 +7,8 @@ public class House implements Cloneable {
     private Battery battery;
     private DayProfile dayProfile;
     private HouseOptions houseOptions;
+    private Integer hour;
+    private Electricity current;
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
@@ -67,6 +69,16 @@ public class House implements Cloneable {
     }
 
     public Electricity getCurrent(int hour) {
+        if (this.hour == null || hour == this.hour + 1) {
+            return calculateCurrent(hour);
+        }
+        if (hour == this.hour) {
+            return this.current;
+        }
+        throw new IllegalArgumentException("Invalid hour");
+    }
+
+    private Electricity calculateCurrent(int hour) {
         float production = getSolarPanelOutput(hour);
         float consumption = getTotalConsumptionOfHour(hour);
         float amount;

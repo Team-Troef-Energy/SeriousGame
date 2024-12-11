@@ -83,7 +83,7 @@ public class LevelService {
 
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
-                Electricity electricity = transformer.getLeftoverCurrent(hour);
+                Electricity electricity = transformer.calculateLeftoverCurrent(hour);
                 CurrentDTO current = new CurrentDTO(
                         electricity.amount(),
                         electricity.direction()
