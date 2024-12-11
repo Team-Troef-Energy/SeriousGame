@@ -38,6 +38,7 @@
         :batteries="popupBatteries"
         @update:isOpen="isPopupOpen = $event"
     />
+    <button id="submit-button" @click="submitChanges">Submit Changes</button>
   </div>
 </template>
 
@@ -98,8 +99,17 @@ export default defineComponent({
 
     const submitChanges = async () => {
       try {
-        const data = await fetchUpdateLevel(levelNumber, { transformers: transformers.value });
-        transformers.value = data.transformers;
+        const data = {
+          transformers: transformers.value.map(transformer => ({
+            id: transformer.id,
+            houses: transformer.houses.map(house => ({
+              id: house.id,
+              batteries: house.batteries.amount,
+              solarpanels: house.solarpanels
+            }))
+          }))
+        };
+        await fetchUpdateLevel(levelNumber, data);
       } catch (error) {
         console.error('Failed to submit changes:', error);
       }
@@ -132,6 +142,7 @@ export default defineComponent({
       popupSolarPanels,
       popupBatteries,
       showHouseDetails,
+      submitChanges,
     };
   },
 });
@@ -152,5 +163,9 @@ export default defineComponent({
   position: relative;
   background: url('/grass.jpg') no-repeat center center;
   background-size: cover;
+}
+
+#submit-button {
+  z-index: 1000;
 }
 </style>
