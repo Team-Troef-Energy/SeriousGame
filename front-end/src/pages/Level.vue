@@ -37,6 +37,8 @@
         :solarPanels="popupSolarPanels"
         :batteries="popupBatteries"
         @update:isOpen="isPopupOpen = $event"
+        @increase="handleIncrease"
+        @decrease="handleDecrease"
     />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
   </div>
@@ -49,7 +51,7 @@ import House from '../components/House.vue';
 import ConnectionLine from '../components/ConnectionLine.vue';
 import PopupComponent from '../components/PopupComponent.vue';
 import { fetchStartLevel, fetchUpdateLevel } from '../utils/api';
-import {useRoute} from "vue-router";
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'Level',
@@ -97,6 +99,33 @@ export default defineComponent({
       isPopupOpen.value = true;
     };
 
+    const updateSolarPanels = (newValue: number) => {
+      const house = transformers.value.flatMap(t => t.houses).find(h => h.id === parseInt(popupTitle.value.split(' ')[1]));
+      if (house) {
+        house.solarpanels = newValue;
+      }
+    };
+
+    const handleIncrease = (property: string) => {
+      if (property === 'solarPanels') {
+        popupSolarPanels.value += 1;
+        updateSolarPanels(popupSolarPanels.value);
+      } else if (property === 'batteries') {
+        popupBatteries.value += 1;
+        // TODO: Update batteries logic here
+      }
+    };
+
+    const handleDecrease = (property: string) => {
+      if (property === 'solarPanels' && popupSolarPanels.value > 0) {
+        popupSolarPanels.value -= 1;
+        updateSolarPanels(popupSolarPanels.value);
+      } else if (property === 'batteries' && popupBatteries.value > 0) {
+        popupBatteries.value -= 1;
+        // TODO: Update batteries logic here
+      }
+    };
+
     const submitChanges = async () => {
       try {
         const data = {
@@ -109,7 +138,12 @@ export default defineComponent({
             }))
           }))
         };
-        await fetchUpdateLevel(levelNumber, data);
+        const response = await fetchUpdateLevel(levelNumber, data);
+        console.log('Changes submitted:', response);
+        const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
+        transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
+        housePositions.value = generatePositions(lastHourData.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
+        transformers.value = lastHourData.transformers;
       } catch (error) {
         console.error('Failed to submit changes:', error);
       }
@@ -118,6 +152,7 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
+        console.log('Initial level data:', data);
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(lastHourData.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
@@ -142,6 +177,9 @@ export default defineComponent({
       popupSolarPanels,
       popupBatteries,
       showHouseDetails,
+      updateSolarPanels,
+      handleIncrease,
+      handleDecrease,
       submitChanges,
     };
   },
