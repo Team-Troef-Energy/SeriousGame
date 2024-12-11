@@ -58,8 +58,8 @@ public class LevelService {
 
     public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
         Level level = switch (levelNumber) {
-            case 1 -> runner.getLevel1();
-            case 2 -> runner.getLevel2();
+            case 1 -> runner.getLevel1().clone();
+            case 2 -> runner.getLevel2().clone();
             default -> throw new IllegalArgumentException("Invalid level number");
         };
 
