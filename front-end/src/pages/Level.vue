@@ -21,6 +21,7 @@
             v-for="house in transformer.houses"
             :key="'house-' + house.id"
             :style="{ position: 'absolute', left: (housePositions[house.id - 1] % 10) * 150 + 'px', top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px' }"
+            @click="showHouseDetails(house)"
         />
       </template>
     </div>
@@ -32,6 +33,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import Transformer from '../components/Transformer.vue';
 import House from '../components/House.vue';
 import ConnectionLine from '../components/ConnectionLine.vue';
+import PopupComponent from '../components/PopupComponent.vue';
 
 export default defineComponent({
   name: 'Level',
@@ -39,6 +41,7 @@ export default defineComponent({
     Transformer,
     House,
     ConnectionLine,
+    PopupComponent,
   },
   setup() {
     const gameCanvas = ref<HTMLDivElement | null>(null);
@@ -52,6 +55,17 @@ export default defineComponent({
         positions.push(start + i);
       }
       return positions;
+    };
+
+    const showHouseDetails = (house: { id: number, energyProduction: number, energyConsumption: number, heatPumps: number, electricCars: number, solarPanels: number, batteries: number }) => {
+      popupTitle.value = `Huis ${house.id}`;
+      popupEnergyProduction.value = house.energyProduction;
+      popupEnergyConsumption.value = house.energyConsumption;
+      popupHeatPumps.value = house.heatPumps;
+      popupElectricCars.value = house.electricCars;
+      popupSolarPanels.value = house.solarPanels;
+      popupBatteries.value = house.batteries;
+      isPopupOpen.value = true;
     };
 
     onMounted(async () => {
