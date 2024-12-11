@@ -25,7 +25,7 @@ public class Transformer implements Cloneable {
         float demand = 0;
         float production = 0;
         for (House house : houses) {
-            Electricity current = house.getCurrent(hour);
+            Electricity current = house.current(hour);
             if (current.direction() == Direction.DEMAND) {
                 demand += current.amount();
             } else if (current.direction() == Direction.PRODUCTION) {

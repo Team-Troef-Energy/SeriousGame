@@ -19,8 +19,8 @@ public class TransformerTest {
         House mockHouse = Mockito.mock(House.class);
         Electricity expected1 = new Electricity(3F, Direction.DEMAND);
         Electricity expected2 = new Electricity(1F, Direction.PRODUCTION);
-        when(mockHouse.getCurrent(1)).thenReturn(expected1);
-        when(mockHouse.getCurrent(2)).thenReturn(expected2);
+        when(mockHouse.current(1)).thenReturn(expected1);
+        when(mockHouse.current(2)).thenReturn(expected2);
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
@@ -34,8 +34,8 @@ public class TransformerTest {
     @DisplayName("test for one house and battery")
     public void batteryTest() {
         House mockHouse = Mockito.mock(House.class);
-        when(mockHouse.getCurrent(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
-        when(mockHouse.getCurrent(2)).thenReturn(new Electricity(7F, Direction.DEMAND));
+        when(mockHouse.current(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
+        when(mockHouse.current(2)).thenReturn(new Electricity(7F, Direction.DEMAND));
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
@@ -55,16 +55,16 @@ public class TransformerTest {
     @DisplayName("test with multiple houses")
     public void multipleHousesTest() {
         House mockHouse1 = Mockito.mock(House.class);
-        when(mockHouse1.getCurrent(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
-        when(mockHouse1.getCurrent(2)).thenReturn(new Electricity(6F, Direction.DEMAND));
-        when(mockHouse1.getCurrent(3)).thenReturn(new Electricity(7F, Direction.DEMAND));
-        when(mockHouse1.getCurrent(4)).thenReturn(new Electricity(7F, Direction.PRODUCTION));
+        when(mockHouse1.current(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
+        when(mockHouse1.current(2)).thenReturn(new Electricity(6F, Direction.DEMAND));
+        when(mockHouse1.current(3)).thenReturn(new Electricity(7F, Direction.DEMAND));
+        when(mockHouse1.current(4)).thenReturn(new Electricity(7F, Direction.PRODUCTION));
 
         House mockHouse2 = Mockito.mock(House.class);
-        when(mockHouse2.getCurrent(1)).thenReturn(new Electricity(4F, Direction.DEMAND));
-        when(mockHouse2.getCurrent(2)).thenReturn(new Electricity(4F, Direction.PRODUCTION));
-        when(mockHouse2.getCurrent(3)).thenReturn(new Electricity(2F, Direction.DEMAND));
-        when(mockHouse2.getCurrent(4)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
+        when(mockHouse2.current(1)).thenReturn(new Electricity(4F, Direction.DEMAND));
+        when(mockHouse2.current(2)).thenReturn(new Electricity(4F, Direction.PRODUCTION));
+        when(mockHouse2.current(3)).thenReturn(new Electricity(2F, Direction.DEMAND));
+        when(mockHouse2.current(4)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse1);
@@ -89,10 +89,10 @@ public class TransformerTest {
     @DisplayName("test for multiple houses and a battery")
     public void multiHouseBatteryTest() {
         House mockHouse1 = Mockito.mock(House.class);
-        when(mockHouse1.getCurrent(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
+        when(mockHouse1.current(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
 
         House mockHouse2 = Mockito.mock(House.class);
-        when(mockHouse2.getCurrent(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
+        when(mockHouse2.current(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse1);
