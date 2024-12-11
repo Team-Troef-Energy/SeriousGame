@@ -48,6 +48,7 @@ import House from '../components/House.vue';
 import ConnectionLine from '../components/ConnectionLine.vue';
 import PopupComponent from '../components/PopupComponent.vue';
 import { fetchStartLevel, fetchUpdateLevel } from '../utils/api';
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'Level',
@@ -58,6 +59,9 @@ export default defineComponent({
     PopupComponent,
   },
   setup() {
+    const route = useRoute();
+    const levelNumber = route.params.levelNmr;
+
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
@@ -94,7 +98,7 @@ export default defineComponent({
 
     const submitChanges = async () => {
       try {
-        const data = await fetchUpdateLevel('1', { transformers: transformers.value });
+        const data = await fetchUpdateLevel(levelNumber, { transformers: transformers.value });
         transformers.value = data.transformers;
       } catch (error) {
         console.error('Failed to submit changes:', error);
@@ -103,7 +107,7 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const data = await fetchStartLevel('1');
+        const data = await fetchStartLevel(levelNumber);
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(lastHourData.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
