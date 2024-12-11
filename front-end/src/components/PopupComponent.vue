@@ -21,13 +21,13 @@
             <v-row>
               <v-col cols="6"><strong>Energie productie:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
-                >{{ energyProduction.toFixed(2) }} kWh</v-col
+                >{{ formattedEnergyProduction }} kWh</v-col
               >
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Energie consumptie:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
-                >{{ energyConsumption.toFixed(2) }} kWh</v-col
+                >{{ formattedEnergyConsumption }} kWh</v-col
               >
             </v-row>
             <v-row>
@@ -162,6 +162,13 @@
         () => props.energyProduction - props.energyConsumption
       );
 
+      const formattedEnergyProduction = computed(() => {
+        return props.energyProduction.toFixed(2);
+      });
+
+      const formattedEnergyConsumption = computed(() => {
+        return props.energyConsumption.toFixed(2);
+      });
       // Methods
       const increaseValue = (property: string) => {
         if (property === 'solarPanels') {
@@ -185,6 +192,8 @@
 
       return {
         energyDifference,
+        formattedEnergyProduction,
+        formattedEnergyConsumption,
         increaseValue,
         decreaseValue,
         closeDialog,
