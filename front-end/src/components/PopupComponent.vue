@@ -112,94 +112,85 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, computed } from 'vue';
+import { defineComponent, computed } from 'vue';
 
-  export default defineComponent({
-    name: 'PopupComponent',
-    props: {
-      isOpen: {
-        type: Boolean,
-        required: true
-      },
-      title: {
-        type: String,
-        required: true
-      },
-      type: {
-        type: String,
-        required: true
-      },
-      energyProduction: {
-        type: Number,
-        required: true,
-        default: 0
-      },
-      energyConsumption: {
-        type: Number,
-        required: true,
-        default: 0
-      },
-      heatPumps: {
-        type: Number,
-        default: 0
-      },
-      electricCars: {
-        type: Number,
-        default: 0
-      },
-      solarPanels: {
-        type: Number,
-        default: 0
-      },
-      batteries: {
-        type: Number,
-        default: 0
-      }
+export default defineComponent({
+  name: 'PopupComponent',
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true
     },
-    setup(props, { emit }) {
-      // Computed properties
-      const energyDifference = computed(
+    title: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
+    },
+    energyProduction: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    energyConsumption: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    heatPumps: {
+      type: Number,
+      default: 0
+    },
+    electricCars: {
+      type: Number,
+      default: 0
+    },
+    solarPanels: {
+      type: Number,
+      default: 0
+    },
+    batteries: {
+      type: Number,
+      default: 0
+    }
+  },
+  setup(props, { emit }) {
+    const energyDifference = computed(
         () => props.energyProduction - props.energyConsumption
-      );
+    );
 
-      const formattedEnergyProduction = computed(() => {
-        return props.energyProduction.toFixed(2);
-      });
+    const formattedEnergyProduction = computed(() => {
+      return props.energyProduction.toFixed(2);
+    });
 
-      const formattedEnergyConsumption = computed(() => {
-        return props.energyConsumption.toFixed(2);
-      });
-      // Methods
-      const increaseValue = (property: string) => {
-        if (property === 'solarPanels') {
-          emit('update:solarPanels', props.solarPanels + 1);
-        } else if (property === 'batteries') {
-          emit('update:batteries', props.batteries + 1);
-        }
-      };
+    const formattedEnergyConsumption = computed(() => {
+      return props.energyConsumption.toFixed(2);
+    });
 
-      const decreaseValue = (property: string) => {
-        if (property === 'solarPanels' && props.solarPanels > 0) {
-          emit('update:solarPanels', props.solarPanels - 1);
-        } else if (property === 'batteries' && props.batteries > 0) {
-          emit('update:batteries', props.batteries - 1);
-        }
-      };
+    const increaseValue = (property: string) => {
+      emit('increase', property);
+    };
 
-      const closeDialog = () => {
-        emit('update:isOpen', false);
-      };
+    const decreaseValue = (property: string) => {
+      emit('decrease', property);
+    };
 
-      return {
-        energyDifference,
-        formattedEnergyProduction,
-        formattedEnergyConsumption,
-        increaseValue,
-        decreaseValue,
-        closeDialog,
-      };
-    },
-  });
+    const closeDialog = () => {
+      emit('update:isOpen', false);
+    };
+
+    return {
+      energyDifference,
+      formattedEnergyProduction,
+      formattedEnergyConsumption,
+      increaseValue,
+      decreaseValue,
+      closeDialog,
+    };
+  },
+});
 </script>
 
 <style scoped>
