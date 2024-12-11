@@ -25,6 +25,19 @@
         />
       </template>
     </div>
+    <PopupComponent
+        v-if="isPopupOpen"
+        :isOpen="isPopupOpen"
+        :title="popupTitle"
+        :type="popupType"
+        :energyProduction="popupEnergyProduction"
+        :energyConsumption="popupEnergyConsumption"
+        :heatPumps="popupHeatPumps"
+        :electricCars="popupElectricCars"
+        :solarPanels="popupSolarPanels"
+        :batteries="popupBatteries"
+        @update:isOpen="isPopupOpen = $event"
+    />
   </div>
 </template>
 
@@ -47,7 +60,17 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, houses: { id: number }[] }[]>([]);
+    const transformers = ref<{ id: number, houses: { id: number, energyProduction: number, energyConsumption: number, heatPumps: number, electricCars: number, solarPanels: number, batteries: number }[] }[]>([]);
+
+    const isPopupOpen = ref(false);
+    const popupTitle = ref('');
+    const popupType = ref('huis');
+    const popupEnergyProduction = ref(0);
+    const popupEnergyConsumption = ref(0);
+    const popupHeatPumps = ref(0);
+    const popupElectricCars = ref(0);
+    const popupSolarPanels = ref(0);
+    const popupBatteries = ref(0);
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
@@ -82,6 +105,16 @@ export default defineComponent({
       transformerPositions,
       housePositions,
       transformers,
+      isPopupOpen,
+      popupTitle,
+      popupType,
+      popupEnergyProduction,
+      popupEnergyConsumption,
+      popupHeatPumps,
+      popupElectricCars,
+      popupSolarPanels,
+      popupBatteries,
+      showHouseDetails,
     };
   },
 });
