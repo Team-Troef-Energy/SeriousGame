@@ -93,7 +93,7 @@ public class Transformer implements Cloneable {
         }
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 }
