@@ -86,7 +86,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   position: relative;
-  background: url('./grass.jpg') no-repeat center center;
+  background: url('/grass.jpg') no-repeat center center;
   background-size: cover;
 }
 </style>
