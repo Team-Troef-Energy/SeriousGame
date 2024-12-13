@@ -3,6 +3,8 @@ package nl.hu.serious_game.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +27,7 @@ public class TransformerTest {
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
 
-        Transformer transformer = new Transformer(1, houses, 0, 0, false);
+        Transformer transformer = new Transformer(1, houses, 0);
         assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
         assertEquals(expected2, transformer.calculateLeftoverCurrent(2));
     }
@@ -45,7 +47,7 @@ public class TransformerTest {
 
         // Adding a second battery would break the test
         // because all 6 of the first getcurrent would go into the battery.
-        Transformer transformer = new Transformer(1, houses, 0, 1, false);
+        Transformer transformer = new Transformer(1, houses, 1);
 
         assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
         assertEquals(expected2, transformer.calculateLeftoverCurrent(2));
@@ -75,7 +77,7 @@ public class TransformerTest {
         Electricity expected3 = new Electricity(9F, Direction.DEMAND);
         Electricity expected4 = new Electricity(9F, Direction.PRODUCTION);
 
-        Transformer transformer = new Transformer(1, houses, 0, 0, false);
+        Transformer transformer = new Transformer(1, houses, 0);
 
         // Checks if production and demand get compensated for eachother.
         assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
@@ -101,8 +103,44 @@ public class TransformerTest {
         // 5 goes into the battery and 1 is left over.
         Electricity expected = new Electricity(1F, Direction.PRODUCTION);
 
-        Transformer transformer = new Transformer(1, houses, 0, 1, false);
+        Transformer transformer = new Transformer(1, houses, 1);
 
         assertEquals(expected, transformer.calculateLeftoverCurrent(1));
+    }
+
+    @Test
+    @DisplayName("low maxCurrent")
+    public void LowMaxCurrentTest() {
+        House mockHouse = Mockito.mock(House.class);
+        when(mockHouse.current(1)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
+        List<House> houses = new ArrayList<>();
+        houses.add(mockHouse);
+        Transformer transformer = new Transformer(1, houses, 0, new Congestion(true, 1));
+        Electricity electricity = transformer.calculateLeftoverCurrent(1);
+        Electricity excess = transformer.getExcessCurrent();
+        assertAll(
+                () -> assertEquals(Direction.PRODUCTION, electricity.direction()),
+                () -> assertEquals(1f, electricity.amount()),
+                () -> assertEquals(Direction.PRODUCTION, electricity.direction()),
+                () -> assertEquals(1f, excess.amount(), 0.001)
+        );
+    }
+
+    @Test
+    @DisplayName("high maxCurrent")
+    public void HighMaxCurrentTest() {
+        House mockHouse = Mockito.mock(House.class);
+        when(mockHouse.current(1)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
+        List<House> houses = new ArrayList<>();
+        houses.add(mockHouse);
+        Transformer transformer = new Transformer(1, houses, 0, new Congestion(true, 10));
+        Electricity electricity = transformer.calculateLeftoverCurrent(1);
+        Electricity excess = transformer.getExcessCurrent();
+        assertAll(
+                () -> assertEquals(Direction.PRODUCTION, electricity.direction()),
+                () -> assertEquals(2f, electricity.amount(), 0.001),
+                () -> assertEquals(Direction.PRODUCTION, electricity.direction()),
+                () -> assertEquals(0f, excess.amount())
+        );
     }
 }

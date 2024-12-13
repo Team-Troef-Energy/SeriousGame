@@ -21,7 +21,7 @@ public class LevelServiceTest {
     public void setUp() {
         Runner runner = mock(Runner.class);
         // Instead of creating a level, we mock one
-        when(runner.getLevel1()).thenReturn(new Level(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new Transformer(1, List.of(), 10, 1, false))));
+        when(runner.getLevel1()).thenReturn(new Level(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new Transformer(1, List.of(), 10))));
         this.levelService = new LevelService(runner);
     }
 
