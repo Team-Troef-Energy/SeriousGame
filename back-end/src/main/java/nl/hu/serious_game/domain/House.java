@@ -141,4 +141,8 @@ public class House implements Cloneable {
     public int getId() {
         return id;
     }
+
+    public HouseOptions getHouseOptions() {
+        return houseOptions;
+    }
 }
