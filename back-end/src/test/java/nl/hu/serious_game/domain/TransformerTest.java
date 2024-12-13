@@ -27,7 +27,7 @@ public class TransformerTest {
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
 
-        Transformer transformer = new Transformer(1, houses, 0, 0, false);
+        Transformer transformer = new Transformer(1, houses, 0);
         assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
         assertEquals(expected2, transformer.calculateLeftoverCurrent(2));
     }
@@ -112,11 +112,11 @@ public class TransformerTest {
     @DisplayName("low maxCurrent")
     public void LowMaxCurrentTest() {
         House mockHouse = Mockito.mock(House.class);
-        when(mockHouse.getCurrent(1)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
+        when(mockHouse.current(1)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
         Transformer transformer = new Transformer(1, houses, 0, new Congestion(true, 1));
-        Electricity electricity = transformer.getLeftoverCurrent(1);
+        Electricity electricity = transformer.calculateLeftoverCurrent(1);
         Electricity excess = transformer.getExcessCurrent();
         assertAll(
                 () -> assertEquals(Direction.PRODUCTION, electricity.direction()),
@@ -130,11 +130,11 @@ public class TransformerTest {
     @DisplayName("high maxCurrent")
     public void HighMaxCurrentTest() {
         House mockHouse = Mockito.mock(House.class);
-        when(mockHouse.getCurrent(1)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
+        when(mockHouse.current(1)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
         Transformer transformer = new Transformer(1, houses, 0, new Congestion(true, 10));
-        Electricity electricity = transformer.getLeftoverCurrent(1);
+        Electricity electricity = transformer.calculateLeftoverCurrent(1);
         Electricity excess = transformer.getExcessCurrent();
         assertAll(
                 () -> assertEquals(Direction.PRODUCTION, electricity.direction()),
