@@ -9,6 +9,8 @@
             :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
             :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
             :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 130"
+            :hasCongestion="house.hasCongestion"
+            :maxCurrent="house.maxCurrent"
         />
       </template>
       <Transformer
@@ -68,7 +70,7 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number }[] }[]>([]);
+    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number }[] }[]>([]);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
