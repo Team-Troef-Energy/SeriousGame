@@ -35,7 +35,7 @@ public class LevelService {
         for (int houseIndex = 0; houseIndex < transformer.getHouses().size(); houseIndex++) { // Loop through each house
             House house = transformer.getHouses().get(houseIndex);
             int houseId = house.getId();
-            Electricity electricity = house.getCurrent(hour); // Get the current for the house
+            Electricity electricity = house.current(hour); // Get the current for the house
             CurrentDTO currentDTO = new CurrentDTO(
                     electricity.amount(),
                     electricity.direction()
@@ -84,7 +84,7 @@ public class LevelService {
 
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
-                Electricity electricity = transformer.getLeftoverCurrent(hour);
+                Electricity electricity = transformer.calculateLeftoverCurrent(hour);
                 CurrentDTO current = new CurrentDTO(
                         electricity.amount(),
                         electricity.direction()

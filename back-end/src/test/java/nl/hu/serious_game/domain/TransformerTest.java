@@ -19,23 +19,23 @@ public class TransformerTest {
         House mockHouse = Mockito.mock(House.class);
         Electricity expected1 = new Electricity(3F, Direction.DEMAND);
         Electricity expected2 = new Electricity(1F, Direction.PRODUCTION);
-        when(mockHouse.getCurrent(1)).thenReturn(expected1);
-        when(mockHouse.getCurrent(2)).thenReturn(expected2);
+        when(mockHouse.current(1)).thenReturn(expected1);
+        when(mockHouse.current(2)).thenReturn(expected2);
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
 
         Transformer transformer = new Transformer(1, houses, 0, 0, false);
-        assertEquals(expected1, transformer.getLeftoverCurrent(1));
-        assertEquals(expected2, transformer.getLeftoverCurrent(2));
+        assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
+        assertEquals(expected2, transformer.calculateLeftoverCurrent(2));
     }
 
     @Test
     @DisplayName("test for one house and battery")
     public void batteryTest() {
         House mockHouse = Mockito.mock(House.class);
-        when(mockHouse.getCurrent(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
-        when(mockHouse.getCurrent(2)).thenReturn(new Electricity(7F, Direction.DEMAND));
+        when(mockHouse.current(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
+        when(mockHouse.current(2)).thenReturn(new Electricity(7F, Direction.DEMAND));
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
@@ -47,24 +47,24 @@ public class TransformerTest {
         // because all 6 of the first getcurrent would go into the battery.
         Transformer transformer = new Transformer(1, houses, 0, 1, false);
 
-        assertEquals(expected1, transformer.getLeftoverCurrent(1));
-        assertEquals(expected2, transformer.getLeftoverCurrent(2));
+        assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
+        assertEquals(expected2, transformer.calculateLeftoverCurrent(2));
     }
 
     @Test
     @DisplayName("test with multiple houses")
     public void multipleHousesTest() {
         House mockHouse1 = Mockito.mock(House.class);
-        when(mockHouse1.getCurrent(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
-        when(mockHouse1.getCurrent(2)).thenReturn(new Electricity(6F, Direction.DEMAND));
-        when(mockHouse1.getCurrent(3)).thenReturn(new Electricity(7F, Direction.DEMAND));
-        when(mockHouse1.getCurrent(4)).thenReturn(new Electricity(7F, Direction.PRODUCTION));
+        when(mockHouse1.current(1)).thenReturn(new Electricity(6F, Direction.PRODUCTION));
+        when(mockHouse1.current(2)).thenReturn(new Electricity(6F, Direction.DEMAND));
+        when(mockHouse1.current(3)).thenReturn(new Electricity(7F, Direction.DEMAND));
+        when(mockHouse1.current(4)).thenReturn(new Electricity(7F, Direction.PRODUCTION));
 
         House mockHouse2 = Mockito.mock(House.class);
-        when(mockHouse2.getCurrent(1)).thenReturn(new Electricity(4F, Direction.DEMAND));
-        when(mockHouse2.getCurrent(2)).thenReturn(new Electricity(4F, Direction.PRODUCTION));
-        when(mockHouse2.getCurrent(3)).thenReturn(new Electricity(2F, Direction.DEMAND));
-        when(mockHouse2.getCurrent(4)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
+        when(mockHouse2.current(1)).thenReturn(new Electricity(4F, Direction.DEMAND));
+        when(mockHouse2.current(2)).thenReturn(new Electricity(4F, Direction.PRODUCTION));
+        when(mockHouse2.current(3)).thenReturn(new Electricity(2F, Direction.DEMAND));
+        when(mockHouse2.current(4)).thenReturn(new Electricity(2F, Direction.PRODUCTION));
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse1);
@@ -78,21 +78,21 @@ public class TransformerTest {
         Transformer transformer = new Transformer(1, houses, 0, 0, false);
 
         // Checks if production and demand get compensated for eachother.
-        assertEquals(expected1, transformer.getLeftoverCurrent(1));
-        assertEquals(expected2, transformer.getLeftoverCurrent(2));
+        assertEquals(expected1, transformer.calculateLeftoverCurrent(1));
+        assertEquals(expected2, transformer.calculateLeftoverCurrent(2));
         // Checks if the values get added when the direction is the same.
-        assertEquals(expected3, transformer.getLeftoverCurrent(3));
-        assertEquals(expected4, transformer.getLeftoverCurrent(4));
+        assertEquals(expected3, transformer.calculateLeftoverCurrent(3));
+        assertEquals(expected4, transformer.calculateLeftoverCurrent(4));
     }
 
     @Test
     @DisplayName("test for multiple houses and a battery")
     public void multiHouseBatteryTest() {
         House mockHouse1 = Mockito.mock(House.class);
-        when(mockHouse1.getCurrent(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
+        when(mockHouse1.current(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
 
         House mockHouse2 = Mockito.mock(House.class);
-        when(mockHouse2.getCurrent(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
+        when(mockHouse2.current(1)).thenReturn(new Electricity(3F, Direction.PRODUCTION));
 
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse1);
@@ -103,6 +103,6 @@ public class TransformerTest {
 
         Transformer transformer = new Transformer(1, houses, 0, 1, false);
 
-        assertEquals(expected, transformer.getLeftoverCurrent(1));
+        assertEquals(expected, transformer.calculateLeftoverCurrent(1));
     }
 }

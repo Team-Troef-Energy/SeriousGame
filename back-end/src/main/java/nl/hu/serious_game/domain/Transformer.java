@@ -21,11 +21,11 @@ public class Transformer implements Cloneable {
         this.hasCongestion = hasCongestion;
     }
 
-    public Electricity getLeftoverCurrent(int hour) {
+    public Electricity calculateLeftoverCurrent(int hour) {
         float demand = 0;
         float production = 0;
         for (House house : houses) {
-            Electricity current = house.getCurrent(hour);
+            Electricity current = house.current(hour);
             if (current.direction() == Direction.DEMAND) {
                 demand += current.amount();
             } else if (current.direction() == Direction.PRODUCTION) {
