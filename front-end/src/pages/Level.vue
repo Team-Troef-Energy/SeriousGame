@@ -24,6 +24,10 @@
             :key="'house-' + house.id"
             :style="{ position: 'absolute', left: (housePositions[house.id - 1] % 10) * 150 + 'px', top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px' }"
             @click="showHouseDetails(house)"
+            :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump"
+            :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries > 0"
         />
       </template>
     </div>
