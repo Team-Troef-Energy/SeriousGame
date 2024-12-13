@@ -38,8 +38,8 @@
         :type="popupType"
         :energyProduction="popupEnergyProduction"
         :energyConsumption="popupEnergyConsumption"
-        :heatPumps="popupHeatPumps"
-        :electricCars="popupElectricCars"
+        :heatPump="popupHeatPump"
+        :electricVehicle="popupElectricVehicle"
         :solarPanels="popupSolarPanels"
         :batteries="popupBatteries"
         @update:isOpen="isPopupOpen = $event"
@@ -74,15 +74,15 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number }[] }[]>([]);
+    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
     const popupType = ref('huis');
     const popupEnergyProduction = ref(0);
     const popupEnergyConsumption = ref(0);
-    const popupHeatPumps = ref(0);
-    const popupElectricCars = ref(0);
+    const popupHeatPump = ref(false);
+    const popupElectricVehicle = ref(false);
     const popupSolarPanels = ref(0);
     const popupBatteries = ref(0);
 
@@ -94,12 +94,12 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number }) => {
+    const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
       popupTitle.value = `Huis ${house.id}`;
       popupEnergyProduction.value = house.production;
       popupEnergyConsumption.value = house.consumption;
-      popupHeatPumps.value = 0; // Example value
-      popupElectricCars.value = 0; // Example value
+      popupHeatPump.value = house.hasHeatpump;
+      popupElectricVehicle.value = house.hasElectricVehicle;
       popupSolarPanels.value = house.solarpanels;
       popupBatteries.value = house.batteries;
       isPopupOpen.value = true;
@@ -178,8 +178,8 @@ export default defineComponent({
       popupType,
       popupEnergyProduction,
       popupEnergyConsumption,
-      popupHeatPumps,
-      popupElectricCars,
+      popupHeatPump,
+      popupElectricVehicle,
       popupSolarPanels,
       popupBatteries,
       showHouseDetails,
