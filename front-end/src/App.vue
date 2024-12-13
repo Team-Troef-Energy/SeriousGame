@@ -4,7 +4,7 @@
   <div class="container">
     <header>
       <div class="header-grid">
-        <img src="../public/troef-logo.png" alt="logo" />
+        <img src="/troef-logo.png" alt="logo" />
         <h1>TROEF Energy - Serious game</h1>
       </div>
     </header>

@@ -34,6 +34,7 @@ public class LevelService {
         ArrayList<HouseDTO> houseDTOs = new ArrayList<>();
         for (int houseIndex = 0; houseIndex < transformer.getHouses().size(); houseIndex++) { // Loop through each house
             House house = transformer.getHouses().get(houseIndex);
+            int houseId = house.getId();
             Electricity electricity = house.getCurrent(hour); // Get the current for the house
             CurrentDTO currentDTO = new CurrentDTO(
                     electricity.amount(),
@@ -44,7 +45,7 @@ public class LevelService {
                 : new BatteryDTO(0, 0);
 
             houseDTOs.add(new HouseDTO(
-                houseIndex, // Use the index as the house ID
+                houseId,
                 currentDTO,
                 batteryDTO,
                 house.getTotalSolarPanels(), // Get the total solar panels of the house
@@ -57,8 +58,8 @@ public class LevelService {
 
     public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
         Level level = switch (levelNumber) {
-            case 1 -> runner.getLevel1();
-            case 2 -> runner.getLevel2();
+            case 1 -> runner.getLevel1().clone();
+            case 2 -> runner.getLevel2().clone();
             default -> throw new IllegalArgumentException("Invalid level number");
         };
 
@@ -77,9 +78,9 @@ public class LevelService {
         List<HourDTO> hours = new ArrayList<>();
         for (int hour = level.getStartTime(); hour <= level.getEndTime(); hour++) { // Loop through each hour in the level
             List<TransformerDTO> transformerDTOs = new ArrayList<>();
-            for (int transformerId = 0; transformerId < level.getTransformers().size(); transformerId++) { // Loop through each transformer
-
-                Transformer transformer = level.getTransformers().get(transformerId);
+            for (int transformerIndex = 0; transformerIndex < level.getTransformers().size(); transformerIndex++) { // Loop through each transformer
+                Transformer transformer = level.getTransformers().get(transformerIndex);
+                int transformerId = transformer.getId();
 
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
@@ -93,7 +94,7 @@ public class LevelService {
                         : new BatteryDTO(0, 0);
 
                 transformerDTOs.add(new TransformerDTO(
-                        transformerId, // Use the index as the transformer ID
+                        transformerId,
                         current,
                         houseDTOs,
                         batteryDTO

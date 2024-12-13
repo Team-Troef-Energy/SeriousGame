@@ -1,7 +1,13 @@
 export async function fetchStartLevel(levelNumber: string): Promise<any> {
   try {
     const response = await fetch(
-      "http://localhost:8080/levels/start/" + levelNumber
+        `http://localhost:8080/levels/start/${levelNumber}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
     );
     if (!response.ok) {
       throw new Error("Network response was not ok");
