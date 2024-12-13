@@ -1,29 +1,48 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1>Hello App!</h1>
-  <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
-  <nav>
-    <RouterLink to="/">Go to Home</RouterLink>
-    <br />
-    <RouterLink to="/test">Go to About</RouterLink>
-  </nav>
-  <main>
-    <RouterView />
-  </main>
+  <div class="container">
+    <header>
+      <div class="header-grid">
+        <img src="/troef-logo.png" alt="logo" />
+        <h1>TROEF Energy - Serious game</h1>
+      </div>
+    </header>
+    <main>
+      <RouterView />
+    </main>
+  </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+header {
+  text-align: center;
+  padding: 1em;
+  background-color: #ffffff;
+  border-bottom: 1px solid #000000;
+  font-size: 0.4rem;
+  color: #000000;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+main {
+  flex: 1;
+  overflow: auto;
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  align-items: center;
+}
+
+header img {
+  height: 50px;
 }
 </style>
