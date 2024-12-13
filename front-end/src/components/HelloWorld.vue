@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { fetchStartLevel } from '../utils/api';
+
 export default {
   name: 'HelloWorld',
   data() {
@@ -16,14 +18,10 @@ export default {
   methods: {
     async handleClick() {
       try {
-        const response = await fetch('http://localhost:8080/levels/start/1'); //Start level 1
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        this.jsonData = await response.json();
+        this.jsonData = await fetchStartLevel('1'); // Start level 1
         console.log(this.jsonData);
       } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error(error);
       }
     }
   }

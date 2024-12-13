@@ -14,7 +14,7 @@ export default defineComponent({
   <div class="welcome-container">
     <img src="/troef-logo.png" alt="Troef logo" />
     <p class="welcome-text">Welkom! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    <NavigateButton to="/playground" label="Speel" class="welcome-button" />
+    <NavigateButton to="/levelSelect" label="Speel" class="welcome-button" />
 
   </div>
 </template>
