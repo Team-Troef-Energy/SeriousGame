@@ -109,5 +109,7 @@ public class Transformer implements Cloneable {
         return id;
     }
 
-
+    public Congestion getCongestion() {
+        return congestion;
+    }
 }

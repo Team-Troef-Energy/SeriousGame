@@ -97,6 +97,7 @@ public class LevelService {
                 transformerDTOs.add(new TransformerDTO(
                         transformerId,
                         current,
+                        transformer.getCongestion(),
                         houseDTOs,
                         batteryDTO
                 ));
