@@ -1,5 +1,6 @@
 <template>
   <div class="level-container">
+    <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
     <div ref="gameCanvas" class="game-canvas">
       <template v-for="transformer in transformers">
         <ConnectionLine
@@ -56,6 +57,7 @@ import Transformer from '../components/Transformer.vue';
 import House from '../components/House.vue';
 import ConnectionLine from '../components/ConnectionLine.vue';
 import PopupComponent from '../components/PopupComponent.vue';
+import NavigateButton from "../components/NavigateButton.vue";
 import { fetchStartLevel, fetchUpdateLevel } from '../utils/api';
 import { useRoute } from 'vue-router';
 
@@ -66,6 +68,7 @@ export default defineComponent({
     House,
     ConnectionLine,
     PopupComponent,
+    NavigateButton,
   },
   setup() {
     const route = useRoute();
@@ -218,5 +221,11 @@ export default defineComponent({
 
 #submit-button {
   z-index: 1000;
+}
+
+#navigate-button {
+  z-index: 1000;
+  position: absolute;
+  margin: 10px;
 }
 </style>
