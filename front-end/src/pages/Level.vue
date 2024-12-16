@@ -101,7 +101,7 @@ export default defineComponent({
       popupHeatPump.value = house.hasHeatpump;
       popupElectricVehicle.value = house.hasElectricVehicle;
       popupSolarPanels.value = house.solarpanels;
-      popupBatteries.value = house.batteries;
+      popupBatteries.value = house.batteries.amount;
       isPopupOpen.value = true;
     };
 
@@ -112,13 +112,20 @@ export default defineComponent({
       }
     };
 
+    const updateBatteries = (newValue: number) => {
+      const house = transformers.value.flatMap(t => t.houses).find(h => h.id === parseInt(popupTitle.value.split(' ')[1]));
+      if (house) {
+        house.batteries.amount = newValue;
+      }
+    };
+
     const handleIncrease = (property: string) => {
       if (property === 'solarPanels') {
         popupSolarPanels.value += 1;
         updateSolarPanels(popupSolarPanels.value);
       } else if (property === 'batteries') {
         popupBatteries.value += 1;
-        // TODO: Update batteries logic here
+        updateBatteries(popupBatteries.value);
       }
     };
 
@@ -128,7 +135,7 @@ export default defineComponent({
         updateSolarPanels(popupSolarPanels.value);
       } else if (property === 'batteries' && popupBatteries.value > 0) {
         popupBatteries.value -= 1;
-        // TODO: Update batteries logic here
+        updateBatteries(popupBatteries.value);
       }
     };
 
