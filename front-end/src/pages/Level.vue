@@ -202,11 +202,11 @@ export default defineComponent({
 }
 
 .game-canvas {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: relative;
-  background: url('/grass.jpg') no-repeat center center;
-  background-size: cover;
+  background: url('/Cartoon_green_texture_grass.jpg') repeat center center;
+  background-size: 25%, 25%;
 }
 
 #submit-button {
