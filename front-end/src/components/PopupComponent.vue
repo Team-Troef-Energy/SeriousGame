@@ -171,11 +171,11 @@ export default defineComponent({
     const electricVehicleDisplay = computed(() => props.electricVehicle ? '✔️' : '❌');
 
     const energyProductionLabel = computed(() => {
-      return props.type === 'transformator' ? 'Energie vanuit huizen ontvangen' : 'Energie productie';
+      return props.type === 'transformator' ? 'Energie om terug te leveren aan net' : 'Energie productie';
     });
 
     const energyConsumptionLabel = computed(() => {
-      return props.type === 'transformator' ? 'Energie aan huizen geleverd' : 'Energie consumptie';
+      return props.type === 'transformator' ? 'Energie aan huizen vanuit net' : 'Energie consumptie';
     });
 
     const increaseValue = (property: string) => {
