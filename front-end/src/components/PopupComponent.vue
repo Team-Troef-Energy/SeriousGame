@@ -19,13 +19,13 @@
           <!-- Energie Overzicht -->
           <div class="section energy-section">
             <v-row>
-              <v-col cols="6"><strong>Energie productie:</strong></v-col>
+              <v-col cols="6"><strong>{{ energyProductionLabel}}:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
                 >{{ formattedEnergyProduction }} kWh</v-col
               >
             </v-row>
             <v-row>
-              <v-col cols="6"><strong>Energie consumptie:</strong></v-col>
+              <v-col cols="6"><strong>{{  energyConsumptionLabel }}:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
                 >{{ formattedEnergyConsumption }} kWh</v-col
               >
@@ -170,6 +170,14 @@ export default defineComponent({
     const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
     const electricVehicleDisplay = computed(() => props.electricVehicle ? '✔️' : '❌');
 
+    const energyProductionLabel = computed(() => {
+      return props.type === 'transformator' ? 'Energie vanuit huizen ontvangen' : 'Energie productie';
+    });
+
+    const energyConsumptionLabel = computed(() => {
+      return props.type === 'transformator' ? 'Energie aan huizen geleverd' : 'Energie consumptie';
+    });
+
     const increaseValue = (property: string) => {
       emit('increase', property);
     };
@@ -188,6 +196,8 @@ export default defineComponent({
       formattedEnergyConsumption,
       heatPumpDisplay,
       electricVehicleDisplay,
+      energyConsumptionLabel,
+      energyProductionLabel,
       increaseValue,
       decreaseValue,
       closeDialog,
