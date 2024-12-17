@@ -21,11 +21,10 @@ public class LevelService {
     }
 
     public LevelDTO startLevel(int levelNumber) {
-        Level level = switch (levelNumber) {
-            case 1 -> runner.getLevel1();
-            case 2 -> runner.getLevel2();
-            default -> throw new IllegalArgumentException("Invalid level number");
-        };
+        if (levelNumber < 1 || levelNumber > runner.getTotalLevels()) {
+            throw new IllegalArgumentException("Invalid level number");
+        }
+        Level level = runner.getLevels().get(levelNumber - 1);
         return runLevel(level);
     }
 
@@ -58,11 +57,11 @@ public class LevelService {
     }
 
     public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
-        Level level = switch (levelNumber) {
-            case 1 -> runner.getLevel1().clone();
-            case 2 -> runner.getLevel2().clone();
-            default -> throw new IllegalArgumentException("Invalid level number");
-        };
+        if (levelNumber < 1 || levelNumber > runner.getTotalLevels()) {
+            throw new IllegalArgumentException("Invalid level number");
+        }
+
+        Level level = runner.getLevels().get(levelNumber - 1).clone();
 
         levelUpdateDTO.transformers().forEach(transformer -> {
             level.setTransformerBattery(transformer.id(), transformer.batteries());
@@ -108,5 +107,9 @@ public class LevelService {
         ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
 
         return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective); // Return the LevelDTO
+    }
+
+    public int getTotalLevels() {
+        return runner.getTotalLevels();
     }
 }
