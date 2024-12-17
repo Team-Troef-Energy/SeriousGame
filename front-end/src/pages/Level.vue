@@ -14,12 +14,14 @@
             :maxCurrent="house.maxCurrent"
         />
       </template>
-      <Transformer
-          v-for="(pos, index) in transformerPositions"
-          :key="'transformer-' + index"
-          :style="{ position: 'absolute', left: (pos % 10) * 150 + 'px', top: Math.floor(pos / 10) * 80 + 'px' }"
-      />
       <template v-for="transformer in transformers">
+        <transformer
+          v-for="transformer in transformers"
+          :key="'transformer-' + transformer.id"
+          :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 'px' }"
+          @click="showTransformerDetails(transformer)"
+          :hasBatteries="transformer.batteries > 0"
+        />
         <House
             v-for="house in transformer.houses"
             :key="'house-' + house.id"
