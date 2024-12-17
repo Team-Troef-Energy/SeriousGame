@@ -16,11 +16,11 @@
       </template>
       <template v-for="transformer in transformers">
         <transformer
-          v-for="transformer in transformers"
-          :key="'transformer-' + transformer.id"
-          :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 'px' }"
-          @click="showTransformerDetails(transformer)"
-          :hasBatteries="transformer.batteries.amount > 0"
+            v-for="transformer in transformers"
+            :key="'transformer-' + transformer.id"
+            :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 'px' }"
+            @click="showTransformerDetails(transformer)"
+            :hasBatteries="transformer.batteries.amount > 0"
         />
         <House
             v-for="house in transformer.houses"
@@ -45,6 +45,7 @@
         :electricVehicle="popupElectricVehicle"
         :solarPanels="popupSolarPanels"
         :batteries="popupBatteries"
+        :batteryCharge="popupBatteryCharge"
         @update:isOpen="isPopupOpen = $event"
         @increase="handleIncrease"
         @decrease="handleDecrease"
@@ -79,7 +80,7 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, batteries: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
+    const transformers = ref<{ id: number, batteries: { amount: number, totalCharge: number }, houses: { id: number, batteries: { amount: number, currentCharge: number }, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
@@ -90,6 +91,7 @@ export default defineComponent({
     const popupElectricVehicle = ref(false);
     const popupSolarPanels = ref(0);
     const popupBatteries = ref(0);
+    const popupBatteryCharge = ref(0);
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
@@ -99,7 +101,7 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: { amount: number}, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
+    const showHouseDetails = (house: { id: number, batteries: { amount: number, totalCharge: number }, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
       popupTitle.value = `Huis ${house.id}`;
       popupType.value = 'huis';
       popupEnergyProduction.value = house.production;
@@ -108,15 +110,17 @@ export default defineComponent({
       popupElectricVehicle.value = house.hasElectricVehicle;
       popupSolarPanels.value = house.solarpanels;
       popupBatteries.value = house.batteries.amount;
+      popupBatteryCharge.value = house.batteries.totalCharge;
       isPopupOpen.value = true;
     };
 
-    const showTransformerDetails = (transformer: { id: number, current: { amount: number, direction: string }, batteries: { amount: number } }) => {
+    const showTransformerDetails = (transformer: { id: number, current: { amount: number, direction: string }, batteries: { amount: number, totalCharge: number } }) => {
       popupTitle.value = `Transformator ${transformer.id}`;
       popupType.value = 'transformator';
       popupEnergyProduction.value = transformer.current.direction === 'PRODUCTION' ? transformer.current.amount : 0;
       popupEnergyConsumption.value = transformer.current.direction === 'DEMAND' ? transformer.current.amount : 0;
       popupBatteries.value = transformer.batteries.amount;
+      popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
     };
 
@@ -212,6 +216,7 @@ export default defineComponent({
       popupElectricVehicle,
       popupSolarPanels,
       popupBatteries,
+      popupBatteryCharge,
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
