@@ -101,6 +101,7 @@ export default defineComponent({
 
     const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
       popupTitle.value = `Huis ${house.id}`;
+      popupType.value = 'huis';
       popupEnergyProduction.value = house.production;
       popupEnergyConsumption.value = house.consumption;
       popupHeatPump.value = house.hasHeatpump;
