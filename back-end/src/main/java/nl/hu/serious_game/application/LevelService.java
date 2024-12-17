@@ -24,7 +24,7 @@ public class LevelService {
         if (levelNumber < 1 || levelNumber > runner.getTotalLevels()) {
             throw new IllegalArgumentException("Invalid level number");
         }
-        Level level = runner.getLevels().get(levelNumber - 1);
+        Level level = runner.getLevel(levelNumber);
         return runLevel(level);
     }
 
@@ -61,7 +61,7 @@ public class LevelService {
             throw new IllegalArgumentException("Invalid level number");
         }
 
-        Level level = runner.getLevels().get(levelNumber - 1).clone();
+        Level level = runner.getLevel(levelNumber).clone();
 
         levelUpdateDTO.transformers().forEach(transformer -> {
             level.setTransformerBattery(transformer.id(), transformer.batteries());

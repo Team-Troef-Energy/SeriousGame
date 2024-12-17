@@ -67,8 +67,8 @@ public class Runner implements CommandLineRunner {
         return level;
     }
 
-    public List<Level> getLevels() {
-        return levels;
+    public Level getLevel(int levelNumber) {
+        return levels.get(levelNumber - 1);
     }
 
     public int getTotalLevels() {
