@@ -20,7 +20,7 @@
           :key="'transformer-' + transformer.id"
           :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 'px' }"
           @click="showTransformerDetails(transformer)"
-          :hasBatteries="transformer.batteries > 0"
+          :hasBatteries="transformer.batteries.amount > 0"
         />
         <House
             v-for="house in transformer.houses"
@@ -30,7 +30,7 @@
             :hasElectricCar="house.hasElectricVehicle"
             :hasHeatPump="house.hasHeatpump"
             :hasSolarPanels="house.solarpanels > 0"
-            :hasBatteries="house.batteries > 0"
+            :hasBatteries="house.batteries.amount > 0"
         />
       </template>
     </div>
@@ -79,7 +79,7 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
+    const transformers = ref<{ id: number, batteries: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
@@ -99,7 +99,7 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
+    const showHouseDetails = (house: { id: number, batteries: { amount: number}, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
       popupTitle.value = `Huis ${house.id}`;
       popupType.value = 'huis';
       popupEnergyProduction.value = house.production;
@@ -128,9 +128,16 @@ export default defineComponent({
     };
 
     const updateBatteries = (newValue: number) => {
-      const house = transformers.value.flatMap(t => t.houses).find(h => h.id === parseInt(popupTitle.value.split(' ')[1]));
-      if (house) {
-        house.batteries.amount = newValue;
+      if (popupType.value === 'huis') {
+        const house = transformers.value.flatMap(t => t.houses).find(h => h.id === parseInt(popupTitle.value.split(' ')[1]));
+        if (house) {
+          house.batteries.amount = newValue;
+        }
+      } else if (popupType.value === 'transformator') {
+        const transformer = transformers.value.find(t => t.id === parseInt(popupTitle.value.split(' ')[1]));
+        if (transformer) {
+          transformer.batteries.amount = newValue;
+        }
       }
     };
 
@@ -159,6 +166,7 @@ export default defineComponent({
         const data = {
           transformers: transformers.value.map(transformer => ({
             id: transformer.id,
+            batteries: transformer.batteries.amount,
             houses: transformer.houses.map(house => ({
               id: house.id,
               batteries: house.batteries.amount,
