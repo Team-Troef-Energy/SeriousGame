@@ -110,6 +110,15 @@ export default defineComponent({
       isPopupOpen.value = true;
     };
 
+    const showTransformerDetails = (transformer: { id: number, current: { amount: number, direction: string }, batteries: { amount: number } }) => {
+      popupTitle.value = `Transformator ${transformer.id}`;
+      popupType.value = 'transformator';
+      popupEnergyProduction.value = transformer.current.direction === 'PRODUCTION' ? transformer.current.amount : 0;
+      popupEnergyConsumption.value = transformer.current.direction === 'DEMAND' ? transformer.current.amount : 0;
+      popupBatteries.value = transformer.batteries.amount;
+      isPopupOpen.value = true;
+    };
+
     const updateSolarPanels = (newValue: number) => {
       const house = transformers.value.flatMap(t => t.houses).find(h => h.id === parseInt(popupTitle.value.split(' ')[1]));
       if (house) {
@@ -195,6 +204,7 @@ export default defineComponent({
       popupSolarPanels,
       popupBatteries,
       showHouseDetails,
+      showTransformerDetails,
       updateSolarPanels,
       handleIncrease,
       handleDecrease,
