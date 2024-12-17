@@ -1,5 +1,6 @@
 <template>
   <div class="level-container">
+    <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
     <div ref="gameCanvas" class="game-canvas">
       <template v-for="transformer in transformers">
         <ConnectionLine
@@ -24,6 +25,10 @@
             :key="'house-' + house.id"
             :style="{ position: 'absolute', left: (housePositions[house.id - 1] % 10) * 150 + 'px', top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px' }"
             @click="showHouseDetails(house)"
+            :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump"
+            :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries > 0"
         />
       </template>
     </div>
@@ -34,8 +39,8 @@
         :type="popupType"
         :energyProduction="popupEnergyProduction"
         :energyConsumption="popupEnergyConsumption"
-        :heatPumps="popupHeatPumps"
-        :electricCars="popupElectricCars"
+        :heatPump="popupHeatPump"
+        :electricVehicle="popupElectricVehicle"
         :solarPanels="popupSolarPanels"
         :batteries="popupBatteries"
         @update:isOpen="isPopupOpen = $event"
@@ -52,6 +57,7 @@ import Transformer from '../components/Transformer.vue';
 import House from '../components/House.vue';
 import ConnectionLine from '../components/ConnectionLine.vue';
 import PopupComponent from '../components/PopupComponent.vue';
+import NavigateButton from "../components/NavigateButton.vue";
 import { fetchStartLevel, fetchUpdateLevel } from '../utils/api';
 import { useRoute } from 'vue-router';
 
@@ -62,6 +68,7 @@ export default defineComponent({
     House,
     ConnectionLine,
     PopupComponent,
+    NavigateButton,
   },
   setup() {
     const route = useRoute();
@@ -70,15 +77,15 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number }[] }[]>([]);
+    const transformers = ref<{ id: number, houses: { id: number, batteries: number, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
     const popupType = ref('huis');
     const popupEnergyProduction = ref(0);
     const popupEnergyConsumption = ref(0);
-    const popupHeatPumps = ref(0);
-    const popupElectricCars = ref(0);
+    const popupHeatPump = ref(false);
+    const popupElectricVehicle = ref(false);
     const popupSolarPanels = ref(0);
     const popupBatteries = ref(0);
 
@@ -90,14 +97,14 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number }) => {
+    const showHouseDetails = (house: { id: number, batteries: number, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
       popupTitle.value = `Huis ${house.id}`;
       popupEnergyProduction.value = house.production;
       popupEnergyConsumption.value = house.consumption;
-      popupHeatPumps.value = 0; // Example value
-      popupElectricCars.value = 0; // Example value
+      popupHeatPump.value = house.hasHeatpump;
+      popupElectricVehicle.value = house.hasElectricVehicle;
       popupSolarPanels.value = house.solarpanels;
-      popupBatteries.value = house.batteries;
+      popupBatteries.value = house.batteries.amount;
       isPopupOpen.value = true;
     };
 
@@ -108,13 +115,20 @@ export default defineComponent({
       }
     };
 
+    const updateBatteries = (newValue: number) => {
+      const house = transformers.value.flatMap(t => t.houses).find(h => h.id === parseInt(popupTitle.value.split(' ')[1]));
+      if (house) {
+        house.batteries.amount = newValue;
+      }
+    };
+
     const handleIncrease = (property: string) => {
       if (property === 'solarPanels') {
         popupSolarPanels.value += 1;
         updateSolarPanels(popupSolarPanels.value);
       } else if (property === 'batteries') {
         popupBatteries.value += 1;
-        // TODO: Update batteries logic here
+        updateBatteries(popupBatteries.value);
       }
     };
 
@@ -124,7 +138,7 @@ export default defineComponent({
         updateSolarPanels(popupSolarPanels.value);
       } else if (property === 'batteries' && popupBatteries.value > 0) {
         popupBatteries.value -= 1;
-        // TODO: Update batteries logic here
+        updateBatteries(popupBatteries.value);
       }
     };
 
@@ -174,8 +188,8 @@ export default defineComponent({
       popupType,
       popupEnergyProduction,
       popupEnergyConsumption,
-      popupHeatPumps,
-      popupElectricCars,
+      popupHeatPump,
+      popupElectricVehicle,
       popupSolarPanels,
       popupBatteries,
       showHouseDetails,
@@ -198,14 +212,20 @@ export default defineComponent({
 }
 
 .game-canvas {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: relative;
-  background: url('/grass.jpg') no-repeat center center;
-  background-size: cover;
+  background: url('/Cartoon_green_texture_grass.jpg') repeat center center;
+  background-size: 25%, 25%;
 }
 
 #submit-button {
   z-index: 1000;
+}
+
+#navigate-button {
+  z-index: 1000;
+  position: absolute;
+  margin: 10px;
 }
 </style>

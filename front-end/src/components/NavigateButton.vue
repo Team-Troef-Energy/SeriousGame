@@ -12,6 +12,16 @@ export default defineComponent({
     label: {
       type: String,
       required: true
+    },
+    backgroundColor: {
+      type: String,
+      default: '#007bff',
+      required: false
+    },
+    textColor: {
+      type: String,
+      default: '#ffffff',
+      required: false
     }
   },
   setup(props) {
@@ -22,14 +32,15 @@ export default defineComponent({
     };
 
     return {
-      navigate
+      navigate,
+      props
     };
   }
 });
 </script>
 
 <template>
-  <button @click="navigate" class="navigate-button">
+  <button @click="navigate" class="navigate-button" :style="{ backgroundColor: props.backgroundColor, color: props.textColor }">
     {{ label }}
   </button>
 </template>
@@ -39,14 +50,12 @@ export default defineComponent({
   padding: 10px 20px;
   border: none;
   border-radius: 25px;
-  background-color: #007bff;
-  color: white;
   font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .navigate-button:hover {
-  background-color: #0056b3;
+  filter: brightness(85%);
 }
 </style>

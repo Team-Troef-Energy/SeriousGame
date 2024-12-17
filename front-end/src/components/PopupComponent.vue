@@ -45,14 +45,12 @@
           <!-- Extra Details voor Huis -->
           <div v-if="type === 'huis'" class="section details-section mt-4">
             <v-row>
-              <v-col cols="6"><strong>Aantal warmtepompen:</strong></v-col>
-              <v-col cols="6" class="text-end highlight">{{ heatPumps }}</v-col>
+              <v-col cols="6"><strong>Warmtepomp:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ heatPumpDisplay }}</v-col>
             </v-row>
             <v-row>
-              <v-col cols="6"><strong>Elektrische auto’s:</strong></v-col>
-              <v-col cols="6" class="text-end highlight"
-                >{{ electricCars }}</v-col
-              >
+              <v-col cols="6"><strong>Elektrische auto:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ electricVehicleDisplay }}</v-col>
             </v-row>
           </div>
 
@@ -139,13 +137,13 @@ export default defineComponent({
       required: true,
       default: 0
     },
-    heatPumps: {
-      type: Number,
-      default: 0
+    heatPump: {
+      type: Boolean,
+      default: false
     },
-    electricCars: {
-      type: Number,
-      default: 0
+    electricVehicle: {
+      type: Boolean,
+      default: false
     },
     solarPanels: {
       type: Number,
@@ -169,6 +167,9 @@ export default defineComponent({
       return props.energyConsumption.toFixed(2);
     });
 
+    const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
+    const electricVehicleDisplay = computed(() => props.electricVehicle ? '✔️' : '❌');
+
     const increaseValue = (property: string) => {
       emit('increase', property);
     };
@@ -185,6 +186,8 @@ export default defineComponent({
       energyDifference,
       formattedEnergyProduction,
       formattedEnergyConsumption,
+      heatPumpDisplay,
+      electricVehicleDisplay,
       increaseValue,
       decreaseValue,
       closeDialog,
