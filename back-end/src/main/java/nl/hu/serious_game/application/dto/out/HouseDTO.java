@@ -10,9 +10,11 @@ public record HouseDTO(
         float production,
         float consumption,
         boolean hasCongestion,
-        float maxCurrent) {
+        float maxCurrent,
+        boolean hasElectricVehicle,
+        boolean hasHeatpump) {
 
     public HouseDTO(int id, CurrentDTO current, BatteryDTO batteries, int solarpanels, float production, float consumption, HouseOptions houseOptions) {
-        this(id, current, batteries, solarpanels, production, consumption, houseOptions.hasCongestion(), houseOptions.maxCurrent());
+        this(id, current, batteries, solarpanels, production, consumption, houseOptions.hasCongestion(), houseOptions.maxCurrent(), houseOptions.hasElectricVehicle(), houseOptions.hasHeatpump());
     }
 }
