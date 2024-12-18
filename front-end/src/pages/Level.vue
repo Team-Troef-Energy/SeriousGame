@@ -58,7 +58,7 @@
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
       @decrease="handleDecrease" />
-    <!-- <button id="submit-button" @click="submitChanges">Submit Changes</button> -->
+    <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard></Dashboard>
   </div>
 </template>
