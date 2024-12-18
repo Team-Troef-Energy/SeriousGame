@@ -19,13 +19,13 @@
           <!-- Energie Overzicht -->
           <div class="section energy-section">
             <v-row>
-              <v-col cols="6"><strong>Energie productie:</strong></v-col>
+              <v-col cols="6"><strong>{{ energyProductionLabel}}:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
                 >{{ formattedEnergyProduction }} kWh</v-col
               >
             </v-row>
             <v-row>
-              <v-col cols="6"><strong>Energie consumptie:</strong></v-col>
+              <v-col cols="6"><strong>{{  energyConsumptionLabel }}:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
                 >{{ formattedEnergyConsumption }} kWh</v-col
               >
@@ -102,6 +102,10 @@
               >
               <v-col cols="2" class="text-end highlight">{{ batteries }}</v-col>
             </v-row>
+            <v-row>
+              <v-col cols="6"><strong>Totale accu lading:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ formattedBatteryCharge }} kWh</v-col>
+            </v-row>
           </div>
         </v-container>
       </v-card-text>
@@ -152,7 +156,11 @@ export default defineComponent({
     batteries: {
       type: Number,
       default: 0
-    }
+    },
+    batteryCharge: {
+      type: Number,
+      default: 0
+    },
   },
   setup(props, { emit }) {
     const energyDifference = computed(
@@ -167,8 +175,20 @@ export default defineComponent({
       return props.energyConsumption.toFixed(2);
     });
 
+    const formattedBatteryCharge = computed(() => {
+      return props.batteryCharge.toFixed(2);
+    });
+
     const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
     const electricVehicleDisplay = computed(() => props.electricVehicle ? '✔️' : '❌');
+
+    const energyProductionLabel = computed(() => {
+      return props.type === 'transformator' ? 'Energie om terug te leveren aan net' : 'Energie productie';
+    });
+
+    const energyConsumptionLabel = computed(() => {
+      return props.type === 'transformator' ? 'Energie aan huizen vanuit net' : 'Energie consumptie';
+    });
 
     const increaseValue = (property: string) => {
       emit('increase', property);
@@ -186,8 +206,11 @@ export default defineComponent({
       energyDifference,
       formattedEnergyProduction,
       formattedEnergyConsumption,
+      formattedBatteryCharge,
       heatPumpDisplay,
       electricVehicleDisplay,
+      energyConsumptionLabel,
+      energyProductionLabel,
       increaseValue,
       decreaseValue,
       closeDialog,
