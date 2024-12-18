@@ -46,6 +46,7 @@
         :solarPanels="popupSolarPanels"
         :batteries="popupBatteries"
         :batteryCharge="popupBatteryCharge"
+        :powerCost="popupPowerCost"
         @update:isOpen="isPopupOpen = $event"
         @increase="handleIncrease"
         @decrease="handleDecrease"
@@ -92,6 +93,7 @@ export default defineComponent({
     const popupSolarPanels = ref(0);
     const popupBatteries = ref(0);
     const popupBatteryCharge = ref(0);
+    const popupPowerCost = ref(0);
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
@@ -101,7 +103,7 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: { amount: number, totalCharge: number }, solarpanels: number, production: number, consumption: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
+    const showHouseDetails = (house: { id: number, batteries: { amount: number, totalCharge: number }, solarpanels: number, production: number, consumption: number, powerCost: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
       popupTitle.value = `Huis ${house.id}`;
       popupType.value = 'huis';
       popupEnergyProduction.value = house.production;
@@ -111,6 +113,7 @@ export default defineComponent({
       popupSolarPanels.value = house.solarpanels;
       popupBatteries.value = house.batteries.amount;
       popupBatteryCharge.value = house.batteries.totalCharge;
+      popupPowerCost.value = house.powerCost;
       isPopupOpen.value = true;
     };
 
@@ -215,6 +218,7 @@ export default defineComponent({
       popupHeatPump,
       popupElectricVehicle,
       popupSolarPanels,
+      popupPowerCost,
       popupBatteries,
       popupBatteryCharge,
       showHouseDetails,
