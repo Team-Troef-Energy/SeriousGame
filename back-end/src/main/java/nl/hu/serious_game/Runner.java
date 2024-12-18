@@ -8,17 +8,19 @@ import java.util.List;
 
 @Component
 public class Runner implements CommandLineRunner {
-    private Level level1;
-    private Level level2;
+    private List<Level> levels;
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Runner started!");
-        this.createLevel1();
-        this.createLevel2();
+        this.createLevels();
     }
 
-    private void createLevel1() {
+    private void createLevels() {
+        this.levels = List.of(createLevel1(), createLevel2());
+    }
+
+    private Level createLevel1() {
         System.out.println("Creating level 1...");
         // Create objective
         Objective objective = new Objective(2, 5);
@@ -33,13 +35,15 @@ public class Runner implements CommandLineRunner {
         // Create a single transformer
         Transformer transformer = new Transformer(1, List.of(house, house2), 1);
 
-        this.level1 = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
+        Level level = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
 
         System.out.println("Level 1 created!");
-        System.out.println(level1);
+        System.out.println(level);
+
+        return level;
     }
 
-    private void createLevel2() {
+    private Level createLevel2() {
         System.out.println("Creating level 2...");
         // Create objective
         Objective objective = new Objective(3, 5);
@@ -55,17 +59,19 @@ public class Runner implements CommandLineRunner {
         // Create a single transformer
         Transformer transformer = new Transformer(1, List.of(house, house2, house3), 1);
 
-        this.level2 = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
+        Level level = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer));
 
         System.out.println("Level 2 created!");
-        System.out.println(level2);
+        System.out.println(level);
+
+        return level;
     }
 
-    public Level getLevel1() {
-        return level1;
+    public Level getLevel(int levelNumber) {
+        return levels.get(levelNumber - 1);
     }
 
-    public Level getLevel2() {
-        return level2;
+    public int getTotalLevels() {
+        return levels.size();
     }
 }
