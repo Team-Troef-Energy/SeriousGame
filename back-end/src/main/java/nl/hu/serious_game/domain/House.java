@@ -9,6 +9,7 @@ public class House implements Cloneable {
     private Electricity excessCurrent;
     private Integer hour;
     private Electricity current;
+    private float powerCost;
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
@@ -123,6 +124,14 @@ public class House implements Cloneable {
 
     public Electricity getExcessCurrent() {
         return excessCurrent;
+    }
+
+    public float getPowerCost() {
+        return powerCost;
+    }
+
+    public void setPowerCost(float powerCost) {
+        this.powerCost = powerCost;
     }
 
     @Override

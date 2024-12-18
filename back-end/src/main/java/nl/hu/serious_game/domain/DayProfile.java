@@ -36,12 +36,18 @@ public class DayProfile {
                 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.36f, 0.36f, 0.36f, 0.36f, 0.36f
         };
 
+        float[] powerCostData = {
+                0.248f, 0.247f, 0.248f, 0.247f, 0.244f, 0.254f, 0.274f, 0.322f, 0.313f, 0.273f, 0.248f, 0.211f,
+                0.160f, 0.154f, 0.153f, 0.154f, 0.196f, 0.249f, 0.286f, 0.311f, 0.285f, 0.261f, 0.253f, 0.243f
+        };
+
         for (int hour = 0; hour < 24; hour++) {
             Map<String, Float> data = new HashMap<>();
             data.put("SolarPanelProduction", solarPanelProduction[hour]);
             data.put("HouseBaseConsumption", houseBaseConsumption[hour]);
             data.put("HeatPumpConsumption", heatPumpConsumption[hour]);
             data.put("ElectricVehicleConsumption", electricVehicleConsumption[hour]);
+            data.put("PowerCost", powerCostData[hour]);
             hourData.put(hour, data);
         }
     }
@@ -58,7 +64,7 @@ public class DayProfile {
                 case "SolarPanelProduction" -> value *= season.getSolarPanelFactor();
                 case "HouseBaseConsumption" -> value *= season.getHouseBaseConsumptionFactor();
                 case "HeatPumpConsumption" -> value *= season.getHeatPumpConsumptionFactor();
-                case "ElectricVehicleConsumption" -> {
+                case "ElectricVehicleConsumption", "PowerCost" -> {
                     return value;
                 }
             }

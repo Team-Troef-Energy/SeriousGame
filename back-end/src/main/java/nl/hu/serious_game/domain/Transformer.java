@@ -59,6 +59,28 @@ public class Transformer implements Cloneable {
         return electricity;
     }
 
+    public void distributePowerCost(int hour) {
+        float totalDemand = 0;
+        for (House house : houses) {
+            Electricity current = house.current(hour);
+            if (current.direction() == Direction.DEMAND) {
+                totalDemand += current.amount();
+            }
+        }
+
+        for (House house : houses) {
+            Electricity current = house.current(hour);
+            if (current.direction() == Direction.DEMAND) {
+                float houseDemand = current.amount();
+                float costShare = houseDemand / totalDemand;
+                float powerCost = house.getDayProfile().getValue(hour, "PowerCost");
+                house.setPowerCost(costShare * powerCost);
+            } else {
+                house.setPowerCost(0);
+            }
+        }
+    }
+
     void setHouseSolarPanels(int houseId, int solarPanels) {
         houses.stream().filter(house -> house.getId() == houseId)
                 .findFirst().orElseThrow(DoesNotExistException::new)

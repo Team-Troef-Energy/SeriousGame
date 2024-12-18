@@ -48,6 +48,7 @@ public class LevelService {
                 houseId,
                 currentDTO,
                 batteryDTO,
+                house.getPowerCost(),
                 house.getTotalSolarPanels(), // Get the total solar panels of the house
                 house.getSolarPanelOutput(hour),
                 house.getTotalConsumptionOfHour(hour),
@@ -82,6 +83,7 @@ public class LevelService {
             for (int transformerIndex = 0; transformerIndex < level.getTransformers().size(); transformerIndex++) { // Loop through each transformer
                 Transformer transformer = level.getTransformers().get(transformerIndex);
                 int transformerId = transformer.getId();
+                transformer.distributePowerCost(hour);
 
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
