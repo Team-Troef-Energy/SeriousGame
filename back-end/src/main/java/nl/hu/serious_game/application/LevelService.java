@@ -24,7 +24,7 @@ public class LevelService {
         if (levelNumber < 1 || levelNumber > runner.getTotalLevels()) {
             throw new IllegalArgumentException("Invalid level number");
         }
-        Level level = runner.getLevel(levelNumber);
+        Level level = runner.getLevel(levelNumber).clone();
         return runLevel(level);
     }
 
