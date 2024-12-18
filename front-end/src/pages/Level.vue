@@ -11,9 +11,7 @@
           v-for="house in transformer.houses"
           :key="'connection-' + house.id"
           :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 100"
-          :y1="
-            Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125
-          "
+          :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
           :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
           :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 130"
           :hasCongestion="house.hasCongestion"
@@ -26,9 +24,7 @@
           :style="{
             position: 'absolute',
             left: (transformerPositions[transformer.id - 1] % 10) * 150 + 'px',
-            top:
-              Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 +
-              'px',
+            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 'px',
           }"
           @click="showTransformerDetails(transformer)"
           :hasBatteries="transformer.batteries.amount > 0" />
@@ -159,13 +155,9 @@ export default defineComponent({
       popupTitle.value = `Transformator ${transformer.id}`;
       popupType.value = "transformator";
       popupEnergyProduction.value =
-        transformer.current.direction === "PRODUCTION"
-          ? transformer.current.amount
-          : 0;
+        transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
       popupEnergyConsumption.value =
-        transformer.current.direction === "DEMAND"
-          ? transformer.current.amount
-          : 0;
+        transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
       popupBatteries.value = transformer.batteries.amount;
       popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
@@ -234,10 +226,7 @@ export default defineComponent({
         const response = await fetchUpdateLevel(levelNumber, data);
         console.log("Changes submitted:", response);
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
-        transformerPositions.value = generatePositions(
-          lastHourData.transformers.length,
-          20
-        );
+        transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
           lastHourData.transformers.reduce(
             (acc, transformer) => acc + transformer.houses.length,
@@ -256,10 +245,7 @@ export default defineComponent({
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
-        transformerPositions.value = generatePositions(
-          lastHourData.transformers.length,
-          20
-        );
+        transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
           lastHourData.transformers.reduce(
             (acc, transformer) => acc + transformer.houses.length,
