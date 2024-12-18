@@ -81,6 +81,7 @@ export default defineComponent({
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
     const transformers = ref<{ id: number, batteries: { amount: number, totalCharge: number }, houses: { id: number, batteries: { amount: number, currentCharge: number }, solarpanels: number, hasCongestion: boolean, maxCurrent: number, hasElectricVehicle: boolean, hasHeatpump: boolean }[] }[]>([]);
+    const dashboardData = ref(null);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref('');
@@ -165,6 +166,36 @@ export default defineComponent({
       }
     };
 
+    const processDashboardData = (data) => {
+      const lastHourData = data.hours[data.hours.length - 1];
+      let totalConsumption = 0;
+      let totalGreenProduction = 0;
+      let totalGreyProduction = 0;
+
+      lastHourData.transformers.forEach(transformer => {
+        if (transformer.current.direction === 'DEMAND') {
+          totalGreyProduction += transformer.current.amount; // Grey energy from transformers
+        }
+        transformer.houses.forEach(house => {
+          totalConsumption += house.consumption;
+          totalGreenProduction += house.production; // Green energy from houses
+        });
+      });
+
+      const totalProduction = totalGreenProduction + totalGreyProduction;
+      const greenProducedEnergyPercentage = (totalGreenProduction / totalProduction) * 100;
+
+      dashboardData.value = {
+        totalEnergyConsumption: totalConsumption,
+        greenProducedEnergyPercentage: greenProducedEnergyPercentage,
+        objectiveStartTime: data.startTime,
+        objectiveEndTime: data.endTime,
+        season: data.season,
+      };
+
+      console.log('Dashboard data:', dashboardData.value);
+    };
+
     const submitChanges = async () => {
       try {
         const data = {
@@ -184,6 +215,7 @@ export default defineComponent({
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(lastHourData.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
         transformers.value = lastHourData.transformers;
+        processDashboardData(response);
       } catch (error) {
         console.error('Failed to submit changes:', error);
       }
@@ -197,6 +229,7 @@ export default defineComponent({
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(lastHourData.transformers.reduce((acc, transformer) => acc + transformer.houses.length, 0), 50);
         transformers.value = lastHourData.transformers;
+        processDashboardData(data);
       } catch (error) {
         console.error('Failed to fetch initial level data:', error);
       }
@@ -207,6 +240,7 @@ export default defineComponent({
       transformerPositions,
       housePositions,
       transformers,
+      dashboardData,
       isPopupOpen,
       popupTitle,
       popupType,
