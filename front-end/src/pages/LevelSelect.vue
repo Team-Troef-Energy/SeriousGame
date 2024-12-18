@@ -1,18 +1,29 @@
 <template>
   <div class="level-select">
-    <LevelSelectButton level="1" />
-    <LevelSelectButton level="2" />
+    <LevelSelectButton v-for="level in levelCount" :key="level" :level="level" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import LevelSelectButton from "../components/LevelSelectButton.vue";
+import { fetchCountLevels } from "../utils/api";
 
 export default defineComponent({
   name: "Level",
   components: {
     LevelSelectButton,
+  },
+  setup() {
+    const levelCount = ref(0);
+
+    onMounted(async () => {
+      levelCount.value = await fetchCountLevels();
+    });
+
+    return {
+      levelCount,
+    };
   },
 });
 </script>

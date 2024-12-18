@@ -39,4 +39,9 @@ public class LevelController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getTotalLevels() {
+        return ResponseEntity.ok(levelService.getTotalLevels());
+    }
 }
