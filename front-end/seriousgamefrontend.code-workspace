@@ -8,6 +8,7 @@
     "editor.tabSize": 2,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
+    "prettier.printWidth": 100,
     "eslint.options": {}
   },
   "extensions": {
