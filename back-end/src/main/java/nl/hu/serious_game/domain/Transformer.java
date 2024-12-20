@@ -60,24 +60,35 @@ public class Transformer implements Cloneable {
     }
 
     public void distributePowerCost(int hour) {
+        // TODO: Fix the calculations
+        // Calculate the total demand for the transformer
         float totalDemand = 0;
-        for (House house : houses) {
-            Electricity current = house.current(hour);
-            if (current.direction() == Direction.DEMAND) {
-                totalDemand += current.amount();
-            }
+        Electricity electricity = this.calculateLeftoverCurrent(hour);
+
+        if (electricity.direction() == Direction.DEMAND) {
+            totalDemand = electricity.amount();
         }
 
+        // Calculate the total cost to be divided over the houses
+        float totalCost = totalDemand * houses.get(0).getDayProfile().getValue(hour, "PowerCost");
+
+        // Calculate the power cost for each house based on their net demand
         for (House house : houses) {
-            Electricity current = house.current(hour);
-            if (current.direction() == Direction.DEMAND) {
-                float houseDemand = current.amount();
-                float costShare = houseDemand / totalDemand;
-                float powerCost = house.getDayProfile().getValue(hour, "PowerCost");
-                house.setPowerCost(costShare * powerCost);
+            float houseProduction = house.getSolarPanelOutput(hour);
+            float houseConsumption = house.getTotalConsumptionOfHour(hour);
+            float netDemand = houseConsumption - houseProduction;
+
+            float powerCost = 0;
+
+            if (netDemand > 0) {
+                // House is demanding power
+                powerCost = (netDemand / totalDemand) * totalCost;
             } else {
-                house.setPowerCost(0);
+                // House is producing excess power
+                powerCost = 0;
             }
+
+            house.setPowerCost(powerCost);
         }
     }
 
