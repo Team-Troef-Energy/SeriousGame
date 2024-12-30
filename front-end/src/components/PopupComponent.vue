@@ -188,7 +188,7 @@ export default defineComponent({
     });
 
     const formattedPowerCost = computed(() => {
-      return props.powerCost.toFixed(2);
+      return props.powerCost.toFixed(4);
     });
 
     const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
