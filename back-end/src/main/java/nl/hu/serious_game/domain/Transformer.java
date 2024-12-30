@@ -60,35 +60,29 @@ public class Transformer implements Cloneable {
     }
 
     public void distributePowerCost(int hour) {
-        // TODO: Fix the calculations
-        // Calculate the total demand for the transformer
         float totalDemand = 0;
-        Electricity electricity = this.calculateLeftoverCurrent(hour);
+        float totalProduction = 0;
 
-        if (electricity.direction() == Direction.DEMAND) {
-            totalDemand = electricity.amount();
+        // Calculate total demand and total production per hour for all houses
+        for (House house : houses) {
+            if (house.current(hour).direction() == Direction.DEMAND) {
+                totalDemand += house.current(hour).amount();
+            } else if (house.current(hour).direction() == Direction.PRODUCTION) {
+                totalProduction += house.current(hour).amount();
+            }
         }
 
-        // Calculate the total cost to be divided over the houses
-        float totalCost = totalDemand * houses.get(0).getDayProfile().getValue(hour, "PowerCost");
-
-        // Calculate the power cost for each house based on their net demand
+        // Distribute the net production proportionally among the houses with net demand to make it fair
+        float remainingProduction = totalProduction;
         for (House house : houses) {
-            float houseProduction = house.getSolarPanelOutput(hour);
-            float houseConsumption = house.getTotalConsumptionOfHour(hour);
-            float netDemand = houseConsumption - houseProduction;
-
-            float powerCost = 0;
-
-            if (netDemand > 0) {
-                // House is demanding power
-                powerCost = (netDemand / totalDemand) * totalCost;
-            } else {
-                // House is producing excess power
-                powerCost = 0;
+            float netDemand = house.getTotalConsumptionOfHour(hour) - house.getSolarPanelOutput(hour);
+            if (netDemand > 0 && remainingProduction > 0) {
+                float share = (netDemand / totalDemand) * totalProduction;
+                netDemand -= share;
+                remainingProduction -= share;
             }
-
-            house.setPowerCost(powerCost);
+            float powerCost = netDemand * house.getDayProfile().getValue(hour, "PowerCost");
+            house.setPowerCost(Math.max(powerCost, 0)); // Ensure powerCost is not negative
         }
     }
 
