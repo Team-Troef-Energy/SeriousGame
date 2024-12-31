@@ -54,7 +54,7 @@
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Totale stroom kosten:</strong></v-col>
-              <v-col cols="6" class="text-end highlight">{{ formattedPowerCost }} €</v-col>
+              <v-col cols="6" class="text-end highlight">{{ formattedTotalPowerCost }} €</v-col>
             </v-row>
           </div>
 
@@ -165,7 +165,7 @@ export default defineComponent({
       type: Number,
       default: 0
     },
-    powerCost: {
+    totalPowerCost: {
       type: Number,
       default: 0
     }
@@ -187,8 +187,8 @@ export default defineComponent({
       return props.batteryCharge.toFixed(2);
     });
 
-    const formattedPowerCost = computed(() => {
-      return props.powerCost.toFixed(4);
+    const formattedTotalPowerCost = computed(() => {
+      return props.totalPowerCost.toFixed(4);
     });
 
     const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
@@ -219,7 +219,7 @@ export default defineComponent({
       formattedEnergyProduction,
       formattedEnergyConsumption,
       formattedBatteryCharge,
-      formattedPowerCost,
+      formattedTotalPowerCost,
       heatPumpDisplay,
       electricVehicleDisplay,
       energyConsumptionLabel,

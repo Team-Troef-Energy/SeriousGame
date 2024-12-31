@@ -49,6 +49,7 @@ public class LevelService {
                 currentDTO,
                 batteryDTO,
                 house.getPowerCost(),
+                house.getTotalPowerCost(),
                 house.getTotalSolarPanels(), // Get the total solar panels of the house
                 house.getSolarPanelOutput(hour),
                 house.getTotalConsumptionOfHour(hour),
