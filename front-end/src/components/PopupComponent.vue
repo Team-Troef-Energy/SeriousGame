@@ -42,6 +42,14 @@
             </v-row>
           </div>
 
+          <!-- Kosten details voor huis -->
+          <div v-if="type === 'huis'" class="section cost-section mt-4">
+            <v-row>
+              <v-col cols="6"><strong>Totale stroom kosten:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">€ {{ formattedTotalPowerCost }}</v-col>
+            </v-row>
+          </div>
+
           <!-- Extra Details voor Huis -->
           <div v-if="type === 'huis'" class="section details-section mt-4">
             <v-row>
@@ -51,10 +59,6 @@
             <v-row>
               <v-col cols="6"><strong>Elektrische auto:</strong></v-col>
               <v-col cols="6" class="text-end highlight">{{ electricVehicleDisplay }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6"><strong>Totale stroom kosten:</strong></v-col>
-              <v-col cols="6" class="text-end highlight">{{ formattedTotalPowerCost }} €</v-col>
             </v-row>
           </div>
 
@@ -256,6 +260,10 @@ export default defineComponent({
 
 .energy-section {
   background-color: #e3f2fd; /* Lichtblauw */
+}
+
+.cost-section {
+  background-color: #f5e7f6;
 }
 
 .details-section {
