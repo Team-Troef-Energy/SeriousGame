@@ -83,6 +83,7 @@ public class Transformer implements Cloneable {
             }
             float powerCost = netDemand * house.getDayProfile().getValue(hour, "PowerCost");
             house.setPowerCost(Math.max(powerCost, 0)); // Ensure powerCost is not negative
+            house.setTotalPowerCost(house.getTotalPowerCost() + house.getPowerCost()); // Accumulate total power cost as well
         }
     }
 
