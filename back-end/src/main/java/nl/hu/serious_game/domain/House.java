@@ -10,12 +10,14 @@ public class House implements Cloneable {
     private Integer hour;
     private Electricity current;
     private float powerCost;
+    private float totalPowerCost;
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
         this.totalSolarPanels = totalSolarPanels;
         this.dayProfile = dayProfile;
         this.houseOptions = houseOptions;
+        this.powerCost = 0;
     }
 
     public void addSolarPanel(int amount) {
@@ -132,6 +134,14 @@ public class House implements Cloneable {
 
     public void setPowerCost(float powerCost) {
         this.powerCost = powerCost;
+    }
+
+    public void setTotalPowerCost(float totalPowerCost) {
+        this.totalPowerCost = totalPowerCost;
+    }
+
+    public float getTotalPowerCost() {
+        return totalPowerCost;
     }
 
     @Override
