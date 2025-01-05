@@ -1,14 +1,53 @@
 <template>
-  <svg :width="width" :height="height" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
-    <line :x1="x1" :y1="y1" :x2="x2" :y2="y2" stroke="black" stroke-width="2" />
-    <text v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
-      Congestie: {{ maxCurrent }}kW
-    </text>
-  </svg>
+  <div>
+    <svg :width="width" :height="height" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
+      <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
+        Congestie
+      </text>
+      <!-- Visible line -->
+      <line
+          :x1="x1"
+          :y1="y1"
+          :x2="x2"
+          :y2="y2"
+          stroke="black"
+          stroke-width="2"
+      />
+      <!-- Invisible line with margin for easier hovering -->
+      <line class="infoBox-trigger"
+          :x1="x1"
+          :y1="y1"
+          :x2="x2"
+          :y2="y2"
+          stroke="transparent"
+          stroke-width="30"
+          @mouseover="showInfoBox"
+          @mouseout="hideInfoBox"
+      />
+    </svg>
+    <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox">
+      {{ infoBoxContents }}
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      infoBoxVisible: false,
+      infoBoxStyle: {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        backgroundColor: '#333',
+        color: '#fff',
+        padding: '5px',
+        borderRadius: '3px',
+        pointerEvents: 'none',
+      },
+    };
+  },
   props: {
     x1: {
       type: Number,
@@ -52,6 +91,30 @@ export default {
       const cy = (this.y1 + this.y2) / 2;
       return `rotate(${angle}, ${cx}, ${cy})`;
     },
+    infoBoxContents() {
+      return `Congestie: ${this.maxCurrent}kW`;
+    },
+  },
+  methods: {
+    showInfoBox(event) {
+      this.infoBoxVisible = true;
+      this.infoBoxStyle.top = `${event.clientY + 10}px`;
+      this.infoBoxStyle.left = `${event.clientX + 10}px`;
+    },
+    hideInfoBox() {
+      this.infoBoxVisible = false;
+    },
   },
 };
 </script>
+
+<style scoped>
+.infoBox-trigger {
+  cursor: help;
+  z-index: 1000;
+}
+.infoBox {
+  font-size: 14px;
+  z-index: 1000;
+}
+</style>
