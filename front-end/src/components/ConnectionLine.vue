@@ -4,25 +4,33 @@
       <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
         Congestie
       </text>
-      <!-- Visible line -->
+      <!-- Line with inner and outer colors -->
       <line
           :x1="x1"
           :y1="y1"
           :x2="x2"
           :y2="y2"
           stroke="black"
-          stroke-width="2"
+          stroke-width="6"
       />
-      <!-- Invisible line with margin for easier hovering -->
-      <line class="infoBox-trigger"
+      <line
           :x1="x1"
           :y1="y1"
           :x2="x2"
           :y2="y2"
-          stroke="transparent"
-          stroke-width="30"
-          @mouseover="showInfoBox"
-          @mouseout="hideInfoBox"
+          :stroke="innerLineColor"
+          stroke-width="2"
+      />
+      <!-- Invisible line with margin for easier hovering -->
+      <line class="infoBox-trigger"
+            :x1="x1"
+            :y1="y1"
+            :x2="x2"
+            :y2="y2"
+            stroke="transparent"
+            stroke-width="30"
+            @mouseover="showInfoBox"
+            @mouseout="hideInfoBox"
       />
     </svg>
     <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox">
@@ -84,15 +92,20 @@ export default {
   },
   computed: {
     rotationTransform() {
+      const marginX = 15;
+      const marginY = 15;
       const dx = this.x2 - this.x1;
       const dy = this.y2 - this.y1;
       const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-      const cx = (this.x1 + this.x2) / 2;
-      const cy = (this.y1 + this.y2) / 2;
+      const cx = (this.x1 + this.x2) / 2 + marginX;
+      const cy = (this.y1 + this.y2) / 2 - marginY;
       return `rotate(${angle}, ${cx}, ${cy})`;
     },
     infoBoxContents() {
       return `Congestie: ${this.maxCurrent}kW`;
+    },
+    innerLineColor() {
+      return this.hasCongestion ? 'red' : 'white';
     },
   },
   methods: {
