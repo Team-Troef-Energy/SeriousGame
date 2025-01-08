@@ -54,6 +54,8 @@
       :batteries="popupBatteries"
       :batteryCharge="popupBatteryCharge"
       :totalPowerCost="popupTotalPowerCost"
+      :solarPanelCost="popupSolarPanelCost"
+      :batteryCost="popupBatteryCost"
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
       @decrease="handleDecrease"
@@ -119,6 +121,8 @@ export default defineComponent({
     const popupBatteries = ref(0);
     const popupBatteryCharge = ref(0);
     const popupTotalPowerCost = ref(0);
+    const popupSolarPanelCost = ref(0);
+    const popupBatteryCost = ref(0);
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
@@ -270,6 +274,8 @@ export default defineComponent({
       try {
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
+        popupSolarPanelCost.value = data.cost.solarPanelCost;
+        popupBatteryCost.value = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -303,6 +309,8 @@ export default defineComponent({
       popupTotalPowerCost,
       popupBatteries,
       popupBatteryCharge,
+      popupSolarPanelCost,
+      popupBatteryCost,
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
