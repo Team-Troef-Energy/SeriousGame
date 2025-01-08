@@ -1,16 +1,14 @@
 <template>
     <v-dialog
-        v-model="dialog"
+        v-model="status"
         transition="dialog-bottom-transition"
         width="auto">
         <template v-slot:default="{ isActive }">
             <v-card>
                 <v-toolbar title="Opening from the Bottom"></v-toolbar>
-
                 <v-card-text class="text-h2 pa-12">
                     {{ message }}
                 </v-card-text>
-
                 <v-card-actions class="justify-end">
                     <v-btn
                         text
@@ -28,7 +26,7 @@
     export default defineComponent({
         name: 'Notification',
         props: {
-            dialog: {
+            status: {
                 type: Boolean,
                 required: true
             },
@@ -37,10 +35,10 @@
                 required: true
             }
         },
-        emits: ['update:dialog'],
+        emits: ['update:status'],
         setup(props, { emit }) {
             const closeDialog = () => {
-                emit('update:dialog', false);
+                emit('update:status', false);
             };
 
             return {

@@ -60,6 +60,11 @@
     />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard></Dashboard>
+    <Notification
+      v-if="notificationStatus"
+      :status="notificationStatus"
+      :message="notificationMessage"
+    />
   </div>
 </template>
 
@@ -73,6 +78,7 @@ import NavigateButton from "../components/NavigateButton.vue";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 import { useRoute } from "vue-router";
 import Dashboard from "../components/Dashboard.vue";
+import Notification from "../components/Notification.vue";
 
 export default defineComponent({
   name: "Level",
@@ -83,6 +89,7 @@ export default defineComponent({
     PopupComponent,
     NavigateButton,
     Dashboard,
+    Notification,
   },
   setup() {
     const route = useRoute();
@@ -119,6 +126,9 @@ export default defineComponent({
     const popupBatteries = ref(0);
     const popupBatteryCharge = ref(0);
     const popupTotalPowerCost = ref(0);
+
+    const notificationStatus = ref(false);
+    const notificationMessage = ref("");
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
@@ -260,6 +270,10 @@ export default defineComponent({
           50
         );
         transformers.value = lastHourData.transformers;
+        if (response.status === true) {
+          notificationStatus.value = true;
+          notificationMessage.value = "Level is behaald!";
+        }
         processDashboardData(response);
       } catch (error) {
         console.error("Failed to submit changes:", error);
@@ -309,6 +323,8 @@ export default defineComponent({
       handleIncrease,
       handleDecrease,
       submitChanges,
+      notificationStatus,
+      notificationMessage,
     };
   },
 });
