@@ -21,7 +21,8 @@ public class LevelServiceTest {
     public void setUp() {
         Runner runner = mock(Runner.class);
         // Instead of creating a level, we mock one
-        when(runner.getLevel1()).thenReturn(new Level(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new Transformer(1, List.of(), 10))));
+        when(runner.getLevel(1)).thenReturn(new Level(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new Transformer(1, List.of(), 10))));
+        when(runner.getTotalLevels()).thenReturn(1);
         this.levelService = new LevelService(runner);
     }
 
@@ -40,7 +41,6 @@ public class LevelServiceTest {
     public void startLevelTest() {
         // When
         LevelDTO levelDTO = this.levelService.startLevel(1);
-
         // Then
         assertAll(
                 () -> assertNotNull(levelDTO, "LevelDTO should not be null"),

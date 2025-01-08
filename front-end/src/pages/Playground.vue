@@ -1,16 +1,16 @@
 <template>
-  <div>
-    <Transformer :width="200" :height="250" :hasBatteries="true" />
-  </div>
+  <div><Dashboard></Dashboard></div>
 </template>
 
 <script>
-import Transformer from '../components/Transformer.vue';
+import Transformer from "../components/Transformer.vue";
+import Dashboard from "../components/Dashboard.vue";
 
 export default {
-  name: 'Playground',
+  name: "Playground",
   components: {
     Transformer,
+    Dashboard,
   },
 };
 </script>
