@@ -10,24 +10,22 @@
         <ConnectionLine
           v-for="house in transformer.houses"
           :key="'connection-' + house.id"
-          :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 100"
+          :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
           :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
           :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-          :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 130"
+          :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
           :hasCongestion="house.hasCongestion"
-          :maxCurrent="house.maxCurrent" />
+          :maxCurrent="house.maxCurrent"
+        />
       </template>
       <template v-for="transformer in transformers">
         <transformer
-          v-for="transformer in transformers"
-          :key="'transformer-' + transformer.id"
-          :style="{
-            position: 'absolute',
-            left: (transformerPositions[transformer.id - 1] % 10) * 150 + 'px',
-            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 'px',
-          }"
-          @click="showTransformerDetails(transformer)"
-          :hasBatteries="transformer.batteries.amount > 0" />
+            v-for="transformer in transformers"
+            :key="'transformer-' + transformer.id"
+            :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px' }"
+            @click="showTransformerDetails(transformer)"
+            :hasBatteries="transformer.batteries.amount > 0"
+        />
         <House
           v-for="house in transformer.houses"
           :key="'house-' + house.id"

@@ -47,11 +47,11 @@ export default {
   props: {
     width: {
       type: Number,
-      default: 200,
+      default: 100,
     },
     height: {
       type: Number,
-      default: 250,
+      default: 125,
     },
     hasBatteries: {
       type: Boolean,
