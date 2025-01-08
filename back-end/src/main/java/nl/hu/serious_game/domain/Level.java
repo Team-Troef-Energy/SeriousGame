@@ -64,6 +64,10 @@ public class Level implements Cloneable {
         return endTime;
     }
 
+    public Cost getCost() {
+        return cost;
+    }
+
     public Level clone() {
         try {
             Level clone = (Level) super.clone();
