@@ -34,6 +34,7 @@ header {
 main {
   flex: 1;
   overflow: auto;
+  overflow-y: hidden !important;
 }
 
 .header-grid {
