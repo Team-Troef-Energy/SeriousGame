@@ -5,11 +5,11 @@
       <v-card-title class="popup-title text-h5 d-flex justify-space-between">
         {{ title }}
         <v-btn
-          icon
-          class="close-btn outlined"
-          style="background-color: white"
-          @click="closeDialog"
-          >❌</v-btn
+            icon
+            class="close-btn outlined"
+            style="background-color: white"
+            @click="closeDialog"
+        >❌</v-btn
         >
       </v-card-title>
 
@@ -21,24 +21,32 @@
             <v-row>
               <v-col cols="6"><strong>{{ energyProductionLabel}}:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
-                >{{ formattedEnergyProduction }} kWh</v-col
+              >{{ formattedEnergyProduction }} kWh</v-col
               >
             </v-row>
             <v-row>
               <v-col cols="6"><strong>{{  energyConsumptionLabel }}:</strong></v-col>
               <v-col cols="6" class="text-end highlight"
-                >{{ formattedEnergyConsumption }} kWh</v-col
+              >{{ formattedEnergyConsumption }} kWh</v-col
               >
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Verschil:</strong></v-col>
               <v-col
-                cols="6"
-                class="text-end"
-                :class="energyDifference < 0 ? 'negative' : 'highlight'"
+                  cols="6"
+                  class="text-end"
+                  :class="energyDifference < 0 ? 'negative' : 'highlight'"
               >
                 {{ energyDifference.toFixed(2) }} kWh
               </v-col>
+            </v-row>
+          </div>
+
+          <!-- Kosten details voor huis -->
+          <div v-if="type === 'huis'" class="section cost-section mt-4">
+            <v-row>
+              <v-col cols="6"><strong>Totale stroom kosten:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">€ {{ formattedTotalPowerCost }}</v-col>
             </v-row>
           </div>
 
@@ -59,23 +67,23 @@
             <v-row class="align-center">
               <v-col cols="4">
                 <v-btn
-                  class="popup-btn"
-                  icon
-                  @click="decreaseValue('solarPanels')"
-                  >➖</v-btn
+                    class="popup-btn"
+                    icon
+                    @click="decreaseValue('solarPanels')"
+                >➖</v-btn
                 >
                 <v-btn
-                  class="popup-btn"
-                  icon
-                  @click="increaseValue('solarPanels')"
-                  >➕</v-btn
+                    class="popup-btn"
+                    icon
+                    @click="increaseValue('solarPanels')"
+                >➕</v-btn
                 >
               </v-col>
               <v-col cols="6" class="text-center"
-                ><strong>Zonnepanelen</strong></v-col
+              ><strong>Zonnepanelen</strong></v-col
               >
               <v-col cols="2" class="text-end highlight"
-                >{{ solarPanels }}</v-col
+              >{{ solarPanels }}</v-col
               >
             </v-row>
           </div>
@@ -85,20 +93,20 @@
             <v-row class="align-center">
               <v-col cols="4">
                 <v-btn
-                  class="popup-btn"
-                  icon
-                  @click="decreaseValue('batteries')"
-                  >➖</v-btn
+                    class="popup-btn"
+                    icon
+                    @click="decreaseValue('batteries')"
+                >➖</v-btn
                 >
                 <v-btn
-                  class="popup-btn"
-                  icon
-                  @click="increaseValue('batteries')"
-                  >➕</v-btn
+                    class="popup-btn"
+                    icon
+                    @click="increaseValue('batteries')"
+                >➕</v-btn
                 >
               </v-col>
               <v-col cols="6" class="text-center"
-                ><strong>Accu’s</strong></v-col
+              ><strong>Accu’s</strong></v-col
               >
               <v-col cols="2" class="text-end highlight">{{ batteries }}</v-col>
             </v-row>
@@ -161,6 +169,10 @@ export default defineComponent({
       type: Number,
       default: 0
     },
+    totalPowerCost: {
+      type: Number,
+      default: 0
+    }
   },
   setup(props, { emit }) {
     const energyDifference = computed(
@@ -177,6 +189,10 @@ export default defineComponent({
 
     const formattedBatteryCharge = computed(() => {
       return props.batteryCharge.toFixed(2);
+    });
+
+    const formattedTotalPowerCost = computed(() => {
+      return props.totalPowerCost.toFixed(4);
     });
 
     const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
@@ -207,6 +223,7 @@ export default defineComponent({
       formattedEnergyProduction,
       formattedEnergyConsumption,
       formattedBatteryCharge,
+      formattedTotalPowerCost,
       heatPumpDisplay,
       electricVehicleDisplay,
       energyConsumptionLabel,
@@ -220,59 +237,63 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .popup-card {
-    background-color: #f8f9fa; /* Neutrale achtergrond */
-    color: #333;
-    border-radius: 12px;
-  }
+.popup-card {
+  background-color: #f8f9fa; /* Neutrale achtergrond */
+  color: #333;
+  border-radius: 12px;
+}
 
-  .popup-title {
-    background-color: #0077b6; /* Donkerblauwe titelbalk */
-    color: #fff;
-  }
+.popup-title {
+  background-color: #0077b6; /* Donkerblauwe titelbalk */
+  color: #fff;
+}
 
-  .close-btn {
-    background-color: #0077b6;
-    color: #fff;
-  }
+.close-btn {
+  background-color: #0077b6;
+  color: #fff;
+}
 
-  .section {
-    padding: 12px;
-    border-radius: 8px;
-  }
+.section {
+  padding: 12px;
+  border-radius: 8px;
+}
 
-  .energy-section {
-    background-color: #e3f2fd; /* Lichtblauw */
-  }
+.energy-section {
+  background-color: #e3f2fd; /* Lichtblauw */
+}
 
-  .details-section {
-    background-color: #fff3e0; /* Lichtoranje */
-  }
+.cost-section {
+  background-color: #f5e7f6;
+}
 
-  .solar-section {
-    background-color: #f1f8e9; /* Lichtgroen */
-  }
+.details-section {
+  background-color: #fff3e0; /* Lichtoranje */
+}
 
-  .battery-section {
-    background-color: #ede7f6; /* Lichtpaars */
-  }
+.solar-section {
+  background-color: #f1f8e9; /* Lichtgroen */
+}
 
-  .popup-btn {
-    background-color: #f1f3f5;
-    color: #0077b6;
-    border-radius: 50%;
-  }
+.battery-section {
+  background-color: #ede7f6; /* Lichtpaars */
+}
 
-  .popup-btn:hover {
-    background-color: #0077b6;
-    color: #fff;
-  }
+.popup-btn {
+  background-color: #f1f3f5;
+  color: #0077b6;
+  border-radius: 50%;
+}
 
-  .highlight {
-    color: #0077b6; /* Positief: Blauw */
-  }
+.popup-btn:hover {
+  background-color: #0077b6;
+  color: #fff;
+}
 
-  .negative {
-    color: #d32f2f; /* Negatief: Rood */
-  }
+.highlight {
+  color: #0077b6; /* Positief: Blauw */
+}
+
+.negative {
+  color: #d32f2f; /* Negatief: Rood */
+}
 </style>
