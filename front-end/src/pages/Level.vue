@@ -270,7 +270,7 @@ export default defineComponent({
           50
         );
         transformers.value = lastHourData.transformers;
-        if (response.status === true) {
+        if (response.isCompleted === true) {
           notificationStatus.value = true;
           notificationMessage.value = "Level is behaald!";
         }
