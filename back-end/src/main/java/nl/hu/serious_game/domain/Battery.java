@@ -11,7 +11,6 @@ public class Battery implements Cloneable {
     private float currentCharge;
     @Getter
     private float maxCharge;
-    private int coinValue;
     @Getter
     private int amount;
 
