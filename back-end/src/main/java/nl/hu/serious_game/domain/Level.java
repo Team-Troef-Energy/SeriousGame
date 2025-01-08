@@ -11,12 +11,14 @@ public class Level implements Cloneable {
     private int endTime;
     private Objective objective;
     private List<Transformer> transformers = new ArrayList<>();
+    private Cost cost;
 
-    public Level(Season season, int startTime, int endTime, Objective objective, List<Transformer> transformers) {
+    public Level(Season season, int startTime, int endTime, Objective objective, List<Transformer> transformers, Cost cost) {
         this.season = season;
         this.startTime = startTime;
         this.endTime = endTime;
         this.objective = objective;
+        this.cost = cost;
         if (!transformers.isEmpty()) {
             this.transformers = transformers;
         } else {
