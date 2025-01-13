@@ -11,6 +11,7 @@ public record LevelDTO(
         int startTime,
         int endTime,
         ObjectiveDTO objective,
-        Cost cost
+        Cost cost,
+        boolean isCompleted
 ) {}
 

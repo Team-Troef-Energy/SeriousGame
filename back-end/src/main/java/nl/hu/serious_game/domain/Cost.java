@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Cost {
     private final int solarPanelCost;
     private final int batteryCost;
+    private final float CO2Cost = 0.5f; // 1 kWh of gray electricity equals 0.5 kg of CO2
 
     // Default constructor for when no specific costs are given
     public Cost() {
@@ -23,6 +24,10 @@ public class Cost {
 
     public int getBatteryCost() {
         return batteryCost;
+    }
+
+    public float getCO2Cost() {
+        return CO2Cost;
     }
 
     @Override
