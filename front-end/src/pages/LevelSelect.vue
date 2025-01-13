@@ -57,4 +57,18 @@ export default defineComponent({
   background-color: #2196f3;
   z-index: -1;
 }
+
+.level-select::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/level-select-background.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: -2;
+}
 </style>
