@@ -15,6 +15,8 @@
           :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
           :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
           :hasCongestion="house.hasCongestion"
+          :is-production="house.current.direction === 'PRODUCTION'"
+          :current="house.current.amount"
           :maxCurrent="house.maxCurrent"
         />
       </template>
@@ -98,6 +100,7 @@ export default defineComponent({
         houses: {
           id: number;
           batteries: { amount: number; currentCharge: number };
+          current: { amount: number; direction: string };
           solarpanels: number;
           hasCongestion: boolean;
           maxCurrent: number;

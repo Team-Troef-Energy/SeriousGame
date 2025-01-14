@@ -2,14 +2,15 @@
   <div>
     <svg :width="width" :height="height" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
       <defs>
-        <marker id="start-arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-          <polygon points="0 3.5, 10 0, 10 7" fill="black" />
+        <marker id="start-arrowhead" markerWidth="5" markerHeight="7" refX="-5" refY="2" orient="auto">
+          <polygon points="0 2, 5 0, 5 4" fill="black" />
         </marker>
-        <marker id="end-arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+        <marker id="end-arrowhead" markerWidth="5" markerHeight="7" refX="10" refY="2" orient="auto">
+          <polygon points="0 0, 5 2, 0 4" fill="black" />
         </marker>
       </defs>
-      <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
+      <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2"
+            :transform="rotationTransform" fill="red">
         Congestie
       </text>
       <!-- Line with inner and outer colors -->
@@ -105,7 +106,7 @@ export default {
     },
     current: {
       type: Number,
-      default: 1,
+      default: 0,
     }
   },
   computed: {
