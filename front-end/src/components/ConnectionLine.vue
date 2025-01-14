@@ -1,6 +1,14 @@
 <template>
   <div>
     <svg :width="width" :height="height" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
+      <defs>
+        <marker id="start-arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+          <polygon points="0 3.5, 10 0, 10 7" fill="black" />
+        </marker>
+        <marker id="end-arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+        </marker>
+      </defs>
       <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
         Congestie
       </text>
@@ -12,6 +20,8 @@
           :y2="y2"
           stroke="black"
           stroke-width="6"
+          :marker-start="current > 0 && isProduction ? 'url(#start-arrowhead)' : ''"
+          :marker-end="current > 0 && !isProduction ? 'url(#end-arrowhead)' : ''"
       />
       <line
           :x1="x1"
@@ -89,6 +99,14 @@ export default {
       type: Number,
       default: 0,
     },
+    isProduction: {
+      type: Boolean,
+      default: false,
+    },
+    current: {
+      type: Number,
+      default: 1,
+    }
   },
   computed: {
     rotationTransform() {
@@ -126,6 +144,7 @@ export default {
   cursor: help;
   z-index: 1000;
 }
+
 .infoBox {
   font-size: 14px;
   z-index: 1000;
