@@ -74,7 +74,9 @@ img {
   margin-top: 20px;
   width: 200px;
   height: 50px;
+  text-align: center;
   font-size: 1.6em;
+  line-height: 0;
 }
 
 .welcome-container::after {
