@@ -67,6 +67,7 @@ export default defineComponent({
 
 img {
   width: 40%;
+  margin-bottom: 50px;
 }
 
 .welcome-button {
@@ -83,10 +84,9 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('/green-happy-background.png');
+  background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('/green-happy-background.png');
   background-size: cover;
   background-position: center;
-  opacity: 0.2;
   z-index: -2;
 }
 </style>
