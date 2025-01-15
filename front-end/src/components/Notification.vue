@@ -5,15 +5,11 @@
         width="auto">
         <template v-slot:default="{ isActive }">
             <v-card>
-                <v-toolbar title="Opening from the Bottom"></v-toolbar>
                 <v-card-text class="text-h2 pa-12">
                     {{ message }}
                 </v-card-text>
                 <v-card-actions class="justify-end">
-                    <v-btn
-                        text
-                        @click="closeDialog"
-                    >Close</v-btn>
+                    <NavigateButton to="/levelSelect" label="Ga terug" />
                 </v-card-actions>
             </v-card>
         </template>
@@ -22,9 +18,13 @@
 
 <script lang="ts">
     import { defineComponent } from 'vue';
+    import NavigateButton from '../components/NavigateButton.vue';
 
     export default defineComponent({
         name: 'Notification',
+        components: {
+            NavigateButton
+        },
         props: {
             status: {
                 type: Boolean,
@@ -34,16 +34,6 @@
                 type: String,
                 required: true
             }
-        },
-        emits: ['update:status'],
-        setup(props, { emit }) {
-            const closeDialog = () => {
-                emit('update:status', false);
-            };
-
-            return {
-                closeDialog
-            };
         }
     });
 </script>

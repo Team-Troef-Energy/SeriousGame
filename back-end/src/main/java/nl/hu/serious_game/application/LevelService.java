@@ -112,7 +112,7 @@ public class LevelService {
         Season season = level.getSeason();
         ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
 
-        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.getIsCompleted()); // Return the LevelDTO
+        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.getIsCompleted(), level.calculateTotalCosts(), level.calculateTotalCO2()); // Return the LevelDTO
     }
 
     public int getTotalLevels() {
@@ -120,10 +120,10 @@ public class LevelService {
     }
 
     private void checkLevelCompletion(Level level) {
-        int totalCost = level.calculateTotalCosts();
-        float totalCO2 = level.calculateTotalCO2();
+        level.calculateTotalCosts();
+        level.calculateTotalCO2();
 
-        if (totalCost <= level.getObjective().getMaxCoins() && totalCO2 <= level.getObjective().getMaxCo2()) {
+        if (level.getTotalCosts() <= level.getObjective().getMaxCoins() && level.getTotalCO2() <= level.getObjective().getMaxCo2()) {
             level.setIsCompleted();
         }
     }
