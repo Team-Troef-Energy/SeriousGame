@@ -8,21 +8,11 @@
             <v-icon icon="mdi-information" size="24" class="mr-2"></v-icon>
             <h1 class="header-title">{{ title }}</h1>
           </v-col>
-          <v-col cols="12" class="d-flex justify-center">
-            <v-btn class="header-btn" color="red" @click="closeDialog">
-              Annuleren
-              <v-icon icon="mdi-cancel" end></v-icon>
-            </v-btn>
-            <v-btn class="header-btn" color="green" @click="submitChanges">
-              Toepassen
-              <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
-            </v-btn>
-          </v-col>
         </v-row>
       </v-card-title>
 
       <!-- Inhoud -->
-      <v-card-text>
+      <v-card-text class="main-contents">
         <v-container fluid>
           <!-- Energie Overzicht -->
           <div class="section energy-section">
@@ -91,6 +81,19 @@
           </div>
         </v-container>
       </v-card-text>
+
+      <div class="card-footer">
+        <v-col cols="12" class="d-flex justify-center">
+          <v-btn class="header-btn" color="red" @click="closeDialog">
+            Annuleren
+            <v-icon icon="mdi-cancel" end></v-icon>
+          </v-btn>
+          <v-btn class="header-btn" color="green" @click="submitChanges">
+            Toepassen
+            <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
+          </v-btn>
+        </v-col>
+      </div>
     </v-card>
   </v-dialog>
 </template>
@@ -202,17 +205,13 @@ export default defineComponent({
 .header-container {
   display: flex;
   align-items: center;
-  padding: 10px 0 0 10px;
+  margin: 2px;
 }
 
 .header-title {
   font-size: 1.5rem;
   font-weight: 500;
   margin: 10px;
-}
-
-.d-flex {
-  padding: 0 0 10px;
 }
 
 .popup-card {
@@ -227,7 +226,6 @@ export default defineComponent({
 }
 
 .header-btn {
-  background-color: #0077b6;
   color: #fff;
   padding: 8px 16px;
   border-radius: 5%;
@@ -239,6 +237,11 @@ export default defineComponent({
 .section {
   padding: 12px;
   border-radius: 8px;
+  margin: 0;
+}
+
+.main-contents {
+  padding: 0;
 }
 
 .energy-section {
