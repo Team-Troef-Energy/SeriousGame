@@ -15,17 +15,19 @@
           :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
           :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
           :hasCongestion="house.hasCongestion"
-          :maxCurrent="house.maxCurrent"
-        />
+          :maxCurrent="house.maxCurrent" />
       </template>
       <template v-for="transformer in transformers">
         <transformer
-            v-for="transformer in transformers"
-            :key="'transformer-' + transformer.id"
-            :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px' }"
-            @click="showTransformerDetails(transformer)"
-            :hasBatteries="transformer.batteries.amount > 0"
-        />
+          v-for="transformer in transformers"
+          :key="'transformer-' + transformer.id"
+          :style="{
+            position: 'absolute',
+            left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
+            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px',
+          }"
+          @click="showTransformerDetails(transformer)"
+          :hasBatteries="transformer.batteries.amount > 0" />
         <House
           v-for="house in transformer.houses"
           :key="'house-' + house.id"
@@ -58,20 +60,18 @@
       :batteryCost="popupBatteryCost"
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
-      @decrease="handleDecrease"
-    />
+      @decrease="handleDecrease" />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard></Dashboard>
     <Notification
       v-if="notificationStatus"
       :status="notificationStatus"
-      :message="notificationMessage"
-    />
+      :message="notificationMessage" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, Ref } from "vue";
 import Transformer from "../components/Transformer.vue";
 import House from "../components/House.vue";
 import ConnectionLine from "../components/ConnectionLine.vue";
@@ -95,7 +95,10 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const levelNumber = route.params.levelNmr;
+    if (!(typeof route === "string")) {
+      console.error("iets foutgegaan");
+    }
+    const levelNumber: string = route.params.levelNmr;
 
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
@@ -115,7 +118,7 @@ export default defineComponent({
         }[];
       }[]
     >([]);
-    const dashboardData = ref(null);
+    const dashboardData: Ref<any, any> = ref(null);
 
     const isPopupOpen = ref(false);
     const popupTitle = ref("");
@@ -135,14 +138,23 @@ export default defineComponent({
     const notificationMessage = ref("");
 
     const generatePositions = (count: number, start: number): number[] => {
-      const positions = [];
+      const positions: number[] = [];
       for (let i = 0; i < count; i++) {
         positions.push(start + i);
       }
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: { amount: number, totalCharge: number }, solarpanels: number, production: number, consumption: number, totalPowerCost: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
+    const showHouseDetails = (house: {
+      id: number;
+      batteries: { amount: number; totalCharge: number };
+      solarpanels: number;
+      production: number;
+      consumption: number;
+      totalPowerCost: number;
+      hasHeatpump: boolean;
+      hasElectricVehicle: boolean;
+    }) => {
       popupTitle.value = `Huis ${house.id}`;
       popupType.value = "huis";
       popupEnergyProduction.value = house.production;
@@ -268,7 +280,7 @@ export default defineComponent({
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
           lastHourData.transformers.reduce(
-            (acc, transformer) => acc + transformer.houses.length,
+            (acc: number, transformer: any) => acc + transformer.houses.length,
             0
           ),
           50
@@ -294,7 +306,7 @@ export default defineComponent({
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
           lastHourData.transformers.reduce(
-            (acc, transformer) => acc + transformer.houses.length,
+            (acc: number, transformer: any) => acc + transformer.houses.length,
             0
           ),
           50

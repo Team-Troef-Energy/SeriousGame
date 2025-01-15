@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import TestPage from "../pages/TestPage.vue";
 import Playground from "../pages/Playground.vue";
 import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
