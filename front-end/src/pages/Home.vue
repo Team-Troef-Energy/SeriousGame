@@ -12,28 +12,27 @@ export default defineComponent({
 
 <template>
   <div class="welcome-container">
-    <img src="/troef-logo.png" alt="Troef logo" />
+    <img src="/troef-logo-light.png" alt="Troef logo" />
     <br />
     <p class="welcome-text">
-      Welkom! Dit is de digitale versie van de Troef serious game,
+      Welkom! Dit is de digitale versie van de Troef serious game.
       <br />
       dit spel is er om mensen op een leuke manier kennis te laten maken met concepten en
       uitdagingen
       <br />
       die bij de energietransitie komen kijken.
     </p>
-    <p class="welcome-text">
+    <p class="welcome-text-sub"> <i>
       Elk level heeft een wijk van huizen die door middel van een transformator met elkaar en het
       stroomnet verbonden zijn.
       <br />
-      Je wint een level door het doel te behalen, het doel van een level kan bijvoorbeeld zijn om
+      Je wint een level door het doel te behalen. Het doel van een level kan bijvoorbeeld zijn om
       alleen maar groene stroom te gebruiken.
       <br />
-      om hiernaar toe te werken kan je bij huizen en de transformator zonnepanelen of accus
-      toevoegen,
+      om hiernaar toe te werken kan je bij huizen zonnepanelen en thuis accu's plaatsen, en de transformator transformator voorzien van accu's.
       <br />
-      deze kosten munten en de uitdaging is dus het doel te behalen binnen het budget.
-    </p>
+      Het toevoegen van deze onderdelen kost munten en de uitdaging is dus het doel te behalen binnen het budget.
+    </i></p>
     <NavigateButton to="/levelSelect" label="Speel" class="welcome-button" />
   </div>
 </template>
@@ -46,15 +45,24 @@ export default defineComponent({
   align-items: center;
   height: 100vh;
   text-align: center;
-  background: #dedede;
 }
 
 .welcome-text {
   font-size: 1.5em;
   margin-bottom: 20px;
-  color: #3b3b3b;
+  color: #ffffff;
   margin-left: 50px;
   margin-right: 50px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-text-sub {
+  font-size: 1.3em;
+  margin-bottom: 20px;
+  color: #ffffff;
+  margin-left: 50px;
+  margin-right: 50px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 img {
@@ -66,5 +74,19 @@ img {
   width: 200px;
   height: 50px;
   font-size: 1.6em;
+}
+
+.welcome-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/green-happy-background.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: -2;
 }
 </style>
