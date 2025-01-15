@@ -5,7 +5,7 @@
         Huidige munten gebruik: {{ coinsUsed }}
       </div>
       <div class="underline">
-        Maximaal aantal munten: {{ maxCoins }}
+        Max. aantal munten: {{ maxCoins }}
       </div>
     </div>
     <div class="slot">
@@ -13,7 +13,7 @@
         Huidige CO2-uitstoot: {{ currentCO2.toFixed(2) }} kg
       </div>
       <div class="underline">
-        Maximaal CO2-uitstoot: {{ MaxCO2.toFixed(2) }} kg
+        Max. CO2-uitstoot: {{ MaxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
