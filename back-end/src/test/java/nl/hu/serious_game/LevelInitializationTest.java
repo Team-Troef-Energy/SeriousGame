@@ -46,7 +46,7 @@ public class LevelInitializationTest {
     @Test
     @DisplayName("Test level initialization")
     public void testLevelInitialization() {
-        Level level = new Level(season, startTime, endTime, objective, (List<Transformer>) transformers);
+        Level level = new Level(season, startTime, endTime, objective, (List<Transformer>) transformers, new Cost(5, 10));
 
         assertNotNull(level.getObjective(), "Objective should be initialized");
         assertEquals(objective, level.getObjective(), "Objective should match the provided value");

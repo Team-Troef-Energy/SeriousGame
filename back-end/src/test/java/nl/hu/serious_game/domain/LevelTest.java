@@ -11,6 +11,6 @@ public class LevelTest {
     @DisplayName("Test for when transformers is empty")
     public void emptyTransformersTest() {
         Objective objective = new Objective(5, 5);
-        assertThrows(IllegalArgumentException.class, () -> new Level(Season.SUMMER, 0, 0, objective, new ArrayList<>()));
+        assertThrows(IllegalArgumentException.class, () -> new Level(Season.SUMMER, 0, 0, objective, new ArrayList<>(), new Cost(5, 10)));
     }
 }
