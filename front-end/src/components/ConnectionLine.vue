@@ -1,37 +1,33 @@
 <template>
   <div>
-    <svg :width="width" :height="height" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
-      <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
+    <svg
+      :width="width"
+      :height="height"
+      xmlns="http://www.w3.org/2000/svg"
+      style="position: absolute; top: 0; left: 0">
+      <text
+        class="congestion-text-indicator"
+        v-if="hasCongestion"
+        :x="(x1 + x2) / 2"
+        :y="(y1 + y2) / 2"
+        :transform="rotationTransform"
+        fill="red">
         Congestie
       </text>
       <!-- Line with inner and outer colors -->
-      <line
-          :x1="x1"
-          :y1="y1"
-          :x2="x2"
-          :y2="y2"
-          stroke="black"
-          stroke-width="6"
-      />
-      <line
-          :x1="x1"
-          :y1="y1"
-          :x2="x2"
-          :y2="y2"
-          :stroke="innerLineColor"
-          stroke-width="2"
-      />
+      <line :x1="x1" :y1="y1" :x2="x2" :y2="y2" stroke="black" stroke-width="6" />
+      <line :x1="x1" :y1="y1" :x2="x2" :y2="y2" :stroke="innerLineColor" stroke-width="2" />
       <!-- Invisible line with margin for easier hovering -->
-      <line class="infoBox-trigger"
-            :x1="x1"
-            :y1="y1"
-            :x2="x2"
-            :y2="y2"
-            stroke="transparent"
-            stroke-width="30"
-            @mouseover="showInfoBox"
-            @mouseout="hideInfoBox"
-      />
+      <line
+        class="infoBox-trigger"
+        :x1="x1"
+        :y1="y1"
+        :x2="x2"
+        :y2="y2"
+        stroke="transparent"
+        stroke-width="30"
+        @mouseover="showInfoBox"
+        @mouseout="hideInfoBox" />
     </svg>
     <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox">
       {{ infoBoxContents }}
@@ -39,20 +35,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
       infoBoxVisible: false,
       infoBoxStyle: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        backgroundColor: '#333',
-        color: '#fff',
-        padding: '5px',
-        borderRadius: '3px',
-        pointerEvents: 'none',
+        position: "absolute",
+        top: "0px",
+        left: "0px",
+        backgroundColor: "#333",
+        color: "#fff",
+        padding: "5px",
+        borderRadius: "3px",
+        pointerEvents: "none",
       },
     };
   },
@@ -105,11 +101,11 @@ export default {
       return `Congestie: ${this.maxCurrent}kW`;
     },
     innerLineColor() {
-      return this.hasCongestion ? 'red' : 'white';
+      return this.hasCongestion ? "red" : "white";
     },
   },
   methods: {
-    showInfoBox(event) {
+    showInfoBox(event: any) {
       this.infoBoxVisible = true;
       this.infoBoxStyle.top = `${event.clientY + 10}px`;
       this.infoBoxStyle.left = `${event.clientX + 10}px`;

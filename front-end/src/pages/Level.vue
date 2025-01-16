@@ -81,6 +81,7 @@ import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 import { useRoute } from "vue-router";
 import Dashboard from "../components/Dashboard.vue";
 import Notification from "../components/Notification.vue";
+import { house, levelData, transformer } from "../typing";
 
 export default defineComponent({
   name: "Level",
@@ -98,26 +99,18 @@ export default defineComponent({
     if (!(typeof route === "string")) {
       console.error("iets foutgegaan");
     }
-    const levelNumber: string = route.params.levelNmr;
+    let levelNumber = route.params.levelNmr;
+
+    // this is to fix the typing, levelnumber should never actually be an object.
+    if (typeof levelNumber === "object") {
+      levelNumber = levelNumber[0];
+      console.error("multiple level numbers were passed");
+    }
 
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<
-      {
-        id: number;
-        batteries: { amount: number; totalCharge: number };
-        houses: {
-          id: number;
-          batteries: { amount: number; currentCharge: number };
-          solarpanels: number;
-          hasCongestion: boolean;
-          maxCurrent: number;
-          hasElectricVehicle: boolean;
-          hasHeatpump: boolean;
-        }[];
-      }[]
-    >([]);
+    const transformers = ref<transformer[]>([]);
     const dashboardData: Ref<any, any> = ref(null);
 
     const isPopupOpen = ref(false);
@@ -145,16 +138,7 @@ export default defineComponent({
       return positions;
     };
 
-    const showHouseDetails = (house: {
-      id: number;
-      batteries: { amount: number; totalCharge: number };
-      solarpanels: number;
-      production: number;
-      consumption: number;
-      totalPowerCost: number;
-      hasHeatpump: boolean;
-      hasElectricVehicle: boolean;
-    }) => {
+    const showHouseDetails = (house: house) => {
       popupTitle.value = `Huis ${house.id}`;
       popupType.value = "huis";
       popupEnergyProduction.value = house.production;
@@ -168,11 +152,7 @@ export default defineComponent({
       isPopupOpen.value = true;
     };
 
-    const showTransformerDetails = (transformer: {
-      id: number;
-      current: { amount: number; direction: string };
-      batteries: { amount: number; totalCharge: number };
-    }) => {
+    const showTransformerDetails = (transformer: transformer) => {
       popupTitle.value = `Transformator ${transformer.id}`;
       popupType.value = "transformator";
       popupEnergyProduction.value =
@@ -231,17 +211,17 @@ export default defineComponent({
       }
     };
 
-    const processDashboardData = (data) => {
+    const processDashboardData = (data: levelData) => {
       const lastHourData = data.hours[data.hours.length - 1];
       let totalConsumption = 0;
       let totalGreenProduction = 0;
       let totalGreyProduction = 0;
 
-      lastHourData.transformers.forEach((transformer) => {
+      lastHourData.transformers.forEach((transformer: transformer) => {
         if (transformer.current.direction === "DEMAND") {
           totalGreyProduction += transformer.current.amount; // Grey energy from transformers
         }
-        transformer.houses.forEach((house) => {
+        transformer.houses.forEach((house: house) => {
           totalConsumption += house.consumption;
           totalGreenProduction += house.production; // Green energy from houses
         });
