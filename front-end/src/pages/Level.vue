@@ -69,7 +69,6 @@
       @submitChanges="submitChanges"
       @cancelChanges="cancelChanges"
     />
-    <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard 
       :coinsUsed="dashboardData.coinsUsed"
       :maxCoins="dashboardData.maxCoins"
@@ -354,7 +353,7 @@ export default defineComponent({
         
         if (response.isCompleted === true) {
           notificationStatus.value = true;
-          notificationMessage.value = "Level is behaald!";
+          notificationMessage.value = "Level is behaald! 🥳";
         }
         
       } catch (error) {
