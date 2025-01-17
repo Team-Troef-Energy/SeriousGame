@@ -57,8 +57,9 @@
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
       @decrease="handleDecrease"
+      @submitChanges="submitChanges"
+      @cancelChanges="cancelChanges"
     />
-    <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard></Dashboard>
   </div>
 </template>
@@ -120,6 +121,9 @@ export default defineComponent({
     const popupBatteryCharge = ref(0);
     const popupTotalPowerCost = ref(0);
 
+    // Used to store the initial popup data when the popup is opened so it can be cancelled
+    const initialPopupData = ref({});
+
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
       for (let i = 0; i < count; i++) {
@@ -140,6 +144,9 @@ export default defineComponent({
       popupBatteryCharge.value = house.batteries.totalCharge;
       popupTotalPowerCost.value = house.totalPowerCost;
       isPopupOpen.value = true;
+
+      // Store initial popup data to allow for cancelling changes
+      initialPopupData.value = { ...house, batteries: { ...house.batteries } };
     };
 
     const showTransformerDetails = (transformer: {
@@ -156,6 +163,9 @@ export default defineComponent({
       popupBatteries.value = transformer.batteries.amount;
       popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
+
+      // Store initial popup data to allow for cancelling changes
+      initialPopupData.value = { ...transformer, batteries: { ...transformer.batteries } };
     };
 
     const updateSolarPanels = (newValue: number) => {
@@ -253,16 +263,58 @@ export default defineComponent({
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
-          lastHourData.transformers.reduce(
-            (acc, transformer) => acc + transformer.houses.length,
-            0
-          ),
-          50
+            lastHourData.transformers.reduce(
+                (acc, transformer) => acc + transformer.houses.length,
+                0
+            ),
+            50
         );
         transformers.value = lastHourData.transformers;
         processDashboardData(response);
+
+        // Refresh popup data
+        if (isPopupOpen.value) {
+          if (popupType.value === "huis") {
+            const house = transformers.value
+                .flatMap((t) => t.houses)
+                .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+            if (house) {
+              showHouseDetails(house);
+            }
+          } else if (popupType.value === "transformator") {
+            const transformer = transformers.value.find(
+                (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+            );
+            if (transformer) {
+              showTransformerDetails(transformer);
+            }
+          }
+        }
       } catch (error) {
         console.error("Failed to submit changes:", error);
+      }
+    };
+
+    const cancelChanges = async () => {
+      try {
+        // Revert to initial popup data
+        if (popupType.value === 'huis') {
+          const house = transformers.value
+              .flatMap((t) => t.houses)
+              .find((h) => h.id === parseInt(popupTitle.value.split(' ')[1]));
+          if (house) {
+            Object.assign(house, initialPopupData.value);
+          }
+        } else if (popupType.value === 'transformator') {
+          const transformer = transformers.value.find(
+              (t) => t.id === parseInt(popupTitle.value.split(' ')[1])
+          );
+          if (transformer) {
+            Object.assign(transformer, initialPopupData.value);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to cancel changes:', error);
       }
     };
 
@@ -309,6 +361,7 @@ export default defineComponent({
       handleIncrease,
       handleDecrease,
       submitChanges,
+      cancelChanges,
     };
   },
 });

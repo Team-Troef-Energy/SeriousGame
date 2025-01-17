@@ -2,41 +2,31 @@
   <v-dialog v-model="isOpen" max-width="500px">
     <v-card class="popup-card">
       <!-- Titelbalk -->
-      <v-card-title class="popup-title text-h5 d-flex justify-space-between">
-        {{ title }}
-        <v-btn
-            icon
-            class="close-btn outlined"
-            style="background-color: white"
-            @click="closeDialog"
-        >❌</v-btn
-        >
+      <v-card-title class="popup-title text-h5">
+        <v-row>
+          <v-col cols="12" class="header-container">
+            <v-icon icon="mdi-information" size="24" class="mr-2"></v-icon>
+            <h1 class="header-title">{{ title }}</h1>
+          </v-col>
+        </v-row>
       </v-card-title>
 
       <!-- Inhoud -->
-      <v-card-text>
+      <v-card-text class="main-contents">
         <v-container fluid>
           <!-- Energie Overzicht -->
           <div class="section energy-section">
             <v-row>
-              <v-col cols="6"><strong>{{ energyProductionLabel}}:</strong></v-col>
-              <v-col cols="6" class="text-end highlight"
-              >{{ formattedEnergyProduction }} kWh</v-col
-              >
+              <v-col cols="6"><strong>{{ energyProductionLabel }}:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ formattedEnergyProduction }} kWh</v-col>
             </v-row>
             <v-row>
-              <v-col cols="6"><strong>{{  energyConsumptionLabel }}:</strong></v-col>
-              <v-col cols="6" class="text-end highlight"
-              >{{ formattedEnergyConsumption }} kWh</v-col
-              >
+              <v-col cols="6"><strong>{{ energyConsumptionLabel }}:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ formattedEnergyConsumption }} kWh</v-col>
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Verschil:</strong></v-col>
-              <v-col
-                  cols="6"
-                  class="text-end"
-                  :class="energyDifference < 0 ? 'negative' : 'highlight'"
-              >
+              <v-col cols="6" class="text-end" :class="energyDifference < 0 ? 'negative' : 'highlight'">
                 {{ energyDifference.toFixed(2) }} kWh
               </v-col>
             </v-row>
@@ -66,25 +56,11 @@
           <div v-if="type !== 'transformator'" class="section solar-section mt-4">
             <v-row class="align-center">
               <v-col cols="4">
-                <v-btn
-                    class="popup-btn"
-                    icon
-                    @click="decreaseValue('solarPanels')"
-                >➖</v-btn
-                >
-                <v-btn
-                    class="popup-btn"
-                    icon
-                    @click="increaseValue('solarPanels')"
-                >➕</v-btn
-                >
+                <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
+                <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"
-              ><strong>Zonnepanelen</strong></v-col
-              >
-              <v-col cols="2" class="text-end highlight"
-              >{{ solarPanels }}</v-col
-              >
+              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong></v-col>
+              <v-col cols="2" class="text-end highlight">{{ solarPanels }}</v-col>
             </v-row>
           </div>
 
@@ -92,22 +68,10 @@
           <div class="section battery-section mt-4">
             <v-row class="align-center">
               <v-col cols="4">
-                <v-btn
-                    class="popup-btn"
-                    icon
-                    @click="decreaseValue('batteries')"
-                >➖</v-btn
-                >
-                <v-btn
-                    class="popup-btn"
-                    icon
-                    @click="increaseValue('batteries')"
-                >➕</v-btn
-                >
+                <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
+                <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"
-              ><strong>Accu’s</strong></v-col
-              >
+              <v-col cols="6" class="text-center"><strong>Accu’s</strong></v-col>
               <v-col cols="2" class="text-end highlight">{{ batteries }}</v-col>
             </v-row>
             <v-row>
@@ -117,6 +81,19 @@
           </div>
         </v-container>
       </v-card-text>
+
+      <div class="card-footer">
+        <v-col cols="12" class="d-flex justify-center">
+          <v-btn class="header-btn" color="red" @click="closeDialog">
+            Annuleren
+            <v-icon icon="mdi-cancel" end></v-icon>
+          </v-btn>
+          <v-btn class="header-btn" color="green" @click="submitChanges">
+            Toepassen
+            <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
+          </v-btn>
+        </v-col>
+      </div>
     </v-card>
   </v-dialog>
 </template>
@@ -175,36 +152,18 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const energyDifference = computed(
-        () => props.energyProduction - props.energyConsumption
-    );
+    const energyDifference = computed(() => props.energyProduction - props.energyConsumption);
 
-    const formattedEnergyProduction = computed(() => {
-      return props.energyProduction.toFixed(2);
-    });
+    const formattedEnergyProduction = computed(() => props.energyProduction.toFixed(2));
+    const formattedEnergyConsumption = computed(() => props.energyConsumption.toFixed(2));
+    const formattedBatteryCharge = computed(() => props.batteryCharge.toFixed(2));
+    const formattedTotalPowerCost = computed(() => props.totalPowerCost.toFixed(4));
 
-    const formattedEnergyConsumption = computed(() => {
-      return props.energyConsumption.toFixed(2);
-    });
+    const heatPumpDisplay = computed(() => (props.heatPump ? '✔️' : '❌'));
+    const electricVehicleDisplay = computed(() => (props.electricVehicle ? '✔️' : '❌'));
 
-    const formattedBatteryCharge = computed(() => {
-      return props.batteryCharge.toFixed(2);
-    });
-
-    const formattedTotalPowerCost = computed(() => {
-      return props.totalPowerCost.toFixed(4);
-    });
-
-    const heatPumpDisplay = computed(() => props.heatPump ? '✔️' : '❌');
-    const electricVehicleDisplay = computed(() => props.electricVehicle ? '✔️' : '❌');
-
-    const energyProductionLabel = computed(() => {
-      return props.type === 'transformator' ? 'Energie om terug te leveren aan net' : 'Energie productie';
-    });
-
-    const energyConsumptionLabel = computed(() => {
-      return props.type === 'transformator' ? 'Energie aan huizen vanuit net' : 'Energie consumptie';
-    });
+    const energyProductionLabel = computed(() => (props.type === 'transformator' ? 'Energie om terug te leveren aan net' : 'Energie productie'));
+    const energyConsumptionLabel = computed(() => (props.type === 'transformator' ? 'Energie aan huizen vanuit net' : 'Energie consumptie'));
 
     const increaseValue = (property: string) => {
       emit('increase', property);
@@ -216,6 +175,11 @@ export default defineComponent({
 
     const closeDialog = () => {
       emit('update:isOpen', false);
+      emit('cancelChanges');
+    };
+
+    const submitChanges = () => {
+      emit('submitChanges');
     };
 
     return {
@@ -231,12 +195,25 @@ export default defineComponent({
       increaseValue,
       decreaseValue,
       closeDialog,
+      submitChanges
     };
-  },
+  }
 });
 </script>
 
 <style scoped>
+.header-container {
+  display: flex;
+  align-items: center;
+  margin: 2px;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 10px;
+}
+
 .popup-card {
   background-color: #f8f9fa; /* Neutrale achtergrond */
   color: #333;
@@ -248,14 +225,23 @@ export default defineComponent({
   color: #fff;
 }
 
-.close-btn {
-  background-color: #0077b6;
+.header-btn {
   color: #fff;
+  padding: 8px 16px;
+  border-radius: 5%;
+  margin: 10px;
+  width: auto;
+  white-space: nowrap;
 }
 
 .section {
   padding: 12px;
   border-radius: 8px;
+  margin: 0;
+}
+
+.main-contents {
+  padding: 0;
 }
 
 .energy-section {
