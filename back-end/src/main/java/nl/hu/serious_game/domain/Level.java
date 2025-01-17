@@ -13,6 +13,8 @@ public class Level implements Cloneable {
     private List<Transformer> transformers = new ArrayList<>();
     private Cost cost;
     private boolean isCompleted = false;
+    private int totalCosts = 0;
+    private float totalCO2 = 0;
 
     public Level(Season season, int startTime, int endTime, Objective objective, List<Transformer> transformers, Cost cost) {
         this.season = season;
@@ -54,19 +56,19 @@ public class Level implements Cloneable {
     }
 
     public int calculateTotalCosts() {
-        int totalCost = 0;
+        totalCosts = 0;
         for (Transformer transformer : this.getTransformers()) {
-            totalCost += transformer.getBatteries().getAmount() * this.getCost().getBatteryCost();
+            totalCosts += transformer.getBatteries().getAmount() * this.getCost().getBatteryCost();
             for (House house : transformer.getHouses()) {
-                totalCost += house.getTotalSolarPanels() * this.getCost().getSolarPanelCost();
-                totalCost += (house.getBattery() != null ? house.getBattery().getAmount() : 0) * this.getCost().getBatteryCost();
+                totalCosts += (house.getTotalSolarPanels() != 0 ? house.getTotalSolarPanels() : 0) * this.getCost().getSolarPanelCost();
+                totalCosts += (house.getBattery() != null ? house.getBattery().getAmount() : 0) * this.getCost().getBatteryCost();
             }
         }
-        return totalCost;
+        return totalCosts;
     }
 
     public float calculateTotalCO2() {
-        float totalCO2 = 0;
+        totalCO2 = 0;
         for (int hour = this.getStartTime(); hour <= this.getEndTime(); hour++) {
             for (Transformer transformer : this.getTransformers()) {
                 for (House house : transformer.getHouses()) {
@@ -115,6 +117,14 @@ public class Level implements Cloneable {
 
     public Cost getCost() {
         return cost;
+    }
+
+    public int getTotalCosts() {
+        return totalCosts;
+    }
+
+    public float getTotalCO2() {
+        return totalCO2;
     }
 
     public Level clone() {
