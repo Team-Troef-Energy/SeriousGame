@@ -1,4 +1,6 @@
 export interface house {
+  maxBatteryCount: number;
+  maxSolarPanelCount: number;
   id: number;
   totalPowerCost: number;
   consumption: number;
@@ -17,6 +19,7 @@ export interface house {
 }
 
 export interface transformer {
+  maxBatteryCount: number;
   id: number;
   batteries: { amount: number; totalCharge: number };
   houses: house[];
