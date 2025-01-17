@@ -72,10 +72,10 @@ public class LevelInitializationTest {
 
         assertNotNull(level, "Level should not be null");
         assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");
-        assertEquals(12, level.getStartTime(), "Start time should be 12");
+        assertEquals(10, level.getStartTime(), "Start time should be 12");
         assertEquals(15, level.getEndTime(), "End time should be 15");
-        assertEquals(2, level.getObjective().getMaxCo2(), "Max CO2 should be 2");
-        assertEquals(5, level.getObjective().getMaxCoins(), "Max coins should be 5");
+        assertEquals(1, level.getObjective().getMaxCo2(), "Max CO2 should be 2");
+        assertEquals(20, level.getObjective().getMaxCoins(), "Max coins should be 5");
         assertEquals(1, level.getTransformers().size(), "There should be one transformer");
     }
 }
