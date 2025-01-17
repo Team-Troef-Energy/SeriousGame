@@ -17,7 +17,7 @@ public class Runner implements CommandLineRunner {
     }
 
     private void createLevels() {
-        this.levels = List.of(createLevel1(), createLevel2(), createLevel3());
+        this.levels = List.of(createLevel1(), createLevel2(), createLevel3(), createLevel4());
     }
 
     private Level createLevel1() {
@@ -91,6 +91,32 @@ public class Runner implements CommandLineRunner {
 
         return level;
     }
+
+    private Level createLevel4() {
+    System.out.println("Creating level 4...");
+    // Create objective
+    Objective objective = new Objective(5, 100);
+
+    // Create a DayProfile
+    DayProfile dayProfile = new DayProfile(Season.SUMMER);
+
+    // Create houses
+    House house1 = new House(1, 0, dayProfile, new HouseOptions(false, true));
+    House house2 = new House(2, 0, dayProfile, new HouseOptions(true, false));
+    House house3 = new House(3, 0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.7f)));
+    House house4 = new House(4, 0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.5f)));
+    House house5 = new House(5, 0, dayProfile, new HouseOptions(false, false));
+
+    // Create a single transformer
+    Transformer transformer = new Transformer(1, List.of(house1, house2, house3, house4, house5), 0);
+
+        Level level = new Level(Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
+
+    System.out.println("Level 4 created!");
+    System.out.println(level);
+
+    return level;
+}
 
     public Level getLevel(int levelNumber) {
         return levels.get(levelNumber - 1);
