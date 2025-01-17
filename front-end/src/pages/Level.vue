@@ -69,7 +69,6 @@
       @submitChanges="submitChanges"
       @cancelChanges="cancelChanges"
     />
-    <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard 
       :coinsUsed="dashboardData.coinsUsed"
       :maxCoins="dashboardData.maxCoins"
