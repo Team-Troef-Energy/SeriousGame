@@ -73,6 +73,9 @@ public class LevelService {
                 level.setHouseSolarPanels(transformer.id(), house.id(), house.solarpanels());
             });
         });
+
+        checkLevelCompletion(level);
+
         return runLevel(level);
     }
 
@@ -109,10 +112,19 @@ public class LevelService {
         Season season = level.getSeason();
         ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
 
-        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective); // Return the LevelDTO
+        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.getIsCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
     }
 
     public int getTotalLevels() {
         return runner.getTotalLevels();
+    }
+
+    private void checkLevelCompletion(Level level) {
+        level.calculateTotalCosts();
+        level.calculateTotalCO2();
+
+        if (level.getTotalCosts() <= level.getObjective().getMaxCoins() && level.getTotalCO2() <= level.getObjective().getMaxCo2()) {
+            level.setIsCompleted();
+        }
     }
 }

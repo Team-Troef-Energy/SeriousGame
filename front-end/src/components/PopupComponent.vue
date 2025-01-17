@@ -59,8 +59,12 @@
                 <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
                 <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong></v-col>
-              <v-col cols="2" class="text-end highlight">{{ solarPanels }}</v-col>
+              <v-col cols="6" class="text-center"
+              ><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col
+              >
+              <v-col cols="2" class="text-end highlight"
+              >{{ solarPanels }}</v-col
+              >
             </v-row>
           </div>
 
@@ -71,7 +75,9 @@
                 <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
                 <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"><strong>Accu’s</strong></v-col>
+              <v-col cols="6" class="text-center"
+              ><strong>Accu’s</strong> (💰{{ batteryCost }})</v-col
+              >
               <v-col cols="2" class="text-end highlight">{{ batteries }}</v-col>
             </v-row>
             <v-row>
@@ -147,6 +153,14 @@ export default defineComponent({
       default: 0
     },
     totalPowerCost: {
+      type: Number,
+      default: 0
+    },
+    solarPanelCost: {
+      type: Number,
+      default: 0
+    },
+    batteryCost: {
       type: Number,
       default: 0
     }

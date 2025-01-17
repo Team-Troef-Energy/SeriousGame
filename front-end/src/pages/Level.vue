@@ -54,13 +54,31 @@
       :batteries="popupBatteries"
       :batteryCharge="popupBatteryCharge"
       :totalPowerCost="popupTotalPowerCost"
+      :solarPanelCost="popupSolarPanelCost"
+      :batteryCost="popupBatteryCost"
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
       @decrease="handleDecrease"
       @submitChanges="submitChanges"
       @cancelChanges="cancelChanges"
     />
-    <Dashboard></Dashboard>
+    <button id="submit-button" @click="submitChanges">Submit Changes</button>
+    <Dashboard 
+      :coinsUsed="dashboardData.coinsUsed"
+      :maxCoins="dashboardData.maxCoins"
+      :currentCO2="dashboardData.currentCO2"
+      :MaxCO2="dashboardData.maxCO2"
+      :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
+      :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
+      :objectiveStartTime="dashboardData.objectiveStartTime"
+      :objectiveEndTime="dashboardData.objectiveEndTime"
+      :season="dashboardData.season"
+    />
+    <Notification
+      v-if="notificationStatus"
+      :status="notificationStatus"
+      :message="notificationMessage"
+    />
   </div>
 </template>
 
@@ -74,6 +92,7 @@ import NavigateButton from "../components/NavigateButton.vue";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 import { useRoute } from "vue-router";
 import Dashboard from "../components/Dashboard.vue";
+import Notification from "../components/Notification.vue";
 
 export default defineComponent({
   name: "Level",
@@ -84,6 +103,7 @@ export default defineComponent({
     PopupComponent,
     NavigateButton,
     Dashboard,
+    Notification,
   },
   setup() {
     const route = useRoute();
@@ -107,7 +127,17 @@ export default defineComponent({
         }[];
       }[]
     >([]);
-    const dashboardData = ref(null);
+    const dashboardData = ref({
+      coinsUsed: 0,
+      maxCoins: 0,
+      currentCO2: 0,
+      maxCO2: 0,
+      totalEnergyConsumption: 0,
+      greenProducedEnergyPercentage: 0,
+      objectiveStartTime: 0,
+      objectiveEndTime: 0,
+      season: ''
+    });
 
     const isPopupOpen = ref(false);
     const popupTitle = ref("");
@@ -120,6 +150,11 @@ export default defineComponent({
     const popupBatteries = ref(0);
     const popupBatteryCharge = ref(0);
     const popupTotalPowerCost = ref(0);
+    const popupSolarPanelCost = ref(0);
+    const popupBatteryCost = ref(0);
+
+    const notificationStatus = ref(false);
+    const notificationMessage = ref("");
 
     // Used to store the initial popup data when the popup is opened so it can be cancelled
     const initialPopupData = ref({});
@@ -235,6 +270,10 @@ export default defineComponent({
       const greenProducedEnergyPercentage = (totalGreenProduction / totalProduction) * 100;
 
       dashboardData.value = {
+        coinsUsed: data.totalCosts,
+        maxCoins: data.objective.maxCoins,
+        currentCO2: data.totalCO2,
+        maxCO2: data.objective.maxCO2,
         totalEnergyConsumption: totalConsumption,
         greenProducedEnergyPercentage: greenProducedEnergyPercentage,
         objectiveStartTime: data.startTime,
@@ -270,8 +309,7 @@ export default defineComponent({
             50
         );
         transformers.value = lastHourData.transformers;
-        processDashboardData(response);
-
+        
         // Refresh popup data
         if (isPopupOpen.value) {
           if (popupType.value === "huis") {
@@ -290,6 +328,14 @@ export default defineComponent({
             }
           }
         }
+
+        processDashboardData(response);
+        
+        if (response.isCompleted === true) {
+          notificationStatus.value = true;
+          notificationMessage.value = "Level is behaald!";
+        }
+        
       } catch (error) {
         console.error("Failed to submit changes:", error);
       }
@@ -322,6 +368,8 @@ export default defineComponent({
       try {
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
+        popupSolarPanelCost.value = data.cost.solarPanelCost;
+        popupBatteryCost.value = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -355,6 +403,8 @@ export default defineComponent({
       popupTotalPowerCost,
       popupBatteries,
       popupBatteryCharge,
+      popupSolarPanelCost,
+      popupBatteryCost,
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
@@ -362,6 +412,8 @@ export default defineComponent({
       handleDecrease,
       submitChanges,
       cancelChanges,
+      notificationStatus,
+      notificationMessage,
     };
   },
 });
