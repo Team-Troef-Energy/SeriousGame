@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "http://troeftest.duckdns.org") // TODO: Adjust this to the front-end application's URL
+                .allowedOrigins("http://localhost:5173", "https://troefgame.duckdns.org") // TODO: Adjust this to the front-end application's URL
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
