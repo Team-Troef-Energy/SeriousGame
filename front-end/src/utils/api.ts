@@ -59,5 +59,5 @@ export async function fetchCountLevels(): Promise<any> {
 
 function getHost() {
   if (location.hostname === "localhost") return "localhost:8080";
-  return "troeftest.duckdns.org:5001";
+  return "troefgame.duckdns.org:5001";
 }
