@@ -49,8 +49,6 @@
 </template>
 
 <script lang="ts">
-import { CSSProperties } from "vue";
-
 export default {
   props: {
     x1: { type: Number, required: true },
@@ -85,7 +83,7 @@ export default {
     },
   },
   methods: {
-    showInfoBox(event) {
+    showInfoBox(event: any) {
       this.$emit("show-info-box", {
         x: event.clientX,
         y: event.clientY,

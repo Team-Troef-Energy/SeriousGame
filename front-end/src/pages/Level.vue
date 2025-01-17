@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, Ref } from "vue";
+import { defineComponent, ref, onMounted, Ref, CSSProperties } from "vue";
 import Transformer from "../components/Transformer.vue";
 import House from "../components/House.vue";
 import ConnectionLine from "../components/ConnectionLine.vue";
@@ -118,14 +118,12 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    if (!(typeof route === "string")) {
-      console.error("iets foutgegaan");
-    }
     let levelNumber = route.params.levelNmr;
 
     // this is to fix the typing, levelnumber should never actually be an object.
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
+      console.log(levelNumber);
       console.error("multiple level numbers were passed");
     }
 
@@ -167,7 +165,7 @@ export default defineComponent({
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
-    const infoBoxStyle = ref({
+    const infoBoxStyle: Ref<CSSProperties> = ref({
       position: "absolute",
       top: "0px",
       left: "0px",
@@ -378,7 +376,7 @@ export default defineComponent({
       }
     };
 
-    const showInfoBox = ({ x, y, contents }) => {
+    const showInfoBox = ({ x, y, contents }: { x: number; y: number; contents: any }) => {
       infoBoxVisible.value = true;
       infoBoxContents.value = contents;
       infoBoxStyle.value.top = `${y + 10}px`;
