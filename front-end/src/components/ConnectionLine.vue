@@ -1,94 +1,61 @@
 <template>
-  <div>
-    <svg :width="width" :height="height" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
-      <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2" :transform="rotationTransform" fill="red">
-        Congestie
-      </text>
-      <!-- Line with inner and outer colors -->
-      <line
+  <g>
+    <defs>
+      <marker id="start-arrowhead" markerWidth="5" markerHeight="7" refX="-5" refY="2" orient="auto">
+        <polygon points="0 2, 5 0, 5 4" fill="black" />
+      </marker>
+      <marker id="end-arrowhead" markerWidth="5" markerHeight="7" refX="10" refY="2" orient="auto">
+        <polygon points="0 0, 5 2, 0 4" fill="black" />
+      </marker>
+    </defs>
+    <text class="congestion-text-indicator" v-if="hasCongestion" :x="(x1 + x2) / 2" :y="(y1 + y2) / 2"
+          :transform="rotationTransform" fill="red">
+      Congestie
+    </text>
+    <!-- Line with inner and outer colors -->
+    <line
+        :x1="x1"
+        :y1="y1"
+        :x2="x2"
+        :y2="y2"
+        stroke="black"
+        stroke-width="6"
+        :marker-start="current > 0 && isProduction ? 'url(#start-arrowhead)' : ''"
+        :marker-end="current > 0 && !isProduction ? 'url(#end-arrowhead)' : ''"
+    />
+    <line
+        :x1="x1"
+        :y1="y1"
+        :x2="x2"
+        :y2="y2"
+        :stroke="innerLineColor"
+        stroke-width="2"
+    />
+    <!-- Invisible line with margin for easier hovering -->
+    <line class="infoBox-trigger"
           :x1="x1"
           :y1="y1"
           :x2="x2"
           :y2="y2"
-          stroke="black"
-          stroke-width="6"
-      />
-      <line
-          :x1="x1"
-          :y1="y1"
-          :x2="x2"
-          :y2="y2"
-          :stroke="innerLineColor"
-          stroke-width="2"
-      />
-      <!-- Invisible line with margin for easier hovering -->
-      <line class="infoBox-trigger"
-            :x1="x1"
-            :y1="y1"
-            :x2="x2"
-            :y2="y2"
-            stroke="transparent"
-            stroke-width="30"
-            @mouseover="showInfoBox"
-            @mouseout="hideInfoBox"
-      />
-    </svg>
-    <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox">
-      {{ infoBoxContents }}
-    </div>
-  </div>
+          stroke="transparent"
+          stroke-width="30"
+          @mouseover="showInfoBox"
+          @mouseout="hideInfoBox"
+    />
+  </g>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      infoBoxVisible: false,
-      infoBoxStyle: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        backgroundColor: '#333',
-        color: '#fff',
-        padding: '5px',
-        borderRadius: '3px',
-        pointerEvents: 'none',
-      },
-    };
-  },
   props: {
-    x1: {
-      type: Number,
-      required: true,
-    },
-    y1: {
-      type: Number,
-      required: true,
-    },
-    x2: {
-      type: Number,
-      required: true,
-    },
-    y2: {
-      type: Number,
-      required: true,
-    },
-    width: {
-      type: Number,
-      default: 1000,
-    },
-    height: {
-      type: Number,
-      default: 1000,
-    },
-    hasCongestion: {
-      type: Boolean,
-      default: false,
-    },
-    maxCurrent: {
-      type: Number,
-      default: 0,
-    },
+    x1: { type: Number, required: true },
+    y1: { type: Number, required: true },
+    x2: { type: Number, required: true },
+    y2: { type: Number, required: true },
+    hasCongestion: { type: Boolean, default: false },
+    maxCurrent: { type: Number, default: 0 },
+    isProduction: { type: Boolean, default: false },
+    current: { type: Number, default: 0 }
   },
   computed: {
     rotationTransform() {
@@ -102,7 +69,11 @@ export default {
       return `rotate(${angle}, ${cx}, ${cy})`;
     },
     infoBoxContents() {
-      return `Congestie: ${this.maxCurrent}kW`;
+      let contents = `Stroom: ${this.current.toPrecision(2)} kW`;
+      if (this.hasCongestion) {
+        contents = `Congestie: ${this.maxCurrent} kW<br>${contents}`;
+      }
+      return contents;
     },
     innerLineColor() {
       return this.hasCongestion ? 'red' : 'white';
@@ -110,12 +81,14 @@ export default {
   },
   methods: {
     showInfoBox(event) {
-      this.infoBoxVisible = true;
-      this.infoBoxStyle.top = `${event.clientY + 10}px`;
-      this.infoBoxStyle.left = `${event.clientX + 10}px`;
+      this.$emit('show-info-box', {
+        x: event.clientX,
+        y: event.clientY,
+        contents: this.infoBoxContents,
+      });
     },
     hideInfoBox() {
-      this.infoBoxVisible = false;
+      this.$emit('hide-info-box');
     },
   },
 };
@@ -124,10 +97,6 @@ export default {
 <style scoped>
 .infoBox-trigger {
   cursor: help;
-  z-index: 1000;
-}
-.infoBox {
-  font-size: 14px;
   z-index: 1000;
 }
 </style>

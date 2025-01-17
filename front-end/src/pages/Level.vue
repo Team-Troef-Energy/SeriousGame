@@ -1,23 +1,29 @@
 <template>
   <div class="level-container">
     <NavigateButton
-      id="navigate-button"
-      label="Verlaat level"
-      to="/levelSelect"
-      backgroundColor="#cc0000" />
+        id="navigate-button"
+        label="Verlaat level"
+        to="/levelSelect"
+        backgroundColor="#cc0000" />
     <div ref="gameCanvas" class="game-canvas">
-      <template v-for="transformer in transformers">
-        <ConnectionLine
-          v-for="house in transformer.houses"
-          :key="'connection-' + house.id"
-          :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-          :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
-          :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-          :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
-          :hasCongestion="house.hasCongestion"
-          :maxCurrent="house.maxCurrent"
-        />
-      </template>
+      <svg :width="1000" :height="1000" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
+        <template v-for="transformer in transformers">
+          <ConnectionLine
+              v-for="house in transformer.houses"
+              :key="'connection-' + house.id"
+              :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
+              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
+              :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
+              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
+              :hasCongestion="house.hasCongestion"
+              :is-production="house.current.direction === 'PRODUCTION'"
+              :current="house.current.amount"
+              :maxCurrent="house.maxCurrent"
+              @show-info-box="showInfoBox"
+              @hide-info-box="hideInfoBox"
+          />
+        </template>
+      </svg>
       <template v-for="transformer in transformers">
         <transformer
             v-for="transformer in transformers"
@@ -27,20 +33,21 @@
             :hasBatteries="transformer.batteries.amount > 0"
         />
         <House
-          v-for="house in transformer.houses"
-          :key="'house-' + house.id"
-          :style="{
+            v-for="house in transformer.houses"
+            :key="'house-' + house.id"
+            :style="{
             position: 'absolute',
             left: (housePositions[house.id - 1] % 10) * 150 + 'px',
             top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px',
           }"
-          @click="showHouseDetails(house)"
-          :hasElectricCar="house.hasElectricVehicle"
-          :hasHeatPump="house.hasHeatpump"
-          :hasSolarPanels="house.solarpanels > 0"
-          :hasBatteries="house.batteries.amount > 0" />
+            @click="showHouseDetails(house)"
+            :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump"
+            :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries.amount > 0" />
       </template>
     </div>
+    <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
     <PopupComponent
       v-if="isPopupOpen"
       :isOpen="isPopupOpen"
@@ -111,19 +118,20 @@ export default defineComponent({
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
     const transformers = ref<
-      {
-        id: number;
-        batteries: { amount: number; totalCharge: number };
-        houses: {
+        {
           id: number;
-          batteries: { amount: number; currentCharge: number };
-          solarpanels: number;
-          hasCongestion: boolean;
-          maxCurrent: number;
-          hasElectricVehicle: boolean;
-          hasHeatpump: boolean;
-        }[];
-      }[]
+          batteries: { amount: number; totalCharge: number };
+          houses: {
+            id: number;
+            batteries: { amount: number; currentCharge: number };
+            current: { amount: number; direction: string };
+            solarpanels: number;
+            hasCongestion: boolean;
+            maxCurrent: number;
+            hasElectricVehicle: boolean;
+            hasHeatpump: boolean;
+          }[];
+        }[]
     >([]);
     const dashboardData = ref({
       coinsUsed: 0,
@@ -153,6 +161,19 @@ export default defineComponent({
 
     const notificationStatus = ref(false);
     const notificationMessage = ref("");
+
+    const infoBoxVisible = ref(false);
+    const infoBoxContents = ref("");
+    const infoBoxStyle = ref({
+      position: 'absolute',
+      top: '0px',
+      left: '0px',
+      backgroundColor: '#333',
+      color: '#fff',
+      padding: '10px',
+      borderRadius: '5px',
+      pointerEvents: 'none',
+    });
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions = [];
@@ -184,9 +205,9 @@ export default defineComponent({
       popupTitle.value = `Transformator ${transformer.id}`;
       popupType.value = "transformator";
       popupEnergyProduction.value =
-        transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
+          transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
       popupEnergyConsumption.value =
-        transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
+          transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
       popupBatteries.value = transformer.batteries.amount;
       popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
@@ -194,8 +215,8 @@ export default defineComponent({
 
     const updateSolarPanels = (newValue: number) => {
       const house = transformers.value
-        .flatMap((t) => t.houses)
-        .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+          .flatMap((t) => t.houses)
+          .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
       if (house) {
         house.solarpanels = newValue;
       }
@@ -204,14 +225,14 @@ export default defineComponent({
     const updateBatteries = (newValue: number) => {
       if (popupType.value === "huis") {
         const house = transformers.value
-          .flatMap((t) => t.houses)
-          .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+            .flatMap((t) => t.houses)
+            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
         if (house) {
           house.batteries.amount = newValue;
         }
       } else if (popupType.value === "transformator") {
         const transformer = transformers.value.find(
-          (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+            (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
         );
         if (transformer) {
           transformer.batteries.amount = newValue;
@@ -291,11 +312,11 @@ export default defineComponent({
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
-          lastHourData.transformers.reduce(
-            (acc, transformer) => acc + transformer.houses.length,
-            0
-          ),
-          50
+            lastHourData.transformers.reduce(
+                (acc, transformer) => acc + transformer.houses.length,
+                0
+            ),
+            50
         );
         transformers.value = lastHourData.transformers;
         processDashboardData(response);
@@ -308,6 +329,17 @@ export default defineComponent({
       }
     };
 
+    const showInfoBox = ({ x, y, contents }) => {
+      infoBoxVisible.value = true;
+      infoBoxContents.value = contents;
+      infoBoxStyle.value.top = `${y + 10}px`;
+      infoBoxStyle.value.left = `${x + 10}px`;
+    };
+
+    const hideInfoBox = () => {
+      infoBoxVisible.value = false;
+    };
+
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
@@ -317,11 +349,11 @@ export default defineComponent({
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
-          lastHourData.transformers.reduce(
-            (acc, transformer) => acc + transformer.houses.length,
-            0
-          ),
-          50
+            lastHourData.transformers.reduce(
+                (acc, transformer) => acc + transformer.houses.length,
+                0
+            ),
+            50
         );
         transformers.value = lastHourData.transformers;
         processDashboardData(data);
@@ -355,6 +387,11 @@ export default defineComponent({
       handleIncrease,
       handleDecrease,
       submitChanges,
+      infoBoxVisible,
+      infoBoxContents,
+      infoBoxStyle,
+      showInfoBox,
+      hideInfoBox,
       notificationStatus,
       notificationMessage,
     };
@@ -387,5 +424,11 @@ export default defineComponent({
   z-index: 1000;
   position: absolute;
   margin: 10px;
+}
+
+.infoBox {
+  font-size: 14px;
+  z-index: 1000;
+  white-space: nowrap;
 }
 </style>
