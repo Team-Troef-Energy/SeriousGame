@@ -3,10 +3,16 @@
     <v-card class="popup-card">
       <!-- Titelbalk -->
       <v-card-title class="popup-title text-h5">
-        <v-row>
-          <v-col cols="12" class="header-container">
+        <v-row class="justify-space-between">
+          <v-col class="d-flex align-center">
             <v-icon icon="mdi-information" size="24" class="mr-2"></v-icon>
             <h1 class="header-title">{{ title }}</h1>
+          </v-col>
+          <v-col class="d-flex justify-end">
+            <v-btn class="header-btn" variant="tonal" @click="closeDialog">
+              Sluiten
+              <v-icon icon="mdi-close" end></v-icon>
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-title>
