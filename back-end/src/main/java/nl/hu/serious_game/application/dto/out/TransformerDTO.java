@@ -9,6 +9,6 @@ public record TransformerDTO(
         CurrentDTO current,
         Congestion congestion,
         List<HouseDTO> houses,
-        BatteryDTO batteries
-) {
+        BatteryDTO batteries,
+        int maxBatteryCount) {
 }

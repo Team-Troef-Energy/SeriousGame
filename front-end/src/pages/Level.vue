@@ -129,8 +129,26 @@ export default defineComponent({
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
-    const transformers = ref<transformer[]>([]);
-    const dashboardData: Ref<any, any> = ref({
+    const transformers = ref<
+        {
+          id: number;
+          batteries: { amount: number; totalCharge: number };
+          maxBatteryCount: number;
+          houses: {
+            id: number;
+            batteries: { amount: number; currentCharge: number };
+            current: { amount: number; direction: string };
+            solarpanels: number;
+            hasCongestion: boolean;
+            maxCurrent: number;
+            hasElectricVehicle: boolean;
+            hasHeatpump: boolean;
+            maxSolarPanelCount: number;
+            maxBatteryCount: number;
+          }[];
+        }[]
+    >([]);
+    const dashboardData = ref({
       coinsUsed: 0,
       maxCoins: 0,
       currentCO2: 0,
@@ -244,11 +262,31 @@ export default defineComponent({
 
     const handleIncrease = (property: string) => {
       if (property === "solarPanels") {
-        popupSolarPanels.value += 1;
-        updateSolarPanels(popupSolarPanels.value);
+        const house = transformers.value
+            .flatMap((t) => t.houses)
+            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+        if (house && house.solarpanels < house.maxSolarPanelCount) {
+          popupSolarPanels.value += 1;
+          updateSolarPanels(popupSolarPanels.value);
+        }
       } else if (property === "batteries") {
-        popupBatteries.value += 1;
-        updateBatteries(popupBatteries.value);
+        if (popupType.value === "huis") {
+          const house = transformers.value
+              .flatMap((t) => t.houses)
+              .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+          if (house && house.batteries.amount < house.maxBatteryCount) {
+            popupBatteries.value += 1;
+            updateBatteries(popupBatteries.value);
+          }
+        } else if (popupType.value === "transformator") {
+          const transformer = transformers.value.find(
+              (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+          );
+          if (transformer && transformer.batteries.amount < transformer.maxBatteryCount) {
+            popupBatteries.value += 1;
+            updateBatteries(popupBatteries.value);
+          }
+        }
       }
     };
 

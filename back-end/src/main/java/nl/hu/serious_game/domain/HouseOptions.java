@@ -6,6 +6,8 @@ public class HouseOptions {
     private boolean hasHeatPump;
     private boolean hasElectricVehicle;
     private Congestion congestion;
+    private int maxSolarPanelCount = 14;
+    private int maxBatteryCount = 2;
 
     public HouseOptions() {
         this.hasHeatPump = false;
@@ -39,6 +41,14 @@ public class HouseOptions {
 
     public float maxCurrent() {
         return congestion.maxCurrent();
+    }
+
+    public int maxSolarPanelCount() {
+        return maxSolarPanelCount;
+    }
+
+    public int maxBatteryCount() {
+        return maxBatteryCount;
     }
 
     @Override
