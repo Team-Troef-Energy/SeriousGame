@@ -1,8 +1,8 @@
 <template>
-  <div><Dashboard></Dashboard></div>
+  <div></div>
 </template>
 
-<script>
+<script lang="ts">
 import Transformer from "../components/Transformer.vue";
 import Dashboard from "../components/Dashboard.vue";
 

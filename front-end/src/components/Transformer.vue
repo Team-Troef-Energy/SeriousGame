@@ -1,10 +1,5 @@
 <template>
-  <svg
-      :width="width"
-      :height="height"
-      viewBox="0 0 200 250"
-      xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg :width="width" :height="height" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
     <!-- Transformer Base -->
     <rect x="50" y="80" width="100" height="120" fill="#708090" stroke="#2F4F4F" stroke-width="2" />
 
@@ -32,8 +27,22 @@
     <!-- Batteries -->
     <g v-if="hasBatteries">
       <!-- Battery Shapes -->
-      <rect x="133" y="127" width="4" height="20" fill="#FFD700" stroke="#DAA520" stroke-width="1" />
-      <rect x="130" y="130" width="10" height="20" fill="#FFD700" stroke="#DAA520" stroke-width="1" />
+      <rect
+        x="133"
+        y="127"
+        width="4"
+        height="20"
+        fill="#FFD700"
+        stroke="#DAA520"
+        stroke-width="1" />
+      <rect
+        x="130"
+        y="130"
+        width="10"
+        height="20"
+        fill="#FFD700"
+        stroke="#DAA520"
+        stroke-width="1" />
       <!-- Battery Icons -->
       <line x1="133" y1="135" x2="137" y2="135" stroke="#000" stroke-width="1" />
       <line x1="135" y1="137" x2="135" y2="133" stroke="#000" stroke-width="1" />
@@ -42,7 +51,7 @@
   </svg>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     width: {

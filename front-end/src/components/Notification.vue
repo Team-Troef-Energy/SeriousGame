@@ -1,9 +1,6 @@
 <template>
-  <v-dialog
-      v-model="status"
-      transition="dialog-bottom-transition"
-      width="auto">
-    <template v-slot:default="{ isActive }">
+  <v-dialog v-model="status" transition="dialog-bottom-transition" width="auto">
+    <template v-slot:default="">
       <v-card>
         <v-card-text class="text-h2 pa-12">
           {{ message }}
@@ -20,28 +17,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import NavigateButton from '../components/NavigateButton.vue';
+import { defineComponent } from "vue";
+import NavigateButton from "../components/NavigateButton.vue";
 
 export default defineComponent({
-  name: 'Notification',
+  name: "Notification",
   components: {
-    NavigateButton
+    NavigateButton,
   },
   props: {
     status: {
       type: Boolean,
-      required: true
+      required: true,
     },
     message: {
       type: String,
-      required: true
+      required: true,
     },
     showConfetti: {
       type: Boolean,
-      default: true
-    }
-  }
+      default: true,
+    },
+  },
 });
 </script>
 
@@ -67,41 +64,71 @@ export default defineComponent({
 }
 
 .confetti:nth-child(1) {
-  background-color: #f2d74e; left: 10%; animation-delay: 0;
+  background-color: #f2d74e;
+  left: 10%;
+  animation-delay: 0;
 }
 .confetti:nth-child(2) {
-  background-color: #95c3de; left: 20%; animation-delay: -5s;
+  background-color: #95c3de;
+  left: 20%;
+  animation-delay: -5s;
 }
 .confetti:nth-child(3) {
-  background-color: #ff9a91; left: 30%; animation-delay: -3s;
+  background-color: #ff9a91;
+  left: 30%;
+  animation-delay: -3s;
 }
 .confetti:nth-child(4) {
-  background-color: #f2d74e; left: 40%; animation-delay: -2.5s;
+  background-color: #f2d74e;
+  left: 40%;
+  animation-delay: -2.5s;
 }
 .confetti:nth-child(5) {
-  background-color: #95c3de; left: 50%; animation-delay: -4s;
+  background-color: #95c3de;
+  left: 50%;
+  animation-delay: -4s;
 }
 .confetti:nth-child(6) {
-  background-color: #ff9a91; left: 60%; animation-delay: -6s;
+  background-color: #ff9a91;
+  left: 60%;
+  animation-delay: -6s;
 }
 .confetti:nth-child(7) {
-  background-color: #f2d74e; left: 70%; animation-delay: -1.5s;
+  background-color: #f2d74e;
+  left: 70%;
+  animation-delay: -1.5s;
 }
 .confetti:nth-child(8) {
-  background-color: #95c3de; left: 80%; animation-delay: -2s;
+  background-color: #95c3de;
+  left: 80%;
+  animation-delay: -2s;
 }
 .confetti:nth-child(9) {
-  background-color: #ff9a91; left: 90%; animation-delay: -3.5s;
+  background-color: #ff9a91;
+  left: 90%;
+  animation-delay: -3.5s;
 }
 .confetti:nth-child(10) {
-  background-color: #f2d74e; left: 100%; animation-delay: -2.5s;
+  background-color: #f2d74e;
+  left: 100%;
+  animation-delay: -2.5s;
 }
 
 @keyframes confetti {
-  0% { transform: rotateZ(15deg) rotateY(0deg) translate(0,0); }
-  25% { transform: rotateZ(5deg) rotateY(360deg) translate(-5vw,20vh); }
-  50% { transform: rotateZ(15deg) rotateY(720deg) translate(5vw,60vh); }
-  75% { transform: rotateZ(5deg) rotateY(1080deg) translate(-10vw,80vh); }
-  100% { transform: rotateZ(15deg) rotateY(1440deg) translate(10vw,110vh); }
+  0% {
+    transform: rotateZ(15deg) rotateY(0deg) translate(0, 0);
+  }
+  25% {
+    transform: rotateZ(5deg) rotateY(360deg) translate(-5vw, 20vh);
+  }
+  50% {
+    transform: rotateZ(15deg) rotateY(720deg) translate(5vw, 60vh);
+  }
+  75% {
+    transform: rotateZ(5deg) rotateY(1080deg) translate(-10vw, 80vh);
+  }
+  100% {
+    transform: rotateZ(15deg) rotateY(1440deg) translate(10vw, 110vh);
+  }
 }
 </style>

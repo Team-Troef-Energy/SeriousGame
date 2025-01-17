@@ -1,50 +1,56 @@
 <template>
   <div class="level-container">
     <NavigateButton
-        id="navigate-button"
-        label="Verlaat level"
-        to="/levelSelect"
-        backgroundColor="#cc0000" />
+      id="navigate-button"
+      label="Verlaat level"
+      to="/levelSelect"
+      backgroundColor="#cc0000" />
     <div ref="gameCanvas" class="game-canvas">
-      <svg :width="1000" :height="1000" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
+      <svg
+        :width="1000"
+        :height="1000"
+        xmlns="http://www.w3.org/2000/svg"
+        style="position: absolute; top: 0; left: 0">
         <template v-for="transformer in transformers">
           <ConnectionLine
-              v-for="house in transformer.houses"
-              :key="'connection-' + house.id"
-              :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
-              :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
-              :hasCongestion="house.hasCongestion"
-              :is-production="house.current.direction === 'PRODUCTION'"
-              :current="house.current.amount"
-              :maxCurrent="house.maxCurrent"
-              @show-info-box="showInfoBox"
-              @hide-info-box="hideInfoBox"
-          />
+            v-for="house in transformer.houses"
+            :key="'connection-' + house.id"
+            :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
+            :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
+            :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
+            :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
+            :hasCongestion="house.hasCongestion"
+            :is-production="house.current.direction === 'PRODUCTION'"
+            :current="house.current.amount"
+            :maxCurrent="house.maxCurrent"
+            @show-info-box="showInfoBox"
+            @hide-info-box="hideInfoBox" />
         </template>
       </svg>
       <template v-for="transformer in transformers">
         <transformer
-            v-for="transformer in transformers"
-            :key="'transformer-' + transformer.id"
-            :style="{ position: 'absolute', left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px', top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px' }"
-            @click="showTransformerDetails(transformer)"
-            :hasBatteries="transformer.batteries.amount > 0"
-        />
+          v-for="transformer in transformers"
+          :key="'transformer-' + transformer.id"
+          :style="{
+            position: 'absolute',
+            left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
+            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px',
+          }"
+          @click="showTransformerDetails(transformer)"
+          :hasBatteries="transformer.batteries.amount > 0" />
         <House
-            v-for="house in transformer.houses"
-            :key="'house-' + house.id"
-            :style="{
+          v-for="house in transformer.houses"
+          :key="'house-' + house.id"
+          :style="{
             position: 'absolute',
             left: (housePositions[house.id - 1] % 10) * 150 + 'px',
             top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px',
           }"
-            @click="showHouseDetails(house)"
-            :hasElectricCar="house.hasElectricVehicle"
-            :hasHeatPump="house.hasHeatpump"
-            :hasSolarPanels="house.solarpanels > 0"
-            :hasBatteries="house.batteries.amount > 0" />
+          @click="showHouseDetails(house)"
+          :hasElectricCar="house.hasElectricVehicle"
+          :hasHeatPump="house.hasHeatpump"
+          :hasSolarPanels="house.solarpanels > 0"
+          :hasBatteries="house.batteries.amount > 0" />
       </template>
     </div>
     <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
@@ -67,9 +73,8 @@
       @increase="handleIncrease"
       @decrease="handleDecrease"
       @submitChanges="submitChanges"
-      @cancelChanges="cancelChanges"
-    />
-    <Dashboard 
+      @cancelChanges="cancelChanges" />
+    <Dashboard
       :coinsUsed="dashboardData.coinsUsed"
       :maxCoins="dashboardData.maxCoins"
       :currentCO2="dashboardData.currentCO2"
@@ -78,18 +83,16 @@
       :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
       :objectiveStartTime="dashboardData.objectiveStartTime"
       :objectiveEndTime="dashboardData.objectiveEndTime"
-      :season="dashboardData.season"
-    />
+      :season="dashboardData.season" />
     <Notification
       v-if="notificationStatus"
       :status="notificationStatus"
-      :message="notificationMessage"
-    />
+      :message="notificationMessage" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, Ref, CSSProperties } from "vue";
 import Transformer from "../components/Transformer.vue";
 import House from "../components/House.vue";
 import ConnectionLine from "../components/ConnectionLine.vue";
@@ -99,6 +102,7 @@ import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 import { useRoute } from "vue-router";
 import Dashboard from "../components/Dashboard.vue";
 import Notification from "../components/Notification.vue";
+import { house, levelData, transformer } from "../typing";
 
 export default defineComponent({
   name: "Level",
@@ -113,7 +117,14 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const levelNumber = route.params.levelNmr;
+    let levelNumber = route.params.levelNmr;
+
+    // this is to fix the typing, levelnumber should never actually be an object.
+    if (typeof levelNumber === "object") {
+      levelNumber = levelNumber[0];
+      console.log(levelNumber);
+      console.error("multiple level numbers were passed");
+    }
 
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
@@ -146,7 +157,7 @@ export default defineComponent({
       greenProducedEnergyPercentage: 0,
       objectiveStartTime: 0,
       objectiveEndTime: 0,
-      season: ''
+      season: "",
     });
 
     const isPopupOpen = ref(false);
@@ -171,26 +182,26 @@ export default defineComponent({
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
-    const infoBoxStyle = ref({
-      position: 'absolute',
-      top: '0px',
-      left: '0px',
-      backgroundColor: '#333',
-      color: '#fff',
-      padding: '10px',
-      borderRadius: '5px',
-      pointerEvents: 'none',
+    const infoBoxStyle: Ref<CSSProperties> = ref({
+      position: "absolute",
+      top: "0px",
+      left: "0px",
+      backgroundColor: "#333",
+      color: "#fff",
+      padding: "10px",
+      borderRadius: "5px",
+      pointerEvents: "none",
     });
 
     const generatePositions = (count: number, start: number): number[] => {
-      const positions = [];
+      const positions: number[] = [];
       for (let i = 0; i < count; i++) {
         positions.push(start + i);
       }
       return positions;
     };
 
-    const showHouseDetails = (house: { id: number, batteries: { amount: number, totalCharge: number }, solarpanels: number, production: number, consumption: number, totalPowerCost: number, hasHeatpump: boolean, hasElectricVehicle: boolean }) => {
+    const showHouseDetails = (house: house) => {
       popupTitle.value = `Huis ${house.id}`;
       popupType.value = "huis";
       popupEnergyProduction.value = house.production;
@@ -207,17 +218,13 @@ export default defineComponent({
       initialPopupData.value = { ...house, batteries: { ...house.batteries } };
     };
 
-    const showTransformerDetails = (transformer: {
-      id: number;
-      current: { amount: number; direction: string };
-      batteries: { amount: number; totalCharge: number };
-    }) => {
+    const showTransformerDetails = (transformer: transformer) => {
       popupTitle.value = `Transformator ${transformer.id}`;
       popupType.value = "transformator";
       popupEnergyProduction.value =
-          transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
+        transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
       popupEnergyConsumption.value =
-          transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
+        transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
       popupBatteries.value = transformer.batteries.amount;
       popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
@@ -228,8 +235,8 @@ export default defineComponent({
 
     const updateSolarPanels = (newValue: number) => {
       const house = transformers.value
-          .flatMap((t) => t.houses)
-          .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+        .flatMap((t) => t.houses)
+        .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
       if (house) {
         house.solarpanels = newValue;
       }
@@ -238,14 +245,14 @@ export default defineComponent({
     const updateBatteries = (newValue: number) => {
       if (popupType.value === "huis") {
         const house = transformers.value
-            .flatMap((t) => t.houses)
-            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+          .flatMap((t) => t.houses)
+          .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
         if (house) {
           house.batteries.amount = newValue;
         }
       } else if (popupType.value === "transformator") {
         const transformer = transformers.value.find(
-            (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+          (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
         );
         if (transformer) {
           transformer.batteries.amount = newValue;
@@ -293,17 +300,17 @@ export default defineComponent({
       }
     };
 
-    const processDashboardData = (data) => {
+    const processDashboardData = (data: levelData) => {
       const lastHourData = data.hours[data.hours.length - 1];
       let totalConsumption = 0;
       let totalGreenProduction = 0;
       let totalGreyProduction = 0;
 
-      lastHourData.transformers.forEach((transformer) => {
+      lastHourData.transformers.forEach((transformer: transformer) => {
         if (transformer.current.direction === "DEMAND") {
           totalGreyProduction += transformer.current.amount; // Grey energy from transformers
         }
-        transformer.houses.forEach((house) => {
+        transformer.houses.forEach((house: house) => {
           totalConsumption += house.consumption;
           totalGreenProduction += house.production; // Green energy from houses
         });
@@ -345,26 +352,26 @@ export default defineComponent({
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
-            lastHourData.transformers.reduce(
-                (acc, transformer) => acc + transformer.houses.length,
-                0
-            ),
-            50
+          lastHourData.transformers.reduce(
+            (acc: number, transformer: any) => acc + transformer.houses.length,
+            0
+          ),
+          50
         );
         transformers.value = lastHourData.transformers;
-        
+
         // Refresh popup data
         if (isPopupOpen.value) {
           if (popupType.value === "huis") {
             const house = transformers.value
-                .flatMap((t) => t.houses)
-                .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+              .flatMap((t) => t.houses)
+              .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
             if (house) {
               showHouseDetails(house);
             }
           } else if (popupType.value === "transformator") {
             const transformer = transformers.value.find(
-                (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+              (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
             );
             if (transformer) {
               showTransformerDetails(transformer);
@@ -373,12 +380,11 @@ export default defineComponent({
         }
 
         processDashboardData(response);
-        
+
         if (response.isCompleted === true) {
           notificationStatus.value = true;
           notificationMessage.value = "Level is behaald! 🥳";
         }
-        
       } catch (error) {
         console.error("Failed to submit changes:", error);
       }
@@ -387,27 +393,27 @@ export default defineComponent({
     const cancelChanges = async () => {
       try {
         // Revert to initial popup data
-        if (popupType.value === 'huis') {
+        if (popupType.value === "huis") {
           const house = transformers.value
-              .flatMap((t) => t.houses)
-              .find((h) => h.id === parseInt(popupTitle.value.split(' ')[1]));
+            .flatMap((t) => t.houses)
+            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
           if (house) {
             Object.assign(house, initialPopupData.value);
           }
-        } else if (popupType.value === 'transformator') {
+        } else if (popupType.value === "transformator") {
           const transformer = transformers.value.find(
-              (t) => t.id === parseInt(popupTitle.value.split(' ')[1])
+            (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
           );
           if (transformer) {
             Object.assign(transformer, initialPopupData.value);
           }
         }
       } catch (error) {
-        console.error('Failed to cancel changes:', error);
+        console.error("Failed to cancel changes:", error);
       }
     };
-      
-    const showInfoBox = ({ x, y, contents }) => {
+
+    const showInfoBox = ({ x, y, contents }: { x: number; y: number; contents: any }) => {
       infoBoxVisible.value = true;
       infoBoxContents.value = contents;
       infoBoxStyle.value.top = `${y + 10}px`;
@@ -427,11 +433,11 @@ export default defineComponent({
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
-            lastHourData.transformers.reduce(
-                (acc, transformer) => acc + transformer.houses.length,
-                0
-            ),
-            50
+          lastHourData.transformers.reduce(
+            (acc: number, transformer: any) => acc + transformer.houses.length,
+            0
+          ),
+          50
         );
         transformers.value = lastHourData.transformers;
         processDashboardData(data);

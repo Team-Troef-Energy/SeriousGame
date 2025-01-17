@@ -2,14 +2,14 @@
   <v-btn @click="handleClick">{{ this.level }}</v-btn>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, toRefs } from "vue";
 import router from "../router/Router";
 export default defineComponent({
   name: "LevelSelectButton",
   props: {
     level: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
