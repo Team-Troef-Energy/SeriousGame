@@ -104,7 +104,8 @@ public class LevelService {
                         current,
                         transformer.getCongestion(),
                         houseDTOs,
-                        batteryDTO
+                        batteryDTO,
+                        transformer.getMaxBatteryCount()
                 ));
             }
             hours.add(new HourDTO(hour, transformerDTOs));
