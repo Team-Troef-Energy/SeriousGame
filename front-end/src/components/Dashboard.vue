@@ -92,6 +92,7 @@ export default defineComponent({
   text-align: center;
   align-items: center;
   font-weight: bold;
+  color: white;
 }
 
 .underline {
