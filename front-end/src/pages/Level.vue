@@ -49,24 +49,31 @@
     </div>
     <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
     <PopupComponent
-        v-if="isPopupOpen"
-        :isOpen="isPopupOpen"
-        :title="popupTitle"
-        :type="popupType"
-        :energyProduction="popupEnergyProduction"
-        :energyConsumption="popupEnergyConsumption"
-        :heatPump="popupHeatPump"
-        :electricVehicle="popupElectricVehicle"
-        :solarPanels="popupSolarPanels"
-        :batteries="popupBatteries"
-        :batteryCharge="popupBatteryCharge"
-        :totalPowerCost="popupTotalPowerCost"
-        @update:isOpen="isPopupOpen = $event"
-        @increase="handleIncrease"
-        @decrease="handleDecrease"
+      v-if="isPopupOpen"
+      :isOpen="isPopupOpen"
+      :title="popupTitle"
+      :type="popupType"
+      :energyProduction="popupEnergyProduction"
+      :energyConsumption="popupEnergyConsumption"
+      :heatPump="popupHeatPump"
+      :electricVehicle="popupElectricVehicle"
+      :solarPanels="popupSolarPanels"
+      :batteries="popupBatteries"
+      :batteryCharge="popupBatteryCharge"
+      :totalPowerCost="popupTotalPowerCost"
+      :solarPanelCost="popupSolarPanelCost"
+      :batteryCost="popupBatteryCost"
+      @update:isOpen="isPopupOpen = $event"
+      @increase="handleIncrease"
+      @decrease="handleDecrease"
     />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard></Dashboard>
+    <Notification
+      v-if="notificationStatus"
+      :status="notificationStatus"
+      :message="notificationMessage"
+    />
   </div>
 </template>
 
@@ -80,6 +87,7 @@ import NavigateButton from "../components/NavigateButton.vue";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 import { useRoute } from "vue-router";
 import Dashboard from "../components/Dashboard.vue";
+import Notification from "../components/Notification.vue";
 
 export default defineComponent({
   name: "Level",
@@ -90,6 +98,7 @@ export default defineComponent({
     PopupComponent,
     NavigateButton,
     Dashboard,
+    Notification,
   },
   setup() {
     const route = useRoute();
@@ -127,6 +136,11 @@ export default defineComponent({
     const popupBatteries = ref(0);
     const popupBatteryCharge = ref(0);
     const popupTotalPowerCost = ref(0);
+    const popupSolarPanelCost = ref(0);
+    const popupBatteryCost = ref(0);
+
+    const notificationStatus = ref(false);
+    const notificationMessage = ref("");
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
@@ -281,6 +295,10 @@ export default defineComponent({
             50
         );
         transformers.value = lastHourData.transformers;
+        if (response.isCompleted === true) {
+          notificationStatus.value = true;
+          notificationMessage.value = "Level is behaald!";
+        }
         processDashboardData(response);
       } catch (error) {
         console.error("Failed to submit changes:", error);
@@ -302,6 +320,8 @@ export default defineComponent({
       try {
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
+        popupSolarPanelCost.value = data.cost.solarPanelCost;
+        popupBatteryCost.value = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -335,6 +355,8 @@ export default defineComponent({
       popupTotalPowerCost,
       popupBatteries,
       popupBatteryCharge,
+      popupSolarPanelCost,
+      popupBatteryCost,
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
@@ -346,6 +368,8 @@ export default defineComponent({
       infoBoxStyle,
       showInfoBox,
       hideInfoBox,
+      notificationStatus,
+      notificationMessage,
     };
   },
 });
