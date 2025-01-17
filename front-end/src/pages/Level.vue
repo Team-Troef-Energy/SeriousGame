@@ -66,6 +66,8 @@
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
       @decrease="handleDecrease"
+      @submitChanges="submitChanges"
+      @cancelChanges="cancelChanges"
     />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard 
@@ -162,6 +164,9 @@ export default defineComponent({
     const notificationStatus = ref(false);
     const notificationMessage = ref("");
 
+    // Used to store the initial popup data when the popup is opened so it can be cancelled
+    const initialPopupData = ref({});
+
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
     const infoBoxStyle = ref({
@@ -195,6 +200,9 @@ export default defineComponent({
       popupBatteryCharge.value = house.batteries.totalCharge;
       popupTotalPowerCost.value = house.totalPowerCost;
       isPopupOpen.value = true;
+
+      // Store initial popup data to allow for cancelling changes
+      initialPopupData.value = { ...house, batteries: { ...house.batteries } };
     };
 
     const showTransformerDetails = (transformer: {
@@ -211,6 +219,9 @@ export default defineComponent({
       popupBatteries.value = transformer.batteries.amount;
       popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
+
+      // Store initial popup data to allow for cancelling changes
+      initialPopupData.value = { ...transformer, batteries: { ...transformer.batteries } };
     };
 
     const updateSolarPanels = (newValue: number) => {
@@ -319,16 +330,61 @@ export default defineComponent({
             50
         );
         transformers.value = lastHourData.transformers;
+        
+        // Refresh popup data
+        if (isPopupOpen.value) {
+          if (popupType.value === "huis") {
+            const house = transformers.value
+                .flatMap((t) => t.houses)
+                .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+            if (house) {
+              showHouseDetails(house);
+            }
+          } else if (popupType.value === "transformator") {
+            const transformer = transformers.value.find(
+                (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+            );
+            if (transformer) {
+              showTransformerDetails(transformer);
+            }
+          }
+        }
+
         processDashboardData(response);
+        
         if (response.isCompleted === true) {
           notificationStatus.value = true;
           notificationMessage.value = "Level is behaald!";
         }
+        
       } catch (error) {
         console.error("Failed to submit changes:", error);
       }
     };
 
+    const cancelChanges = async () => {
+      try {
+        // Revert to initial popup data
+        if (popupType.value === 'huis') {
+          const house = transformers.value
+              .flatMap((t) => t.houses)
+              .find((h) => h.id === parseInt(popupTitle.value.split(' ')[1]));
+          if (house) {
+            Object.assign(house, initialPopupData.value);
+          }
+        } else if (popupType.value === 'transformator') {
+          const transformer = transformers.value.find(
+              (t) => t.id === parseInt(popupTitle.value.split(' ')[1])
+          );
+          if (transformer) {
+            Object.assign(transformer, initialPopupData.value);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to cancel changes:', error);
+      }
+    };
+      
     const showInfoBox = ({ x, y, contents }) => {
       infoBoxVisible.value = true;
       infoBoxContents.value = contents;
@@ -387,6 +443,7 @@ export default defineComponent({
       handleIncrease,
       handleDecrease,
       submitChanges,
+      cancelChanges,
       infoBoxVisible,
       infoBoxContents,
       infoBoxStyle,
