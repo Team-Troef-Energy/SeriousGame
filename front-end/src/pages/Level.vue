@@ -62,7 +62,16 @@
       @increase="handleIncrease"
       @decrease="handleDecrease" />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
-    <Dashboard></Dashboard>
+    <Dashboard
+      :coinsUsed="dashboardData.coinsUsed"
+      :maxCoins="dashboardData.maxCoins"
+      :currentCO2="dashboardData.currentCO2"
+      :MaxCO2="dashboardData.maxCO2"
+      :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
+      :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
+      :objectiveStartTime="dashboardData.objectiveStartTime"
+      :objectiveEndTime="dashboardData.objectiveEndTime"
+      :season="dashboardData.season" />
     <Notification
       v-if="notificationStatus"
       :status="notificationStatus"
@@ -111,7 +120,17 @@ export default defineComponent({
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
     const transformers = ref<transformer[]>([]);
-    const dashboardData: Ref<any, any> = ref(null);
+    const dashboardData: Ref<any, any> = ref({
+      coinsUsed: 0,
+      maxCoins: 0,
+      currentCO2: 0,
+      maxCO2: 0,
+      totalEnergyConsumption: 0,
+      greenProducedEnergyPercentage: 0,
+      objectiveStartTime: 0,
+      objectiveEndTime: 0,
+      season: "",
+    });
 
     const isPopupOpen = ref(false);
     const popupTitle = ref("");
@@ -231,6 +250,10 @@ export default defineComponent({
       const greenProducedEnergyPercentage = (totalGreenProduction / totalProduction) * 100;
 
       dashboardData.value = {
+        coinsUsed: data.totalCosts,
+        maxCoins: data.objective.maxCoins,
+        currentCO2: data.totalCO2,
+        maxCO2: data.objective.maxCO2,
         totalEnergyConsumption: totalConsumption,
         greenProducedEnergyPercentage: greenProducedEnergyPercentage,
         objectiveStartTime: data.startTime,
@@ -266,11 +289,11 @@ export default defineComponent({
           50
         );
         transformers.value = lastHourData.transformers;
+        processDashboardData(response);
         if (response.isCompleted === true) {
           notificationStatus.value = true;
           notificationMessage.value = "Level is behaald!";
         }
-        processDashboardData(response);
       } catch (error) {
         console.error("Failed to submit changes:", error);
       }
