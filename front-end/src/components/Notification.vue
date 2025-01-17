@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="status" transition="dialog-bottom-transition" width="auto">
-    <template v-slot:default="{ isActive }">
+    <template v-slot:default="">
       <v-card>
         <v-card-text class="text-h2 pa-12">
           {{ message }}
