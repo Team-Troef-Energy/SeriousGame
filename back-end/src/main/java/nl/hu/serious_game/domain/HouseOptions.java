@@ -6,7 +6,7 @@ public class HouseOptions {
     private boolean hasHeatPump;
     private boolean hasElectricVehicle;
     private Congestion congestion;
-    private int maxSolarPanelCount = 12;
+    private int maxSolarPanelCount = 14;
     private int maxBatteryCount = 2;
 
     public HouseOptions() {
