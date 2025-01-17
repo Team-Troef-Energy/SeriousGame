@@ -6,17 +6,27 @@
       to="/levelSelect"
       backgroundColor="#cc0000" />
     <div ref="gameCanvas" class="game-canvas">
-      <template v-for="transformer in transformers">
-        <ConnectionLine
-          v-for="house in transformer.houses"
-          :key="'connection-' + house.id"
-          :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-          :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
-          :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-          :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
-          :hasCongestion="house.hasCongestion"
-          :maxCurrent="house.maxCurrent" />
-      </template>
+      <svg
+        :width="1000"
+        :height="1000"
+        xmlns="http://www.w3.org/2000/svg"
+        style="position: absolute; top: 0; left: 0">
+        <template v-for="transformer in transformers">
+          <ConnectionLine
+            v-for="house in transformer.houses"
+            :key="'connection-' + house.id"
+            :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
+            :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
+            :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
+            :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
+            :hasCongestion="house.hasCongestion"
+            :is-production="house.current.direction === 'PRODUCTION'"
+            :current="house.current.amount"
+            :maxCurrent="house.maxCurrent"
+            @show-info-box="showInfoBox"
+            @hide-info-box="hideInfoBox" />
+        </template>
+      </svg>
       <template v-for="transformer in transformers">
         <transformer
           v-for="transformer in transformers"
@@ -43,6 +53,7 @@
           :hasBatteries="house.batteries.amount > 0" />
       </template>
     </div>
+    <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
     <PopupComponent
       v-if="isPopupOpen"
       :isOpen="isPopupOpen"
@@ -60,7 +71,9 @@
       :batteryCost="popupBatteryCost"
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
-      @decrease="handleDecrease" />
+      @decrease="handleDecrease"
+      @submitChanges="submitChanges"
+      @cancelChanges="cancelChanges" />
     <button id="submit-button" @click="submitChanges">Submit Changes</button>
     <Dashboard
       :coinsUsed="dashboardData.coinsUsed"
@@ -149,6 +162,22 @@ export default defineComponent({
     const notificationStatus = ref(false);
     const notificationMessage = ref("");
 
+    // Used to store the initial popup data when the popup is opened so it can be cancelled
+    const initialPopupData = ref({});
+
+    const infoBoxVisible = ref(false);
+    const infoBoxContents = ref("");
+    const infoBoxStyle = ref({
+      position: "absolute",
+      top: "0px",
+      left: "0px",
+      backgroundColor: "#333",
+      color: "#fff",
+      padding: "10px",
+      borderRadius: "5px",
+      pointerEvents: "none",
+    });
+
     const generatePositions = (count: number, start: number): number[] => {
       const positions: number[] = [];
       for (let i = 0; i < count; i++) {
@@ -169,6 +198,9 @@ export default defineComponent({
       popupBatteryCharge.value = house.batteries.totalCharge;
       popupTotalPowerCost.value = house.totalPowerCost;
       isPopupOpen.value = true;
+
+      // Store initial popup data to allow for cancelling changes
+      initialPopupData.value = { ...house, batteries: { ...house.batteries } };
     };
 
     const showTransformerDetails = (transformer: transformer) => {
@@ -181,6 +213,9 @@ export default defineComponent({
       popupBatteries.value = transformer.batteries.amount;
       popupBatteryCharge.value = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
+
+      // Store initial popup data to allow for cancelling changes
+      initialPopupData.value = { ...transformer, batteries: { ...transformer.batteries } };
     };
 
     const updateSolarPanels = (newValue: number) => {
@@ -289,7 +324,28 @@ export default defineComponent({
           50
         );
         transformers.value = lastHourData.transformers;
+
+        // Refresh popup data
+        if (isPopupOpen.value) {
+          if (popupType.value === "huis") {
+            const house = transformers.value
+              .flatMap((t) => t.houses)
+              .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+            if (house) {
+              showHouseDetails(house);
+            }
+          } else if (popupType.value === "transformator") {
+            const transformer = transformers.value.find(
+              (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+            );
+            if (transformer) {
+              showTransformerDetails(transformer);
+            }
+          }
+        }
+
         processDashboardData(response);
+
         if (response.isCompleted === true) {
           notificationStatus.value = true;
           notificationMessage.value = "Level is behaald!";
@@ -297,6 +353,40 @@ export default defineComponent({
       } catch (error) {
         console.error("Failed to submit changes:", error);
       }
+    };
+
+    const cancelChanges = async () => {
+      try {
+        // Revert to initial popup data
+        if (popupType.value === "huis") {
+          const house = transformers.value
+            .flatMap((t) => t.houses)
+            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
+          if (house) {
+            Object.assign(house, initialPopupData.value);
+          }
+        } else if (popupType.value === "transformator") {
+          const transformer = transformers.value.find(
+            (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
+          );
+          if (transformer) {
+            Object.assign(transformer, initialPopupData.value);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to cancel changes:", error);
+      }
+    };
+
+    const showInfoBox = ({ x, y, contents }) => {
+      infoBoxVisible.value = true;
+      infoBoxContents.value = contents;
+      infoBoxStyle.value.top = `${y + 10}px`;
+      infoBoxStyle.value.left = `${x + 10}px`;
+    };
+
+    const hideInfoBox = () => {
+      infoBoxVisible.value = false;
     };
 
     onMounted(async () => {
@@ -346,6 +436,12 @@ export default defineComponent({
       handleIncrease,
       handleDecrease,
       submitChanges,
+      cancelChanges,
+      infoBoxVisible,
+      infoBoxContents,
+      infoBoxStyle,
+      showInfoBox,
+      hideInfoBox,
       notificationStatus,
       notificationMessage,
     };
@@ -378,5 +474,11 @@ export default defineComponent({
   z-index: 1000;
   position: absolute;
   margin: 10px;
+}
+
+.infoBox {
+  font-size: 14px;
+  z-index: 1000;
+  white-space: nowrap;
 }
 </style>
