@@ -112,7 +112,7 @@ public class LevelService {
         Season season = level.getSeason();
         ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
 
-        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.getIsCompleted(), level.calculateTotalCosts(), level.calculateTotalCO2()); // Return the LevelDTO
+        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.getIsCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
     }
 
     public int getTotalLevels() {
