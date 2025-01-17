@@ -36,8 +36,10 @@
 </template>
 
 <script lang="ts">
+import { CSSProperties } from "vue";
+
 export default {
-  data() {
+  data(): { infoBoxVisible: boolean; infoBoxStyle: CSSProperties } {
     return {
       infoBoxVisible: false,
       infoBoxStyle: {
