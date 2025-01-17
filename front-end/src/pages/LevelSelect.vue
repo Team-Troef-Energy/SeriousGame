@@ -35,6 +35,7 @@ export default defineComponent({
   position: absolute;
   top: 200px;
   width: 100%;
+  color: white;
 }
 
 .level-select {
@@ -65,10 +66,8 @@ export default defineComponent({
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('/level-select-background.png');
+  background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('/green-happy-background.png');
   background-size: cover;
-  background-position: center;
-  opacity: 0.3;
   z-index: -2;
 }
 </style>
