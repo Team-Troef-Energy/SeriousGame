@@ -23,7 +23,7 @@ public class Runner implements CommandLineRunner {
     private Level createLevel1() {
         System.out.println("Creating level 1...");
         // Create objective
-        Objective objective = new Objective(2, 5);
+        Objective objective = new Objective(2, 50);
 
         // Create a DayProfile
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
