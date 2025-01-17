@@ -24,12 +24,20 @@ public class House implements Cloneable {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount of solar panels");
         }
+
+        if (amount > houseOptions.maxSolarPanelCount()) {
+            throw new IllegalArgumentException("Cannot exceed the maximum number of solar panels: " + houseOptions.maxSolarPanelCount());
+        }
         totalSolarPanels += amount;
     }
 
     void setTotalSolarPanels(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot set amount of solar panels to negative number");
+        }
+
+        if (amount > houseOptions.maxSolarPanelCount()) {
+            throw new IllegalArgumentException("Cannot exceed the maximum number of solar panels: " + houseOptions.maxSolarPanelCount());
         }
         this.totalSolarPanels = amount;
     }
@@ -47,6 +55,10 @@ public class House implements Cloneable {
     public void setBattery(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount of batteries");
+        }
+
+        if (amount > houseOptions.maxBatteryCount()) {
+            throw new IllegalArgumentException("Cannot exceed the maximum number of batteries: " + houseOptions.maxBatteryCount());
         }
         this.battery = new Battery(amount);
     }
