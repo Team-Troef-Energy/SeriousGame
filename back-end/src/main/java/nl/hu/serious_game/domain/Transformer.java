@@ -12,6 +12,7 @@ public class Transformer implements Cloneable {
     private List<House> houses;
     private Battery battery;
     private Electricity excessCurrent;
+    private int maxBatteryCount = 4;
 
     public Transformer(int id, List<House> houses, int batteries) {
         this.id = id;
@@ -103,6 +104,9 @@ public class Transformer implements Cloneable {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount of batteries");
         }
+        if (amount > maxBatteryCount) {
+            throw new IllegalArgumentException("Cannot exceed the maximum battery count of " + maxBatteryCount);
+        }
         this.battery = new Battery(amount);
     }
 
@@ -116,6 +120,10 @@ public class Transformer implements Cloneable {
 
     public Electricity getExcessCurrent() {
         return excessCurrent;
+    }
+
+    public int getMaxBatteryCount() {
+        return maxBatteryCount;
     }
 
     @Override
