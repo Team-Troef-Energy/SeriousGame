@@ -353,7 +353,7 @@ export default defineComponent({
         
         if (response.isCompleted === true) {
           notificationStatus.value = true;
-          notificationMessage.value = "Level is behaald!";
+          notificationMessage.value = "Level is behaald! 🥳";
         }
         
       } catch (error) {
