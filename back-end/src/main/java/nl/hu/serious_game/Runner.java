@@ -17,25 +17,25 @@ public class Runner implements CommandLineRunner {
     }
 
     private void createLevels() {
-        this.levels = List.of(createLevel1(), createLevel2());
+        this.levels = List.of(createLevel1(), createLevel2(), createLevel3());
     }
 
     private Level createLevel1() {
         System.out.println("Creating level 1...");
         // Create objective
-        Objective objective = new Objective(2, 5);
+        Objective objective = new Objective(1, 20);
 
         // Create a DayProfile
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create a house
-        House house = new House(1, 4, dayProfile, new HouseOptions());
-        House house2 = new House(2, 8, dayProfile, new HouseOptions());
+        House house1 = new House(1, 0, dayProfile, new HouseOptions());
+        House house2 = new House(2, 0, dayProfile, new HouseOptions());
 
         // Create a single transformer
-        Transformer transformer = new Transformer(1, List.of(house, house2), 1);
+        Transformer transformer = new Transformer(1, List.of(house1, house2), 0);
 
-        Level level = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer), new Cost(5, 10));
+        Level level = new Level(Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
 
         System.out.println("Level 1 created!");
         System.out.println(level);
@@ -46,22 +46,47 @@ public class Runner implements CommandLineRunner {
     private Level createLevel2() {
         System.out.println("Creating level 2...");
         // Create objective
-        Objective objective = new Objective(3, 5);
+        Objective objective = new Objective(2, 50);
 
         // Create a DayProfile
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create a house
-        House house = new House(1, 4, dayProfile, new HouseOptions(true, false));
-        House house2 = new House(2, 8, dayProfile, new HouseOptions(false, true));
-        House house3 = new House(3, 8, dayProfile, new HouseOptions(true, true));
+        House house1 = new House(1, 0, dayProfile, new HouseOptions(true, false));
+        House house2 = new House(2, 0, dayProfile, new HouseOptions(false, true));
+        House house3 = new House(3, 0, dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        Transformer transformer = new Transformer(1, List.of(house, house2, house3), 1);
+        Transformer transformer = new Transformer(1, List.of(house1, house2, house3), 0);
 
-        Level level = new Level(Season.SUMMER, 12, 15, objective, List.of(transformer), new Cost(5, 10));
+        Level level = new Level(Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
 
         System.out.println("Level 2 created!");
+        System.out.println(level);
+
+        return level;
+    }
+
+    private Level createLevel3() {
+        System.out.println("Creating level 3...");
+        // Create objective
+        Objective objective = new Objective(4, 150);
+
+        // Create a DayProfile
+        DayProfile dayProfile = new DayProfile(Season.SUMMER);
+
+        // Create a house
+        House house1 = new House(1, 0, dayProfile, new HouseOptions(false, false));
+        House house2 = new House(2, 0, dayProfile, new HouseOptions(false, true));
+        House house3 = new House(3, 0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.5f)));
+        House house4 = new House(4, 0, dayProfile, new HouseOptions(false, false));
+
+        // Create a single transformer
+        Transformer transformer = new Transformer(1, List.of(house1, house2, house3, house4), 0);
+
+        Level level = new Level(Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
+
+        System.out.println("Level 3 created!");
         System.out.println(level);
 
         return level;
