@@ -17,16 +17,25 @@
           <!-- Energie Overzicht -->
           <div class="section energy-section">
             <v-row>
-              <v-col cols="6"><strong>{{ energyProductionLabel }}:</strong></v-col>
+              <v-col cols="6"
+                ><strong>{{ energyProductionLabel }}:</strong></v-col
+              >
               <v-col cols="6" class="text-end highlight">{{ formattedEnergyProduction }} kWh</v-col>
             </v-row>
             <v-row>
-              <v-col cols="6"><strong>{{ energyConsumptionLabel }}:</strong></v-col>
-              <v-col cols="6" class="text-end highlight">{{ formattedEnergyConsumption }} kWh</v-col>
+              <v-col cols="6"
+                ><strong>{{ energyConsumptionLabel }}:</strong></v-col
+              >
+              <v-col cols="6" class="text-end highlight"
+                >{{ formattedEnergyConsumption }} kWh</v-col
+              >
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Verschil:</strong></v-col>
-              <v-col cols="6" class="text-end" :class="energyDifference < 0 ? 'negative' : 'highlight'">
+              <v-col
+                cols="6"
+                class="text-end"
+                :class="energyDifference < 0 ? 'negative' : 'highlight'">
                 {{ energyDifference.toFixed(2) }} kWh
               </v-col>
             </v-row>
@@ -60,11 +69,9 @@
                 <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
               <v-col cols="6" class="text-center"
-              ><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col
+                ><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col
               >
-              <v-col cols="2" class="text-end highlight"
-              >{{ solarPanels }}</v-col
-              >
+              <v-col cols="2" class="text-end highlight">{{ solarPanels }}</v-col>
             </v-row>
           </div>
 
@@ -76,7 +83,7 @@
                 <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
               </v-col>
               <v-col cols="6" class="text-center"
-              ><strong>Accu’s</strong> (💰{{ batteryCost }})</v-col
+                ><strong>Accu’s</strong> (💰{{ batteryCost }})</v-col
               >
               <v-col cols="2" class="text-end highlight">{{ batteries }}</v-col>
             </v-row>
@@ -105,65 +112,65 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed } from "vue";
 
 export default defineComponent({
-  name: 'PopupComponent',
+  name: "PopupComponent",
   props: {
     isOpen: {
       type: Boolean,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     type: {
       type: String,
-      required: true
+      required: true,
     },
     energyProduction: {
       type: Number,
       required: true,
-      default: 0
+      default: 0,
     },
     energyConsumption: {
       type: Number,
       required: true,
-      default: 0
+      default: 0,
     },
     heatPump: {
       type: Boolean,
-      default: false
+      default: false,
     },
     electricVehicle: {
       type: Boolean,
-      default: false
+      default: false,
     },
     solarPanels: {
       type: Number,
-      default: 0
+      default: 0,
     },
     batteries: {
       type: Number,
-      default: 0
+      default: 0,
     },
     batteryCharge: {
       type: Number,
-      default: 0
+      default: 0,
     },
     totalPowerCost: {
       type: Number,
-      default: 0
+      default: 0,
     },
     solarPanelCost: {
       type: Number,
-      default: 0
+      default: 0,
     },
     batteryCost: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   setup(props, { emit }) {
     const energyDifference = computed(() => props.energyProduction - props.energyConsumption);
@@ -173,27 +180,31 @@ export default defineComponent({
     const formattedBatteryCharge = computed(() => props.batteryCharge.toFixed(2));
     const formattedTotalPowerCost = computed(() => props.totalPowerCost.toFixed(4));
 
-    const heatPumpDisplay = computed(() => (props.heatPump ? '✔️' : '❌'));
-    const electricVehicleDisplay = computed(() => (props.electricVehicle ? '✔️' : '❌'));
+    const heatPumpDisplay = computed(() => (props.heatPump ? "✔️" : "❌"));
+    const electricVehicleDisplay = computed(() => (props.electricVehicle ? "✔️" : "❌"));
 
-    const energyProductionLabel = computed(() => (props.type === 'transformator' ? 'Energie om terug te leveren aan net' : 'Energie productie'));
-    const energyConsumptionLabel = computed(() => (props.type === 'transformator' ? 'Energie aan huizen vanuit net' : 'Energie consumptie'));
+    const energyProductionLabel = computed(() =>
+      props.type === "transformator" ? "Energie om terug te leveren aan net" : "Energie productie"
+    );
+    const energyConsumptionLabel = computed(() =>
+      props.type === "transformator" ? "Energie aan huizen vanuit net" : "Energie consumptie"
+    );
 
     const increaseValue = (property: string) => {
-      emit('increase', property);
+      emit("increase", property);
     };
 
     const decreaseValue = (property: string) => {
-      emit('decrease', property);
+      emit("decrease", property);
     };
 
     const closeDialog = () => {
-      emit('update:isOpen', false);
-      emit('cancelChanges');
+      emit("update:isOpen", false);
+      emit("cancelChanges");
     };
 
     const submitChanges = () => {
-      emit('submitChanges');
+      emit("submitChanges");
     };
 
     return {
@@ -209,9 +220,9 @@ export default defineComponent({
       increaseValue,
       decreaseValue,
       closeDialog,
-      submitChanges
+      submitChanges,
     };
-  }
+  },
 });
 </script>
 
