@@ -83,6 +83,7 @@ public class House implements Cloneable {
         return dayProfile.getValue(hour, "ElectricVehicleConsumption");
     }
 
+    // Returns the current for the house at a specific hour
     public Electricity current(int hour) {
         if (this.hour == null || hour == this.hour + 1) {
             return calculateCurrent(hour);
