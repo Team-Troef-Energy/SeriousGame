@@ -1,14 +1,25 @@
 package nl.hu.serious_game.application;
 
-import nl.hu.serious_game.Runner;
-import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
-import nl.hu.serious_game.application.dto.out.*;
-import nl.hu.serious_game.domain.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import nl.hu.serious_game.Runner;
+import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
+import nl.hu.serious_game.application.dto.out.BatteryDTO;
+import nl.hu.serious_game.application.dto.out.CurrentDTO;
+import nl.hu.serious_game.application.dto.out.HourDTO;
+import nl.hu.serious_game.application.dto.out.HouseDTO;
+import nl.hu.serious_game.application.dto.out.LevelDTO;
+import nl.hu.serious_game.application.dto.out.ObjectiveDTO;
+import nl.hu.serious_game.application.dto.out.TransformerDTO;
+import nl.hu.serious_game.domain.Electricity;
+import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.Level;
+import nl.hu.serious_game.domain.Season;
+import nl.hu.serious_game.domain.Transformer;
 
 @Service
 public class LevelService {
@@ -34,7 +45,7 @@ public class LevelService {
         for (int houseIndex = 0; houseIndex < transformer.getHouses().size(); houseIndex++) { // Loop through each house
             House house = transformer.getHouses().get(houseIndex);
             int houseId = house.getId();
-            Electricity electricity = house.current(hour); // Get the current for the house
+            Electricity electricity = house.getElectricityAtHour(hour); // Get the current for the house
             CurrentDTO currentDTO = new CurrentDTO(
                     electricity.amount(),
                     electricity.direction()
@@ -50,8 +61,8 @@ public class LevelService {
                 house.getPowerCost(),
                 house.getTotalPowerCost(),
                 house.getTotalSolarPanels(), // Get the total solar panels of the house
-                house.getSolarPanelOutput(hour),
-                house.getTotalConsumptionOfHour(hour),
+                house.getSolarPanelConsumptionAtHour(hour),
+                house.getTotalConsumptionAtHour(hour),
                 house.getHouseOptions()
             ));
         }
@@ -86,11 +97,11 @@ public class LevelService {
             for (int transformerIndex = 0; transformerIndex < level.getTransformers().size(); transformerIndex++) { // Loop through each transformer
                 Transformer transformer = level.getTransformers().get(transformerIndex);
                 int transformerId = transformer.getId();
-                transformer.distributePowerCost(hour);
+                transformer.distributePowerCostAtHour(hour);
 
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
-                Electricity electricity = transformer.calculateLeftoverCurrent(hour);
+                Electricity electricity = transformer.getCalculatedLeftoverElectricityAtHour(hour);
                 CurrentDTO current = new CurrentDTO(
                         electricity.amount(),
                         electricity.direction()
@@ -113,7 +124,7 @@ public class LevelService {
         Season season = level.getSeason();
         ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
 
-        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.getIsCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
+        return new LevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.isCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
     }
 
     public int getTotalLevels() {
@@ -121,8 +132,8 @@ public class LevelService {
     }
 
     private void checkLevelCompletion(Level level) {
-        level.calculateTotalCosts();
-        level.calculateTotalCO2();
+        level.getCalculatedTotalCosts();
+        level.getCalculatedTotalCO2();
 
         if (level.getTotalCosts() <= level.getObjective().getMaxCoins() && level.getTotalCO2() <= level.getObjective().getMaxCo2()) {
             level.setIsCompleted();

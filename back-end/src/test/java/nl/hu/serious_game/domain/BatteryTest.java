@@ -1,10 +1,9 @@
 package nl.hu.serious_game.domain;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BatteryTest {
     @Test
@@ -13,7 +12,7 @@ public class BatteryTest {
         Battery battery = new Battery(1);
         Electricity input = new Electricity(3f, Direction.PRODUCTION);
         Electricity expected = new Electricity(0f, Direction.PRODUCTION);
-        assertEquals(battery.use(input), expected);
+        assertEquals(battery.chargeOrDischarge(input), expected);
         assertEquals(battery.getCurrentCharge(), 3f);
     }
 
@@ -23,7 +22,7 @@ public class BatteryTest {
         Battery battery = new Battery(1);
         Electricity input = new Electricity(5.5f, Direction.PRODUCTION);
         Electricity expected = new Electricity(0.5f, Direction.PRODUCTION);
-        assertEquals(battery.use(input), expected);
+        assertEquals(battery.chargeOrDischarge(input), expected);
         assertEquals(battery.getCurrentCharge(), 5f);
     }
 
@@ -32,10 +31,10 @@ public class BatteryTest {
     public void chargeMoreThanCapacityTest() {
         Battery battery = new Battery(1);
         Electricity electricity = new Electricity(5f, Direction.PRODUCTION);
-        battery.use(electricity);
-        battery.use(electricity);
-        battery.use(electricity);
-        assertEquals(battery.use(electricity), electricity);
+        battery.chargeOrDischarge(electricity);
+        battery.chargeOrDischarge(electricity);
+        battery.chargeOrDischarge(electricity);
+        assertEquals(battery.chargeOrDischarge(electricity), electricity);
         assertEquals(battery.getCurrentCharge(), 13.5f);
     }
 
@@ -43,10 +42,10 @@ public class BatteryTest {
     @DisplayName("test for when there is more demand than currentCharge")
     public void fullDischargeTest() {
         Battery battery = new Battery(1);
-        battery.use(new Electricity(5f, Direction.PRODUCTION));
+        battery.chargeOrDischarge(new Electricity(5f, Direction.PRODUCTION));
         Electricity input = new Electricity(5.5f, Direction.DEMAND);
         Electricity expected = new Electricity(0.5f, Direction.DEMAND);
-        assertEquals(battery.use(input), expected);
+        assertEquals(battery.chargeOrDischarge(input), expected);
         assertEquals(battery.getCurrentCharge(), 0f);
     }
 
@@ -54,10 +53,10 @@ public class BatteryTest {
     @DisplayName("test for when there is less demand than currentCharge")
     public void someDischargeTest() {
         Battery battery = new Battery(1);
-        battery.use(new Electricity(5f, Direction.PRODUCTION));
+        battery.chargeOrDischarge(new Electricity(5f, Direction.PRODUCTION));
         Electricity input = new Electricity(4.5f, Direction.DEMAND);
         Electricity expected = new Electricity(0f, Direction.DEMAND);
-        assertEquals(battery.use(input), expected);
+        assertEquals(battery.chargeOrDischarge(input), expected);
         assertEquals(battery.getCurrentCharge(), 0.5f);
     }
 
@@ -65,12 +64,12 @@ public class BatteryTest {
     @DisplayName("attempt to pull more than dischargeSpeed")
     public void dischargeSpeedTest() {
         Battery battery = new Battery(1);
-        battery.use(new Electricity(5f, Direction.PRODUCTION));
-        battery.use(new Electricity(5f, Direction.PRODUCTION));
-        battery.use(new Electricity(5f, Direction.PRODUCTION));
+        battery.chargeOrDischarge(new Electricity(5f, Direction.PRODUCTION));
+        battery.chargeOrDischarge(new Electricity(5f, Direction.PRODUCTION));
+        battery.chargeOrDischarge(new Electricity(5f, Direction.PRODUCTION));
         Electricity input = new Electricity(12f, Direction.DEMAND);
         Electricity expected = new Electricity(0.5f, Direction.DEMAND);
-        assertEquals(battery.use(input), expected);
+        assertEquals(battery.chargeOrDischarge(input), expected);
         assertEquals(battery.getCurrentCharge(), 2f);
     }
 

@@ -67,25 +67,25 @@ public class House implements Cloneable {
         return dayProfile;
     }
 
-    public float getSolarPanelOutput(int hour) {
-        return totalSolarPanels * dayProfile.getValue(hour, "SolarPanelProduction");
+    public float getSolarPanelConsumptionAtHour(int hour) {
+        return totalSolarPanels * dayProfile.getValueFromColumnAtHour(hour, "SolarPanelProduction");
     }
 
-    public float getBaseConsumption(int hour) {
-        return dayProfile.getValue(hour, "HouseBaseConsumption");
+    public float getBaseConsumptionAtHour(int hour) {
+        return dayProfile.getValueFromColumnAtHour(hour, "HouseBaseConsumption");
     }
 
-    public float getHeatPumpConsumption(int hour) {
-        return dayProfile.getValue(hour, "HeatPumpConsumption");
+    public float getHeatPumpConsumptionAtHour(int hour) {
+        return dayProfile.getValueFromColumnAtHour(hour, "HeatPumpConsumption");
     }
 
-    public float getElectricVehicleConsumption(int hour) {
-        return dayProfile.getValue(hour, "ElectricVehicleConsumption");
+    public float getElectricVehicleConsumptionAtHour(int hour) {
+        return dayProfile.getValueFromColumnAtHour(hour, "ElectricVehicleConsumption");
     }
 
-    public Electricity current(int hour) {
+    public Electricity getElectricityAtHour(int hour) {
         if (this.hour == null || hour == this.hour + 1) {
-            return calculateCurrent(hour);
+            return getCalculatedElectricityAtHour(hour);
         }
         if (hour == this.hour) {
             return this.current;
@@ -93,9 +93,9 @@ public class House implements Cloneable {
         throw new IllegalArgumentException("Invalid hour");
     }
 
-    private Electricity calculateCurrent(int hour) {
-        float production = getSolarPanelOutput(hour);
-        float consumption = getTotalConsumptionOfHour(hour);
+    private Electricity getCalculatedElectricityAtHour(int hour) {
+        float production = getSolarPanelConsumptionAtHour(hour);
+        float consumption = getTotalConsumptionAtHour(hour);
         float amount;
         Direction direction;
         if (production > consumption) {
@@ -108,7 +108,7 @@ public class House implements Cloneable {
         Electricity electricity = new Electricity(amount, direction);
 
         if (battery != null) {
-            electricity = battery.use(electricity);
+            electricity = battery.chargeOrDischarge(electricity);
         }
 
         if (houseOptions.hasCongestion() && electricity.amount() > houseOptions.maxCurrent()) {
@@ -121,10 +121,10 @@ public class House implements Cloneable {
         return electricity;
     }
 
-    public float getTotalConsumptionOfHour(int hour) {
-        float total = getBaseConsumption(hour);
-        total += houseOptions.hasHeatpump() ? getHeatPumpConsumption(hour) : 0;
-        total += houseOptions.hasElectricVehicle() ? getElectricVehicleConsumption(hour) : 0;
+    public float getTotalConsumptionAtHour(int hour) {
+        float total = getBaseConsumptionAtHour(hour);
+        total += houseOptions.hasHeatPump() ? getHeatPumpConsumptionAtHour(hour) : 0;
+        total += houseOptions.hasElectricVehicle() ? getElectricVehicleConsumptionAtHour(hour) : 0;
         return total;
     }
 

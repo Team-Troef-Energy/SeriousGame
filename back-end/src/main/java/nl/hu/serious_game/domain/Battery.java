@@ -23,7 +23,7 @@ public class Battery implements Cloneable {
 
     // Takes the electricity that needs to be handled.
     // Returns the electricity that remains afterwards.
-    public Electricity use(Electricity electricity) {
+    public Electricity chargeOrDischarge(Electricity electricity) {
         if (electricity.amount() == 0) {
             return electricity;
         }

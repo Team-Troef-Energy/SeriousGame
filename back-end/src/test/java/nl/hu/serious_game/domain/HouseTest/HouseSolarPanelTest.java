@@ -1,18 +1,19 @@
 package nl.hu.serious_game.domain.HouseTest;
 
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.House;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.Season;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
+import nl.hu.serious_game.domain.DayProfile;
+import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.HouseOptions;
+import nl.hu.serious_game.domain.Season;
 
 public class HouseSolarPanelTest {
     @Test
@@ -27,7 +28,7 @@ public class HouseSolarPanelTest {
     public void SummerTestOneSolarPanel() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
         House house = new House(1, 1, dayProfile, new HouseOptions());
-        assertEquals(0.196428571f, house.getSolarPanelOutput(12));
+        assertEquals(0.196428571f, house.getSolarPanelConsumptionAtHour(12));
     }
 
     // Parameterized test for checking the solar panel output for different seasons and hours
@@ -37,7 +38,7 @@ public class HouseSolarPanelTest {
     public void SeasonTestOneSolarPanel(Season season, int hour, float expectedOutput) {
         DayProfile dayProfile = new DayProfile(season);
         House house = new House(1, 1, dayProfile, new HouseOptions());
-        assertEquals(expectedOutput, house.getSolarPanelOutput(hour));
+        assertEquals(expectedOutput, house.getSolarPanelConsumptionAtHour(hour));
     }
 
     // Source of arguments for the parameterized test, containing: Season, Hour, Expected output
@@ -65,7 +66,7 @@ public class HouseSolarPanelTest {
     public void SolarPanelAmountTest(int solarPanelAmount, int hour, float expectedOutput) {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
         House house = new House(1, solarPanelAmount, dayProfile, new HouseOptions());
-        assertEquals(expectedOutput, house.getSolarPanelOutput(hour));
+        assertEquals(expectedOutput, house.getSolarPanelConsumptionAtHour(hour));
     }
 
     // Source of arguments for the parameterized test, containing: Solar panel amount, Hour, Expected output
@@ -86,7 +87,7 @@ public class HouseSolarPanelTest {
     public void InvalidHourTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
         House house = new House(1, 1, dayProfile, new HouseOptions());
-        assertThrows(IllegalArgumentException.class, () -> house.getSolarPanelOutput(24));
+        assertThrows(IllegalArgumentException.class, () -> house.getSolarPanelConsumptionAtHour(24));
     }
 
     // Adding a negative amount of solar panels throws an IllegalArgumentException

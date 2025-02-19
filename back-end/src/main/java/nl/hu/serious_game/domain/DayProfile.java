@@ -52,7 +52,7 @@ public class DayProfile {
         }
     }
 
-    public float getValue(int hour, String column) {
+    public float getValueFromColumnAtHour(int hour, String column) {
         if (hour < 0 || hour > 23) {
             throw new IllegalArgumentException("Hour must be between 0 and 23");
         }
