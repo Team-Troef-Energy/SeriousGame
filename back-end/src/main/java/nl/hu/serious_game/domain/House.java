@@ -9,8 +9,8 @@ public class House implements Cloneable {
     private Electricity excessCurrent;
     private Integer hour;
     private Electricity current;
-    private float powerCost;
-    private float totalPowerCost;
+    private float powerCost; // Cost in euros
+    private float totalPowerCost; // Cost in euros
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;

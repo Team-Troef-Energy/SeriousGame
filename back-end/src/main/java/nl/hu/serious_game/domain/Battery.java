@@ -14,6 +14,9 @@ public class Battery implements Cloneable {
     @Getter
     private int amount;
 
+    // 13.5 kWh is the capacity of a single battery.
+    // 5 kWh is the charge speed of a single battery.
+    // 11.5 kWh is the discharge speed of a single battery.
     public Battery(int amount) {
         maxCharge = 13.5f * amount;
         chargeSpeed = 5 * amount;

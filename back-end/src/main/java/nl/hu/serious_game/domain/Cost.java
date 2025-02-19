@@ -3,9 +3,9 @@ package nl.hu.serious_game.domain;
 import java.util.Objects;
 
 public class Cost {
-    private final int solarPanelCost;
-    private final int batteryCost;
-    private final float CO2Cost = 0.5f; // 1 kWh of gray electricity equals 0.5 kg of CO2
+    private final int solarPanelCost; // Cost in coins
+    private final int batteryCost; // Cost in coins
+    private final float CO2Cost = 0.5f; // 1 kWh of gray electricity equals 0.5 kg of CO2, so 1 kWh = 0.5 kg CO2
 
     // Default constructor for when no specific costs are given
     public Cost() {

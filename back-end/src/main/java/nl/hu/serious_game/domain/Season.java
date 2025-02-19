@@ -1,6 +1,7 @@
 package nl.hu.serious_game.domain;
 
 public enum Season {
+    // The power consumption data for solar panels is based on the summer season. So factors are used to adjust the data for the other seasons
     SPRING(0.89f, 1.25f, 1.19f),
     SUMMER(1f, 1f, 1f),
     AUTUMN(0.54f, 1.25f, 1.63f),
