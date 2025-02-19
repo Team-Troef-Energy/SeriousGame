@@ -127,6 +127,7 @@ public class Level implements Cloneable {
         return totalCO2;
     }
 
+    // The Level can be cloned to reuse the same structure with different values, avoiding the need to create a new instance each time
     public Level clone() {
         try {
             Level clone = (Level) super.clone();

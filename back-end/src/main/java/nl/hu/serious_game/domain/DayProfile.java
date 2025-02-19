@@ -48,6 +48,9 @@ public class DayProfile {
                 0.160f, 0.154f, 0.153f, 0.154f, 0.196f, 0.249f, 0.286f, 0.311f, 0.285f, 0.261f, 0.253f, 0.243f
         };
 
+        // The data hashmap stores electricity production, consumption, and cost for a specific instance at each hour of the day
+        // The key is the specific instance you want the data for
+        // The value is the hour of the day (0-23)
         for (int hour = 0; hour < 24; hour++) {
             Map<String, Float> data = new HashMap<>();
             data.put("SolarPanelProduction", solarPanelProduction[hour]);
@@ -59,6 +62,8 @@ public class DayProfile {
         }
     }
 
+    // Returns the kWh or euro value of a specific instance for a specific hour
+    // The instance can be "SolarPanelProduction", "HouseBaseConsumption", "HeatPumpConsumption", "ElectricVehicleConsumption", or "PowerCost"
     public float getValue(int hour, String column) {
         if (hour < 0 || hour > 23) {
             throw new IllegalArgumentException("Hour must be between 0 and 23");
