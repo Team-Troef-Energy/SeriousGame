@@ -11,7 +11,7 @@ public class Transformer implements Cloneable {
     private Congestion congestion;
     private List<House> houses;
     private Battery battery;
-    private Electricity excessCurrent;
+    private Current excessCurrent;
     private int maxBatteryCount = 4;
 
     public Transformer(int id, List<House> houses, int batteries) {
@@ -28,11 +28,11 @@ public class Transformer implements Cloneable {
         this.congestion = congestion;
     }
 
-    public Electricity getCalculatedLeftoverElectricityAtHour(int hour) {
+    public Current getCalculatedLeftoverCurrentAtHour(int hour) {
         float demand = 0;
         float production = 0;
         for (House house : houses) {
-            Electricity current = house.getElectricityAtHour(hour);
+            Current current = house.getCurrentAtHour(hour);
             if (current.direction() == Direction.DEMAND) {
                 demand += current.amount();
             } else if (current.direction() == Direction.PRODUCTION) {
@@ -49,15 +49,15 @@ public class Transformer implements Cloneable {
             direction = Direction.PRODUCTION;
         }
 
-        Electricity electricity = battery.chargeOrDischarge(new Electricity(total, direction));
+        Current current = battery.chargeOrDischarge(new Current(total, direction));
 
-        if (congestion.hasCongestion() && electricity.amount() > congestion.maxCurrent()) {
-            excessCurrent = new Electricity(electricity.amount() - congestion.maxCurrent(), direction);
-            electricity = new Electricity(congestion.maxCurrent(), direction);
+        if (congestion.hasCongestion() && current.amount() > congestion.maxCurrent()) {
+            excessCurrent = new Current(current.amount() - congestion.maxCurrent(), direction);
+            current = new Current(congestion.maxCurrent(), direction);
         } else {
-            excessCurrent = new Electricity(0f, direction);
+            excessCurrent = new Current(0f, direction);
         }
-        return electricity;
+        return current;
     }
 
     public void distributePowerCostAtHour(int hour) {
@@ -66,10 +66,10 @@ public class Transformer implements Cloneable {
 
         // Calculate total demand and total production per hour for all houses
         for (House house : houses) {
-            if (house.getElectricityAtHour(hour).direction() == Direction.DEMAND) {
-                totalDemand += house.getElectricityAtHour(hour).amount();
-            } else if (house.getElectricityAtHour(hour).direction() == Direction.PRODUCTION) {
-                totalProduction += house.getElectricityAtHour(hour).amount();
+            if (house.getCurrentAtHour(hour).direction() == Direction.DEMAND) {
+                totalDemand += house.getCurrentAtHour(hour).amount();
+            } else if (house.getCurrentAtHour(hour).direction() == Direction.PRODUCTION) {
+                totalProduction += house.getCurrentAtHour(hour).amount();
             }
         }
 
@@ -118,7 +118,7 @@ public class Transformer implements Cloneable {
         return battery;
     }
 
-    public Electricity getExcessCurrent() {
+    public Current getExcessCurrent() {
         return excessCurrent;
     }
 

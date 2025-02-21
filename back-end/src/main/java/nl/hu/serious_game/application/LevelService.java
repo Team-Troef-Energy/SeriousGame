@@ -15,7 +15,7 @@ import nl.hu.serious_game.application.dto.out.HouseDTO;
 import nl.hu.serious_game.application.dto.out.LevelDTO;
 import nl.hu.serious_game.application.dto.out.ObjectiveDTO;
 import nl.hu.serious_game.application.dto.out.TransformerDTO;
-import nl.hu.serious_game.domain.Electricity;
+import nl.hu.serious_game.domain.Current;
 import nl.hu.serious_game.domain.House;
 import nl.hu.serious_game.domain.Level;
 import nl.hu.serious_game.domain.Season;
@@ -45,10 +45,10 @@ public class LevelService {
         for (int houseIndex = 0; houseIndex < transformer.getHouses().size(); houseIndex++) { // Loop through each house
             House house = transformer.getHouses().get(houseIndex);
             int houseId = house.getId();
-            Electricity electricity = house.getElectricityAtHour(hour); // Get the current for the house
+            Current current = house.getCurrentAtHour(hour); // Get the current for the house
             CurrentDTO currentDTO = new CurrentDTO(
-                    electricity.amount(),
-                    electricity.direction()
+                    current.amount(),
+                    current.direction()
             );
             BatteryDTO batteryDTO = house.getBattery() != null
                 ? new BatteryDTO(house.getBattery().getAmount(), house.getBattery().getCurrentCharge())
@@ -101,10 +101,10 @@ public class LevelService {
 
                 ArrayList<HouseDTO> houseDTOs = getHouseDTOS(transformer, hour);
 
-                Electricity electricity = transformer.getCalculatedLeftoverElectricityAtHour(hour);
-                CurrentDTO current = new CurrentDTO(
-                        electricity.amount(),
-                        electricity.direction()
+                Current current = transformer.getCalculatedLeftoverCurrentAtHour(hour);
+                CurrentDTO currentDTO = new CurrentDTO(
+                        current.amount(),
+                        current.direction()
                 );
                 BatteryDTO batteryDTO = transformer.getBatteries() != null
                         ? new BatteryDTO(transformer.getBatteries().getAmount(), transformer.getBatteries().getCurrentCharge())
@@ -112,7 +112,7 @@ public class LevelService {
 
                 transformerDTOs.add(new TransformerDTO(
                         transformerId,
-                        current,
+                        currentDTO,
                         transformer.getCongestion(),
                         houseDTOs,
                         batteryDTO,

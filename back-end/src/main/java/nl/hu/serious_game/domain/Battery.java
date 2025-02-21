@@ -21,23 +21,23 @@ public class Battery implements Cloneable {
         this.amount = amount;
     }
 
-    // Takes the electricity that needs to be handled.
-    // Returns the electricity that remains afterwards.
-    public Electricity chargeOrDischarge(Electricity electricity) {
-        if (electricity.amount() == 0) {
-            return electricity;
+    // Takes the current that needs to be handled.
+    // Returns the current that remains afterwards.
+    public Current chargeOrDischarge(Current current) {
+        if (current.amount() == 0) {
+            return current;
         }
-        if (electricity.direction() == Direction.DEMAND) {
+        if (current.direction() == Direction.DEMAND) {
             float available = Math.min(this.dischargeSpeed, this.currentCharge);
-            float flow = Math.min(available, electricity.amount());
+            float flow = Math.min(available, current.amount());
             this.currentCharge -= flow;
-            return new Electricity(electricity.amount() - flow, Direction.DEMAND);
+            return new Current(current.amount() - flow, Direction.DEMAND);
         }
-        if (electricity.direction() == Direction.PRODUCTION) {
+        if (current.direction() == Direction.PRODUCTION) {
             float available = Math.min(this.chargeSpeed, this.maxCharge - this.currentCharge);
-            float flow = Math.min(available, electricity.amount());
+            float flow = Math.min(available, current.amount());
             this.currentCharge += flow;
-            return new Electricity(electricity.amount() - flow, Direction.PRODUCTION);
+            return new Current(current.amount() - flow, Direction.PRODUCTION);
         }
         throw new RuntimeException("Unreachable");
      }

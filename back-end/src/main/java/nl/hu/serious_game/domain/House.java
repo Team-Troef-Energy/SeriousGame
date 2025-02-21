@@ -6,9 +6,9 @@ public class House implements Cloneable {
     private Battery battery;
     private DayProfile dayProfile;
     private HouseOptions houseOptions;
-    private Electricity excessCurrent;
+    private Current excessCurrent;
     private Integer hour;
-    private Electricity current;
+    private Current current;
     private float powerCost;
     private float totalPowerCost;
 
@@ -83,9 +83,9 @@ public class House implements Cloneable {
         return dayProfile.getValueFromColumnAtHour(hour, "ElectricVehicleConsumption");
     }
 
-    public Electricity getElectricityAtHour(int hour) {
+    public Current getCurrentAtHour(int hour) {
         if (this.hour == null || hour == this.hour + 1) {
-            return getCalculatedElectricityAtHour(hour);
+            return getCalculatedCurrentAtHour(hour);
         }
         if (hour == this.hour) {
             return this.current;
@@ -93,7 +93,7 @@ public class House implements Cloneable {
         throw new IllegalArgumentException("Invalid hour");
     }
 
-    private Electricity getCalculatedElectricityAtHour(int hour) {
+    private Current getCalculatedCurrentAtHour(int hour) {
         float production = getSolarPanelConsumptionAtHour(hour);
         float consumption = getTotalConsumptionAtHour(hour);
         float amount;
@@ -105,20 +105,20 @@ public class House implements Cloneable {
             amount = consumption - production;
             direction = Direction.DEMAND;
         }
-        Electricity electricity = new Electricity(amount, direction);
+        Current current = new Current(amount, direction);
 
         if (battery != null) {
-            electricity = battery.chargeOrDischarge(electricity);
+            current = battery.chargeOrDischarge(current);
         }
 
-        if (houseOptions.hasCongestion() && electricity.amount() > houseOptions.maxCurrent()) {
-            excessCurrent = new Electricity(electricity.amount() - houseOptions.maxCurrent(), direction);
-            electricity = new Electricity(houseOptions.maxCurrent(), direction);
+        if (houseOptions.hasCongestion() && current.amount() > houseOptions.maxCurrent()) {
+            excessCurrent = new Current(current.amount() - houseOptions.maxCurrent(), direction);
+            current = new Current(houseOptions.maxCurrent(), direction);
         } else {
             // Direction is not important here.
-            excessCurrent = new Electricity(0f, direction);
+            excessCurrent = new Current(0f, direction);
         }
-        return electricity;
+        return current;
     }
 
     public float getTotalConsumptionAtHour(int hour) {
@@ -136,7 +136,7 @@ public class House implements Cloneable {
         return battery;
     }
 
-    public Electricity getExcessCurrent() {
+    public Current getExcessCurrent() {
         return excessCurrent;
     }
 

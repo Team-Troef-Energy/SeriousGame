@@ -29,8 +29,8 @@ public class HouseCurrentTest {
         House house = new House(1, 14, dayProfile, new HouseOptions());
 
         assertAll(
-            () -> assertEquals(Direction.PRODUCTION, house.getElectricityAtHour(12).direction()),
-            () -> assertEquals(2.36f, house.getElectricityAtHour(12).amount(), 0.001)
+            () -> assertEquals(Direction.PRODUCTION, house.getCurrentAtHour(12).direction()),
+            () -> assertEquals(2.36f, house.getCurrentAtHour(12).amount(), 0.001)
         );
     }
 
@@ -45,8 +45,8 @@ public class HouseCurrentTest {
         House house = new House(1, 1, dayProfile, new HouseOptions());
 
         assertAll(
-            () -> assertEquals(Direction.DEMAND, house.getElectricityAtHour(12).direction()),
-            () -> assertEquals(0.193571429f, house.getElectricityAtHour(12).amount(), 0.0000001)
+            () -> assertEquals(Direction.DEMAND, house.getCurrentAtHour(12).direction()),
+            () -> assertEquals(0.193571429f, house.getCurrentAtHour(12).amount(), 0.0000001)
         );
     }
 }

@@ -77,8 +77,8 @@ public class Level implements Cloneable {
                     float netConsumption = consumption - solarPanelOutput;
 
                     if (netConsumption > 0 && house.getBattery() != null) {
-                        Electricity electricity = house.getBattery().chargeOrDischarge(new Electricity(netConsumption, Direction.DEMAND));
-                        netConsumption = electricity.amount();
+                        Current current = house.getBattery().chargeOrDischarge(new Current(netConsumption, Direction.DEMAND));
+                        netConsumption = current.amount();
                     }
 
                     if (netConsumption > 0) {
@@ -87,8 +87,8 @@ public class Level implements Cloneable {
                 }
 
                 if (transformer.getBatteries() != null) {
-                    Electricity electricity = transformer.getBatteries().chargeOrDischarge(new Electricity(totalCO2, Direction.DEMAND));
-                    totalCO2 = electricity.amount();
+                    Current current = transformer.getBatteries().chargeOrDischarge(new Current(totalCO2, Direction.DEMAND));
+                    totalCO2 = current.amount();
                 }
             }
         }
