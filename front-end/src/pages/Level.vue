@@ -1,3 +1,8 @@
+<!-- 
+ Code is probably working fine, but this is absolutely un fucking readable.
+ We'll gonna need to turn this into a bunch of different components with the same logic,
+ and then judge whether it needs improvement or not.
+-->
 <template>
   <div class="level-container">
     <NavigateButton
@@ -406,6 +411,7 @@ export default defineComponent({
       infoBoxVisible.value = false;
     };
 
+    // When the page loads
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
