@@ -9,8 +9,8 @@ public class House implements Cloneable {
     private Electricity excessCurrent;
     private Integer hour;
     private Electricity current;
-    private float powerCost;
-    private float totalPowerCost;
+    private float powerCost; // Cost in euros
+    private float totalPowerCost; // Cost in euros
 
     public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.id = id;
@@ -83,6 +83,7 @@ public class House implements Cloneable {
         return dayProfile.getValue(hour, "ElectricVehicleConsumption");
     }
 
+    // Returns the current for the house at a specific hour
     public Electricity current(int hour) {
         if (this.hour == null || hour == this.hour + 1) {
             return calculateCurrent(hour);

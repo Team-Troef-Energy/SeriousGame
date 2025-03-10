@@ -1,9 +1,9 @@
 package nl.hu.serious_game.domain;
 
-import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 
 public class Level implements Cloneable {
     private Season season;
@@ -13,7 +13,7 @@ public class Level implements Cloneable {
     private List<Transformer> transformers = new ArrayList<>();
     private Cost cost;
     private boolean isCompleted = false;
-    private int totalCosts = 0;
+    private int totalCosts = 0; // Cost in coins
     private float totalCO2 = 0;
 
     public Level(Season season, int startTime, int endTime, Objective objective, List<Transformer> transformers, Cost cost) {
@@ -127,6 +127,7 @@ public class Level implements Cloneable {
         return totalCO2;
     }
 
+    // The Level can be cloned to reuse the same structure with different values, avoiding the need to create a new instance each time
     public Level clone() {
         try {
             Level clone = (Level) super.clone();
