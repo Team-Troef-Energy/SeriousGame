@@ -1,19 +1,19 @@
 package nl.hu.serious_game.domain.HouseTest;
 
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.House;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.Season;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import nl.hu.serious_game.domain.DayProfile;
+import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.HouseOptions;
+import nl.hu.serious_game.domain.Season;
 
 public class HouseConsumptionTest {
     @Test
@@ -29,7 +29,7 @@ public class HouseConsumptionTest {
     @DisplayName("House Consumption Test 12:00")
     public void HouseConsumptionTestHour12() {
         House house = new House(1, 1, new DayProfile(Season.SUMMER), new HouseOptions());
-        assertEquals(0.39f, house.getBaseConsumption(12));
+        assertEquals(0.39f, house.getBaseConsumptionAtHour(12));
     }
 
     // Parameterized test for checking the house consumption for different seasons and hours
@@ -38,7 +38,7 @@ public class HouseConsumptionTest {
     @MethodSource("provideHouseConsumptionSeasonAndTimeExamples")
     public void SeasonTestHouseConsumption(Season season, int hour, float expectedOutput) {
         House house = new House(1, 1, new DayProfile(season), new HouseOptions());
-        assertEquals(expectedOutput, house.getBaseConsumption(hour));
+        assertEquals(expectedOutput, house.getBaseConsumptionAtHour(hour));
     }
 
     // Source of arguments for the parameterized test, containing: Season, Hour, Expected output
@@ -64,7 +64,7 @@ public class HouseConsumptionTest {
     @MethodSource("provideHouseConsumptionOptionsAndTimeExamples")
     public void HouseConsumptionTestOptions(Season season, boolean hasElectricVehicle, boolean hasHeatPump, int hour, float expectedOutput) {
         House house = new House(1, 1, new DayProfile(season), new HouseOptions(hasHeatPump, hasElectricVehicle));
-        assertEquals(expectedOutput, house.getTotalConsumptionOfHour(hour));
+        assertEquals(expectedOutput, house.getTotalConsumptionAtHour(hour));
     }
 
     // Source of arguments for the parameterized test, containing: Season, Electric vehicle, Heat pump, Hour, Expected output

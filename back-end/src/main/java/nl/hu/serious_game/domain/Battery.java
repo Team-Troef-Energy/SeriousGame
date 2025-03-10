@@ -24,29 +24,29 @@ public class Battery implements Cloneable {
         this.amount = amount;
     }
 
-    // Takes the electricity that needs to be handled.
-    // Returns the electricity that remains afterwards.
-    // The maximum amount of electricity that can be demanded is the discharge speed.
-    // The maximum amount of electricity that can be stored is the charge speed.
-    public Electricity use(Electricity electricity) {
-        if (electricity.amount() == 0) {
-            return electricity;
+    // Takes the current that needs to be handled.
+    // Returns the current that remains afterwards.
+    // The maximum amount of current that can be demanded is the discharge speed.
+    // The maximum amount of current that can be stored is the charge speed.
+    public Current chargeOrDischarge(Current current) {
+        if (current.amount() == 0) {
+            return current;
         }
 
-        // If the electricity is demanded, the battery will discharge
-        if (electricity.direction() == Direction.DEMAND) {
+        // If the current is demanded, the battery will discharge
+        if (current.direction() == Direction.DEMAND) {
             float available = Math.min(this.dischargeSpeed, this.currentCharge);
-            float flow = Math.min(available, electricity.amount());
+            float flow = Math.min(available, current.amount());
             this.currentCharge -= flow;
-            return new Electricity(electricity.amount() - flow, Direction.DEMAND);
+            return new Current(current.amount() - flow, Direction.DEMAND);
         }
 
-        // If the electricity is produced, the battery will charge
-        if (electricity.direction() == Direction.PRODUCTION) {
+        // If the current is produced, the battery will charge
+        if (current.direction() == Direction.PRODUCTION) {
             float available = Math.min(this.chargeSpeed, this.maxCharge - this.currentCharge);
-            float flow = Math.min(available, electricity.amount());
+            float flow = Math.min(available, current.amount());
             this.currentCharge += flow;
-            return new Electricity(electricity.amount() - flow, Direction.PRODUCTION);
+            return new Current(current.amount() - flow, Direction.PRODUCTION);
         }
         throw new RuntimeException("Unreachable");
      }

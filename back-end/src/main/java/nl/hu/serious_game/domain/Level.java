@@ -47,7 +47,7 @@ public class Level implements Cloneable {
                 .setBattery(amount);
     }
 
-    public boolean getIsCompleted() {
+    public boolean isCompleted() {
         return isCompleted;
     }
 
@@ -55,7 +55,7 @@ public class Level implements Cloneable {
         isCompleted = true;
     }
 
-    public int calculateTotalCosts() {
+    public int getCalculatedTotalCosts() {
         totalCosts = 0;
         for (Transformer transformer : this.getTransformers()) {
             totalCosts += transformer.getBatteries().getAmount() * this.getCost().getBatteryCost();
@@ -67,18 +67,18 @@ public class Level implements Cloneable {
         return totalCosts;
     }
 
-    public float calculateTotalCO2() {
+    public float getCalculatedTotalCO2() {
         totalCO2 = 0;
         for (int hour = this.getStartTime(); hour <= this.getEndTime(); hour++) {
             for (Transformer transformer : this.getTransformers()) {
                 for (House house : transformer.getHouses()) {
-                    float consumption = house.getTotalConsumptionOfHour(hour);
-                    float solarPanelOutput = house.getSolarPanelOutput(hour);
+                    float consumption = house.getTotalConsumptionAtHour(hour);
+                    float solarPanelOutput = house.getSolarPanelConsumptionAtHour(hour);
                     float netConsumption = consumption - solarPanelOutput;
 
                     if (netConsumption > 0 && house.getBattery() != null) {
-                        Electricity electricity = house.getBattery().use(new Electricity(netConsumption, Direction.DEMAND));
-                        netConsumption = electricity.amount();
+                        Current current = house.getBattery().chargeOrDischarge(new Current(netConsumption, Direction.DEMAND));
+                        netConsumption = current.amount();
                     }
 
                     if (netConsumption > 0) {
@@ -87,8 +87,8 @@ public class Level implements Cloneable {
                 }
 
                 if (transformer.getBatteries() != null) {
-                    Electricity electricity = transformer.getBatteries().use(new Electricity(totalCO2, Direction.DEMAND));
-                    totalCO2 = electricity.amount();
+                    Current current = transformer.getBatteries().chargeOrDischarge(new Current(totalCO2, Direction.DEMAND));
+                    totalCO2 = current.amount();
                 }
             }
         }

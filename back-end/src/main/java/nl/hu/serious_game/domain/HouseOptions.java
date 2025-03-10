@@ -27,7 +27,7 @@ public class HouseOptions {
         this.congestion = congestion;
     }
 
-    public boolean hasHeatpump() {
+    public boolean hasHeatPump() {
         return hasHeatPump;
     }
 

@@ -1,9 +1,9 @@
 package nl.hu.serious_game.domain;
 
-import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 
 public class Transformer implements Cloneable {
     private final int id;
@@ -11,7 +11,7 @@ public class Transformer implements Cloneable {
     private Congestion congestion;
     private List<House> houses;
     private Battery battery;
-    private Electricity excessCurrent;
+    private Current excessCurrent;
     private int maxBatteryCount = 4;
 
     public Transformer(int id, List<House> houses, int batteries) {
@@ -28,11 +28,11 @@ public class Transformer implements Cloneable {
         this.congestion = congestion;
     }
 
-    public Electricity calculateLeftoverCurrent(int hour) {
+    public Current getCalculatedLeftoverCurrentAtHour(int hour) {
         float demand = 0;
         float production = 0;
         for (House house : houses) {
-            Electricity current = house.current(hour);
+            Current current = house.getCurrentAtHour(hour);
             if (current.direction() == Direction.DEMAND) {
                 demand += current.amount();
             } else if (current.direction() == Direction.PRODUCTION) {
@@ -49,40 +49,40 @@ public class Transformer implements Cloneable {
             direction = Direction.PRODUCTION;
         }
 
-        Electricity electricity = battery.use(new Electricity(total, direction));
+        Current current = battery.chargeOrDischarge(new Current(total, direction));
 
-        if (congestion.hasCongestion() && electricity.amount() > congestion.maxCurrent()) {
-            excessCurrent = new Electricity(electricity.amount() - congestion.maxCurrent(), direction);
-            electricity = new Electricity(congestion.maxCurrent(), direction);
+        if (congestion.hasCongestion() && current.amount() > congestion.maxCurrent()) {
+            excessCurrent = new Current(current.amount() - congestion.maxCurrent(), direction);
+            current = new Current(congestion.maxCurrent(), direction);
         } else {
-            excessCurrent = new Electricity(0f, direction);
+            excessCurrent = new Current(0f, direction);
         }
-        return electricity;
+        return current;
     }
 
-    public void distributePowerCost(int hour) {
+    public void distributePowerCostAtHour(int hour) {
         float totalDemand = 0;
         float totalProduction = 0;
 
         // Calculate total demand and total production per hour for all houses
         for (House house : houses) {
-            if (house.current(hour).direction() == Direction.DEMAND) {
-                totalDemand += house.current(hour).amount();
-            } else if (house.current(hour).direction() == Direction.PRODUCTION) {
-                totalProduction += house.current(hour).amount();
+            if (house.getCurrentAtHour(hour).direction() == Direction.DEMAND) {
+                totalDemand += house.getCurrentAtHour(hour).amount();
+            } else if (house.getCurrentAtHour(hour).direction() == Direction.PRODUCTION) {
+                totalProduction += house.getCurrentAtHour(hour).amount();
             }
         }
 
         // Distribute the net production proportionally among the houses with net demand to make it fair
         float remainingProduction = totalProduction;
         for (House house : houses) {
-            float netDemand = house.getTotalConsumptionOfHour(hour) - house.getSolarPanelOutput(hour);
+            float netDemand = house.getTotalConsumptionAtHour(hour) - house.getSolarPanelConsumptionAtHour(hour);
             if (netDemand > 0 && remainingProduction > 0) {
                 float share = (netDemand / totalDemand) * totalProduction;
                 netDemand -= share;
                 remainingProduction -= share;
             }
-            float powerCost = netDemand * house.getDayProfile().getValue(hour, "PowerCost");
+            float powerCost = netDemand * house.getDayProfile().getValueFromColumnAtHour(hour, "PowerCost");
             house.setPowerCost(Math.max(powerCost, 0)); // Ensure powerCost is not negative
             house.setTotalPowerCost(house.getTotalPowerCost() + house.getPowerCost()); // Accumulate total power cost as well
         }
@@ -118,7 +118,7 @@ public class Transformer implements Cloneable {
         return battery;
     }
 
-    public Electricity getExcessCurrent() {
+    public Current getExcessCurrent() {
         return excessCurrent;
     }
 

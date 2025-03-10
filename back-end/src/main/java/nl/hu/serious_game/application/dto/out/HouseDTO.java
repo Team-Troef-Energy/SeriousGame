@@ -19,6 +19,6 @@ public record HouseDTO(
         int maxBatteryCount) {
 
     public HouseDTO(int id, CurrentDTO current, BatteryDTO batteries, float powerCost, float totalPowerCost, int solarpanels, float production, float consumption, HouseOptions houseOptions) {
-        this(id, current, batteries, powerCost, totalPowerCost, solarpanels, production, consumption, houseOptions.hasCongestion(), houseOptions.maxCurrent(), houseOptions.hasElectricVehicle(), houseOptions.hasHeatpump(), houseOptions.maxSolarPanelCount(), houseOptions.maxBatteryCount());
+        this(id, current, batteries, powerCost, totalPowerCost, solarpanels, production, consumption, houseOptions.hasCongestion(), houseOptions.maxCurrent(), houseOptions.hasElectricVehicle(), houseOptions.hasHeatPump(), houseOptions.maxSolarPanelCount(), houseOptions.maxBatteryCount());
     }
 }
