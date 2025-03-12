@@ -1,108 +1,64 @@
 <template>
-  <div class="level-container">
-    <NavigateButton
-      id="navigate-button"
-      label="Verlaat level"
-      to="/levelSelect"
-      backgroundColor="#cc0000" />
-    <div ref="gameCanvas" class="game-canvas">
-      <svg
-        :width="1000"
-        :height="1000"
-        xmlns="http://www.w3.org/2000/svg"
-        style="position: absolute; top: 0; left: 0">
+  <div class="level container">
+    <div class="level-container">
+      <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
+      <div ref="gameCanvas" class="game-canvas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="line-svg">
+          <template v-for="transformer in transformers">
+            <ConnectionLine v-for="house in transformer.houses" :key="'connection-' + house.id"
+              :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
+              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 / getResolutionFactor() + 125"
+              :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
+              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 / getResolutionFactor() + 60" :hasCongestion="house.hasCongestion"
+              :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
+              :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+          </template>
+        </svg>
         <template v-for="transformer in transformers">
-          <ConnectionLine
-            v-for="house in transformer.houses"
-            :key="'connection-' + house.id"
-            :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-            :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
-            :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-            :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
-            :hasCongestion="house.hasCongestion"
-            :is-production="house.current.direction === 'PRODUCTION'"
-            :current="house.current.amount"
-            :maxCurrent="house.maxCurrent"
-            @show-info-box="showInfoBox"
-            @hide-info-box="hideInfoBox" />
-        </template>
-      </svg>
-      <template v-for="transformer in transformers">
-        <transformer
-          v-for="transformer in transformers"
-          :key="'transformer-' + transformer.id"
-          :style="{
+          <transformer v-for="transformer in transformers" :key="'transformer-' + transformer.id" :style="{
             position: 'absolute',
             left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
-            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px',
-          }"
-          @click="showTransformerDetails(transformer)"
-          :hasBatteries="transformer.batteries.amount > 0" />
-        <House
-          v-for="house in transformer.houses"
-          :key="'house-' + house.id"
-          :style="{
+            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 / getResolutionFactor() + 30 + 'px',
+          }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
+          <House v-for="house in transformer.houses" :key="'house-' + house.id" :style="{
             position: 'absolute',
             left: (housePositions[house.id - 1] % 10) * 150 + 'px',
-            top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px',
-          }"
-          @click="showHouseDetails(house)"
-          :hasElectricCar="house.hasElectricVehicle"
-          :hasHeatPump="house.hasHeatpump"
-          :hasSolarPanels="house.solarpanels > 0"
-          :hasBatteries="house.batteries.amount > 0" />
-      </template>
+            top: Math.floor(housePositions[house.id - 1] / 10) * 80 / getResolutionFactor() + 'px',
+          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries.amount > 0" />
+        </template>
+      </div>
+      <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
+      <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :title="popupTitle" :type="popupType"
+        :energyProduction="popupEnergyProduction" :energyConsumption="popupEnergyConsumption" :heatPump="popupHeatPump"
+        :electricVehicle="popupElectricVehicle" :solarPanels="popupSolarPanels" :batteries="popupBatteries"
+        :batteryCharge="popupBatteryCharge" :totalPowerCost="popupTotalPowerCost" :solarPanelCost="popupSolarPanelCost"
+        :batteryCost="popupBatteryCost" @update:isOpen="isPopupOpen = $event" @increase="handleIncrease"
+        @decrease="handleDecrease" @submitChanges="submitChanges" @cancelChanges="cancelChanges" />
+      <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
+        :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
+        :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
+        :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
+        :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
+        :season="dashboardData.season" />
+      <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
     </div>
-    <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
-    <PopupComponent
-      v-if="isPopupOpen"
-      :isOpen="isPopupOpen"
-      :title="popupTitle"
-      :type="popupType"
-      :energyProduction="popupEnergyProduction"
-      :energyConsumption="popupEnergyConsumption"
-      :heatPump="popupHeatPump"
-      :electricVehicle="popupElectricVehicle"
-      :solarPanels="popupSolarPanels"
-      :batteries="popupBatteries"
-      :batteryCharge="popupBatteryCharge"
-      :totalPowerCost="popupTotalPowerCost"
-      :solarPanelCost="popupSolarPanelCost"
-      :batteryCost="popupBatteryCost"
-      @update:isOpen="isPopupOpen = $event"
-      @increase="handleIncrease"
-      @decrease="handleDecrease"
-      @submitChanges="submitChanges"
-      @cancelChanges="cancelChanges" />
-    <Dashboard
-      :coinsUsed="dashboardData.coinsUsed"
-      :maxCoins="dashboardData.maxCoins"
-      :currentCO2="dashboardData.currentCO2"
-      :MaxCO2="dashboardData.maxCO2"
-      :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
-      :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
-      :objectiveStartTime="dashboardData.objectiveStartTime"
-      :objectiveEndTime="dashboardData.objectiveEndTime"
-      :season="dashboardData.season" />
-    <Notification
-      v-if="notificationStatus"
-      :status="notificationStatus"
-      :message="notificationMessage" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, Ref, CSSProperties } from "vue";
-import Transformer from "../components/Transformer.vue";
-import House from "../components/House.vue";
-import ConnectionLine from "../components/ConnectionLine.vue";
-import PopupComponent from "../components/PopupComponent.vue";
-import NavigateButton from "../components/NavigateButton.vue";
-import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
+import { CSSProperties, defineComponent, onMounted, ref, Ref } from "vue";
 import { useRoute } from "vue-router";
+import ConnectionLine from "../components/ConnectionLine.vue";
 import Dashboard from "../components/Dashboard.vue";
+import House from "../components/House.vue";
+import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
+import PopupComponent from "../components/PopupComponent.vue";
+import Transformer from "../components/Transformer.vue";
 import { house, levelData, transformer } from "../typing";
+import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
 export default defineComponent({
   name: "Level",
@@ -182,6 +138,11 @@ export default defineComponent({
       }
       return positions;
     };
+
+    const getResolutionFactor = () => {
+      console.log( (( window.outerWidth - 10 ) / window.innerWidth))
+      return (( window.outerWidth - 10 ) / window.innerWidth);
+    }
 
     const showHouseDetails = (house: house) => {
       popupTitle.value = `Huis ${house.id}`;
@@ -447,6 +408,7 @@ export default defineComponent({
       popupBatteryCharge,
       popupSolarPanelCost,
       popupBatteryCost,
+      getResolutionFactor,
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
@@ -467,20 +429,28 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.level {
+  height: 100%;
+}
+
 .level-container {
   height: 100%;
-  width: 50vw;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
 .game-canvas {
-  width: 100vw;
+  width: 100%;
   height: 100%;
   position: relative;
   background: url("/Cartoon_green_texture_grass.jpg") repeat center center;
   background-size: 25%, 25%;
+}
+
+.line-svg {
+  width: 100%;
+  height: 100%;
 }
 
 #submit-button {

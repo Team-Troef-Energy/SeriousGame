@@ -80,7 +80,6 @@ export default defineComponent({
 <style scoped>
 .dashboard-container {
   height: 20vh;
-  width: 100vw;
   display: flex;
   flex-direction: row;
   background-color: rgb(82, 81, 81);
