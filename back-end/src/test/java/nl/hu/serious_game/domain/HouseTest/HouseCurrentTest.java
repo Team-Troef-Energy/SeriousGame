@@ -1,10 +1,15 @@
 package nl.hu.serious_game.domain.HouseTest;
 
-import nl.hu.serious_game.domain.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import nl.hu.serious_game.domain.DayProfile;
+import nl.hu.serious_game.domain.Direction;
+import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.HouseOptions;
+import nl.hu.serious_game.domain.Season;
 
 public class HouseCurrentTest {
     @Test
@@ -24,8 +29,8 @@ public class HouseCurrentTest {
         House house = new House(1, 14, dayProfile, new HouseOptions());
 
         assertAll(
-            () -> assertEquals(Direction.PRODUCTION, house.current(12).direction()),
-            () -> assertEquals(2.36f, house.current(12).amount(), 0.001)
+            () -> assertEquals(Direction.PRODUCTION, house.getCurrentAtHour(12).direction()),
+            () -> assertEquals(2.36f, house.getCurrentAtHour(12).amount(), 0.001)
         );
     }
 
@@ -40,8 +45,8 @@ public class HouseCurrentTest {
         House house = new House(1, 1, dayProfile, new HouseOptions());
 
         assertAll(
-            () -> assertEquals(Direction.DEMAND, house.current(12).direction()),
-            () -> assertEquals(0.193571429f, house.current(12).amount(), 0.0000001)
+            () -> assertEquals(Direction.DEMAND, house.getCurrentAtHour(12).direction()),
+            () -> assertEquals(0.193571429f, house.getCurrentAtHour(12).amount(), 0.0000001)
         );
     }
 }
