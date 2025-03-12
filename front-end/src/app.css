@@ -18,6 +18,10 @@ body, .root-element {
     height: 100%;
 }
 
+html {
+    overflow-y: auto !important;
+}
+
 body, .root-element {
     display: flex;
     flex-direction: column;
