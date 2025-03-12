@@ -119,12 +119,6 @@ button:focus-visible {
   }
 }
 
-@media (min-width: 1920px) {
-  .container {
-      max-width: 1920px;
-  }
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

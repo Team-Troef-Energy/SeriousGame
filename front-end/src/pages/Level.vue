@@ -444,6 +444,7 @@ export default defineComponent({
 <style scoped>
 .level {
   height: 100%;
+  min-width: 100%;
 }
 
 .level-container {
