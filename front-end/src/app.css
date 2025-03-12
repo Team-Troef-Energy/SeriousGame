@@ -26,8 +26,6 @@ body, .root-element {
     display: flex;
     flex-direction: column;
     margin: 0;
-    background-image: var(--clr-primary-bg);
-    background-repeat: no-repeat;
 }
 
 * {
