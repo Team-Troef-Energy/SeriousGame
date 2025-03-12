@@ -42,5 +42,12 @@ header h1 {
     font-weight: 600;
     grid-column: 2;
     text-align: center;
+    visibility: hidden;
+}
+
+@media (min-width: 640px) {
+  header h1 {
+    visibility: visible;
+  }
 }
 </style>
