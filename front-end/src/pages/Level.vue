@@ -7,23 +7,24 @@
           <template v-for="transformer in transformers">
             <ConnectionLine v-for="house in transformer.houses" :key="'connection-' + house.id"
               :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 / getResolutionFactor() + 125"
+              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 125"
               :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 / getResolutionFactor() + 60" :hasCongestion="house.hasCongestion"
-              :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
-              :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60"
+              :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+              :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
+              @hide-info-box="hideInfoBox" />
           </template>
         </svg>
         <template v-for="transformer in transformers">
           <transformer v-for="transformer in transformers" :key="'transformer-' + transformer.id" :style="{
             position: 'absolute',
             left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
-            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 / getResolutionFactor() + 30 + 'px',
+            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 30 + 'px',
           }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
           <House v-for="house in transformer.houses" :key="'house-' + house.id" :style="{
             position: 'absolute',
             left: (housePositions[house.id - 1] % 10) * 150 + 'px',
-            top: Math.floor(housePositions[house.id - 1] / 10) * 80 / getResolutionFactor() + 'px',
+            top: Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 'px',
           }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
             :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
             :hasBatteries="house.batteries.amount > 0" />
@@ -140,8 +141,20 @@ export default defineComponent({
     };
 
     const getResolutionFactor = () => {
-      console.log( (( window.outerWidth - 10 ) / window.innerWidth))
-      return (( window.outerWidth - 10 ) / window.innerWidth);
+      const baseWidth = 1920;  // Reference width
+      const baseHeight = 1080; // Reference height
+
+      const viewportWidth = window.innerWidth;   // Current viewport width
+      const viewportHeight = window.innerHeight; // Current viewport height
+
+      // Compute width and height factors
+      const widthFactor = viewportWidth / baseWidth;
+      const heightFactor = viewportHeight / baseHeight;
+
+      // Use the LARGER factor to scale UP for bigger screens
+      const factor = Math.max(widthFactor, heightFactor);
+
+      return factor;
     }
 
     const showHouseDetails = (house: house) => {
