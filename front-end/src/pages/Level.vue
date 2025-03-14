@@ -29,8 +29,7 @@
     </div>
     <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
     <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties" :transformers=transformers @update:isOpen="isPopupOpen = $event"
-  @decrease="handleDecrease" @submitChanges="submitChanges"
-      @cancelChanges="cancelChanges" />
+  @submitChanges="submitChanges" />
     <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
       :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
       :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
@@ -52,7 +51,7 @@ import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
-import { batteries, house, levelData, transformer } from "../types";
+import { house, levelData, transformer } from "../types";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
 export default defineComponent({
@@ -93,24 +92,14 @@ export default defineComponent({
       season: "",
     });
 
+    let solarPanelCost = 0;
+    let batteryCost = 0;
+
     const popupProperties = ref<PopupProperties | undefined>(undefined);
     const isPopupOpen = ref(false);
-    const popupTitle = ref("");
-    const popupType = ref("huis");
-    const popupEnergyProduction = ref(0);
-    const popupEnergyConsumption = ref(0);
-    const popupHeatPump = ref(false);
-    const popupElectricVehicle = ref(false);
-    const popupSolarPanels = ref(0);
-    const popupBatteries = ref<batteries>({ amount: 0, totalCharge: 0, cost: 0 });
-    const popupTotalPowerCost = ref(0);
-    const popupSolarPanelCost = ref(0);
 
     const notificationStatus = ref(false);
     const notificationMessage = ref("");
-
-    // Used to store the initial popup data when the popup is opened so it can be cancelled
-    const initialPopupData = ref({});
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
@@ -135,30 +124,12 @@ export default defineComponent({
 
     const showHouseDetails = (house: house) => {
       isPopupOpen.value = true;
-      popupProperties.value = new PopupProperties(house, popupSolarPanelCost.value, popupBatteries.value.cost);
+      popupProperties.value = new PopupProperties(house, solarPanelCost, batteryCost);
     };
 
     const showTransformerDetails = (transformer: transformer) => {
       isPopupOpen.value = true;
-      popupProperties.value = new PopupProperties(transformer, popupSolarPanelCost.value, popupBatteries.value.cost);
-    };
-
-    const updateSolarPanels = (newValue: number) => {
-      const house = transformers.value
-        .flatMap((t) => t.houses)
-        .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
-      if (house) {
-        house.solarpanels = newValue;
-      }
-    };
-
-
-    const handleDecrease = (property: string) => {
-      if (property === "solarPanels" && popupSolarPanels.value > 0) {
-        popupSolarPanels.value -= 1;
-      } else if (property === "batteries" && popupBatteries.value.amount > 0) {
-        popupBatteries.value.amount -= 1;
-      }
+      popupProperties.value = new PopupProperties(transformer, solarPanelCost, batteryCost);
     };
 
     const processDashboardData = (data: levelData) => {
@@ -221,25 +192,6 @@ export default defineComponent({
         );
         transformers.value = lastHourData.transformers;
 
-        // Refresh popup data
-        if (isPopupOpen.value) {
-          if (popupType.value === "huis") {
-            const house = transformers.value
-              .flatMap((t) => t.houses)
-              .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
-            if (house) {
-              showHouseDetails(house);
-            }
-          } else if (popupType.value === "transformator") {
-            const transformer = transformers.value.find(
-              (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
-            );
-            if (transformer) {
-              showTransformerDetails(transformer);
-            }
-          }
-        }
-
         processDashboardData(response);
 
         if (response.isCompleted === true) {
@@ -250,29 +202,6 @@ export default defineComponent({
         console.error("Failed to submit changes:", error);
       }
       isPopupOpen.value = false;
-    };
-
-    const cancelChanges = async () => {
-      try {
-        // Revert to initial popup data
-        if (popupType.value === "huis") {
-          const house = transformers.value
-            .flatMap((t) => t.houses)
-            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
-          if (house) {
-            Object.assign(house, initialPopupData.value);
-          }
-        } else if (popupType.value === "transformator") {
-          const transformer = transformers.value.find(
-            (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
-          );
-          if (transformer) {
-            Object.assign(transformer, initialPopupData.value);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to cancel changes:", error);
-      }
     };
 
     const showInfoBox = ({ x, y, contents }: { x: number; y: number; contents: any }) => {
@@ -290,8 +219,8 @@ export default defineComponent({
       try {
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
-        popupSolarPanelCost.value = data.cost.solarPanelCost;
-        popupBatteries.value.cost = data.cost.batteryCost;
+        solarPanelCost = data.cost.solarPanelCost;
+        batteryCost = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -316,22 +245,9 @@ export default defineComponent({
       dashboardData,
       isPopupOpen,
       popupProperties,
-      popupTitle,
-      popupType,
-      popupEnergyProduction,
-      popupEnergyConsumption,
-      popupHeatPump,
-      popupElectricVehicle,
-      popupSolarPanels,
-      popupTotalPowerCost,
-      popupBatteries,
-      popupSolarPanelCost,
       showHouseDetails,
       showTransformerDetails,
-      updateSolarPanels,
-      handleDecrease,
       submitChanges,
-      cancelChanges,
       infoBoxVisible,
       infoBoxContents,
       infoBoxStyle,

@@ -274,7 +274,6 @@ export default defineComponent({
       totalPowerCost.value = properties.totalPowerCost ?? 0;
       solarPanelCost.value = properties.solarPanelCost ?? 0;
       batteries.value.cost = properties.batteries?.cost ?? 0;
-      console.log("Popup created");
 
     };
 
