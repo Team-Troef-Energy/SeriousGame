@@ -1,3 +1,4 @@
+import { batteries } from "./Batteries";
 import { current } from "./Current";
 export interface house {
   maxBatteryCount: number;
@@ -7,11 +8,7 @@ export interface house {
   consumption: number;
   production: number;
   current: current;
-  batteries: {
-    totalCharge: number;
-    amount: number;
-    currentCharge: number;
-  };
+  batteries: batteries;
   solarpanels: number;
   hasCongestion: boolean;
   maxCurrent: number;

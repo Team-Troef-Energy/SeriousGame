@@ -89,9 +89,9 @@
                 <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
               </v-col>
               <v-col cols="6" class="text-center"
-                ><strong>Accu’s</strong> (💰{{ batteryCost }})</v-col
+                ><strong>Accu’s</strong> (💰{{ batteries.cost }})</v-col
               >
-              <v-col cols="2" class="text-end highlight">{{ batteries }}</v-col>
+              <v-col cols="2" class="text-end highlight">{{ batteries.amount }}</v-col>
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Totale accu lading:</strong></v-col>
@@ -118,7 +118,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { computed, defineComponent, PropType } from "vue";
+import { batteries } from "../types";
 
 export default defineComponent({
   name: "PopupComponent",
@@ -158,11 +159,7 @@ export default defineComponent({
       default: 0,
     },
     batteries: {
-      type: Number,
-      default: 0,
-    },
-    batteryCharge: {
-      type: Number,
+      type: Object as PropType<batteries>,
       default: 0,
     },
     totalPowerCost: {
@@ -173,17 +170,13 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
-    batteryCost: {
-      type: Number,
-      default: 0,
-    },
   },
   setup(props, { emit }) {
     const energyDifference = computed(() => props.energyProduction - props.energyConsumption);
 
     const formattedEnergyProduction = computed(() => props.energyProduction.toFixed(2));
     const formattedEnergyConsumption = computed(() => props.energyConsumption.toFixed(2));
-    const formattedBatteryCharge = computed(() => props.batteryCharge.toFixed(2));
+    const formattedBatteryCharge = computed(() => (props.batteries.totalCharge ?? 0).toFixed(2));
     const formattedTotalPowerCost = computed(() => props.totalPowerCost.toFixed(4));
 
     const heatPumpDisplay = computed(() => (props.heatPump ? "✔️" : "❌"));

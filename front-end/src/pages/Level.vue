@@ -65,10 +65,8 @@
       :electricVehicle="popupElectricVehicle"
       :solarPanels="popupSolarPanels"
       :batteries="popupBatteries"
-      :batteryCharge="popupBatteryCharge"
       :totalPowerCost="popupTotalPowerCost"
       :solarPanelCost="popupSolarPanelCost"
-      :batteryCost="popupBatteryCost"
       @update:isOpen="isPopupOpen = $event"
       @increase="handleIncrease"
       @decrease="handleDecrease"
@@ -101,7 +99,7 @@ import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
-import { house, levelData, transformer } from "../types";
+import { batteries, house, levelData, transformer } from "../types";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
 export default defineComponent({
@@ -150,11 +148,9 @@ export default defineComponent({
     const popupHeatPump = ref(false);
     const popupElectricVehicle = ref(false);
     const popupSolarPanels = ref(0);
-    const popupBatteries = ref(0);
-    const popupBatteryCharge = ref(0);
+    const popupBatteries = ref<batteries>({ amount: 0, totalCharge: 0, cost: 0 });
     const popupTotalPowerCost = ref(0);
     const popupSolarPanelCost = ref(0);
-    const popupBatteryCost = ref(0);
 
     const notificationStatus = ref(false);
     const notificationMessage = ref("");
@@ -191,8 +187,8 @@ export default defineComponent({
       popupHeatPump.value = house.hasHeatpump;
       popupElectricVehicle.value = house.hasElectricVehicle;
       popupSolarPanels.value = house.solarpanels;
-      popupBatteries.value = house.batteries.amount;
-      popupBatteryCharge.value = house.batteries.totalCharge;
+      popupBatteries.value.amount = house.batteries.amount;
+      popupBatteries.value.totalCharge = house.batteries.totalCharge;
       popupTotalPowerCost.value = house.totalPowerCost;
       isPopupOpen.value = true;
 
@@ -207,8 +203,8 @@ export default defineComponent({
         transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
       popupEnergyConsumption.value =
         transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
-      popupBatteries.value = transformer.batteries.amount;
-      popupBatteryCharge.value = transformer.batteries.totalCharge;
+      popupBatteries.value.amount = transformer.batteries.amount;
+      popupBatteries.value.totalCharge = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
 
       // Store initial popup data to allow for cancelling changes
@@ -257,16 +253,16 @@ export default defineComponent({
             .flatMap((t) => t.houses)
             .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
           if (house && house.batteries.amount < house.maxBatteryCount) {
-            popupBatteries.value += 1;
-            updateBatteries(popupBatteries.value);
+            popupBatteries.value.amount += 1;
+            updateBatteries(popupBatteries.value.amount);
           }
         } else if (popupType.value === "transformator") {
           const transformer: transformer | undefined = transformers.value.find(
             (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
           );
           if (transformer && transformer.batteries.amount < transformer.maxBatteryCount) {
-            popupBatteries.value += 1;
-            updateBatteries(popupBatteries.value);
+            popupBatteries.value.amount += 1;
+            updateBatteries(popupBatteries.value.amount);
           }
         }
       }
@@ -276,9 +272,9 @@ export default defineComponent({
       if (property === "solarPanels" && popupSolarPanels.value > 0) {
         popupSolarPanels.value -= 1;
         updateSolarPanels(popupSolarPanels.value);
-      } else if (property === "batteries" && popupBatteries.value > 0) {
-        popupBatteries.value -= 1;
-        updateBatteries(popupBatteries.value);
+      } else if (property === "batteries" && popupBatteries.value.amount > 0) {
+        popupBatteries.value.amount -= 1;
+        updateBatteries(popupBatteries.value.amount);
       }
     };
 
@@ -411,7 +407,7 @@ export default defineComponent({
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
         popupSolarPanelCost.value = data.cost.solarPanelCost;
-        popupBatteryCost.value = data.cost.batteryCost;
+        popupBatteries.value.cost = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -444,9 +440,7 @@ export default defineComponent({
       popupSolarPanels,
       popupTotalPowerCost,
       popupBatteries,
-      popupBatteryCharge,
       popupSolarPanelCost,
-      popupBatteryCost,
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
