@@ -1,91 +1,43 @@
 <template>
   <div class="level-container">
-    <NavigateButton
-      id="navigate-button"
-      label="Verlaat level"
-      to="/levelSelect"
-      backgroundColor="#cc0000" />
+    <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
     <div ref="gameCanvas" class="game-canvas">
-      <svg
-        :width="1000"
-        :height="1000"
-        xmlns="http://www.w3.org/2000/svg"
-        style="position: absolute; top: 0; left: 0">
+      <svg :width="1000" :height="1000" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0">
         <template v-for="transformer in transformers">
-          <ConnectionLine
-            v-for="house in transformer.houses"
-            :key="'connection-' + house.id"
+          <ConnectionLine v-for="house in transformer.houses" :key="'connection-' + house.id"
             :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
             :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
             :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-            :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60"
-            :hasCongestion="house.hasCongestion"
-            :is-production="house.current.direction === 'PRODUCTION'"
-            :current="house.current.amount"
-            :maxCurrent="house.maxCurrent"
-            @show-info-box="showInfoBox"
-            @hide-info-box="hideInfoBox" />
+            :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60" :hasCongestion="house.hasCongestion"
+            :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
+            :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
         </template>
       </svg>
       <template v-for="transformer in transformers">
-        <transformer
-          v-for="transformer in transformers"
-          :key="'transformer-' + transformer.id"
-          :style="{
-            position: 'absolute',
-            left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
-            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px',
-          }"
-          @click="showTransformerDetails(transformer)"
-          :hasBatteries="transformer.batteries.amount > 0" />
-        <House
-          v-for="house in transformer.houses"
-          :key="'house-' + house.id"
-          :style="{
-            position: 'absolute',
-            left: (housePositions[house.id - 1] % 10) * 150 + 'px',
-            top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px',
-          }"
-          @click="showHouseDetails(house)"
-          :hasElectricCar="house.hasElectricVehicle"
-          :hasHeatPump="house.hasHeatpump"
-          :hasSolarPanels="house.solarpanels > 0"
-          :hasBatteries="house.batteries.amount > 0" />
+        <transformer v-for="transformer in transformers" :key="'transformer-' + transformer.id" :style="{
+          position: 'absolute',
+          left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
+          top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px',
+        }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
+        <House v-for="house in transformer.houses" :key="'house-' + house.id" :style="{
+          position: 'absolute',
+          left: (housePositions[house.id - 1] % 10) * 150 + 'px',
+          top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px',
+        }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
+          :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
       </template>
     </div>
     <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
-    <PopupComponent
-      v-if="isPopupOpen"
-      :isOpen="isPopupOpen"
-      :title="popupTitle"
-      :type="popupType"
-      :energyProduction="popupEnergyProduction"
-      :energyConsumption="popupEnergyConsumption"
-      :heatPump="popupHeatPump"
-      :electricVehicle="popupElectricVehicle"
-      :solarPanels="popupSolarPanels"
-      :batteries="popupBatteries"
-      :totalPowerCost="popupTotalPowerCost"
-      :solarPanelCost="popupSolarPanelCost"
-      @update:isOpen="isPopupOpen = $event"
-      @increase="handleIncrease"
-      @decrease="handleDecrease"
-      @submitChanges="submitChanges"
+    <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties" :transformers=transformers @update:isOpen="isPopupOpen = $event"
+  @decrease="handleDecrease" @submitChanges="submitChanges"
       @cancelChanges="cancelChanges" />
-    <Dashboard
-      :coinsUsed="dashboardData.coinsUsed"
-      :maxCoins="dashboardData.maxCoins"
-      :currentCO2="dashboardData.currentCO2"
-      :MaxCO2="dashboardData.maxCO2"
+    <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
+      :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
       :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
       :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
-      :objectiveStartTime="dashboardData.objectiveStartTime"
-      :objectiveEndTime="dashboardData.objectiveEndTime"
+      :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
       :season="dashboardData.season" />
-    <Notification
-      v-if="notificationStatus"
-      :status="notificationStatus"
-      :message="notificationMessage" />
+    <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
   </div>
 </template>
 
@@ -99,6 +51,7 @@ import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
+import { PopupProperties } from "../objects/PopupProperties";
 import { batteries, house, levelData, transformer } from "../types";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
@@ -140,6 +93,7 @@ export default defineComponent({
       season: "",
     });
 
+    const popupProperties = ref<PopupProperties | undefined>(undefined);
     const isPopupOpen = ref(false);
     const popupTitle = ref("");
     const popupType = ref("huis");
@@ -180,35 +134,13 @@ export default defineComponent({
     };
 
     const showHouseDetails = (house: house) => {
-      popupTitle.value = `Huis ${house.id}`;
-      popupType.value = "huis";
-      popupEnergyProduction.value = house.production;
-      popupEnergyConsumption.value = house.consumption;
-      popupHeatPump.value = house.hasHeatpump;
-      popupElectricVehicle.value = house.hasElectricVehicle;
-      popupSolarPanels.value = house.solarpanels;
-      popupBatteries.value.amount = house.batteries.amount;
-      popupBatteries.value.totalCharge = house.batteries.totalCharge;
-      popupTotalPowerCost.value = house.totalPowerCost;
       isPopupOpen.value = true;
-
-      // Store initial popup data to allow for cancelling changes
-      initialPopupData.value = { ...house, batteries: { ...house.batteries } };
+      popupProperties.value = new PopupProperties(house, popupSolarPanelCost.value, popupBatteries.value.cost);
     };
 
     const showTransformerDetails = (transformer: transformer) => {
-      popupTitle.value = `Transformator ${transformer.id}`;
-      popupType.value = "transformator";
-      popupEnergyProduction.value =
-        transformer.current.direction === "PRODUCTION" ? transformer.current.amount : 0;
-      popupEnergyConsumption.value =
-        transformer.current.direction === "DEMAND" ? transformer.current.amount : 0;
-      popupBatteries.value.amount = transformer.batteries.amount;
-      popupBatteries.value.totalCharge = transformer.batteries.totalCharge;
       isPopupOpen.value = true;
-
-      // Store initial popup data to allow for cancelling changes
-      initialPopupData.value = { ...transformer, batteries: { ...transformer.batteries } };
+      popupProperties.value = new PopupProperties(transformer, popupSolarPanelCost.value, popupBatteries.value.cost);
     };
 
     const updateSolarPanels = (newValue: number) => {
@@ -220,61 +152,12 @@ export default defineComponent({
       }
     };
 
-    const updateBatteries = (newValue: number) => {
-      if (popupType.value === "huis") {
-        const house = transformers.value
-          .flatMap((t) => t.houses)
-          .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
-        if (house) {
-          house.batteries.amount = newValue;
-        }
-      } else if (popupType.value === "transformator") {
-        const transformer = transformers.value.find(
-          (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
-        );
-        if (transformer) {
-          transformer.batteries.amount = newValue;
-        }
-      }
-    };
-
-    const handleIncrease = (property: string) => {
-      if (property === "solarPanels") {
-        const house: house | undefined = transformers.value
-          .flatMap((t) => t.houses)
-          .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
-        if (house && house.solarpanels < house.maxSolarPanelCount) {
-          popupSolarPanels.value += 1;
-          updateSolarPanels(popupSolarPanels.value);
-        }
-      } else if (property === "batteries") {
-        if (popupType.value === "huis") {
-          const house: house | undefined = transformers.value
-            .flatMap((t) => t.houses)
-            .find((h) => h.id === parseInt(popupTitle.value.split(" ")[1]));
-          if (house && house.batteries.amount < house.maxBatteryCount) {
-            popupBatteries.value.amount += 1;
-            updateBatteries(popupBatteries.value.amount);
-          }
-        } else if (popupType.value === "transformator") {
-          const transformer: transformer | undefined = transformers.value.find(
-            (t) => t.id === parseInt(popupTitle.value.split(" ")[1])
-          );
-          if (transformer && transformer.batteries.amount < transformer.maxBatteryCount) {
-            popupBatteries.value.amount += 1;
-            updateBatteries(popupBatteries.value.amount);
-          }
-        }
-      }
-    };
 
     const handleDecrease = (property: string) => {
       if (property === "solarPanels" && popupSolarPanels.value > 0) {
         popupSolarPanels.value -= 1;
-        updateSolarPanels(popupSolarPanels.value);
       } else if (property === "batteries" && popupBatteries.value.amount > 0) {
         popupBatteries.value.amount -= 1;
-        updateBatteries(popupBatteries.value.amount);
       }
     };
 
@@ -366,6 +249,7 @@ export default defineComponent({
       } catch (error) {
         console.error("Failed to submit changes:", error);
       }
+      isPopupOpen.value = false;
     };
 
     const cancelChanges = async () => {
@@ -431,6 +315,7 @@ export default defineComponent({
       transformers,
       dashboardData,
       isPopupOpen,
+      popupProperties,
       popupTitle,
       popupType,
       popupEnergyProduction,
@@ -444,7 +329,6 @@ export default defineComponent({
       showHouseDetails,
       showTransformerDetails,
       updateSolarPanels,
-      handleIncrease,
       handleDecrease,
       submitChanges,
       cancelChanges,

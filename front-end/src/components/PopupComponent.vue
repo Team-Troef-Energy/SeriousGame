@@ -23,25 +23,16 @@
           <!-- Energie Overzicht -->
           <div class="section energy-section">
             <v-row>
-              <v-col cols="6"
-                ><strong>{{ energyProductionLabel }}:</strong></v-col
-              >
+              <v-col cols="6"><strong>{{ energyProductionLabel }}:</strong></v-col>
               <v-col cols="6" class="text-end highlight">{{ formattedEnergyProduction }} kWh</v-col>
             </v-row>
             <v-row>
-              <v-col cols="6"
-                ><strong>{{ energyConsumptionLabel }}:</strong></v-col
-              >
-              <v-col cols="6" class="text-end highlight"
-                >{{ formattedEnergyConsumption }} kWh</v-col
-              >
+              <v-col cols="6"><strong>{{ energyConsumptionLabel }}:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ formattedEnergyConsumption }} kWh</v-col>
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Verschil:</strong></v-col>
-              <v-col
-                cols="6"
-                class="text-end"
-                :class="energyDifference < 0 ? 'negative' : 'highlight'">
+              <v-col cols="6" class="text-end" :class="energyDifference < 0 ? 'negative' : 'highlight'">
                 {{ energyDifference.toFixed(2) }} kWh
               </v-col>
             </v-row>
@@ -74,9 +65,7 @@
                 <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
                 <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"
-                ><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col
-              >
+              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col>
               <v-col cols="2" class="text-end highlight">{{ solarPanels }}</v-col>
             </v-row>
           </div>
@@ -88,9 +77,7 @@
                 <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
                 <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"
-                ><strong>Accu’s</strong> (💰{{ batteries.cost }})</v-col
-              >
+              <v-col cols="6" class="text-center"><strong>Accu’s</strong> (💰{{ batteries.cost }})</v-col>
               <v-col cols="2" class="text-end highlight">{{ batteries.amount }}</v-col>
             </v-row>
             <v-row>
@@ -118,95 +105,194 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
-import { batteries } from "../types";
+import { computed, defineComponent, onMounted, PropType, ref } from "vue";
+import { PopupProperties } from "../objects/PopupProperties";
+import { batteries, house, transformer } from "../types";
 
 export default defineComponent({
   name: "PopupComponent",
   props: {
     isOpen: {
       type: Boolean,
+    },
+    popupProperties: {
+      type: Object as PropType<PopupProperties>,
+      required: false,
+    },
+    transformers: {
+      type: Array as PropType<transformer[]>,
       required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      required: true,
-    },
-    energyProduction: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    energyConsumption: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    heatPump: {
-      type: Boolean,
-      default: false,
-    },
-    electricVehicle: {
-      type: Boolean,
-      default: false,
-    },
-    solarPanels: {
-      type: Number,
-      default: 0,
-    },
-    batteries: {
-      type: Object as PropType<batteries>,
-      default: 0,
-    },
-    totalPowerCost: {
-      type: Number,
-      default: 0,
-    },
-    solarPanelCost: {
-      type: Number,
-      default: 0,
     },
   },
   setup(props, { emit }) {
-    const energyDifference = computed(() => props.energyProduction - props.energyConsumption);
+    const transformers = ref<transformer[]>(props.transformers);
+    const title = ref("");
+    const type = ref("");
+    const energyProduction = ref(0);
+    const energyConsumption = ref(0);
+    const batteries = ref<batteries>({ amount: 0, totalCharge: 0, cost: 0 });
+    const heatPump = ref(false);
+    const electricVehicle = ref(false);
+    const solarPanels = ref(0);
+    const totalPowerCost = ref(0);
+    const solarPanelCost = ref(0);
 
-    const formattedEnergyProduction = computed(() => props.energyProduction.toFixed(2));
-    const formattedEnergyConsumption = computed(() => props.energyConsumption.toFixed(2));
-    const formattedBatteryCharge = computed(() => (props.batteries.totalCharge ?? 0).toFixed(2));
-    const formattedTotalPowerCost = computed(() => props.totalPowerCost.toFixed(4));
+    const energyDifference = computed(() => energyProduction.value - energyConsumption.value);
 
-    const heatPumpDisplay = computed(() => (props.heatPump ? "✔️" : "❌"));
-    const electricVehicleDisplay = computed(() => (props.electricVehicle ? "✔️" : "❌"));
+    const formattedEnergyProduction = computed(() => energyProduction.value.toFixed(2));
+    const formattedEnergyConsumption = computed(() => energyConsumption.value.toFixed(2));
+    const formattedBatteryCharge = computed(() => (batteries.value.totalCharge ?? 0).toFixed(2));
+    const formattedTotalPowerCost = computed(() => totalPowerCost.value.toFixed(4));
+
+    const heatPumpDisplay = computed(() => (heatPump ? "✔️" : "❌"));
+    const electricVehicleDisplay = computed(() => (electricVehicle ? "✔️" : "❌"));
 
     const energyProductionLabel = computed(() =>
-      props.type === "transformator" ? "Energie om terug te leveren aan net" : "Energie productie"
+      type.value === "transformator" ? "Energie om terug te leveren aan net" : "Energie productie"
     );
     const energyConsumptionLabel = computed(() =>
-      props.type === "transformator" ? "Energie aan huizen vanuit net" : "Energie consumptie"
+      type.value === "transformator" ? "Energie aan huizen vanuit net" : "Energie consumptie"
     );
 
-    const increaseValue = (property: string) => {
-      emit("increase", property);
+    let popupTitleValue = parseInt(title.value.split(" ")[1]);
+    let solarPanelsAmount: number | null = null;
+    let batteriesAmount: number | null = null;
+
+    const findHouse = (houseId: number) => {
+      return transformers.value.flatMap((t: transformer) => t.houses).find((h: house) => h.id === houseId);
     };
 
+    const findTransformer = (transformerId: number) => {
+      return transformers.value.find((t: transformer) => t.id === transformerId);
+    };
+
+    const increaseValue = (property: string) => {
+      popupTitleValue = parseInt(title.value.split(" ")[1]);
+      const house = findHouse(popupTitleValue);
+      const transformer = findTransformer(popupTitleValue);
+      correctLocalSavedNumbers();
+
+      if (solarPanelsAmount === null || batteriesAmount === null) {
+        return;
+      }
+
+      switch (property) {
+        case "solarPanels":
+          if (house && solarPanelsAmount < house.maxSolarPanelCount) {
+            solarPanelsAmount += 1;
+            solarPanels.value += 1;
+          }
+          break;
+
+        case "batteries":
+          switch (type.value) {
+            case "huis":
+              if (house && batteriesAmount < house.maxBatteryCount) {
+                batteriesAmount += 1;
+                batteries.value.amount += 1;
+              }
+              break;
+
+            case "transformator":
+              if (transformer && batteriesAmount < transformer.maxBatteryCount) {
+                batteriesAmount += 1;
+                batteries.value.amount += 1;
+              }
+              break;
+
+            default:
+              break;
+          }
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    const correctLocalSavedNumbers = () => {
+      popupTitleValue = parseInt(title.value.split(" ")[1]);
+      const house = findHouse(popupTitleValue);
+      const transformer = findTransformer(popupTitleValue);
+      solarPanelsAmount = solarPanelsAmount === null ? house?.solarpanels ?? 0 : solarPanelsAmount;
+
+      type.value == "huis" ?
+        batteriesAmount = batteriesAmount === null ? house?.batteries.amount ?? 0 : batteriesAmount :
+        batteriesAmount = batteriesAmount === null ? transformer?.batteries.amount ?? 0 : batteriesAmount;
+    }
+
     const decreaseValue = (property: string) => {
-      emit("decrease", property);
+      correctLocalSavedNumbers();
+
+      if (solarPanelsAmount === null || batteriesAmount === null) {
+        return;
+      }
+
+      if (property === "solarPanels" && solarPanelsAmount > 0) {
+        solarPanelsAmount -= 1;
+        solarPanels.value -= 1;
+      } else if (property === "batteries" && batteriesAmount > 0) {
+        batteriesAmount -= 1;
+        batteries.value.amount -= 1;
+      }
     };
 
     const closeDialog = () => {
       emit("update:isOpen", false);
-      emit("cancelChanges");
     };
 
     const submitChanges = () => {
+      if (type.value === "huis") {
+        const house = findHouse(popupTitleValue);
+        if (house) {
+          house.solarpanels = solarPanels.value;
+          house.batteries.amount = batteries.value.amount;
+        }
+      } else if (type.value === "transformator") {
+        const transformer = findTransformer(popupTitleValue);
+        if (transformer) {
+          transformer.batteries.amount = batteries.value.amount;
+        }
+      }
       emit("submitChanges");
     };
 
+
+    const createPopup = (properties: PopupProperties | undefined) => {
+      if (!properties) {
+        return;
+      }
+      console.log("Popup properties", properties);
+      title.value = properties.title;
+      type.value = properties.type;
+      energyProduction.value = properties.energyProduction;
+      energyConsumption.value = properties.energyConsumption;
+      heatPump.value = properties.heatPump ?? false;
+      electricVehicle.value = properties.electricVehicle ?? false;
+      solarPanels.value = properties.solarPanels ?? 0;
+      batteries.value = properties.batteries;
+      totalPowerCost.value = properties.totalPowerCost ?? 0;
+      solarPanelCost.value = properties.solarPanelCost ?? 0;
+      batteries.value.cost = properties.batteries?.cost ?? 0;
+      console.log("Popup created");
+
+    };
+
+    onMounted(() => {
+      createPopup(props.popupProperties);
+    });
+
     return {
+      title,
+      type,
+      energyProduction,
+      energyConsumption,
+      batteries,
+      heatPump,
+      electricVehicle,
+      solarPanels,
+      totalPowerCost,
+      solarPanelCost,
       energyDifference,
       formattedEnergyProduction,
       formattedEnergyConsumption,
@@ -239,13 +325,15 @@ export default defineComponent({
 }
 
 .popup-card {
-  background-color: #f8f9fa; /* Neutrale achtergrond */
+  background-color: #f8f9fa;
+  /* Neutrale achtergrond */
   color: #333;
   border-radius: 12px;
 }
 
 .popup-title {
-  background-color: #0077b6; /* Donkerblauwe titelbalk */
+  background-color: #0077b6;
+  /* Donkerblauwe titelbalk */
   color: #fff;
 }
 
@@ -269,7 +357,8 @@ export default defineComponent({
 }
 
 .energy-section {
-  background-color: #e3f2fd; /* Lichtblauw */
+  background-color: #e3f2fd;
+  /* Lichtblauw */
 }
 
 .cost-section {
@@ -277,15 +366,18 @@ export default defineComponent({
 }
 
 .details-section {
-  background-color: #fff3e0; /* Lichtoranje */
+  background-color: #fff3e0;
+  /* Lichtoranje */
 }
 
 .solar-section {
-  background-color: #f1f8e9; /* Lichtgroen */
+  background-color: #f1f8e9;
+  /* Lichtgroen */
 }
 
 .battery-section {
-  background-color: #ede7f6; /* Lichtpaars */
+  background-color: #ede7f6;
+  /* Lichtpaars */
 }
 
 .popup-btn {
@@ -300,10 +392,12 @@ export default defineComponent({
 }
 
 .highlight {
-  color: #0077b6; /* Positief: Blauw */
+  color: #0077b6;
+  /* Positief: Blauw */
 }
 
 .negative {
-  color: #d32f2f; /* Negatief: Rood */
+  color: #d32f2f;
+  /* Negatief: Rood */
 }
 </style>
