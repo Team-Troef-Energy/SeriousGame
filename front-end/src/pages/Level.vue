@@ -92,17 +92,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, Ref, CSSProperties } from "vue";
-import Transformer from "../components/Transformer.vue";
-import House from "../components/House.vue";
-import ConnectionLine from "../components/ConnectionLine.vue";
-import PopupComponent from "../components/PopupComponent.vue";
-import NavigateButton from "../components/NavigateButton.vue";
-import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
+import { CSSProperties, defineComponent, onMounted, ref, Ref } from "vue";
 import { useRoute } from "vue-router";
+import ConnectionLine from "../components/ConnectionLine.vue";
 import Dashboard from "../components/Dashboard.vue";
+import House from "../components/House.vue";
+import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
-import { house, levelData, transformer } from "../typing";
+import PopupComponent from "../components/PopupComponent.vue";
+import Transformer from "../components/Transformer.vue";
+import { house, levelData, transformer } from "../types";
+import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
 export default defineComponent({
   name: "Level",
