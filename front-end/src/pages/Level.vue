@@ -99,6 +99,8 @@ import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
+import { PopupProperties } from "../objects/PopupProperties";
+import PopUpState from "../states/PopupState";
 import { batteries, house, levelData, transformer } from "../types";
 import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
@@ -180,18 +182,8 @@ export default defineComponent({
     };
 
     const showHouseDetails = (house: house) => {
-      popupTitle.value = `Huis ${house.id}`;
-      popupType.value = "huis";
-      popupEnergyProduction.value = house.production;
-      popupEnergyConsumption.value = house.consumption;
-      popupHeatPump.value = house.hasHeatpump;
-      popupElectricVehicle.value = house.hasElectricVehicle;
-      popupSolarPanels.value = house.solarpanels;
-      popupBatteries.value.amount = house.batteries.amount;
-      popupBatteries.value.totalCharge = house.batteries.totalCharge;
-      popupTotalPowerCost.value = house.totalPowerCost;
-      isPopupOpen.value = true;
-
+      console.log("test");
+      PopUpState.setPopup(new PopupProperties(house));
       // Store initial popup data to allow for cancelling changes
       initialPopupData.value = { ...house, batteries: { ...house.batteries } };
     };
@@ -407,7 +399,7 @@ export default defineComponent({
         const data = await fetchStartLevel(levelNumber);
         console.log("Initial level data:", data);
         popupSolarPanelCost.value = data.cost.solarPanelCost;
-        popupBatteries.value.cost = data.cost.batteryCost;
+        popupBatteries.value = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(

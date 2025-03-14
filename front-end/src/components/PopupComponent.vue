@@ -23,25 +23,16 @@
           <!-- Energie Overzicht -->
           <div class="section energy-section">
             <v-row>
-              <v-col cols="6"
-                ><strong>{{ energyProductionLabel }}:</strong></v-col
-              >
+              <v-col cols="6"><strong>{{ energyProductionLabel }}:</strong></v-col>
               <v-col cols="6" class="text-end highlight">{{ formattedEnergyProduction }} kWh</v-col>
             </v-row>
             <v-row>
-              <v-col cols="6"
-                ><strong>{{ energyConsumptionLabel }}:</strong></v-col
-              >
-              <v-col cols="6" class="text-end highlight"
-                >{{ formattedEnergyConsumption }} kWh</v-col
-              >
+              <v-col cols="6"><strong>{{ energyConsumptionLabel }}:</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ formattedEnergyConsumption }} kWh</v-col>
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Verschil:</strong></v-col>
-              <v-col
-                cols="6"
-                class="text-end"
-                :class="energyDifference < 0 ? 'negative' : 'highlight'">
+              <v-col cols="6" class="text-end" :class="energyDifference < 0 ? 'negative' : 'highlight'">
                 {{ energyDifference.toFixed(2) }} kWh
               </v-col>
             </v-row>
@@ -74,9 +65,7 @@
                 <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
                 <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"
-                ><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col
-              >
+              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ solarPanelCost }})</v-col>
               <v-col cols="2" class="text-end highlight">{{ solarPanels }}</v-col>
             </v-row>
           </div>
@@ -88,9 +77,7 @@
                 <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
                 <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
               </v-col>
-              <v-col cols="6" class="text-center"
-                ><strong>Accu’s</strong> (💰{{ batteries.cost }})</v-col
-              >
+              <v-col cols="6" class="text-center"><strong>Accu’s</strong> (💰{{ batteries.cost }})</v-col>
               <v-col cols="2" class="text-end highlight">{{ batteries.amount }}</v-col>
             </v-row>
             <v-row>
@@ -118,7 +105,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
+import { computed, defineComponent, onMounted, onUnmounted, PropType } from "vue";
+import { PopupProperties } from "../objects/PopupProperties";
+import PopupState from "../states/PopupState";
 import { batteries } from "../types";
 
 export default defineComponent({
@@ -206,6 +195,34 @@ export default defineComponent({
       emit("submitChanges");
     };
 
+    let popupSubscription: any;
+
+    const createPopup = (properties: PopupProperties) => {
+      emit("update:title", properties.title);
+      emit("update:type", properties.type);
+      emit("update:energyProduction", properties.energyProduction);
+      emit("update:energyConsumption", properties.energyConsumption);
+      emit("update:heatPump", properties.heatPump);
+      emit("update:electricVehicle", properties.electricVehicle);
+      emit("update:solarPanels", properties.solarPanels);
+      emit("update:batteries", properties.batteries);
+      emit("update:totalPowerCost", properties.totalPowerCost);
+      emit("update:solarPanelCost", properties.solarPanelCost);
+      emit("update:isOpen", true);
+      console.log('hi')
+    };
+
+    onMounted(async () => {
+      console.log('for sure')
+      popupSubscription = PopupState.popupEvent().subscribe((properties: PopupProperties) => {
+        createPopup(properties);
+      });
+    });
+
+    onUnmounted(() => {
+      popupSubscription.unsubscribe();
+    });
+
     return {
       energyDifference,
       formattedEnergyProduction,
@@ -239,13 +256,15 @@ export default defineComponent({
 }
 
 .popup-card {
-  background-color: #f8f9fa; /* Neutrale achtergrond */
+  background-color: #f8f9fa;
+  /* Neutrale achtergrond */
   color: #333;
   border-radius: 12px;
 }
 
 .popup-title {
-  background-color: #0077b6; /* Donkerblauwe titelbalk */
+  background-color: #0077b6;
+  /* Donkerblauwe titelbalk */
   color: #fff;
 }
 
@@ -269,7 +288,8 @@ export default defineComponent({
 }
 
 .energy-section {
-  background-color: #e3f2fd; /* Lichtblauw */
+  background-color: #e3f2fd;
+  /* Lichtblauw */
 }
 
 .cost-section {
@@ -277,15 +297,18 @@ export default defineComponent({
 }
 
 .details-section {
-  background-color: #fff3e0; /* Lichtoranje */
+  background-color: #fff3e0;
+  /* Lichtoranje */
 }
 
 .solar-section {
-  background-color: #f1f8e9; /* Lichtgroen */
+  background-color: #f1f8e9;
+  /* Lichtgroen */
 }
 
 .battery-section {
-  background-color: #ede7f6; /* Lichtpaars */
+  background-color: #ede7f6;
+  /* Lichtpaars */
 }
 
 .popup-btn {
@@ -300,10 +323,12 @@ export default defineComponent({
 }
 
 .highlight {
-  color: #0077b6; /* Positief: Blauw */
+  color: #0077b6;
+  /* Positief: Blauw */
 }
 
 .negative {
-  color: #d32f2f; /* Negatief: Rood */
+  color: #d32f2f;
+  /* Negatief: Rood */
 }
 </style>
