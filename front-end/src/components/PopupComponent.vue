@@ -262,7 +262,6 @@ export default defineComponent({
       if (!properties) {
         return;
       }
-      console.log("Popup properties", properties);
       title.value = properties.title;
       type.value = properties.type;
       energyProduction.value = properties.energyProduction;
