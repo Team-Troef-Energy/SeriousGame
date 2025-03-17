@@ -1,3 +1,8 @@
+/**
+ * Fetches a level from the back-end and starts it. Uses a paremeter to choose the level.
+ * @param levelNumber: string
+ * @returns Promise<any>
+ */
 export async function fetchStartLevel(levelNumber: string): Promise<any> {
   try {
     const response = await fetch(`http://${getHost()}/levels/start/${levelNumber}`, {
@@ -17,6 +22,12 @@ export async function fetchStartLevel(levelNumber: string): Promise<any> {
   }
 }
 
+/**
+ * Updates a certain level with the new game information.
+ * @param levelNumber: string 
+ * @param levelUpdateDto: any
+ * @returns  Promise<any>
+ */
 export async function fetchUpdateLevel(levelNumber: string, levelUpdateDto: any): Promise<any> {
   try {
     const response = await fetch(`http://${getHost()}/levels/update/` + levelNumber, {
@@ -37,6 +48,10 @@ export async function fetchUpdateLevel(levelNumber: string, levelUpdateDto: any)
   }
 }
 
+/**
+ * Fetches the amount of levels that exist.
+ * @returns Promise<any>
+ */
 export async function fetchCountLevels(): Promise<any> {
   try {
     console.log(location.hostname);
@@ -57,6 +72,10 @@ export async function fetchCountLevels(): Promise<any> {
   }
 }
 
+/**
+ * Returns the URL on where the site is run, to make sure fetches work.
+ * @returns string
+ */
 function getHost() {
   if (location.hostname === "localhost") return "localhost:8080";
   return "troefgame.duckdns.org:5001";
