@@ -1,8 +1,13 @@
 <template>
     <header>
         <div class="header-grid">
-            <img src="/troef-logo.png" alt="logo" />
-            <h1>TROEF Energy - Serious game</h1>
+            <a href="/">
+                <img src="/troef-logo.png" alt="logo" />
+            </a>
+            <div class="header-links">
+                <a href="/">Home</a>
+                <a href="/register">Register</a>
+            </div>
         </div>
     </header>
 </template>
@@ -24,15 +29,8 @@ header {
     color: #000000;
 }
 
-.header-grid {
-    display: grid;
-    grid-template-columns: 50px 1fr 50px;
-    align-items: center;
-}
-
 header img {
-    height: 50px;
-    grid-column: 1;
+    height: 40px;
 }
 
 header h1 {
@@ -42,12 +40,27 @@ header h1 {
     font-weight: 600;
     grid-column: 2;
     text-align: center;
-    visibility: hidden;
 }
 
-@media (min-width: 640px) {
-  header h1 {
-    visibility: visible;
-  }
+.header-grid {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px;
+    align-items: center;
+}
+
+.header-links {
+    gap: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.header-links a {
+    font-size: 15px;
+    color: black;
+}
+
+.header-links a:hover {
+    text-decoration: underline;
 }
 </style>

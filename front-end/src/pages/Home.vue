@@ -102,8 +102,7 @@ img {
   z-index: -2;
 }
 
-@media (min-width: 768px) {
-
+@media (min-width: 640px) {
   .home {
     height: 100%;
   }
