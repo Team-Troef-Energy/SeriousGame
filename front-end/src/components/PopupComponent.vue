@@ -66,7 +66,7 @@
                 <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
               <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ properties.solarPanelCost
-                }})</v-col>
+              }})</v-col>
               <v-col cols="2" class="text-end highlight">{{ properties.solarPanels }}</v-col>
             </v-row>
           </div>
@@ -244,7 +244,7 @@ export default defineComponent({
       if (!givenProperties) {
         return;
       }
-      properties.value = givenProperties;
+      properties.value = JSON.parse(JSON.stringify(givenProperties));
     };
 
     onMounted(() => {
