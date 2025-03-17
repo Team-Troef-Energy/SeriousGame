@@ -9,7 +9,7 @@
         </a>
         
         <div class="header-links">
-          <a href="/home">Home</a>
+          <a href="/">Home</a>
           <a href="/register">Register</a>
         </div>
 
