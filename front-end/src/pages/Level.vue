@@ -4,44 +4,46 @@
  and then judge whether it needs improvement or not.
 -->
 <template>
-  <div class="level-container">
-    <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
-    <div ref="gameCanvas" class="game-canvas">
-      <svg :width="1000" :height="1000" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0">
+  <div class="level container">
+    <div class="level-container">
+      <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
+      <div ref="gameCanvas" class="game-canvas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="line-svg">
+          <template v-for="transformer in transformers">
+            <ConnectionLine v-for="house in transformer.houses" :key="'connection-' + house.id"
+              :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
+              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 125"
+              :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
+              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60" :hasCongestion="house.hasCongestion"
+              :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
+              :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+          </template>
+        </svg>
         <template v-for="transformer in transformers">
-          <ConnectionLine v-for="house in transformer.houses" :key="'connection-' + house.id"
-            :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-            :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 125"
-            :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-            :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 + 60" :hasCongestion="house.hasCongestion"
-            :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
-            :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+          <transformer v-for="transformer in transformers" :key="'transformer-' + transformer.id" :style="{
+            position: 'absolute',
+            left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
+            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+          }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
+          <House v-for="house in transformer.houses" :key="'house-' + house.id" :style="{
+            position: 'absolute',
+            left: (housePositions[house.id - 1] % 10) * 150 + 'px',
+            top: Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 'px',
+          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
+            :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
         </template>
-      </svg>
-      <template v-for="transformer in transformers">
-        <transformer v-for="transformer in transformers" :key="'transformer-' + transformer.id" :style="{
-          position: 'absolute',
-          left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
-          top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 + 30 + 'px',
-        }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
-        <House v-for="house in transformer.houses" :key="'house-' + house.id" :style="{
-          position: 'absolute',
-          left: (housePositions[house.id - 1] % 10) * 150 + 'px',
-          top: Math.floor(housePositions[house.id - 1] / 10) * 80 + 'px',
-        }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
-          :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
-      </template>
+      </div>
+      <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
+      <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
+        :transformers=transformers @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
+      <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
+        :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
+        :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
+        :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
+        :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
+        :season="dashboardData.season" />
+      <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
     </div>
-    <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
-    <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties" :transformers=transformers @update:isOpen="isPopupOpen = $event"
-  @submitChanges="submitChanges" />
-    <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
-      :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
-      :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
-      :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
-      :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
-      :season="dashboardData.season" />
-    <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
   </div>
 </template>
 
@@ -126,6 +128,23 @@ export default defineComponent({
       }
       return positions;
     };
+
+    const getResolutionFactor = () => {
+      const baseWidth = 1920;  // Reference width
+      const baseHeight = 1080; // Reference height
+
+      const viewportWidth = window.innerWidth;   // Current viewport width
+      const viewportHeight = window.innerHeight; // Current viewport height
+
+      // Compute width and height factors
+      const widthFactor = viewportWidth / baseWidth;
+      const heightFactor = viewportHeight / baseHeight;
+
+      // Use the LARGER factor to scale UP for bigger screens
+      const factor = Math.max(widthFactor, heightFactor);
+
+      return factor;
+    }
 
     const showHouseDetails = (house: house) => {
       isPopupOpen.value = true;
@@ -251,6 +270,7 @@ export default defineComponent({
       dashboardData,
       isPopupOpen,
       popupProperties,
+      getResolutionFactor,
       showHouseDetails,
       showTransformerDetails,
       submitChanges,
@@ -267,20 +287,29 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.level {
+  height: 100%;
+  min-width: 100%;
+}
+
 .level-container {
   height: 100%;
-  width: 50vw;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
 .game-canvas {
-  width: 100vw;
+  width: 100%;
   height: 100%;
   position: relative;
   background: url("/Cartoon_green_texture_grass.jpg") repeat center center;
   background-size: 25%, 25%;
+}
+
+.line-svg {
+  width: 100%;
+  height: 100%;
 }
 
 #submit-button {
