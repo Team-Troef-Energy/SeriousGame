@@ -79,7 +79,6 @@ export default defineComponent({
     // this is to fix the typing, levelnumber should never actually be an object.
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
-      console.log(levelNumber);
       console.error("multiple level numbers were passed");
     }
 
@@ -186,8 +185,6 @@ export default defineComponent({
         objectiveEndTime: data.endTime,
         season: data.season,
       };
-
-      console.log("Dashboard data:", dashboardData.value);
     };
 
     const submitChanges = async () => {
@@ -204,7 +201,6 @@ export default defineComponent({
           })),
         };
         const response = await fetchUpdateLevel(levelNumber, data);
-        console.log("Changes submitted:", response);
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -243,7 +239,6 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
-        console.log("Initial level data:", data);
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour

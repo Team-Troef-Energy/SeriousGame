@@ -12,7 +12,6 @@
     name: 'LeaveButton',
     methods: {
       handleClick() {
-        console.log("level left"); // Functionaliteit toevoegen
       },
     },
   }

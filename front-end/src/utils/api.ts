@@ -54,7 +54,6 @@ export async function fetchUpdateLevel(levelNumber: string, levelUpdateDto: any)
  */
 export async function fetchCountLevels(): Promise<any> {
   try {
-    console.log(location.hostname);
     const response = await fetch(`http://${getHost()}/levels/count`, {
       method: "GET",
       headers: {
