@@ -14,9 +14,10 @@
               :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
               :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 125"
               :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60" :hasCongestion="house.hasCongestion"
-              :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
-              :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60"
+              :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+              :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
+              @hide-info-box="hideInfoBox" />
           </template>
         </svg>
         <template v-for="transformer in transformers">
@@ -29,8 +30,9 @@
             position: 'absolute',
             left: (housePositions[house.id - 1] % 10) * 150 + 'px',
             top: Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 'px',
-          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
-            :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
+          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries.amount > 0" />
         </template>
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
@@ -79,7 +81,6 @@ export default defineComponent({
     // this is to fix the typing, levelnumber should never actually be an object.
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
-      console.log(levelNumber);
       console.error("multiple level numbers were passed");
     }
 
@@ -173,7 +174,7 @@ export default defineComponent({
       });
 
       const totalProduction = totalGreenProduction + totalGreyProduction;
-      const greenProducedEnergyPercentage = (totalGreenProduction / totalProduction) * 100;
+      const greenProducedEnergyPercentage = totalProduction == 0 ? 0 : (totalGreenProduction / totalProduction) * 100;
 
       dashboardData.value = {
         coinsUsed: data.totalCosts,
@@ -186,8 +187,6 @@ export default defineComponent({
         objectiveEndTime: data.endTime,
         season: data.season,
       };
-
-      console.log("Dashboard data:", dashboardData.value);
     };
 
     const submitChanges = async () => {
@@ -204,7 +203,6 @@ export default defineComponent({
           })),
         };
         const response = await fetchUpdateLevel(levelNumber, data);
-        console.log("Changes submitted:", response);
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -243,7 +241,6 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
-        console.log("Initial level data:", data);
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
