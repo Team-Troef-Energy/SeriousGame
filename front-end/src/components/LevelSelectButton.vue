@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="handleClick">{{ this.level }}</v-btn>
+  <v-btn @click="handleClick">{{ level }}</v-btn>
 </template>
 
 <script lang="ts">
