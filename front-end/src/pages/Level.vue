@@ -14,9 +14,10 @@
               :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
               :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 125"
               :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60" :hasCongestion="house.hasCongestion"
-              :is-production="house.current.direction === 'PRODUCTION'" :current="house.current.amount"
-              :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60"
+              :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+              :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
+              @hide-info-box="hideInfoBox" />
           </template>
         </svg>
         <template v-for="transformer in transformers">
@@ -29,8 +30,9 @@
             position: 'absolute',
             left: (housePositions[house.id - 1] % 10) * 150 + 'px',
             top: Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 'px',
-          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
-            :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
+          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries.amount > 0" />
         </template>
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
@@ -172,7 +174,7 @@ export default defineComponent({
       });
 
       const totalProduction = totalGreenProduction + totalGreyProduction;
-      const greenProducedEnergyPercentage = (totalGreenProduction / totalProduction) * 100;
+      const greenProducedEnergyPercentage = totalProduction == 0 ? 0 : (totalGreenProduction / totalProduction) * 100;
 
       dashboardData.value = {
         coinsUsed: data.totalCosts,
