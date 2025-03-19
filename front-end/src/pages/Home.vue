@@ -1,15 +1,3 @@
-<script lang="ts">
-import { defineComponent } from "vue";
-import NavigateButton from "../components/NavigateButton.vue";
-
-export default defineComponent({
-  name: "Home",
-  components: {
-    NavigateButton,
-  },
-});
-</script>
-
 <template>
   <div class="home container">
     <div class="welcome-container">
@@ -34,6 +22,18 @@ export default defineComponent({
 
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import NavigateButton from "../components/NavigateButton.vue";
+
+export default defineComponent({
+  name: "Home",
+  components: {
+    NavigateButton,
+  },
+});
+</script>
 
 <style scoped>
 .home {
