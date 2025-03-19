@@ -3,7 +3,7 @@
  * @param levelNumber: string
  * @returns Promise<any>
  */
-export async function fetchStartLevel(levelNumber: string): Promise<any> {
+export async function fetchStartLevel(levelNumber: string | string[]): Promise<any> {
   try {
     const response = await fetch(`http://${getHost()}/levels/start/${levelNumber}`, {
       method: "GET",
@@ -28,7 +28,7 @@ export async function fetchStartLevel(levelNumber: string): Promise<any> {
  * @param levelUpdateDto: any
  * @returns  Promise<any>
  */
-export async function fetchUpdateLevel(levelNumber: string, levelUpdateDto: any): Promise<any> {
+export async function fetchUpdateLevel(levelNumber: string | string[], levelUpdateDto: any): Promise<any> {
   try {
     const response = await fetch(`http://${getHost()}/levels/update/` + levelNumber, {
       method: "POST",
@@ -54,7 +54,6 @@ export async function fetchUpdateLevel(levelNumber: string, levelUpdateDto: any)
  */
 export async function fetchCountLevels(): Promise<any> {
   try {
-    console.log(location.hostname);
     const response = await fetch(`http://${getHost()}/levels/count`, {
       method: "GET",
       headers: {

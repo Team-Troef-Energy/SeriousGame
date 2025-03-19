@@ -52,7 +52,8 @@ export default defineComponent({
 
 <template>
     <div class="register-page-container">
-        <div class="register-page-content">
+
+      <div class="register-page-content">
             <form @submit="handleRegister" class="register-form">
                 <input v-model="email" type="email" placeholder="Enter email" required />
                 <input v-model="password" type="password" placeholder="Enter password" required />

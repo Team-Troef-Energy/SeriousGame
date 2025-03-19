@@ -14,27 +14,21 @@ export default defineComponent({
   <div class="home container">
     <div class="welcome-container">
       <img src="/troef-logo-light.png" alt="Troef logo" />
-      <br />
-      <p class="welcome-text">
-        Welkom! Dit is de digitale versie van de Troef serious game.
-        <br />
-        dit spel is er om mensen op een leuke manier kennis te laten maken met concepten en
-        uitdagingen
-        <br />
-        die bij de energietransitie komen kijken.
-      </p>
-      <p class="welcome-text-sub"> <i>
-          Elk level heeft een wijk van huizen die door middel van een transformator met elkaar en het
-          stroomnet verbonden zijn.
-          <br />
+      <div class="welcome-text">
+        <p>
+          Welkom! Dit is de digitale versie van de Troef serious game.
+          Dit spel is er om mensen op een leuke manier kennis te laten maken met concepten en uitdagingen
+          die bij de energietransitie komen kijken. </p>
+      </div>
+      <div class="welcome-text-sub">
+        <i>
           Je wint een level door het doel te behalen. Het doel van een level kan bijvoorbeeld zijn om
           alleen maar groene stroom te gebruiken.
-          <br />
-          om hiernaar toe te werken kan je bij huizen zonnepanelen en thuis accu's plaatsen, en de transformator
+          Om hiernaar toe te werken kan je bij huizen zonnepanelen en thuis accu's plaatsen, en de transformator
           transformator voorzien van accu's.
-          <br />
           Het toevoegen van deze onderdelen kost munten en de uitdaging is dus het doel te behalen binnen het budget.
-        </i></p>
+        </i>
+      </div>
       <NavigateButton to="/levelSelect" label="Speel" class="welcome-button" />
     </div>
 
@@ -55,9 +49,12 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   text-align: center;
+  row-gap: 1rem;
 }
 
 .welcome-text {
+  display: flex;
+  justify-content: center;
   font-size: 1.5em;
   margin-bottom: 20px;
   color: #ffffff;
@@ -66,7 +63,13 @@ export default defineComponent({
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+.welcome-text p {
+  line-height: 1.5;
+}
+
 .welcome-text-sub {
+  display: flex;
+  justify-content: center;
   font-size: 1.3em;
   margin-bottom: 20px;
   color: #ffffff;
@@ -105,6 +108,16 @@ img {
 @media (min-width: 640px) {
   .home {
     height: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .welcome-text p {
+    width: 55%;
+  }
+
+  .welcome-text-sub i {
+    width: 70%;
   }
 }
 </style>

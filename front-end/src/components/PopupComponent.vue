@@ -66,7 +66,7 @@
                 <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
               </v-col>
               <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ properties.solarPanelCost
-                }})</v-col>
+              }})</v-col>
               <v-col cols="2" class="text-end highlight">{{ properties.solarPanels }}</v-col>
             </v-row>
           </div>
@@ -108,7 +108,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, ref } from "vue";
 import { PopupProperties } from "../objects/PopupProperties";
-import { batteries, house, transformer } from "../types";
+import { house, transformer } from "../types";
 
 export default defineComponent({
   name: "PopupComponent",
@@ -137,7 +137,7 @@ export default defineComponent({
     const formattedEnergyProduction = computed(() => properties.value.energyProduction.toFixed(2));
     const formattedEnergyConsumption = computed(() => properties.value.energyConsumption.toFixed(2));
     const formattedBatteryCharge = computed(() => (properties.value.batteries.totalCharge ?? 0).toFixed(2));
-    const formattedTotalPowerCost = computed(() => properties.value.totalPowerCost.toFixed(4));
+    const formattedTotalPowerCost = computed(() => (properties.value.totalPowerCost ?? 0).toFixed(4));
 
     const heatPumpDisplay = computed(() => (properties.value.heatPump ? "✔️" : "❌"));
     const electricVehicleDisplay = computed(() => (properties.value.electricVehicle ? "✔️" : "❌"));
@@ -154,7 +154,11 @@ export default defineComponent({
     let batteriesAmount: number | null = null;
 
     const findHouse = (houseId: number) => {
-      return transformers.value.flatMap((t: transformer) => t.houses).find((h: house) => h.id === houseId);
+      return transformers.value
+        .map((t: transformer) => t.houses)  // Extract houses arrays
+        .reduce((acc, houses) => acc.concat(houses), []) // Flatten them
+        .find((h: house) => h.id === houseId);
+
     };
 
     const findTransformer = (transformerId: number) => {
@@ -172,12 +176,12 @@ export default defineComponent({
         return;
       }
 
-      const canIncreaseSolarPanels = (house: house) => house && solarPanelsAmount < house.maxSolarPanelCount;
-      const canIncreaseBatteries = (maxCount: number) => batteriesAmount < maxCount;
+      const canIncreaseSolarPanels = (house: house) => house && solarPanelsAmount !== null && solarPanelsAmount < house.maxSolarPanelCount;
+      const canIncreaseBatteries = (maxCount: number) => batteriesAmount !== null && batteriesAmount < maxCount;
 
-      if (property === "solarPanels" && canIncreaseSolarPanels(house)) {
+      if (property === "solarPanels" && house && canIncreaseSolarPanels(house)) {
         solarPanelsAmount += 1;
-        properties.value.solarPanels += 1;
+        properties.value.solarPanels = (properties.value.solarPanels ?? 0) + 1;
         return;
       }
 
@@ -212,7 +216,7 @@ export default defineComponent({
 
       if (property === "solarPanels" && solarPanelsAmount > 0) {
         solarPanelsAmount -= 1;
-        properties.value.solarPanels -= 1;
+        properties.value.solarPanels = (properties.value.solarPanels ?? 0) - 1;
       } else if (property === "batteries" && batteriesAmount > 0) {
         batteriesAmount -= 1;
         properties.value.batteries.amount -= 1;
@@ -227,7 +231,7 @@ export default defineComponent({
       if (properties.value.type === "huis") {
         const house = findHouse(popupTitleValue);
         if (house) {
-          house.solarpanels = properties.value.solarPanels;
+          house.solarpanels = properties.value.solarPanels ?? 0;
           house.batteries.amount = properties.value.batteries.amount;
         }
       } else if (properties.value.type === "transformator") {
@@ -244,7 +248,7 @@ export default defineComponent({
       if (!givenProperties) {
         return;
       }
-      properties.value = givenProperties;
+      properties.value = JSON.parse(JSON.stringify(givenProperties));
     };
 
     onMounted(() => {
