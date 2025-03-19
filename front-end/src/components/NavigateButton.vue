@@ -1,3 +1,9 @@
+<template>
+  <button @click="navigate" class="navigate-button" :style="{ backgroundColor: props.backgroundColor, color: props.textColor }">
+    {{ label }}
+  </button>
+</template>
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
@@ -38,12 +44,6 @@ export default defineComponent({
   }
 });
 </script>
-
-<template>
-  <button @click="navigate" class="navigate-button" :style="{ backgroundColor: props.backgroundColor, color: props.textColor }">
-    {{ label }}
-  </button>
-</template>
 
 <style scoped>
 .navigate-button {

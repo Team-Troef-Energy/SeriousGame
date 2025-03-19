@@ -1,6 +1,28 @@
+<template>
+    <div class="register-page-container">
+
+      <div class="register-page-content">
+            <form @submit="handleRegister" class="register-form">
+                <input v-model="email" type="email" placeholder="Enter email" required />
+                <input v-model="password" type="password" placeholder="Enter password" required />
+                <button type="submit" class="register-btn">Register</button>
+            </form>
+            <div class="providers-container">
+                <button @click="handleGoogleRegister">
+                    <img src="../assets/google_icon.png" alt="Google icon">
+                    Register met Google
+                </button>
+                <button @click="handleGitHubRegister">
+                    <img src="../assets/github_icon.png" alt="GitHub icon">
+                    Register met GitHub
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { registerWithGitHub, registerWithGoogle, signUpEmailAndPassword } from '../utils/auth-service';
 
 export default defineComponent({
@@ -49,29 +71,6 @@ export default defineComponent({
     }
 });
 </script>
-
-<template>
-    <div class="register-page-container">
-
-      <div class="register-page-content">
-            <form @submit="handleRegister" class="register-form">
-                <input v-model="email" type="email" placeholder="Enter email" required />
-                <input v-model="password" type="password" placeholder="Enter password" required />
-                <button type="submit" class="register-btn">Register</button>
-            </form>
-            <div class="providers-container">
-                <button @click="handleGoogleRegister">
-                    <img src="../assets/google_icon.png" alt="Google icon">
-                    Register met Google
-                </button>
-                <button @click="handleGitHubRegister">
-                    <img src="../assets/github_icon.png" alt="GitHub icon">
-                    Register met GitHub
-                </button>
-            </div>
-        </div>
-    </div>
-</template>
 
 <style scoped>
 .register-page-container {
