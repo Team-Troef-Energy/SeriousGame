@@ -3,6 +3,7 @@ package nl.hu.serious_game.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.hu.serious_game.data.LevelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,18 +25,18 @@ import nl.hu.serious_game.domain.Transformer;
 @Service
 public class LevelService {
 
-    private final Runner runner;
+    private final LevelRepository levelRepository;
 
     @Autowired
-    public LevelService(Runner runner) {
-        this.runner = runner;
+    public LevelService(LevelRepository levelRepository) {
+        this.levelRepository = levelRepository;
     }
 
-    public LevelDTO startLevel(int levelNumber) {
-        if (levelNumber < 1 || levelNumber > runner.getTotalLevels()) {
+    public LevelDTO startLevel(long levelNumber) {
+        if (levelNumber < 1 || levelNumber > levelRepository.getLevelCount()) {
             throw new IllegalArgumentException("Invalid level number");
         }
-        Level level = runner.getLevel(levelNumber).clone();
+        Level level = levelRepository.getLevelById(levelNumber).clone();
         return runLevel(level);
     }
 
@@ -47,8 +48,8 @@ public class LevelService {
             int houseId = house.getId();
             Current current = house.getCurrentAtHour(hour); // Get the current for the house
             CurrentDTO currentDTO = new CurrentDTO(
-                    current.amount(),
-                    current.direction()
+                    current.getAmount(),
+                    current.getDirection()
             );
             BatteryDTO batteryDTO = house.getBattery() != null
                 ? new BatteryDTO(house.getBattery().getAmount(), house.getBattery().getCurrentCharge())
@@ -69,12 +70,12 @@ public class LevelService {
         return houseDTOs; // Return the list of HouseDTOs
     }
 
-    public LevelDTO updateLevel(int levelNumber, LevelUpdateDTO levelUpdateDTO) {
-        if (levelNumber < 1 || levelNumber > runner.getTotalLevels()) {
+    public LevelDTO updateLevel(long levelNumber, LevelUpdateDTO levelUpdateDTO) {
+        if (levelNumber < 1 || levelNumber > levelRepository.getLevelCount()) {
             throw new IllegalArgumentException("Invalid level number");
         }
 
-        Level level = runner.getLevel(levelNumber).clone();
+        Level level = levelRepository.getLevelById(levelNumber).clone();
 
         levelUpdateDTO.transformers().forEach(transformer -> {
             level.setTransformerBattery(transformer.id(), transformer.batteries());
@@ -103,11 +104,11 @@ public class LevelService {
 
                 Current current = transformer.getCalculatedLeftoverCurrentAtHour(hour);
                 CurrentDTO currentDTO = new CurrentDTO(
-                        current.amount(),
-                        current.direction()
+                        current.getAmount(),
+                        current.getDirection()
                 );
-                BatteryDTO batteryDTO = transformer.getBatteries() != null
-                        ? new BatteryDTO(transformer.getBatteries().getAmount(), transformer.getBatteries().getCurrentCharge())
+                BatteryDTO batteryDTO = transformer.getBattery() != null
+                        ? new BatteryDTO(transformer.getBattery().getAmount(), transformer.getBattery().getCurrentCharge())
                         : new BatteryDTO(0, 0);
 
                 transformerDTOs.add(new TransformerDTO(
@@ -128,7 +129,7 @@ public class LevelService {
     }
 
     public int getTotalLevels() {
-        return runner.getTotalLevels();
+        return levelRepository.getLevelCount();
     }
 
     private void checkLevelCompletion(Level level) {

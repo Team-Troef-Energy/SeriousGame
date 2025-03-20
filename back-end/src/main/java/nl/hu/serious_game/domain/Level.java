@@ -3,13 +3,29 @@ package nl.hu.serious_game.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 
+@Getter
+@Entity
+@NoArgsConstructor
 public class Level implements Cloneable {
+    @Id
+    @GeneratedValue
+    @Setter // TODO: ids should not be settable. this is to set the id to zero when cloning.
+    private Long id;
+
     private Season season;
     private int startTime;
     private int endTime;
+
+
     private Objective objective;
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Transformer> transformers = new ArrayList<>();
     private Cost cost;
     private boolean isCompleted = false;
@@ -47,10 +63,6 @@ public class Level implements Cloneable {
                 .setBattery(amount);
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
     public void setIsCompleted() {
         isCompleted = true;
     }
@@ -58,7 +70,7 @@ public class Level implements Cloneable {
     public int getCalculatedTotalCosts() {
         totalCosts = 0;
         for (Transformer transformer : this.getTransformers()) {
-            totalCosts += transformer.getBatteries().getAmount() * this.getCost().getBatteryCost();
+            totalCosts += transformer.getBattery().getAmount() * this.getCost().getBatteryCost();
             for (House house : transformer.getHouses()) {
                 totalCosts += (house.getTotalSolarPanels() != 0 ? house.getTotalSolarPanels() : 0) * this.getCost().getSolarPanelCost();
                 totalCosts += (house.getBattery() != null ? house.getBattery().getAmount() : 0) * this.getCost().getBatteryCost();
@@ -78,7 +90,7 @@ public class Level implements Cloneable {
 
                     if (netConsumption > 0 && house.getBattery() != null) {
                         Current current = house.getBattery().chargeOrDischarge(new Current(netConsumption, Direction.DEMAND));
-                        netConsumption = current.amount();
+                        netConsumption = current.getAmount();
                     }
 
                     if (netConsumption > 0) {
@@ -86,44 +98,12 @@ public class Level implements Cloneable {
                     }
                 }
 
-                if (transformer.getBatteries() != null) {
-                    Current current = transformer.getBatteries().chargeOrDischarge(new Current(totalCO2, Direction.DEMAND));
-                    totalCO2 = current.amount();
+                if (transformer.getBattery() != null) {
+                    Current current = transformer.getBattery().chargeOrDischarge(new Current(totalCO2, Direction.DEMAND));
+                    totalCO2 = current.getAmount();
                 }
             }
         }
-        return totalCO2;
-    }
-
-    public Objective getObjective() {
-        return objective;
-    }
-
-    public List<Transformer> getTransformers() {
-        return transformers;
-    }
-
-    public Season getSeason() {
-        return season;
-    }
-
-    public int getStartTime() {
-        return startTime;
-    }
-
-    public int getEndTime() {
-        return endTime;
-    }
-
-    public Cost getCost() {
-        return cost;
-    }
-
-    public int getTotalCosts() {
-        return totalCosts;
-    }
-
-    public float getTotalCO2() {
         return totalCO2;
     }
 

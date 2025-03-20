@@ -67,8 +67,7 @@ public class LevelInitializationTest {
     @Test
     @DisplayName("Test createLevel1 method of runner")
     void testCreateLevel1() throws Exception {
-        runner.run();
-        Level level = runner.getLevel(1);
+        Level level = runner.createLevel1();
 
         assertNotNull(level, "Level should not be null");
         assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");

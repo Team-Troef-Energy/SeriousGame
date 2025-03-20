@@ -26,7 +26,7 @@ public class TransformerTest {
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
 
-        Transformer transformer = new Transformer(1, houses, 0);
+        Transformer transformer = new Transformer(houses, 0);
         assertEquals(expected1, transformer.getCalculatedLeftoverCurrentAtHour(1));
         assertEquals(expected2, transformer.getCalculatedLeftoverCurrentAtHour(2));
     }
@@ -46,7 +46,7 @@ public class TransformerTest {
 
         // Adding a second battery would break the test
         // because all 6 of the first getcurrent would go into the battery.
-        Transformer transformer = new Transformer(1, houses, 1);
+        Transformer transformer = new Transformer(houses, 1);
 
         assertEquals(expected1, transformer.getCalculatedLeftoverCurrentAtHour(1));
         assertEquals(expected2, transformer.getCalculatedLeftoverCurrentAtHour(2));
@@ -76,7 +76,7 @@ public class TransformerTest {
         Current expected3 = new Current(9F, Direction.DEMAND);
         Current expected4 = new Current(9F, Direction.PRODUCTION);
 
-        Transformer transformer = new Transformer(1, houses, 0);
+        Transformer transformer = new Transformer(houses, 0);
 
         // Checks if production and demand get compensated for eachother.
         assertEquals(expected1, transformer.getCalculatedLeftoverCurrentAtHour(1));
@@ -102,7 +102,7 @@ public class TransformerTest {
         // 5 goes into the battery and 1 is left over.
         Current expected = new Current(1F, Direction.PRODUCTION);
 
-        Transformer transformer = new Transformer(1, houses, 1);
+        Transformer transformer = new Transformer(houses, 1);
 
         assertEquals(expected, transformer.getCalculatedLeftoverCurrentAtHour(1));
     }
@@ -114,14 +114,14 @@ public class TransformerTest {
         when(mockHouse.getCurrentAtHour(1)).thenReturn(new Current(2F, Direction.PRODUCTION));
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
-        Transformer transformer = new Transformer(1, houses, 0, new Congestion(true, 1));
+        Transformer transformer = new Transformer(houses, 0, new Congestion(true, 1));
         Current current = transformer.getCalculatedLeftoverCurrentAtHour(1);
         Current excess = transformer.getExcessCurrent();
         assertAll(
-                () -> assertEquals(Direction.PRODUCTION, current.direction()),
-                () -> assertEquals(1f, current.amount()),
-                () -> assertEquals(Direction.PRODUCTION, current.direction()),
-                () -> assertEquals(1f, excess.amount(), 0.001)
+                () -> assertEquals(Direction.PRODUCTION, current.getDirection()),
+                () -> assertEquals(1f, current.getAmount()),
+                () -> assertEquals(Direction.PRODUCTION, current.getDirection()),
+                () -> assertEquals(1f, excess.getAmount(), 0.001)
         );
     }
 
@@ -132,14 +132,14 @@ public class TransformerTest {
         when(mockHouse.getCurrentAtHour(1)).thenReturn(new Current(2F, Direction.PRODUCTION));
         List<House> houses = new ArrayList<>();
         houses.add(mockHouse);
-        Transformer transformer = new Transformer(1, houses, 0, new Congestion(true, 10));
+        Transformer transformer = new Transformer(houses, 0, new Congestion(true, 10));
         Current current = transformer.getCalculatedLeftoverCurrentAtHour(1);
         Current excess = transformer.getExcessCurrent();
         assertAll(
-                () -> assertEquals(Direction.PRODUCTION, current.direction()),
-                () -> assertEquals(2f, current.amount(), 0.001),
-                () -> assertEquals(Direction.PRODUCTION, current.direction()),
-                () -> assertEquals(0f, excess.amount())
+                () -> assertEquals(Direction.PRODUCTION, current.getDirection()),
+                () -> assertEquals(2f, current.getAmount(), 0.001),
+                () -> assertEquals(Direction.PRODUCTION, current.getDirection()),
+                () -> assertEquals(0f, excess.getAmount())
         );
     }
 }

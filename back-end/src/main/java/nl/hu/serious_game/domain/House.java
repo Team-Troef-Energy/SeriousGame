@@ -1,19 +1,35 @@
 package nl.hu.serious_game.domain;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+
+@Getter
+@Entity
+@NoArgsConstructor
 public class House implements Cloneable {
-    private final int id;
+    @Id
+    @GeneratedValue
+    @Setter // TODO: ids should not be settable. this is to set the id to zero when cloning.
+    private int id;
+
     private int totalSolarPanels;
+
+    @OneToOne(cascade = CascadeType.ALL)
     private Battery battery;
     private DayProfile dayProfile;
     private HouseOptions houseOptions;
     private Current excessCurrent;
-    private Integer hour;
-    private Current current;
+    //private Integer hour;
+    //private Current current;
+    @Setter
     private float powerCost; // Cost in euros
+    @Setter
     private float totalPowerCost; // Cost in euros
 
-    public House (int id, int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
-        this.id = id;
+    public House(int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
         this.totalSolarPanels = totalSolarPanels;
         this.dayProfile = dayProfile;
         this.houseOptions = houseOptions;
@@ -63,10 +79,6 @@ public class House implements Cloneable {
         this.battery = new Battery(amount);
     }
 
-    public DayProfile getDayProfile() {
-        return dayProfile;
-    }
-
     public float getSolarPanelConsumptionAtHour(int hour) {
         return totalSolarPanels * dayProfile.getValueFromColumnAtHour(hour, "SolarPanelProduction");
     }
@@ -85,6 +97,8 @@ public class House implements Cloneable {
 
     // Returns the current for the house at a specific hour
     public Current getCurrentAtHour(int hour) {
+        return getCalculatedCurrentAtHour(hour);
+        /*
         if (this.hour == null || hour == this.hour + 1) {
             return getCalculatedCurrentAtHour(hour);
         }
@@ -92,6 +106,7 @@ public class House implements Cloneable {
             return this.current;
         }
         throw new IllegalArgumentException("Invalid hour");
+         */
     }
 
     private Current getCalculatedCurrentAtHour(int hour) {
@@ -112,8 +127,8 @@ public class House implements Cloneable {
             current = battery.chargeOrDischarge(current);
         }
 
-        if (houseOptions.hasCongestion() && current.amount() > houseOptions.maxCurrent()) {
-            excessCurrent = new Current(current.amount() - houseOptions.maxCurrent(), direction);
+        if (houseOptions.hasCongestion() && current.getAmount() > houseOptions.maxCurrent()) {
+            excessCurrent = new Current(current.getAmount() - houseOptions.maxCurrent(), direction);
             current = new Current(houseOptions.maxCurrent(), direction);
         } else {
             // Direction is not important here.
@@ -129,34 +144,6 @@ public class House implements Cloneable {
         return total;
     }
 
-    public int getTotalSolarPanels() {
-        return totalSolarPanels;
-    }
-
-    public Battery getBattery() {
-        return battery;
-    }
-
-    public Current getExcessCurrent() {
-        return excessCurrent;
-    }
-
-    public float getPowerCost() {
-        return powerCost;
-    }
-
-    public void setPowerCost(float powerCost) {
-        this.powerCost = powerCost;
-    }
-
-    public void setTotalPowerCost(float totalPowerCost) {
-        this.totalPowerCost = totalPowerCost;
-    }
-
-    public float getTotalPowerCost() {
-        return totalPowerCost;
-    }
-
     @Override
     public House clone() {
         try {
@@ -168,13 +155,5 @@ public class House implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Cloning failed");
         }
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public HouseOptions getHouseOptions() {
-        return houseOptions;
     }
 }
