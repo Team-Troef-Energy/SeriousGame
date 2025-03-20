@@ -88,7 +88,11 @@ public class LevelService {
 
         checkLevelCompletion(level);
 
-        return runLevel(level);
+        var result = runLevel(level);
+
+        this.levelRepository.save(level);
+
+        return result;
     }
 
     private LevelDTO runLevel(Level level) {

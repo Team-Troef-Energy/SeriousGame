@@ -45,6 +45,7 @@ public class Runner implements CommandLineRunner {
         Transformer transformer = new Transformer(List.of(house1, house2), 0);
 
         Level level = new Level(Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
+        level.setId(1L);
 
         System.out.println("Level 1 created!");
         System.out.println(level);
@@ -69,6 +70,7 @@ public class Runner implements CommandLineRunner {
         Transformer transformer = new Transformer(List.of(house1, house2, house3), 0);
 
         Level level = new Level(Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
+        level.setId(2L);
 
         System.out.println("Level 2 created!");
         System.out.println(level);
@@ -94,6 +96,7 @@ public class Runner implements CommandLineRunner {
         Transformer transformer = new Transformer(List.of(house1, house2, house3, house4), 0);
 
         Level level = new Level(Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
+        level.setId(3L);
 
         System.out.println("Level 3 created!");
         System.out.println(level);
@@ -119,7 +122,8 @@ public class Runner implements CommandLineRunner {
         // Create a single transformer
         Transformer transformer = new Transformer(List.of(house1, house2, house3, house4, house5), 0);
 
-            Level level = new Level(Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
+        Level level = new Level(Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
+        level.setId(4L);
 
         System.out.println("Level 4 created!");
         System.out.println(level);
