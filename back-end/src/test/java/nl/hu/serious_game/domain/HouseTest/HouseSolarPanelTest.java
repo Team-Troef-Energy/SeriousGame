@@ -27,7 +27,7 @@ public class HouseSolarPanelTest {
     @DisplayName("Summer Test with one solar panel")
     public void SummerTestOneSolarPanel() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         assertEquals(0.196428571f, house.getSolarPanelConsumptionAtHour(12));
     }
 
@@ -37,7 +37,7 @@ public class HouseSolarPanelTest {
     @MethodSource("provideSolarPanelSeasonAndTimeExamples")
     public void SeasonTestOneSolarPanel(Season season, int hour, float expectedOutput) {
         DayProfile dayProfile = new DayProfile(season);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         assertEquals(expectedOutput, house.getSolarPanelConsumptionAtHour(hour));
     }
 
@@ -65,7 +65,7 @@ public class HouseSolarPanelTest {
     @MethodSource("provideSolarPanelAmountExamples")
     public void SolarPanelAmountTest(int solarPanelAmount, int hour, float expectedOutput) {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, solarPanelAmount, dayProfile, new HouseOptions());
+        House house = new House(solarPanelAmount, dayProfile, new HouseOptions());
         assertEquals(expectedOutput, house.getSolarPanelConsumptionAtHour(hour));
     }
 
@@ -86,7 +86,7 @@ public class HouseSolarPanelTest {
     @DisplayName("Invalid Hour Test")
     public void InvalidHourTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         assertThrows(IllegalArgumentException.class, () -> house.getSolarPanelConsumptionAtHour(24));
     }
 
@@ -95,7 +95,7 @@ public class HouseSolarPanelTest {
     @DisplayName("Add Negative Solar Panel Amount Test")
     public void AddNegativeSolarPanelAmountTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         assertThrows(IllegalArgumentException.class, () -> house.addSolarPanel(-1));
     }
 
@@ -104,7 +104,7 @@ public class HouseSolarPanelTest {
     @DisplayName("Remove Negative Solar Panel Amount Test")
     public void RemoveNegativeSolarPanelAmountTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         assertThrows(IllegalArgumentException.class, () -> house.removeSolarPanel(-1));
     }
 
@@ -113,7 +113,7 @@ public class HouseSolarPanelTest {
     @DisplayName("Remove More Solar Panels Than There Are Test")
     public void RemoveMoreSolarPanelsThanThereAreTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         assertThrows(IllegalArgumentException.class, () -> house.removeSolarPanel(2));
     }
 
@@ -122,7 +122,7 @@ public class HouseSolarPanelTest {
     @DisplayName("Remove Right Amount Of Solar Panels Test")
     public void RemoveRightAmountOfSolarPanelsTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
         house.removeSolarPanel(1);
         assertEquals(0, house.getTotalSolarPanels());
     }

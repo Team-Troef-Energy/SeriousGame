@@ -2,6 +2,7 @@ package nl.hu.serious_game.application;
 
 import nl.hu.serious_game.Runner;
 import nl.hu.serious_game.application.dto.out.LevelDTO;
+import nl.hu.serious_game.data.LevelRepository;
 import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,11 +20,11 @@ public class LevelServiceTest {
 
     @BeforeEach
     public void setUp() {
-        Runner runner = mock(Runner.class);
+        LevelRepository levelRepository = mock(LevelRepository.class);
         // Instead of creating a level, we mock one
-        when(runner.getLevel(1)).thenReturn(new Level(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new Transformer(1, List.of(), 10)), new Cost(5, 10)));
-        when(runner.getTotalLevels()).thenReturn(1);
-        this.levelService = new LevelService(runner);
+        when(levelRepository.getLevelById(1L)).thenReturn(new Level(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new Transformer(List.of(), 10)), new Cost(5, 10)));
+        when(levelRepository.getLevelCount()).thenReturn(1);
+        this.levelService = new LevelService(levelRepository);
     }
 
     @Test

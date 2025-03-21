@@ -19,7 +19,7 @@ public class HouseBatteryTest {
 
     @BeforeEach
     public void setUp() {
-        this.house = new House(1, 14, new DayProfile(Season.SUMMER), new HouseOptions());
+        this.house = new House(14, new DayProfile(Season.SUMMER), new HouseOptions());
     }
 
     // One battery can be added to a house
@@ -64,7 +64,7 @@ public class HouseBatteryTest {
     public void batteryCanStoreEverythingTest() {
         this.house.setBattery(1);
         assertAll(
-                () -> assertEquals(0f, house.getCurrentAtHour(12).amount()),
+                () -> assertEquals(0f, house.getCurrentAtHour(12).getAmount()),
                 () -> assertEquals(2.36f, house.getBattery().getCurrentCharge(), 0.000001f)
         );
     }
@@ -81,8 +81,8 @@ public class HouseBatteryTest {
         this.house.addSolarPanel(14);
         Current current = house.getCurrentAtHour(12);
         assertAll(
-                () -> assertEquals(0.11f, current.amount(), 0.000001f),
-                () -> assertEquals(Direction.PRODUCTION, current.direction()),
+                () -> assertEquals(0.11f, current.getAmount(), 0.000001f),
+                () -> assertEquals(Direction.PRODUCTION, current.getDirection()),
                 () -> assertEquals(5f, house.getBattery().getCurrentCharge())
         );
     }
@@ -100,7 +100,7 @@ public class HouseBatteryTest {
         // "Mock" the battery to have 5 kW stored already
         this.house.getBattery().chargeOrDischarge(new Current(5f, Direction.PRODUCTION));
         assertAll(
-                () -> assertEquals(0f, house.getCurrentAtHour(19).amount()),
+                () -> assertEquals(0f, house.getCurrentAtHour(19).getAmount()),
                 () -> assertEquals(4.61f, house.getBattery().getCurrentCharge(), 0.000001f)
         );
     }
@@ -117,9 +117,9 @@ public class HouseBatteryTest {
     public void batteryCanStoreEverythingOver2HoursTest() {
         this.house.setBattery(1);
         assertAll(
-                () -> assertEquals(0f, house.getCurrentAtHour(12).amount()),
+                () -> assertEquals(0f, house.getCurrentAtHour(12).getAmount()),
                 () -> assertEquals(2.36f, house.getBattery().getCurrentCharge(), 0.000001f),
-                () -> assertEquals(0f, house.getCurrentAtHour(13).amount()),
+                () -> assertEquals(0f, house.getCurrentAtHour(13).getAmount()),
                 () -> assertEquals(4.72f, house.getBattery().getCurrentCharge(), 0.000001f)
         );
     }
@@ -137,9 +137,9 @@ public class HouseBatteryTest {
         // "Mock" the battery to have 5 kW stored already
         this.house.getBattery().chargeOrDischarge(new Current(5f, Direction.PRODUCTION));
         assertAll(
-                () -> assertEquals(0f, house.getCurrentAtHour(19).amount()),
+                () -> assertEquals(0f, house.getCurrentAtHour(19).getAmount()),
                 () -> assertEquals(4.61f, house.getBattery().getCurrentCharge(), 0.000001f),
-                () -> assertEquals(0f, house.getCurrentAtHour(20).amount()),
+                () -> assertEquals(0f, house.getCurrentAtHour(20).getAmount()),
                 () -> assertEquals(4.22f, house.getBattery().getCurrentCharge(), 0.000001f)
         );
     }

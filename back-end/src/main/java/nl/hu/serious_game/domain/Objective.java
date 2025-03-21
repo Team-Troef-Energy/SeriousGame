@@ -1,5 +1,12 @@
 package nl.hu.serious_game.domain;
 
+import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Embeddable
+@NoArgsConstructor
 public class Objective {
     private float maxCo2;
     private int maxCoins;
@@ -10,13 +17,5 @@ public class Objective {
         }
         this.maxCo2 = maxCo2;
         this.maxCoins = maxCoins;
-    }
-
-    public float getMaxCo2() {
-        return maxCo2;
-    }
-
-    public int getMaxCoins() {
-        return maxCoins;
     }
 }

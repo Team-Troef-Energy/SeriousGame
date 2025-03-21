@@ -1,19 +1,25 @@
 package nl.hu.serious_game.domain;
 
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class DayProfile {
     private Season season;
-    private Map<Integer, Map<String, Float>> hourData;
+    private static final Map<Integer, Map<String, Float>> hourData;
 
-    public DayProfile(Season season) {
-        this.season = season;
+    static {
         hourData = new HashMap<>();
         initializeData();
     }
 
-    private void initializeData() {
+    private static void initializeData() {
         // The amount of electricity produced by the solar panels in kWh for a day
         // For example 0 kWh at 00:00, 0.017857143 kWh at 08:00, 0.160714286 kWh at 16:00, 0 kWh at 23:00
         float[] solarPanelProduction = {

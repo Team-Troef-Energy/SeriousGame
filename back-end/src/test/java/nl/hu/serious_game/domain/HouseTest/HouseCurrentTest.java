@@ -26,11 +26,11 @@ public class HouseCurrentTest {
     @DisplayName("Summer Test with 14 solar panels, house producing more than consuming")
     public void SummerTest14SolarPanels() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 14, dayProfile, new HouseOptions());
+        House house = new House(14, dayProfile, new HouseOptions());
 
         assertAll(
-            () -> assertEquals(Direction.PRODUCTION, house.getCurrentAtHour(12).direction()),
-            () -> assertEquals(2.36f, house.getCurrentAtHour(12).amount(), 0.001)
+            () -> assertEquals(Direction.PRODUCTION, house.getCurrentAtHour(12).getDirection()),
+            () -> assertEquals(2.36f, house.getCurrentAtHour(12).getAmount(), 0.001)
         );
     }
 
@@ -42,11 +42,11 @@ public class HouseCurrentTest {
     @DisplayName("Summer Test with 1 solar panel, house consuming more than producing")
     public void SummerTest1SolarPanel() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        House house = new House(1, 1, dayProfile, new HouseOptions());
+        House house = new House(1, dayProfile, new HouseOptions());
 
         assertAll(
-            () -> assertEquals(Direction.DEMAND, house.getCurrentAtHour(12).direction()),
-            () -> assertEquals(0.193571429f, house.getCurrentAtHour(12).amount(), 0.0000001)
+            () -> assertEquals(Direction.DEMAND, house.getCurrentAtHour(12).getDirection()),
+            () -> assertEquals(0.193571429f, house.getCurrentAtHour(12).getAmount(), 0.0000001)
         );
     }
 }

@@ -1,0 +1,14 @@
+services:
+  database:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: troef
+      POSTGRES_PASSWORD: troef
+      POSTGRES_DB: troef-data
+    volumes:
+      - "database-data:/var/lib/postgresql/data/"
+
+volumes:
+  database-data:
