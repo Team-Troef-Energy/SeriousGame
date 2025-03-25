@@ -3,26 +3,37 @@ package nl.hu.serious_game.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 
+@Getter
+@Entity
+@NoArgsConstructor
 public class Transformer implements Cloneable {
-    private final int id;
-    private float powerBalance;
+    @Id
+    @GeneratedValue
+    @Setter // TODO: ids should not be settable. this is to set the id to zero when cloning.
+    private int id;
+
     private Congestion congestion;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<House> houses;
+
+    @OneToOne(cascade = CascadeType.ALL)
     private Battery battery;
     private Current excessCurrent;
     private int maxBatteryCount = 4;
 
-    public Transformer(int id, List<House> houses, int batteries) {
-        this.id = id;
+    public Transformer(List<House> houses, int batteries) {
         this.houses = houses;
         this.battery = new Battery(batteries);
         this.congestion = new Congestion(false, 0f);
     }
 
-    public Transformer(int id, List<House> houses, int batteries, Congestion congestion) {
-        this.id = id;
+    public Transformer(List<House> houses, int batteries, Congestion congestion) {
         this.houses = houses;
         this.battery = new Battery(batteries);
         this.congestion = congestion;
@@ -33,12 +44,12 @@ public class Transformer implements Cloneable {
         float production = 0;
         for (House house : houses) {
             Current current = house.getCurrentAtHour(hour);
-            if (current.direction() == Direction.DEMAND) {
-                demand += current.amount();
-            } else if (current.direction() == Direction.PRODUCTION) {
-                production += current.amount();
+            if (current.getDirection() == Direction.DEMAND) {
+                demand += current.getAmount();
+            } else if (current.getDirection() == Direction.PRODUCTION) {
+                production += current.getAmount();
             } else {
-                throw new RuntimeException("unexpected direction: " + current.direction());
+                throw new RuntimeException("unexpected direction: " + current.getDirection());
             }
         }
         float total = Math.abs(demand - production);
@@ -51,9 +62,9 @@ public class Transformer implements Cloneable {
 
         Current current = battery.chargeOrDischarge(new Current(total, direction));
 
-        if (congestion.hasCongestion() && current.amount() > congestion.maxCurrent()) {
-            excessCurrent = new Current(current.amount() - congestion.maxCurrent(), direction);
-            current = new Current(congestion.maxCurrent(), direction);
+        if (congestion.isHasCongestion() && current.getAmount() > congestion.getMaxCurrent()) {
+            excessCurrent = new Current(current.getAmount() - congestion.getMaxCurrent(), direction);
+            current = new Current(congestion.getMaxCurrent(), direction);
         } else {
             excessCurrent = new Current(0f, direction);
         }
@@ -66,10 +77,10 @@ public class Transformer implements Cloneable {
 
         // Calculate total demand and total production per hour for all houses
         for (House house : houses) {
-            if (house.getCurrentAtHour(hour).direction() == Direction.DEMAND) {
-                totalDemand += house.getCurrentAtHour(hour).amount();
-            } else if (house.getCurrentAtHour(hour).direction() == Direction.PRODUCTION) {
-                totalProduction += house.getCurrentAtHour(hour).amount();
+            if (house.getCurrentAtHour(hour).getDirection() == Direction.DEMAND) {
+                totalDemand += house.getCurrentAtHour(hour).getAmount();
+            } else if (house.getCurrentAtHour(hour).getDirection() == Direction.PRODUCTION) {
+                totalProduction += house.getCurrentAtHour(hour).getAmount();
             }
         }
 
@@ -110,22 +121,6 @@ public class Transformer implements Cloneable {
         this.battery = new Battery(amount);
     }
 
-    public List<House> getHouses() {
-        return houses;
-    }
-
-    public Battery getBatteries() {
-        return battery;
-    }
-
-    public Current getExcessCurrent() {
-        return excessCurrent;
-    }
-
-    public int getMaxBatteryCount() {
-        return maxBatteryCount;
-    }
-
     @Override
     public Transformer clone() {
         try {
@@ -141,11 +136,4 @@ public class Transformer implements Cloneable {
         }
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public Congestion getCongestion() {
-        return congestion;
-    }
 }

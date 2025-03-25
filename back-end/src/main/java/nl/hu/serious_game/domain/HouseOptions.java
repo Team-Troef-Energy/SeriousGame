@@ -1,7 +1,10 @@
 package nl.hu.serious_game.domain;
 
+import jakarta.persistence.Embeddable;
+
 import java.util.Objects;
 
+@Embeddable
 public class HouseOptions {
     private boolean hasHeatPump;
     private boolean hasElectricVehicle;
@@ -36,11 +39,11 @@ public class HouseOptions {
     }
 
     public boolean hasCongestion() {
-        return congestion.hasCongestion();
+        return congestion.isHasCongestion();
     }
 
     public float maxCurrent() {
-        return congestion.maxCurrent();
+        return congestion.getMaxCurrent();
     }
 
     public int maxSolarPanelCount() {

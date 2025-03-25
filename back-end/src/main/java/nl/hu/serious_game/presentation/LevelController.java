@@ -22,7 +22,7 @@ public class LevelController {
     public ResponseEntity<LevelDTO> startLevel(@PathVariable int levelNumber) {
         try {
             LevelDTO level = levelService.startLevel(levelNumber);
-            System.out.println("levelNumber = " + levelNumber);
+            System.out.println("start: levelNumber = " + levelNumber);
             return ResponseEntity.ok(level);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -33,7 +33,7 @@ public class LevelController {
     public ResponseEntity<LevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody LevelUpdateDTO levelUpdateDTO) {
         try {
             LevelDTO updatedLevel = levelService.updateLevel(levelNumber, levelUpdateDTO);
-            System.out.println("levelNumber = " + levelNumber);
+            System.out.println("update: levelNumber = " + levelNumber);
             return ResponseEntity.ok(updatedLevel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
