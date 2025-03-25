@@ -90,7 +90,7 @@ public class LevelService {
 
         LevelDTO result = runLevel(level);
 
-        this.levelRepository.save(level);
+        //this.levelRepository.save(level);
 
         return result;
     }
