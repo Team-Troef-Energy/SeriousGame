@@ -1,15 +1,16 @@
 <template>
-    <div>
-        <h1>Dashboard</h1>
-    </div>
+    <level-editor />
 </template>
 
 <script>
-export default {
+import LevelEditor from '../components/level-editor/LevelEditor.vue';
 
+export default {
+    components: {
+        LevelEditor
+    }
 }
 </script>
 
 <style>
-
 </style>
