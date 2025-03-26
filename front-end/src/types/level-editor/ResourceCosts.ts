@@ -1,5 +1,5 @@
 export interface resourceCosts {
     battery: number;
-    coin: number;
+    solarPanel: number;
     co2: number;
 }
