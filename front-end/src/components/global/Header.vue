@@ -7,8 +7,10 @@
             <div class="header-links">
                 <a href="/">Home</a>
                 <a href="/register">Register</a>
+                <a href="/login">Login</a>
+                <a href="/terms">Terms</a>
                 <a href="/dashboard">Dashboard</a>
-            </div>
+          </div>
         </div>
     </header>
 </template>

@@ -3,13 +3,17 @@ import Dashboard from "../pages/Dashboard.vue";
 import Home from "../pages/Home.vue";
 import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
+import LoginPage from "../pages/LoginPage.vue";
 import RegisterPage from '../pages/RegisterPage.vue';
+import TermsPage from "../pages/TermsPage.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
   { path: "/level/:levelNmr", name: "Level", component: Level },
   { path: "/levelSelect", name: "levelSelect", component: LevelSelect },
   { path: "/register", name: 'RegisterPage', component: RegisterPage },
+  { path: "/terms", name: 'TermsPage', component: TermsPage },
+  { path: "/login", name: 'LoginPage', component: LoginPage },
   { path: "/dashboard", name: 'RegisterPage', component: Dashboard }
 ];
 
