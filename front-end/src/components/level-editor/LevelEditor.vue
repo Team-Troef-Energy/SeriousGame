@@ -47,7 +47,15 @@
                 <label for="end-time">Eind tijd</label>
                 <input type="number" id="end-time" v-model="levelTemplate.endTime" min="0" max="24" />
             </div>
-            <div class="level-editor-buttons form-row">
+            <div class="level-editor-house-button form-row">
+                <button class="button" @click.prevent="addHouse">Voeg huis toe</button>
+            </div>
+            <div class="level-editor-house-list">
+                <ComponentHolder>
+                    <HouseConfiguration v-for="house in levelTemplate.houses" :key="house.houseNumber" />
+                </ComponentHolder>
+            </div>
+            <div class="level-editor-buttons">
                 <button class="button">Annuleren</button>
                 <button class="button">Opslaan</button>
             </div>
@@ -58,8 +66,11 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { levelTemplate } from '../../types/level-editor/LevelTemplate';
+import ComponentHolder from './ComponentHolder.vue';
+import HouseConfiguration from './HouseConfiguration.vue';
 
 export default defineComponent({
+    components: { ComponentHolder, HouseConfiguration },
     name: 'LevelEditor',
     props: {
         levelTemplate: {
@@ -74,6 +85,7 @@ export default defineComponent({
             maxCoins: 0,
             season: 'SPRING',
             amountOfBatteriesForTransformator: 0,
+            houses: [],
             resourceCosts: {
                 battery: 0,
                 solarPanel: 0,
@@ -83,9 +95,21 @@ export default defineComponent({
             endTime: 0
         });
 
+        const addHouse = () => {
+            levelTemplate.value.houses.push({
+                houseNumber: levelTemplate.value.houses.length + 1,
+                hasHeatPump: false,
+                hasElectricalVehicle: false,
+                hasCongestion: false,
+                amountOfSolarPanels: 0,
+                amountOfBatteries: 0
+            });
+        };
+
 
         return {
-            levelTemplate
+            levelTemplate,
+            addHouse
         };
     }
 });
@@ -105,7 +129,6 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     text-align: center;
-    row-gap: 0.5rem;
     background-color: white;
     border-radius: 1rem;
     padding: 2rem;
@@ -143,6 +166,19 @@ export default defineComponent({
     width: 80%;
 }
 
+.level-editor-house-button {
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.level-editor-house-list {
+    display: flex;
+    justify-content: center;
+    height: 10rem;
+    width: 80%;
+    margin-top: 2rem;
+}
+
 .level-editor-buttons {
     display: flex;
     justify-content: space-between;
@@ -178,11 +214,10 @@ export default defineComponent({
         width: 20rem;
     }
 
-    .level-editor-buttons {
-        justify-content: space-between;
-        gap: 1rem;
-        width: 80%;
+    .level-editor-house-button {
+        width: 100%;
     }
+
 }
 
 @media (min-width: 1024px) {
@@ -207,9 +242,8 @@ export default defineComponent({
         width: 25rem;
     }
 
-    .level-editor-buttons {
-        gap: 1rem;
-        width: 80%;
+    .level-editor-house-button {
+        width: 100%;
     }
 }
 </style>

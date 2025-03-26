@@ -1,4 +1,5 @@
-export interface houseProperties {
+export interface HouseConfiguration {
+    houseNumber: number;
     hasHeatPump: boolean;
     hasElectricalVehicle: boolean;
     hasCongestion: boolean;

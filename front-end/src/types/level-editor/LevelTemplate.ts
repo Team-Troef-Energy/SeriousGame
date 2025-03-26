@@ -1,3 +1,4 @@
+import { HouseConfiguration } from "./HouseConfiguration";
 import { resourceCosts } from "./ResourceCosts";
 import season from "./Season";
 
@@ -7,6 +8,7 @@ export interface levelTemplate {
     maxCoins: number;
     season: season;
     amountOfBatteriesForTransformator: number;
+    houses: HouseConfiguration[];
     resourceCosts: resourceCosts
     startTime: number;
     endTime: number;
