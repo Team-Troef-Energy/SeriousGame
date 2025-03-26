@@ -10,7 +10,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 p {
     color: black;
 }

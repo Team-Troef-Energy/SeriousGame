@@ -14,7 +14,7 @@
   });
   </script>
   
-  <style>
+  <style scoped>
   .holder {
     width: 100%;
     height: 100%;

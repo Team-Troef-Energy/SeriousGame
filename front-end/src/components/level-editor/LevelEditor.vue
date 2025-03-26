@@ -115,7 +115,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .level-editor {
     display: flex;
     justify-content: center;

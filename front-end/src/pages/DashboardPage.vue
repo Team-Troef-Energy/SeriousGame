@@ -1,16 +1,18 @@
 <template>
-    <level-editor />
+    <LevelEditor />
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import LevelEditor from '../components/level-editor/LevelEditor.vue';
 
-export default {
+export default defineComponent({
+    name: 'DashboardPage',
     components: {
         LevelEditor
     }
-}
+});
 </script>
 
-<style>
+<style scoped>
 </style>
