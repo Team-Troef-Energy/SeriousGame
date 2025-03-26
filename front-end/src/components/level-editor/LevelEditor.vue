@@ -126,7 +126,6 @@ export default defineComponent({
 .level-editor-form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     text-align: center;
     background-color: white;
