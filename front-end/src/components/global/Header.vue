@@ -8,7 +8,8 @@
                 <a href="/">Home</a>
                 <a href="/register">Register</a>
                 <a href="/login">Login</a>
-            </div>
+                <a href="/terms">Terms</a>
+          </div>
         </div>
     </header>
 </template>
