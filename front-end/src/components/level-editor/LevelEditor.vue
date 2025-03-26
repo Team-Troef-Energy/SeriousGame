@@ -198,6 +198,7 @@ export default defineComponent({
 @media (min-width: 768px) {
     .level-editor-form {
         flex-direction: row;
+        justify-content: center;
         flex-wrap: wrap;
         width: 50rem;
         height: unset;
