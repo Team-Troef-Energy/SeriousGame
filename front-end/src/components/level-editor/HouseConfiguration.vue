@@ -6,24 +6,24 @@
             </div>
             <div class="form-row">
                 <label for="hasHeatPump">Heeft warmtepomp</label>
-                <input type="checkbox" id="hasHeatPump" v-model="houseConfiguration.hasHeatPump" />
+                <input type="checkbox" id="hasHeatPump" v-model="localHouseConfiguration.hasHeatPump" />
             </div>
             <div class="form-row">
                 <label for="hasElectricalVehicle">Heeft elektrische auto</label>
-                <input type="checkbox" id="hasElectricalVehicle" v-model="houseConfiguration.hasElectricalVehicle" />
+                <input type="checkbox" id="hasElectricalVehicle" v-model="localHouseConfiguration.hasElectricalVehicle" />
             </div>
             <div class="form-row">
                 <label for="hasCongestion">Heeft congestie</label>
-                <input type="checkbox" id="hasCongestion" v-model="houseConfiguration.hasCongestion" />
+                <input type="checkbox" id="hasCongestion" v-model="localHouseConfiguration.hasCongestion" />
             </div>
             <div class="form-row">
                 <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
-                <input type="number" id="amountOfSolarPanels" v-model="houseConfiguration.amountOfSolarPanels"
+                <input type="number" id="amountOfSolarPanels" v-model="localHouseConfiguration.amountOfSolarPanels"
                     min="0" />
             </div>
             <div class="form-row">
                 <label for="amountOfBatteries">Aantal batterijen</label>
-                <input type="number" id="amountOfBatteries" v-model="houseConfiguration.amountOfBatteries" min="0" />
+                <input type="number" id="amountOfBatteries" v-model="localHouseConfiguration.amountOfBatteries" min="0" />
             </div>
             <div class="form-row">
                 <button class="button" @click="removeHouse">
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, reactive, watch } from "vue";
 import { houseConfiguration } from "../../types/level-editor/HouseConfiguration";
 
 export default defineComponent({
@@ -43,24 +43,26 @@ export default defineComponent({
     props: {
         houseConfiguration: {
             type: Object as PropType<houseConfiguration>,
-            required: false,
-            default: () => ({
-                houseNumber: 0,
-                hasHeatPump: false,
-                hasElectricalVehicle: false,
-                hasCongestion: false,
-                amountOfSolarPanels: 0,
-                amountOfBatteries: 0,
-            }),
+            required: true,
         },
     },
     setup(props, { emit }) {
+        const localHouseConfiguration = reactive({ ...props.houseConfiguration });
+
+        watch(
+            () => props.houseConfiguration,
+            (newVal) => {
+                Object.assign(localHouseConfiguration, newVal);
+            },
+            { deep: true }
+        );
+
         const removeHouse = () => {
             emit("remove-house");
         };
 
         return {
-            houseConfiguration: props.houseConfiguration,
+            localHouseConfiguration,
             removeHouse,
         };
     },

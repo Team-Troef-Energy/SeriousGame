@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { textModal } from '../../types/global/TextModal';
 import { levelTemplate } from '../../types/level-editor/LevelTemplate';
 import { fetchCountLevels, fetchStartLevel } from '../../utils/api';
@@ -87,13 +87,7 @@ import HouseConfiguration from './HouseConfiguration.vue';
 export default defineComponent({
     components: { ComponentHolder, HouseConfiguration, TextModal },
     name: 'LevelEditor',
-    props: {
-        levelTemplate: {
-            type: Object as PropType<levelTemplate>,
-            required: false,
-        },
-    },
-    setup(props) {
+    setup() {
         let totalAmountOfLevels = ref<number[]>([]);
 
         onMounted(async () => {
@@ -173,7 +167,9 @@ export default defineComponent({
         };
 
         const insertLevelTemplate = (givenLevelTemplate: levelTemplate) => {
+            console.log('before:', levelTemplate.value);
             levelTemplate.value = givenLevelTemplate;
+            console.log('after:', levelTemplate.value);
         };
 
         const clearLevelTemplate = () => {
