@@ -31,7 +31,13 @@
                 <div class="form-amount-of-batteries-for-transformator-input form-row">
                     <label for="amountOfBatteriesForTransformator">Aantal batterijen voor transformator</label>
                     <input type="number" id="amountOfBatteriesForTransformator"
-                        v-model="levelTemplate.amountOfBatteriesForTransformator" min="0" />
+                        v-model="levelTemplate.transformator.amountOfBatteries" min="0" />
+                </div>
+                <div class="form-max-amount-of-batteries-for-transformator-input form-row">
+                    <label for="maxAmountOfBatteriesForTransformator">Maximaal aantal batterijen voor
+                        transformator</label>
+                    <input type="number" id="maxAmountOfBatteriesForTransformator"
+                        v-model="levelTemplate.transformator.maxAmountOfBatteries" min="0" />
                 </div>
                 <div class="form-costs-battery form-row">
                     <label for="costs-battery">Kosten batterij</label>
@@ -109,7 +115,10 @@ export default defineComponent({
                 maxCoins: 0
             },
             season: 'SPRING',
-            amountOfBatteriesForTransformator: 0,
+            transformator: {
+                amountOfBatteries: 0,
+                maxAmountOfBatteries: 0
+            },
             houses: [],
             resourceCosts: {
                 battery: 0,
@@ -127,11 +136,11 @@ export default defineComponent({
             modalContent.value.body = body;
             isModalVisible.value = true;
         };
-        
+
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
             const startLevelData = await fetchStartLevel(savedLevelValue.toString());
-            console.log(startLevelData);
+
             clearLevelTemplate();
 
             levelTemplate.value.levelNumber = savedLevelValue;
@@ -144,7 +153,10 @@ export default defineComponent({
                     maxCoins: startLevelData.objective.maxCoins
                 },
                 season: startLevelData.season,
-                amountOfBatteriesForTransformator: transformer.batteries.amount,
+                transformator: {
+                    amountOfBatteries: transformer.batteries.amount,
+                    maxAmountOfBatteries: transformer.maxBatteryCount
+                },
                 houses: transformer.houses.map((house: any, index: number) => {
                     return {
                         houseNumber: index + 1,
@@ -205,7 +217,9 @@ export default defineComponent({
         const saveOrEditLevel = () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCo2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
-            if (levelTemplate.value.amountOfBatteriesForTransformator < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
+            if (levelTemplate.value.transformator.amountOfBatteries < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
+            if (levelTemplate.value.transformator.maxAmountOfBatteries < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
+            if (levelTemplate.value.transformator.amountOfBatteries > levelTemplate.value.transformator.maxAmountOfBatteries) return showModal('Fout', 'Aantal batterijen voor transformator mag niet groter zijn dan maximaal aantal batterijen voor transformator');
             if (levelTemplate.value.resourceCosts.battery < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
             if (levelTemplate.value.resourceCosts.solarPanel < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
             if (levelTemplate.value.resourceCosts.co2 < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
@@ -370,6 +384,7 @@ export default defineComponent({
 
     .level-editor-form-global-inputs {
         width: 50rem;
+        justify-content: unset;
     }
 
     .level-editor-form label {
@@ -411,16 +426,38 @@ export default defineComponent({
     }
 
     .level-editor-form label {
-        width: 30rem;
+        width: 20rem;
+    }
+
+    .level-editor-form input,
+    .level-editor-form select {
+        width: 5rem;
     }
 
     .form-row {
         gap: 1rem;
-        width: 25rem;
+        width: 30rem;
     }
 
     .level-editor-house-button {
         width: 100%;
     }
+}
+
+@media (min-width: 1280px) {
+    .level-editor-form {
+        width: 95rem;
+    }
+}
+
+@media (min-width: 1536px) {
+    .level-editor-form-global-inputs {
+        width: 100%;
+    }
+
+    .level-editor-house-list {
+        height: 20rem;
+    }
+
 }
 </style>
