@@ -4,7 +4,7 @@
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level Nummer</label>
-                    <select id="levelNumber" v-model="levelTemplate.levelNumber">
+                    <select id="levelNumber" v-model="levelTemplate.levelNumber" @change="onLevelNumberChange">
                         <option v-for="level in totalAmountOfLevels" :key="level" :value="level">
                             {{ level }}
                         </option>
@@ -12,11 +12,11 @@
                 </div>
                 <div class="form-max-co2-input form-row">
                     <label for="maxCo2">Maximale Co2</label>
-                    <input type="number" id="maxCo2" v-model="levelTemplate.maxCo2" min="0" />
+                    <input type="number" id="maxCo2" v-model="levelTemplate.objective.maxCo2" min="0" />
                 </div>
                 <div class="form-max-coins-input form-row">
                     <label for="maxCoins">Maximaal aantal munten</label>
-                    <input type="number" id="maxCoins" v-model="levelTemplate.maxCoins" min="0" />
+                    <input type="number" id="maxCoins" v-model="levelTemplate.objective.maxCoins" min="0" />
                 </div>
                 <div class="form-season-input form-row">
                     <label for="season">Seizoen</label>
@@ -78,7 +78,7 @@
 import { defineComponent, onMounted, PropType, ref } from 'vue';
 import { textModal } from '../../types/global/TextModal';
 import { levelTemplate } from '../../types/level-editor/LevelTemplate';
-import { fetchCountLevels } from '../../utils/api';
+import { fetchCountLevels, fetchStartLevel } from '../../utils/api';
 import TextModal from '../global/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
@@ -108,8 +108,10 @@ export default defineComponent({
 
         let levelTemplate = ref<levelTemplate>({
             levelNumber: 0,
-            maxCo2: 0,
-            maxCoins: 0,
+            objective: {
+                maxCo2: 0,
+                maxCoins: 0
+            },
             season: 'SPRING',
             amountOfBatteriesForTransformator: 0,
             houses: [],
@@ -126,6 +128,34 @@ export default defineComponent({
             modalContent.value.header = header;
             modalContent.value.body = body;
             isModalVisible.value = true;
+        };
+        
+        const onLevelNumberChange = async () => {
+            const startLevelData = await fetchStartLevel(levelTemplate.value.levelNumber.toString());
+
+            const newLevelTemplate = {
+                levelNumber: levelTemplate.value.levelNumber,
+                objective: {
+                    maxCo2: startLevelData.objective.maxCO2,
+                    maxCoins: startLevelData.objective.maxCoins
+                },
+                season: startLevelData.season,
+                amountOfBatteriesForTransformator: startLevelData.hours[startLevelData.hours.length - 1].transformers[0].batteries.amount,
+                houses: startLevelData.houses,
+                resourceCosts: {
+                    battery: startLevelData.cost.batteryCost,
+                    solarPanel: startLevelData.cost.solarPanelCost,
+                    co2: startLevelData.cost.co2Cost,
+                },
+                startTime: startLevelData.startTime,
+                endTime: startLevelData.endTime
+            };
+
+            insertLevelTemplate(newLevelTemplate);
+        };
+
+        const insertLevelTemplate = (givenLevelTemplate: levelTemplate) => {
+            levelTemplate.value = givenLevelTemplate;
         };
 
         const addHouse = () => {
@@ -144,8 +174,8 @@ export default defineComponent({
         };
 
         const saveOrEditLevel = () => {
-            if (levelTemplate.value.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
-            if (levelTemplate.value.maxCo2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
+            if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
+            if (levelTemplate.value.objective.maxCo2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
             if (levelTemplate.value.amountOfBatteriesForTransformator < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
             if (levelTemplate.value.resourceCosts.battery < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
             if (levelTemplate.value.resourceCosts.solarPanel < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
@@ -174,6 +204,7 @@ export default defineComponent({
             totalAmountOfLevels,
             isModalVisible,
             showModal,
+            onLevelNumberChange,
             modalContent,
             addHouse,
             removeHouse,
