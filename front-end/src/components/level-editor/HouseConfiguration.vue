@@ -36,13 +36,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { HouseConfiguration } from "../../types/level-editor/HouseConfiguration";
+import { houseConfiguration } from "../../types/level-editor/HouseConfiguration";
 
 export default defineComponent({
     name: "HouseConfiguration",
     props: {
         houseConfiguration: {
-            type: Object as PropType<HouseConfiguration>,
+            type: Object as PropType<houseConfiguration>,
             required: false,
             default: () => ({
                 houseNumber: 0,

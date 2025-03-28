@@ -132,7 +132,8 @@ export default defineComponent({
         
         const onLevelNumberChange = async () => {
             const startLevelData = await fetchStartLevel(levelTemplate.value.levelNumber.toString());
-
+            
+            const transformer = startLevelData.hours[startLevelData.hours.length - 1].transformers[0];
             const newLevelTemplate = {
                 levelNumber: levelTemplate.value.levelNumber,
                 objective: {
@@ -140,8 +141,17 @@ export default defineComponent({
                     maxCoins: startLevelData.objective.maxCoins
                 },
                 season: startLevelData.season,
-                amountOfBatteriesForTransformator: startLevelData.hours[startLevelData.hours.length - 1].transformers[0].batteries.amount,
-                houses: startLevelData.houses,
+                amountOfBatteriesForTransformator: transformer.batteries.amount,
+                houses: transformer.houses.map((house: any, index: number) => {
+                    return {
+                        houseNumber: index + 1,
+                        hasHeatPump: house.hasHeatpump,
+                        hasElectricalVehicle: house.hasElectricVehicle,
+                        hasCongestion: house.hasCongestion,
+                        amountOfSolarPanels: house.solarpanels,
+                        amountOfBatteries: house.batteries.amount
+                    };
+                }),
                 resourceCosts: {
                     battery: startLevelData.cost.batteryCost,
                     solarPanel: startLevelData.cost.solarPanelCost,
