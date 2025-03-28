@@ -217,6 +217,10 @@ export default defineComponent({
             for (const house of levelTemplate.value.houses) {
                 if (house.battery.amount < 0) return showModal('Fout', 'Aantal batterijen mag niet negatief zijn voor een huis');
                 if (house.solarPanel.amount < 0) return showModal('Fout', 'Aantal zonnepanelen mag niet negatief zijn voor een huis');
+                if (house.battery.maxAmount < 0) return showModal('Fout', 'Maximaal aantal batterijen mag niet negatief zijn voor een huis');
+                if (house.solarPanel.maxAmount < 0) return showModal('Fout', 'Maximaal aantal zonnepanelen mag niet negatief zijn voor een huis');
+                if (house.battery.amount > house.battery.maxAmount) return showModal('Fout', 'Aantal batterijen mag niet groter zijn dan maximaal aantal batterijen voor een huis');
+                if (house.solarPanel.amount > house.solarPanel.maxAmount) return showModal('Fout', 'Aantal zonnepanelen mag niet groter zijn dan maximaal aantal zonnepanelen voor een huis');
             }
 
             if (levelTemplate.value.levelNumber == 0) {
