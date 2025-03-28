@@ -4,7 +4,8 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
-    GithubAuthProvider 
+    GithubAuthProvider,
+    signInWithEmailAndPassword
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./firebase-service";
@@ -62,4 +63,9 @@ export async function registerWithGitHub() {
 
 export function signUserOut() {
     return signOut(auth);
+};
+
+export const signInEmailAndPassword = async (email: string, password: string) => {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
 };
