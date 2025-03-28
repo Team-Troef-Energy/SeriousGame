@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="level-editor-house-button form-row">
-                <button class="button" @click.prevent="addHouse">Voeg huis toe</button>
+                <button class="btn" @click.prevent="addHouse">Voeg huis toe</button>
             </div>
             <div class="level-editor-house-list">
                 <ComponentHolder>
@@ -65,8 +65,9 @@
                 </ComponentHolder>
             </div>
             <div class="level-editor-buttons">
-                <button class="button" @click.prevent="clearLevelTemplate">Annuleren</button>
-                <button class="button" @click.prevent="saveOrEditLevel">Opslaan</button>
+                <button class="btn btn-cancel" @click.prevent="clearLevelTemplate">Annuleren</button>
+                <button class="btn btn-delete" @click.prevent="deleteLevel">Verwijderen</button>
+                <button class="btn btn-save" @click.prevent="saveOrEditLevel">Opslaan</button>
             </div>
         </form>
         <Teleport to="body">
@@ -167,9 +168,7 @@ export default defineComponent({
         };
 
         const insertLevelTemplate = (givenLevelTemplate: levelTemplate) => {
-            console.log('before:', levelTemplate.value);
             levelTemplate.value = givenLevelTemplate;
-            console.log('after:', levelTemplate.value);
         };
 
         const clearLevelTemplate = () => {
@@ -216,6 +215,12 @@ export default defineComponent({
 
         };
 
+        const deleteLevel = () => {
+            if (levelTemplate.value.levelNumber == 0) return showModal('Fout', 'Kan geen nieuw level verwijderen');
+
+            // TODO: Delete level
+        }
+
 
         return {
             levelTemplate,
@@ -227,7 +232,8 @@ export default defineComponent({
             addHouse,
             removeHouse,
             clearLevelTemplate,
-            saveOrEditLevel
+            saveOrEditLevel,
+            deleteLevel
         };
     }
 });
@@ -311,13 +317,25 @@ export default defineComponent({
     margin-top: 2rem;
 }
 
-.button {
+.btn {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     border: none;
     background-color: #007bff;
     color: white;
     cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+}
+
+.btn-delete {
+    background-color: #ff3c3c;
+}
+
+.btn-save {
+    background-color: #28a745;
 }
 
 @media (min-width: 768px) {
