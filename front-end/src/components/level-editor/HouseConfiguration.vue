@@ -18,7 +18,8 @@
             </div>
             <div class="form-row">
                 <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
-                <input type="number" id="amountOfSolarPanels" v-model="houseConfiguration.amountOfSolarPanels" min="0" />
+                <input type="number" id="amountOfSolarPanels" v-model="houseConfiguration.amountOfSolarPanels"
+                    min="0" />
             </div>
             <div class="form-row">
                 <label for="amountOfBatteries">Aantal batterijen</label>
@@ -75,7 +76,6 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
     text-align: center;
     background-color: rgb(243 243 243);
     border-radius: 1rem;
@@ -122,5 +122,11 @@ img {
 
 button img {
     width: 2.5rem;
+}
+
+@media (min-width: 1280px) {
+    .house-configuration-form {
+        justify-content: center;
+    }
 }
 </style>
