@@ -216,7 +216,7 @@ export default defineComponent({
     }
 
     .level-editor-form {
-        width: 70rem;
+        width: 75rem;
     }
 
     .level-editor-form-global-inputs {
@@ -248,7 +248,7 @@ export default defineComponent({
     }
 
     .level-editor-form {
-        width: 80rem;
+        width: 85rem;
     }
 
     .level-editor-form-global-inputs {

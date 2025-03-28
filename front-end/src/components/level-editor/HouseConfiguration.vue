@@ -2,6 +2,9 @@
     <div class="house-configuration container">
         <form class="house-configuration-form">
             <div class="form-row">
+                <img src="/icons/house.png" alt="house" />
+            </div>
+            <div class="form-row">
                 <label for="hasHeatPump">Heeft warmtepomp</label>
                 <input type="checkbox" id="hasHeatPump" v-model="houseConfiguration.hasHeatPump" />
             </div>
@@ -61,6 +64,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     text-align: center;
     background-color: rgb(243 243 243);
     border-radius: 1rem;
@@ -68,7 +72,7 @@ export default defineComponent({
     overflow: auto;
     padding: 0rem 1rem 0rem 1rem;
     height: 7rem;	
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .house-configuration-form label,
@@ -99,5 +103,9 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     gap: 2rem;
+}
+
+img {
+    width: 5rem;
 }
 </style>
