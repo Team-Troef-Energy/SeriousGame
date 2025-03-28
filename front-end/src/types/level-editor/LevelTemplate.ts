@@ -1,4 +1,4 @@
-import { HouseConfiguration } from "./HouseConfiguration";
+import { houseConfiguration } from "./HouseConfiguration";
 import { objective } from "./Objective";
 import { resourceCosts } from "./ResourceCosts";
 import season from "./Season";
@@ -8,7 +8,7 @@ export interface levelTemplate {
     objective: objective;
     season: season;
     amountOfBatteriesForTransformator: number;
-    houses: HouseConfiguration[];
+    houses: houseConfiguration[];
     resourceCosts: resourceCosts
     startTime: number;
     endTime: number;

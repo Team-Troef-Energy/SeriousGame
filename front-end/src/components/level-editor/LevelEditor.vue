@@ -3,7 +3,7 @@
         <form class="level-editor-form">
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
-                    <label for="levelNumber">Level Nummer</label>
+                    <label for="levelNumber">Level nummer</label>
                     <select id="levelNumber" v-model="levelTemplate.levelNumber" @change="onLevelNumberChange">
                         <option :value="0" selected>Nieuw Level</option>
                         <option v-for="level in totalAmountOfLevels" :key="level" :value="level">
@@ -131,7 +131,7 @@ export default defineComponent({
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
             const startLevelData = await fetchStartLevel(savedLevelValue.toString());
-
+            console.log(startLevelData);
             clearLevelTemplate();
 
             levelTemplate.value.levelNumber = savedLevelValue;
@@ -151,8 +151,14 @@ export default defineComponent({
                         hasHeatPump: house.hasHeatpump,
                         hasElectricalVehicle: house.hasElectricVehicle,
                         hasCongestion: house.hasCongestion,
-                        amountOfSolarPanels: house.solarpanels,
-                        amountOfBatteries: house.batteries.amount
+                        battery: {
+                            amount: house.batteries.amount,
+                            maxAmount: house.maxBatteryCount
+                        },
+                        solarPanel: {
+                            amount: house.solarpanels,
+                            maxAmount: house.maxSolarPanelCount
+                        }
                     };
                 }),
                 resourceCosts: {
@@ -181,8 +187,14 @@ export default defineComponent({
                 hasHeatPump: false,
                 hasElectricalVehicle: false,
                 hasCongestion: false,
-                amountOfSolarPanels: 0,
-                amountOfBatteries: 0
+                battery: {
+                    amount: 0,
+                    maxAmount: 0
+                },
+                solarPanel: {
+                    amount: 0,
+                    maxAmount: 0
+                }
             });
         };
 
@@ -203,8 +215,8 @@ export default defineComponent({
             if (levelTemplate.value.houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
 
             for (const house of levelTemplate.value.houses) {
-                if (house.amountOfSolarPanels < 0) return showModal('Fout', 'Aantal zonnepanelen mag niet negatief zijn voor een huis');
-                if (house.amountOfBatteries < 0) return showModal('Fout', 'Aantal batterijen mag niet negatief zijn voor een huis');
+                if (house.battery.amount < 0) return showModal('Fout', 'Aantal batterijen mag niet negatief zijn voor een huis');
+                if (house.solarPanel.amount < 0) return showModal('Fout', 'Aantal zonnepanelen mag niet negatief zijn voor een huis');
             }
 
             if (levelTemplate.value.levelNumber == 0) {
