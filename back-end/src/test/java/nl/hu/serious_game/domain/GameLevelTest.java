@@ -6,11 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-public class LevelTest {
+public class GameLevelTest {
     @Test
     @DisplayName("Test for when transformers is empty")
     public void emptyTransformersTest() {
         Objective objective = new Objective(5, 5);
-        assertThrows(IllegalArgumentException.class, () -> new Level(Season.SUMMER, 0, 0, objective, new ArrayList<>(), new Cost(5, 10)));
+        assertThrows(IllegalArgumentException.class, () -> new GameLevel(Season.SUMMER, 0, 0, objective, new ArrayList<>(), new Cost(5, 10)));
     }
 }

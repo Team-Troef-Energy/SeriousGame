@@ -9,17 +9,17 @@ import org.junit.jupiter.api.Test;
 import nl.hu.serious_game.domain.Current;
 import nl.hu.serious_game.domain.DayProfile;
 import nl.hu.serious_game.domain.Direction;
-import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.GameHouse;
 import nl.hu.serious_game.domain.HouseOptions;
 import nl.hu.serious_game.domain.Season;
 
-public class HouseBatteryTest {
+public class GameHouseBatteryTest {
 
-    private House house;
+    private GameHouse house;
 
     @BeforeEach
     public void setUp() {
-        this.house = new House(14, new DayProfile(Season.SUMMER), new HouseOptions());
+        this.house = new GameHouse(14, new DayProfile(Season.SUMMER), new HouseOptions());
     }
 
     // One battery can be added to a house

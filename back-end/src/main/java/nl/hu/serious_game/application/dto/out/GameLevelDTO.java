@@ -5,7 +5,7 @@ import nl.hu.serious_game.domain.Season;
 
 import java.util.List;
 
-public record LevelDTO(
+public record GameLevelDTO(
         List<HourDTO> hours,
         Season season,
         int startTime,
@@ -16,4 +16,3 @@ public record LevelDTO(
         int totalCosts,
         float totalCO2
 ) {}
-

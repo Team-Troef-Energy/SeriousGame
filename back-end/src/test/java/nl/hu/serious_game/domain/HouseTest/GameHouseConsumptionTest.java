@@ -11,11 +11,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.House;
+import nl.hu.serious_game.domain.GameHouse;
 import nl.hu.serious_game.domain.HouseOptions;
 import nl.hu.serious_game.domain.Season;
 
-public class HouseConsumptionTest {
+public class GameHouseConsumptionTest {
     @Test
     @DisplayName("Template Test")
     public void TemplateTest() {
@@ -28,7 +28,7 @@ public class HouseConsumptionTest {
     @Test
     @DisplayName("House Consumption Test 12:00")
     public void HouseConsumptionTestHour12() {
-        House house = new House(1, new DayProfile(Season.SUMMER), new HouseOptions());
+        GameHouse house = new GameHouse(1, new DayProfile(Season.SUMMER), new HouseOptions());
         assertEquals(0.39f, house.getBaseConsumptionAtHour(12));
     }
 
@@ -37,7 +37,7 @@ public class HouseConsumptionTest {
     @DisplayName("Season Test house consumption")
     @MethodSource("provideHouseConsumptionSeasonAndTimeExamples")
     public void SeasonTestHouseConsumption(Season season, int hour, float expectedOutput) {
-        House house = new House(1, new DayProfile(season), new HouseOptions());
+        GameHouse house = new GameHouse(1, new DayProfile(season), new HouseOptions());
         assertEquals(expectedOutput, house.getBaseConsumptionAtHour(hour));
     }
 
@@ -63,7 +63,7 @@ public class HouseConsumptionTest {
     @DisplayName("House Consumption Test with options")
     @MethodSource("provideHouseConsumptionOptionsAndTimeExamples")
     public void HouseConsumptionTestOptions(Season season, boolean hasElectricVehicle, boolean hasHeatPump, int hour, float expectedOutput) {
-        House house = new House(1, new DayProfile(season), new HouseOptions(hasHeatPump, hasElectricVehicle));
+        GameHouse house = new GameHouse(1, new DayProfile(season), new HouseOptions(hasHeatPump, hasElectricVehicle));
         assertEquals(expectedOutput, house.getTotalConsumptionAtHour(hour));
     }
 

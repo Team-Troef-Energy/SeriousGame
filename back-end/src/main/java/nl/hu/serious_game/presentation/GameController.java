@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/scores")
 public class GameController {
     private final GameService gameService;
-    public GameController(GameService gameService, GameService gameService1) {
-        this.gameService = gameService1;
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
     }
 }

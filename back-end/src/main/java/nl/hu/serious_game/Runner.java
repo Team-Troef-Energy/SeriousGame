@@ -1,8 +1,7 @@
 package nl.hu.serious_game;
 
-import nl.hu.serious_game.data.LevelRepository;
+import nl.hu.serious_game.data.GameLevelRepository;
 import nl.hu.serious_game.domain.*;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -11,25 +10,25 @@ import java.util.List;
 
 @Component
 public class Runner implements CommandLineRunner {
-    private final LevelRepository levelRepository;
+    private final GameLevelRepository gameLevelRepository;
 
     @Autowired
-    public Runner(LevelRepository levelRepository) {
-        this.levelRepository = levelRepository;
+    public Runner(GameLevelRepository gameLevelRepository) {
+        this.gameLevelRepository = gameLevelRepository;
     }
 
     @Override
     public void run(String... args) {
         System.out.println("Runner started!");
-        if (levelRepository.getLevelCount() == 0) {
-            levelRepository.save(createLevel1());
-            levelRepository.save(createLevel2());
-            levelRepository.save(createLevel3());
-            levelRepository.save(createLevel4());
+        if (gameLevelRepository.getLevelCount() == 0) {
+            gameLevelRepository.save(createLevel1());
+            gameLevelRepository.save(createLevel2());
+            gameLevelRepository.save(createLevel3());
+            gameLevelRepository.save(createLevel4());
         }
     }
 
-    public Level createLevel1() {
+    public GameLevel createLevel1() {
         System.out.println("Creating level 1...");
         // Create objective
         Objective objective = new Objective(1, 20);
@@ -38,13 +37,13 @@ public class Runner implements CommandLineRunner {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create a house
-        House house1 = new House(0, dayProfile, new HouseOptions());
-        House house2 = new House(0, dayProfile, new HouseOptions());
+        GameHouse house1 = new GameHouse(0, dayProfile, new HouseOptions());
+        GameHouse house2 = new GameHouse(0, dayProfile, new HouseOptions());
 
         // Create a single transformer
-        Transformer transformer = new Transformer(List.of(house1, house2), 0);
+        GameTransformer transformer = new GameTransformer(List.of(house1, house2), 0);
 
-        Level level = new Level(Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
+        GameLevel level = new GameLevel(Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
         level.setId(1L);
 
         System.out.println("Level 1 created!");
@@ -53,7 +52,7 @@ public class Runner implements CommandLineRunner {
         return level;
     }
 
-    public Level createLevel2() {
+    public GameLevel createLevel2() {
         System.out.println("Creating level 2...");
         // Create objective
         Objective objective = new Objective(2, 50);
@@ -62,14 +61,14 @@ public class Runner implements CommandLineRunner {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create a house
-        House house1 = new House(0, dayProfile, new HouseOptions(true, false));
-        House house2 = new House(0, dayProfile, new HouseOptions(false, true));
-        House house3 = new House(0, dayProfile, new HouseOptions(false, false));
+        GameHouse house1 = new GameHouse(0, dayProfile, new HouseOptions(true, false));
+        GameHouse house2 = new GameHouse(0, dayProfile, new HouseOptions(false, true));
+        GameHouse house3 = new GameHouse(0, dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        Transformer transformer = new Transformer(List.of(house1, house2, house3), 0);
+        GameTransformer transformer = new GameTransformer(List.of(house1, house2, house3), 0);
 
-        Level level = new Level(Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
+        GameLevel level = new GameLevel(Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
         level.setId(2L);
 
         System.out.println("Level 2 created!");
@@ -78,7 +77,7 @@ public class Runner implements CommandLineRunner {
         return level;
     }
 
-    public Level createLevel3() {
+    public GameLevel createLevel3() {
         System.out.println("Creating level 3...");
         // Create objective
         Objective objective = new Objective(4, 150);
@@ -87,15 +86,15 @@ public class Runner implements CommandLineRunner {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create a house
-        House house1 = new House(0, dayProfile, new HouseOptions(false, false));
-        House house2 = new House(0, dayProfile, new HouseOptions(false, true));
-        House house3 = new House(0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.5f)));
-        House house4 = new House(0, dayProfile, new HouseOptions(false, false));
+        GameHouse house1 = new GameHouse(0, dayProfile, new HouseOptions(false, false));
+        GameHouse house2 = new GameHouse(0, dayProfile, new HouseOptions(false, true));
+        GameHouse house3 = new GameHouse(0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.5f)));
+        GameHouse house4 = new GameHouse(0, dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        Transformer transformer = new Transformer(List.of(house1, house2, house3, house4), 0);
+        GameTransformer transformer = new GameTransformer(List.of(house1, house2, house3, house4), 0);
 
-        Level level = new Level(Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
+        GameLevel level = new GameLevel(Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
         level.setId(3L);
 
         System.out.println("Level 3 created!");
@@ -104,7 +103,7 @@ public class Runner implements CommandLineRunner {
         return level;
     }
 
-    public Level createLevel4() {
+    public GameLevel createLevel4() {
         System.out.println("Creating level 4...");
         // Create objective
         Objective objective = new Objective(5, 100);
@@ -113,16 +112,16 @@ public class Runner implements CommandLineRunner {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
 
         // Create houses
-        House house1 = new House(0, dayProfile, new HouseOptions(false, true));
-        House house2 = new House(0, dayProfile, new HouseOptions(true, false));
-        House house3 = new House(0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.7f)));
-        House house4 = new House(0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.5f)));
-        House house5 = new House(0, dayProfile, new HouseOptions(false, false));
+        GameHouse house1 = new GameHouse(0, dayProfile, new HouseOptions(false, true));
+        GameHouse house2 = new GameHouse(0, dayProfile, new HouseOptions(true, false));
+        GameHouse house3 = new GameHouse(0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.7f)));
+        GameHouse house4 = new GameHouse(0, dayProfile, new HouseOptions(true, true, new Congestion(true, 0.5f)));
+        GameHouse house5 = new GameHouse(0, dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        Transformer transformer = new Transformer(List.of(house1, house2, house3, house4, house5), 0);
+        GameTransformer transformer = new GameTransformer(List.of(house1, house2, house3, house4, house5), 0);
 
-        Level level = new Level(Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
+        GameLevel level = new GameLevel(Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
         level.setId(4L);
 
         System.out.println("Level 4 created!");
