@@ -75,7 +75,7 @@ export default defineComponent({
     props: {
         levelTemplate: {
             type: Object as PropType<levelTemplate>,
-            required: true,
+            required: false,
         },
     },
     setup(props) {
@@ -174,7 +174,7 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     height: 10rem;
-    width: 80%;
+    width: 100%;
     margin-top: 2rem;
 }
 
