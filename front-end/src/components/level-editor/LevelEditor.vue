@@ -5,6 +5,7 @@
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level Nummer</label>
                     <select id="levelNumber" v-model="levelTemplate.levelNumber" @change="onLevelNumberChange">
+                        <option :value="0" selected>Nieuw Level</option>
                         <option v-for="level in totalAmountOfLevels" :key="level" :value="level">
                             {{ level }}
                         </option>
@@ -64,7 +65,7 @@
                 </ComponentHolder>
             </div>
             <div class="level-editor-buttons">
-                <button class="button">Annuleren</button>
+                <button class="button" @click.prevent="clearLevelTemplate">Annuleren</button>
                 <button class="button" @click.prevent="saveOrEditLevel">Opslaan</button>
             </div>
         </form>
@@ -106,7 +107,7 @@ export default defineComponent({
             body: 'Nothing to show'
         });
 
-        let levelTemplate = ref<levelTemplate>({
+        let emptyLevelTemplate: levelTemplate = {
             levelNumber: 0,
             objective: {
                 maxCo2: 0,
@@ -122,7 +123,9 @@ export default defineComponent({
             },
             startTime: 0,
             endTime: 0
-        });
+        };
+
+        let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
 
         const showModal = (header: string, body: string) => {
             modalContent.value.header = header;
@@ -131,8 +134,13 @@ export default defineComponent({
         };
         
         const onLevelNumberChange = async () => {
-            const startLevelData = await fetchStartLevel(levelTemplate.value.levelNumber.toString());
-            
+            const savedLevelValue = levelTemplate.value.levelNumber;
+            const startLevelData = await fetchStartLevel(savedLevelValue.toString());
+
+            clearLevelTemplate();
+
+            levelTemplate.value.levelNumber = savedLevelValue;
+
             const transformer = startLevelData.hours[startLevelData.hours.length - 1].transformers[0];
             const newLevelTemplate = {
                 levelNumber: levelTemplate.value.levelNumber,
@@ -166,6 +174,10 @@ export default defineComponent({
 
         const insertLevelTemplate = (givenLevelTemplate: levelTemplate) => {
             levelTemplate.value = givenLevelTemplate;
+        };
+
+        const clearLevelTemplate = () => {
+            levelTemplate.value = { ...emptyLevelTemplate };
         };
 
         const addHouse = () => {
@@ -214,10 +226,11 @@ export default defineComponent({
             totalAmountOfLevels,
             isModalVisible,
             showModal,
-            onLevelNumberChange,
             modalContent,
+            onLevelNumberChange,
             addHouse,
             removeHouse,
+            clearLevelTemplate,
             saveOrEditLevel
         };
     }
