@@ -64,17 +64,22 @@
                 <button class="button">Opslaan</button>
             </div>
         </form>
+        <Teleport to="body">
+            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false"/>
+        </Teleport>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
+import { textModal } from '../../types/global/TextModal';
 import { levelTemplate } from '../../types/level-editor/LevelTemplate';
+import TextModal from '../global/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
 
 export default defineComponent({
-    components: { ComponentHolder, HouseConfiguration },
+    components: { ComponentHolder, HouseConfiguration, TextModal },
     name: 'LevelEditor',
     props: {
         levelTemplate: {
@@ -83,6 +88,13 @@ export default defineComponent({
         },
     },
     setup(props) {
+        let isModalVisible = ref(false)
+
+        let modalContent = ref<textModal>({
+            header: 'Alert',
+            body: 'Nothing to show'
+        });
+
         let levelTemplate = ref<levelTemplate>({
             levelNumber: 0,
             maxCo2: 0,
@@ -99,7 +111,14 @@ export default defineComponent({
             endTime: 0
         });
 
+        const showModal = (header: string, body: string) => {
+            modalContent.value.header = header;
+            modalContent.value.body = body;
+            isModalVisible.value = true;
+        };
+
         const addHouse = () => {
+            showModal('Huis toegevoegd', 'Er is een huis toegevoegd!');
             levelTemplate.value.houses.push({
                 houseNumber: levelTemplate.value.houses.length + 1,
                 hasHeatPump: false,
@@ -118,7 +137,10 @@ export default defineComponent({
         return {
             levelTemplate,
             addHouse,
-            removeHouse
+            removeHouse,
+            isModalVisible,
+            showModal,
+            modalContent
         };
     }
 });
