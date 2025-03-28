@@ -1,5 +1,7 @@
 <template>
-    <LevelEditor />
+    <div class="dashboard-page container">
+        <LevelEditor />
+    </div>
 </template>
 
 <script lang="ts">
@@ -15,4 +17,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.dashboard-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.dashboard-page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/green-happy-background.png');
+    background-size: cover;
+    z-index: -2;
+}
 </style>
