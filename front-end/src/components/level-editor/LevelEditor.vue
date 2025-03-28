@@ -55,7 +55,8 @@
             </div>
             <div class="level-editor-house-list">
                 <ComponentHolder>
-                    <HouseConfiguration v-for="house in levelTemplate.houses" :key="house.houseNumber" />
+                    <HouseConfiguration v-for="(house, index) in levelTemplate.houses" :key="house.houseNumber"
+                        :house-configuration="house" @remove-house="removeHouse(index)" />
                 </ComponentHolder>
             </div>
             <div class="level-editor-buttons">
@@ -109,10 +110,15 @@ export default defineComponent({
             });
         };
 
+        const removeHouse = (index: number) => {
+            levelTemplate.value.houses.splice(index, 1);
+        };
+
 
         return {
             levelTemplate,
-            addHouse
+            addHouse,
+            removeHouse
         };
     }
 });

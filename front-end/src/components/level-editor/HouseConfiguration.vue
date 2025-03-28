@@ -24,6 +24,11 @@
                 <label for="amountOfBatteries">Aantal batterijen</label>
                 <input type="number" id="amountOfBatteries" v-model="houseConfiguration.amountOfBatteries" />
             </div>
+            <div class="form-row">
+                <button class="button" @click="removeHouse">
+                    <img src="/icons/cross.png" alt="delete" />
+                </button>
+            </div>
         </form>
     </div>
 </template>
@@ -39,7 +44,7 @@ export default defineComponent({
             type: Object as PropType<HouseConfiguration>,
             required: false,
         },
-    }, setup() {
+    }, setup(_, { emit }) {
         let houseConfiguration = ref<HouseConfiguration>({
             houseNumber: 0,
             hasHeatPump: false,
@@ -49,8 +54,13 @@ export default defineComponent({
             amountOfBatteries: 0
         });
 
+        const removeHouse = () => {
+            emit("remove-house");
+        };
+
         return {
-            houseConfiguration
+            houseConfiguration,
+            removeHouse
         };
     }
 });
@@ -60,6 +70,7 @@ export default defineComponent({
 .house-configuration {
     width: 95%;
 }
+
 .house-configuration-form {
     display: flex;
     flex-direction: row;
@@ -71,7 +82,7 @@ export default defineComponent({
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     overflow: auto;
     padding: 0rem 1rem 0rem 1rem;
-    height: 7rem;	
+    height: 7rem;
     gap: 1rem;
 }
 
@@ -107,5 +118,9 @@ export default defineComponent({
 
 img {
     width: 5rem;
+}
+
+button img {
+    width: 2.5rem;
 }
 </style>
