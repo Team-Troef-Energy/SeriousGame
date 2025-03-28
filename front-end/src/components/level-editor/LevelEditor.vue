@@ -1,51 +1,54 @@
 <template>
     <div class="level-editor container">
         <form class="level-editor-form">
-            <div class="form-level-input form-row">
-                <label for="levelNumber">Level Nummer</label>
-                <input type="number" id="levelNumber" v-model="levelTemplate.levelNumber" min="0" />
-            </div>
-            <div class="form-max-co2-input form-row">
-                <label for="maxCo2">Maximale Co2</label>
-                <input type="number" id="maxCo2" v-model="levelTemplate.maxCo2" min="0" />
-            </div>
-            <div class="form-max-coins-input form-row">
-                <label for="maxCoins">Maximaal aantal munten</label>
-                <input type="number" id="maxCoins" v-model="levelTemplate.maxCoins" min="0" />
-            </div>
-            <div class="form-season-input form-row">
-                <label for="season">Seizoen</label>
-                <select v-model="levelTemplate.season">
-                    <option value="SPRING">Lente</option>
-                    <option value="SUMMER">Zomer</option>
-                    <option value="AUTUMN">Herfst</option>
-                    <option value="WINTER">Winter</option>
-                </select>
-            </div>
-            <div class="form-amount-of-batteries-for-transformator-input form-row">
-                <label for="amountOfBatteriesForTransformator">Aantal batterijen voor transformator</label>
-                <input type="number" id="amountOfBatteriesForTransformator"
-                    v-model="levelTemplate.amountOfBatteriesForTransformator" min="0" />
-            </div>
-            <div class="form-costs-battery form-row">
-                <label for="costs-battery">Kosten batterij</label>
-                <input type="number" id="costs-battery" v-model="levelTemplate.resourceCosts.battery" min="0" />
-            </div>
-            <div class="form-costs-solar-panel form-row">
-                <label for="costs-solar-panel">Kosten zonnepaneel</label>
-                <input type="number" id="costs-solar-panel" v-model="levelTemplate.resourceCosts.solarPanel" min="0" />
-            </div>
-            <div class="form-costs-co2 form-row">
-                <label for="costs-co2">Kosten Co2</label>
-                <input type="number" id="costs-co2" v-model="levelTemplate.resourceCosts.co2" min="0" />
-            </div>
-            <div class="form-start-time form-row">
-                <label for="start-time">Start tijd</label>
-                <input type="number" id="start-time" v-model="levelTemplate.startTime" min="0" max="24" />
-            </div>
-            <div class="form-end-time form-row">
-                <label for="end-time">Eind tijd</label>
-                <input type="number" id="end-time" v-model="levelTemplate.endTime" min="0" max="24" />
+            <div class="level-editor-form-global-inputs">
+                <div class="form-level-input form-row">
+                    <label for="levelNumber">Level Nummer</label>
+                    <input type="number" id="levelNumber" v-model="levelTemplate.levelNumber" min="0" />
+                </div>
+                <div class="form-max-co2-input form-row">
+                    <label for="maxCo2">Maximale Co2</label>
+                    <input type="number" id="maxCo2" v-model="levelTemplate.maxCo2" min="0" />
+                </div>
+                <div class="form-max-coins-input form-row">
+                    <label for="maxCoins">Maximaal aantal munten</label>
+                    <input type="number" id="maxCoins" v-model="levelTemplate.maxCoins" min="0" />
+                </div>
+                <div class="form-season-input form-row">
+                    <label for="season">Seizoen</label>
+                    <select v-model="levelTemplate.season">
+                        <option value="SPRING">Lente</option>
+                        <option value="SUMMER">Zomer</option>
+                        <option value="AUTUMN">Herfst</option>
+                        <option value="WINTER">Winter</option>
+                    </select>
+                </div>
+                <div class="form-amount-of-batteries-for-transformator-input form-row">
+                    <label for="amountOfBatteriesForTransformator">Aantal batterijen voor transformator</label>
+                    <input type="number" id="amountOfBatteriesForTransformator"
+                        v-model="levelTemplate.amountOfBatteriesForTransformator" min="0" />
+                </div>
+                <div class="form-costs-battery form-row">
+                    <label for="costs-battery">Kosten batterij</label>
+                    <input type="number" id="costs-battery" v-model="levelTemplate.resourceCosts.battery" min="0" />
+                </div>
+                <div class="form-costs-solar-panel form-row">
+                    <label for="costs-solar-panel">Kosten zonnepaneel</label>
+                    <input type="number" id="costs-solar-panel" v-model="levelTemplate.resourceCosts.solarPanel"
+                        min="0" />
+                </div>
+                <div class="form-costs-co2 form-row">
+                    <label for="costs-co2">Kosten Co2</label>
+                    <input type="number" id="costs-co2" v-model="levelTemplate.resourceCosts.co2" min="0" />
+                </div>
+                <div class="form-start-time form-row">
+                    <label for="start-time">Start tijd</label>
+                    <input type="number" id="start-time" v-model="levelTemplate.startTime" min="0" max="24" />
+                </div>
+                <div class="form-end-time form-row">
+                    <label for="end-time">Eind tijd</label>
+                    <input type="number" id="end-time" v-model="levelTemplate.endTime" min="0" max="24" />
+                </div>
             </div>
             <div class="level-editor-house-button form-row">
                 <button class="button" @click.prevent="addHouse">Voeg huis toe</button>
@@ -136,6 +139,13 @@ export default defineComponent({
     overflow: auto;
 }
 
+.level-editor-form-global-inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
 .level-editor-form label,
 .level-editor-form input,
 .level-editor-form select {
@@ -196,12 +206,21 @@ export default defineComponent({
 }
 
 @media (min-width: 768px) {
-    .level-editor-form {
+
+    .level-editor-form,
+    .level-editor-form-global-inputs {
         flex-direction: row;
         justify-content: center;
         flex-wrap: wrap;
-        width: 50rem;
         height: unset;
+    }
+
+    .level-editor-form {
+        width: 70rem;
+    }
+
+    .level-editor-form-global-inputs {
+        width: 50rem;
     }
 
     .level-editor-form label {
@@ -221,9 +240,18 @@ export default defineComponent({
 }
 
 @media (min-width: 1024px) {
-    .level-editor-form {
+
+    .level-editor-form,
+    .level-editor-form-global-inputs {
         flex-direction: row;
         flex-wrap: wrap;
+    }
+
+    .level-editor-form {
+        width: 80rem;
+    }
+
+    .level-editor-form-global-inputs {
         width: 60rem;
     }
 

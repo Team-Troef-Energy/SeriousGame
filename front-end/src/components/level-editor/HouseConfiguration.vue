@@ -67,7 +67,7 @@ export default defineComponent({
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     overflow: auto;
     padding: 0rem 1rem 0rem 1rem;
-    height: 6rem;	
+    height: 7rem;	
     gap: 2rem;
 }
 
