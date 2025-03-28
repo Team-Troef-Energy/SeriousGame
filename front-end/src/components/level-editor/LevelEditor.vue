@@ -4,7 +4,11 @@
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level Nummer</label>
-                    <input type="number" id="levelNumber" v-model="levelTemplate.levelNumber" min="0" />
+                    <select id="levelNumber" v-model="levelTemplate.levelNumber">
+                        <option v-for="level in totalAmountOfLevels" :key="level" :value="level">
+                            {{ level }}
+                        </option>
+                    </select>
                 </div>
                 <div class="form-max-co2-input form-row">
                     <label for="maxCo2">Maximale Co2</label>
@@ -61,19 +65,20 @@
             </div>
             <div class="level-editor-buttons">
                 <button class="button">Annuleren</button>
-                <button class="button">Opslaan</button>
+                <button class="button" @click.prevent="saveOrEditLevel">Opslaan</button>
             </div>
         </form>
         <Teleport to="body">
-            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false"/>
+            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, onMounted, PropType, ref } from 'vue';
 import { textModal } from '../../types/global/TextModal';
 import { levelTemplate } from '../../types/level-editor/LevelTemplate';
+import { fetchCountLevels } from '../../utils/api';
 import TextModal from '../global/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
@@ -88,6 +93,12 @@ export default defineComponent({
         },
     },
     setup(props) {
+        let totalAmountOfLevels = ref<number[]>([]);
+
+        onMounted(async () => {
+            totalAmountOfLevels.value = await fetchCountLevels();
+        });
+
         let isModalVisible = ref(false)
 
         let modalContent = ref<textModal>({
@@ -118,7 +129,6 @@ export default defineComponent({
         };
 
         const addHouse = () => {
-            showModal('Huis toegevoegd', 'Er is een huis toegevoegd!');
             levelTemplate.value.houses.push({
                 houseNumber: levelTemplate.value.houses.length + 1,
                 hasHeatPump: false,
@@ -133,14 +143,41 @@ export default defineComponent({
             levelTemplate.value.houses.splice(index, 1);
         };
 
+        const saveOrEditLevel = () => {
+            if (levelTemplate.value.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
+            if (levelTemplate.value.maxCo2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
+            if (levelTemplate.value.amountOfBatteriesForTransformator < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
+            if (levelTemplate.value.resourceCosts.battery < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
+            if (levelTemplate.value.resourceCosts.solarPanel < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
+            if (levelTemplate.value.resourceCosts.co2 < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
+            if (levelTemplate.value.startTime < 0 || levelTemplate.value.startTime > 24) return showModal('Fout', 'Start tijd moet tussen 0 en 24 zijn');
+            if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 24) return showModal('Fout', 'Eind tijd moet tussen 0 en 24 zijn');
+            if (levelTemplate.value.startTime >= levelTemplate.value.endTime) return showModal('Fout', 'Start tijd moet voor eind tijd zijn');
+            if (levelTemplate.value.houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
+
+            for (const house of levelTemplate.value.houses) {
+                if (house.amountOfSolarPanels < 0) return showModal('Fout', 'Aantal zonnepanelen mag niet negatief zijn voor een huis');
+                if (house.amountOfBatteries < 0) return showModal('Fout', 'Aantal batterijen mag niet negatief zijn voor een huis');
+            }
+
+            if (levelTemplate.value.levelNumber == 0) {
+                // TODO: Save level
+            } else {
+                // TODO: Edit level
+            }
+
+        };
+
 
         return {
             levelTemplate,
-            addHouse,
-            removeHouse,
+            totalAmountOfLevels,
             isModalVisible,
             showModal,
-            modalContent
+            modalContent,
+            addHouse,
+            removeHouse,
+            saveOrEditLevel
         };
     }
 });
