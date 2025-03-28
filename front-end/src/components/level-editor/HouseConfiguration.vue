@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import { defineComponent, PropType } from "vue";
 import { HouseConfiguration } from "../../types/level-editor/HouseConfiguration";
 
 export default defineComponent({
@@ -43,26 +43,26 @@ export default defineComponent({
         houseConfiguration: {
             type: Object as PropType<HouseConfiguration>,
             required: false,
+            default: () => ({
+                houseNumber: 0,
+                hasHeatPump: false,
+                hasElectricalVehicle: false,
+                hasCongestion: false,
+                amountOfSolarPanels: 0,
+                amountOfBatteries: 0,
+            }),
         },
-    }, setup(_, { emit }) {
-        let houseConfiguration = ref<HouseConfiguration>({
-            houseNumber: 0,
-            hasHeatPump: false,
-            hasElectricalVehicle: false,
-            hasCongestion: false,
-            amountOfSolarPanels: 0,
-            amountOfBatteries: 0
-        });
-
+    },
+    setup(props, { emit }) {
         const removeHouse = () => {
             emit("remove-house");
         };
 
         return {
-            houseConfiguration,
-            removeHouse
+            houseConfiguration: props.houseConfiguration,
+            removeHouse,
         };
-    }
+    },
 });
 </script>
 
