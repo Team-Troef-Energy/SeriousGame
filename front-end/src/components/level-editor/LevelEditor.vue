@@ -183,7 +183,7 @@ export default defineComponent({
 .level-editor-house-list {
     display: flex;
     justify-content: center;
-    height: 10rem;
+    height: 15rem;
     width: 100%;
     margin-top: 2rem;
 }
