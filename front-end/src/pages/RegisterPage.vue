@@ -17,6 +17,10 @@
                     Register met GitHub
                 </button>
             </div>
+            <div class="permission-box">
+                <input type="checkbox" v-model="permission">
+                <p>Door een account aan te maken, bevestig ik dat ik akkoord ga met de <a href="/terms">voorwaarden</a>.</p>
+            </div>
         </div>
     </div>
 </template>
@@ -28,11 +32,18 @@ import { registerWithGitHub, registerWithGoogle, signUpEmailAndPassword } from '
 export default defineComponent({
     name: 'RegisterPage',
     setup() {
+        const permission = ref(false);
         const email = ref('');
         const password = ref('');
 
         function handleRegister(e: any) {
             e.preventDefault();
+
+            if (!permission.value) {
+                window.alert('You have to check permission.');
+                return;
+            }
+
             signUpEmailAndPassword(email.value, password.value)
                 .then(() => {
                     console.log('ingelogd!');
@@ -44,6 +55,11 @@ export default defineComponent({
 
         async function handleGoogleRegister(e: any) {
             e.preventDefault();
+            
+            if (!permission.value) {
+                window.alert('You have to check permission.');
+                return;
+            }
 
             try {
                 await registerWithGoogle();
@@ -52,7 +68,14 @@ export default defineComponent({
             }
         };
 
-        async function handleGitHubRegister() {
+        async function handleGitHubRegister(e: any) {
+            e.preventDefault();
+
+            if (!permission.value) {
+                window.alert('You have to check permission.');
+                return;
+            }
+
             try {
                 await registerWithGitHub();
                 window.location.reload();
@@ -62,6 +85,7 @@ export default defineComponent({
         }
 
         return {
+            permission,
             email,
             password,
             handleRegister,
@@ -142,5 +166,21 @@ export default defineComponent({
 .providers-container button img {
     width: 16px;
     height: 16px;
+}
+
+.permission-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.permission-box p {
+    font-size: 12px;
+}
+
+.permission-box input:hover {
+    cursor: pointer;
+    transform: scale(1.2);
 }
 </style>
