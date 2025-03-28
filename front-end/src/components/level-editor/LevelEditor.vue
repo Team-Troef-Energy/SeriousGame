@@ -381,7 +381,8 @@ export default defineComponent({
         justify-content: unset;
     }
 
-    .level-editor-form input, .level-editor-form select {
+    .level-editor-form input,
+    .level-editor-form select {
         width: 5rem;
         height: 3rem;
     }
@@ -413,7 +414,7 @@ export default defineComponent({
     .level-editor-house-button {
         width: 100%;
     }
-    
+
 }
 
 @media (min-width: 1280px) {
@@ -431,6 +432,7 @@ export default defineComponent({
     .level-editor-house-list {
         height: 20rem;
     }
+
     .level-editor-form label,
     .level-editor-form input,
     .level-editor-form select {
@@ -445,6 +447,10 @@ export default defineComponent({
     .form-row {
         width: 27rem;
         gap: 1rem;
+    }
+
+    .level-editor-house-button {
+        width: 100%;
     }
 
 
