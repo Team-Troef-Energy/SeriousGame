@@ -1,5 +1,5 @@
 <template>
-    <div class="component-holder container">
+    <div class="component-holder">
       <div class="holder">
         <slot></slot>
       </div>
@@ -18,6 +18,7 @@
   .holder {
     display:flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     height: 100%;
     overflow: auto;

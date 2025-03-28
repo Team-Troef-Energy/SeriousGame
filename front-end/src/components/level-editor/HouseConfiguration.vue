@@ -1,5 +1,5 @@
 <template>
-    <div class="house-configuration container">
+    <div class="house-configuration">
         <form class="house-configuration-form">
             <div class="form-house-icon form-row">
                 <img src="/icons/house.png" alt="house" />

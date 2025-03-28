@@ -1,5 +1,5 @@
 <template>
-    <div class="level-editor container">
+    <div class="level-editor">
         <form class="level-editor-form">
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
@@ -273,8 +273,9 @@ export default defineComponent({
 .level-editor {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
+    height: 95%;
+    width: 90%;
+    overflow-y: auto;
 }
 
 .level-editor-form {
@@ -286,13 +287,13 @@ export default defineComponent({
     border-radius: 1rem;
     padding: 2rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    height: 80%;
     overflow: auto;
 }
 
 .level-editor-form-global-inputs {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
 }
@@ -343,7 +344,7 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    width: 80%;
+    width: 100%;
     margin-top: 2rem;
 }
 
@@ -373,28 +374,21 @@ export default defineComponent({
     .level-editor-form,
     .level-editor-form-global-inputs {
         flex-direction: row;
-        justify-content: center;
         flex-wrap: wrap;
-        height: unset;
-    }
-
-    .level-editor-form {
-        width: 75rem;
     }
 
     .level-editor-form-global-inputs {
-        width: 50rem;
         justify-content: unset;
     }
 
-    .level-editor-form label {
-        width: 30rem;
+    .level-editor-form input, .level-editor-form select {
+        width: 5rem;
+        height: 3rem;
     }
 
     .form-row {
         justify-content: center;
-        gap: 1rem;
-        width: 20rem;
+        width: 19rem;
     }
 
     .level-editor-house-button {
@@ -411,43 +405,22 @@ export default defineComponent({
         flex-wrap: wrap;
     }
 
-    .level-editor-form {
-        width: 85rem;
-    }
-
-    .level-editor-form-global-inputs {
-        width: 60rem;
-    }
-
-    .level-editor-form label,
-    .level-editor-form input,
-    .level-editor-form select {
-        white-space: nowrap;
-    }
-
-    .level-editor-form label {
-        width: 20rem;
-    }
-
-    .level-editor-form input,
-    .level-editor-form select {
-        width: 5rem;
-    }
-
     .form-row {
+        width: 17rem;
         gap: 1rem;
-        width: 30rem;
     }
 
     .level-editor-house-button {
         width: 100%;
     }
+    
 }
 
 @media (min-width: 1280px) {
-    .level-editor-form {
-        width: 95rem;
+    .level-editor-form-global-inputs {
+        justify-content: unset;
     }
+
 }
 
 @media (min-width: 1536px) {
@@ -458,6 +431,22 @@ export default defineComponent({
     .level-editor-house-list {
         height: 20rem;
     }
+    .level-editor-form label,
+    .level-editor-form input,
+    .level-editor-form select {
+        white-space: nowrap;
+    }
+
+    .level-editor-form label {
+        width: 19rem;
+        gap: 3rem;
+    }
+
+    .form-row {
+        width: 27rem;
+        gap: 1rem;
+    }
+
 
 }
 </style>
