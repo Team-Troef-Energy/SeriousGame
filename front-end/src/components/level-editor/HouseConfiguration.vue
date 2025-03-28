@@ -126,7 +126,7 @@ export default defineComponent({
 }
 
 .house-configuration-form input {
-    width: 3rem;
+    width: 3.5rem;
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: 1px solid black;
