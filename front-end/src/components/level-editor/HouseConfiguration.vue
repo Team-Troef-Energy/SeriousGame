@@ -18,11 +18,11 @@
             </div>
             <div class="form-row">
                 <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
-                <input type="number" id="amountOfSolarPanels" v-model="houseConfiguration.amountOfSolarPanels" />
+                <input type="number" id="amountOfSolarPanels" v-model="houseConfiguration.amountOfSolarPanels" min="0" />
             </div>
             <div class="form-row">
                 <label for="amountOfBatteries">Aantal batterijen</label>
-                <input type="number" id="amountOfBatteries" v-model="houseConfiguration.amountOfBatteries" />
+                <input type="number" id="amountOfBatteries" v-model="houseConfiguration.amountOfBatteries" min="0" />
             </div>
             <div class="form-row">
                 <button class="button" @click="removeHouse">
