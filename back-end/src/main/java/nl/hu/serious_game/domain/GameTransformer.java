@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor // for unit tests
 public class GameTransformer implements Cloneable {
     @Id
     @GeneratedValue

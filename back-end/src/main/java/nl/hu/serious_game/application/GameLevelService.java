@@ -44,6 +44,9 @@ public class GameLevelService {
                 )).toList(),
                 new Cost()
         );
+
+        level = this.gameLevelRepository.save(level);
+
         return runLevel(level);
     }
 

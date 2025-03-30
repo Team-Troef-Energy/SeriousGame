@@ -1,6 +1,7 @@
 package nl.hu.serious_game.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor // for unit tests
 public class LevelTemplate {
     @Id
     @GeneratedValue

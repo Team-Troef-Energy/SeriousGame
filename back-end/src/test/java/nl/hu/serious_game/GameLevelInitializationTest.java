@@ -46,7 +46,7 @@ public class GameLevelInitializationTest {
     @Test
     @DisplayName("Test level initialization")
     public void testLevelInitialization() {
-        GameLevel level = new GameLevel(new LevelTemplate(season, startTime, endTime, objective, null), transformers, new Cost(5, 10));
+        GameLevel level = new GameLevel(new LevelTemplate(1, season, startTime, endTime, objective, null), transformers, new Cost(5, 10));
 
         assertNotNull(level.getTemplate().getObjective(), "Template objective should be initialized");
         assertEquals(objective, level.getTemplate().getObjective(), "Template objective should match the provided value");

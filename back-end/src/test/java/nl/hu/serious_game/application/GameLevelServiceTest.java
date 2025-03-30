@@ -2,12 +2,17 @@ package nl.hu.serious_game.application;
 
 import nl.hu.serious_game.application.dto.out.GameLevelDTO;
 import nl.hu.serious_game.data.GameLevelRepository;
+import nl.hu.serious_game.data.LevelTemplateRepository;
 import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -19,15 +24,16 @@ public class GameLevelServiceTest {
 
     @BeforeEach
     public void setUp() {
-        GameLevelRepository gameLevelRepository = mock(GameLevelRepository.class);
         // Instead of creating a level, we mock one
-        when(gameLevelRepository.getGameLevelById(1L)).thenReturn(new GameLevel(
-                new LevelTemplate(Season.SUMMER, 8, 18, new Objective(2, 5), List.of()),
-                List.of(),
-                new Cost(0, 0)
-        ));
-        when(gameLevelRepository.getLevelCount()).thenReturn(1);
-        this.gameLevelService = new GameLevelService(gameLevelRepository);
+        LevelTemplateRepository levelTemplateRepository = mock(LevelTemplateRepository.class);
+        GameLevelRepository gameLevelRepository = mock(GameLevelRepository.class);
+
+        LevelTransformer levelTransformer = new LevelTransformer(1L, new Congestion(), List.of(), 0);
+        LevelTemplate levelTemplate = new LevelTemplate(1, Season.SUMMER, 8, 18, new Objective(2, 5), List.of(levelTransformer));
+
+        when(gameLevelRepository.save(Mockito.any())).thenReturn(new GameLevel(1L, levelTemplate, List.of(new GameTransformer(1L, levelTransformer, List.of(), new Battery(0), new Current())), new Cost(), false, 0, 0));
+        when(levelTemplateRepository.getLevelTemplateByLevelNumber(1)).thenReturn(Optional.of(levelTemplate));
+        this.gameLevelService = new GameLevelService(gameLevelRepository, levelTemplateRepository);
     }
 
     /*
