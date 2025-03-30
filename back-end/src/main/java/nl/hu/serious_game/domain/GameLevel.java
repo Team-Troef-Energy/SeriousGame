@@ -36,19 +36,19 @@ public class GameLevel implements Cloneable {
         }
     }
 
-    public void setHouseSolarPanels(int transformerId, int houseId, int amount) {
+    public void setHouseSolarPanels(long transformerId, long houseId, int amount) {
         transformers.stream().filter(transformer -> transformer.getId() == transformerId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setHouseSolarPanels(houseId, amount);
     }
 
-    public void setHouseBattery(int transformerId, int houseId, int amount) {
+    public void setHouseBattery(long transformerId, long houseId, int amount) {
         transformers.stream().filter(transformer -> transformer.getId() == transformerId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setHouseBattery(houseId, amount);
     }
 
-    public void setTransformerBattery(int transformerId, int amount) {
+    public void setTransformerBattery(long transformerId, int amount) {
         transformers.stream().filter(transformer -> transformer.getId() == transformerId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setBattery(amount);

@@ -13,7 +13,7 @@ import lombok.Setter;
 public class LevelHouse {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
     @Setter
     private DayProfile dayProfile;

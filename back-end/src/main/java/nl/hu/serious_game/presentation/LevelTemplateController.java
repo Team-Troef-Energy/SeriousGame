@@ -21,7 +21,7 @@ public class LevelTemplateController {
     @PostMapping("/create")
     public ResponseEntity<LevelTemplateDTO> createLevelTemplate(@RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
         try {
-            LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateService);
+            LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateCreateDTO);
             return ResponseEntity.ok(levelTemplate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -37,5 +37,4 @@ public class LevelTemplateController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }

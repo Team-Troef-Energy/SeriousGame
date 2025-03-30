@@ -5,8 +5,8 @@ import nl.hu.serious_game.domain.Congestion;
 import java.util.List;
 
 public record GameTransformerDTO(
-        int id,
-        int templateId,
+        long id,
+        long templateId,
         CurrentDTO current,
         Congestion congestion,
         List<GameHouseDTO> houses,

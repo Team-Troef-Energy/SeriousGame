@@ -7,7 +7,7 @@ import nl.hu.serious_game.data.GameLevelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
+import nl.hu.serious_game.application.dto.in.GameLevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.BatteryDTO;
 import nl.hu.serious_game.application.dto.out.CurrentDTO;
 import nl.hu.serious_game.application.dto.out.HourDTO;
@@ -43,7 +43,7 @@ public class GameLevelService {
         ArrayList<GameHouseDTO> gameHouseDTOS = new ArrayList<>();
         for (int houseIndex = 0; houseIndex < transformer.getHouses().size(); houseIndex++) { // Loop through each house
             GameHouse house = transformer.getHouses().get(houseIndex);
-            int houseId = house.getId();
+            long houseId = house.getId();
             Current current = house.getCurrentAtHour(hour); // Get the current for the house
             CurrentDTO currentDTO = new CurrentDTO(
                     current.getAmount(),
@@ -55,6 +55,7 @@ public class GameLevelService {
 
             gameHouseDTOS.add(new GameHouseDTO(
                 houseId,
+                house.getTemplate().getId(),
                 currentDTO,
                 batteryDTO,
                 house.getPowerCost(),
@@ -62,13 +63,13 @@ public class GameLevelService {
                 house.getTotalSolarPanels(), // Get the total solar panels of the house
                 house.getSolarPanelConsumptionAtHour(hour),
                 house.getTotalConsumptionAtHour(hour),
-                house.getHouseOptions()
+                house.getTemplate().getHouseOptions()
             ));
         }
         return gameHouseDTOS; // Return the list of HouseDTOs
     }
 
-    public GameLevelDTO updateLevel(long levelNumber, LevelUpdateDTO levelUpdateDTO) {
+    public GameLevelDTO updateLevel(long levelNumber, GameLevelUpdateDTO levelUpdateDTO) {
         if (levelNumber < 1 || levelNumber > gameLevelRepository.getLevelCount()) {
             throw new IllegalArgumentException("Invalid level number");
         }
@@ -95,11 +96,11 @@ public class GameLevelService {
 
     private GameLevelDTO runLevel(GameLevel level) {
         List<HourDTO> hours = new ArrayList<>();
-        for (int hour = level.getStartTime(); hour <= level.getEndTime(); hour++) { // Loop through each hour in the level
+        for (int hour = level.getTemplate().getStartTime(); hour <= level.getTemplate().getEndTime(); hour++) { // Loop through each hour in the level
             List<GameTransformerDTO> gameTransformerDTOS = new ArrayList<>();
             for (int transformerIndex = 0; transformerIndex < level.getTransformers().size(); transformerIndex++) { // Loop through each transformer
                 GameTransformer transformer = level.getTransformers().get(transformerIndex);
-                int transformerId = transformer.getId();
+                long transformerId = transformer.getId();
                 transformer.distributePowerCostAtHour(hour);
 
                 ArrayList<GameHouseDTO> gameHouseDTOS = getHouseDTOS(transformer, hour);
@@ -115,19 +116,20 @@ public class GameLevelService {
 
                 gameTransformerDTOS.add(new GameTransformerDTO(
                         transformerId,
+                        transformer.getTemplate().getId(),
                         currentDTO,
-                        transformer.getCongestion(),
+                        transformer.getTemplate().getCongestion(),
                         gameHouseDTOS,
                         batteryDTO,
-                        transformer.getMaxBatteryCount()
+                        transformer.getTemplate().getMaxBatteryCount()
                 ));
             }
             hours.add(new HourDTO(hour, gameTransformerDTOS));
         }
-        Season season = level.getSeason();
-        ObjectiveDTO objective = new ObjectiveDTO(level.getObjective().getMaxCo2(), level.getObjective().getMaxCoins());
+        Season season = level.getTemplate().getSeason();
+        ObjectiveDTO objective = new ObjectiveDTO(level.getTemplate().getObjective().getMaxCo2(), level.getTemplate().getObjective().getMaxCoins());
 
-        return new GameLevelDTO(hours, season, level.getStartTime(), level.getEndTime(), objective, level.getCost(), level.isCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
+        return new GameLevelDTO(hours, season, level.getTemplate().getStartTime(), level.getTemplate().getEndTime(), objective, level.getCost(), level.isCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
     }
 
     public int getTotalLevels() {
@@ -138,7 +140,7 @@ public class GameLevelService {
         level.getCalculatedTotalCosts();
         level.getCalculatedTotalCO2();
 
-        if (level.getTotalCosts() <= level.getObjective().getMaxCoins() && level.getTotalCO2() <= level.getObjective().getMaxCo2()) {
+        if (level.getTotalCosts() <= level.getTemplate().getObjective().getMaxCoins() && level.getTotalCO2() <= level.getTemplate().getObjective().getMaxCo2()) {
             level.setIsCompleted();
         }
     }

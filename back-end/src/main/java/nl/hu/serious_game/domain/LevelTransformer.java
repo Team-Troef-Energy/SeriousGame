@@ -13,7 +13,7 @@ import java.util.List;
 public class LevelTransformer {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
     @Setter
     private Congestion congestion;

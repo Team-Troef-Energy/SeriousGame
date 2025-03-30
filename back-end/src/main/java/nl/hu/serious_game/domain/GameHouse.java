@@ -11,7 +11,7 @@ import lombok.Setter;
 public class GameHouse implements Cloneable {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
     @ManyToOne
     private LevelHouse template;

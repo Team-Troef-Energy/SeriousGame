@@ -1,7 +1,7 @@
 package nl.hu.serious_game.presentation;
 
 import nl.hu.serious_game.application.GameLevelService;
-import nl.hu.serious_game.application.dto.in.LevelUpdateDTO;
+import nl.hu.serious_game.application.dto.in.GameLevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.GameLevelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class GameLevelController {
     }
 
     @PostMapping("/update/{levelNumber}")
-    public ResponseEntity<GameLevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody LevelUpdateDTO levelUpdateDTO) {
+    public ResponseEntity<GameLevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody GameLevelUpdateDTO levelUpdateDTO) {
         try {
             GameLevelDTO updatedLevel = gameLevelService.updateLevel(levelNumber, levelUpdateDTO);
             System.out.println("update: levelNumber = " + levelNumber);

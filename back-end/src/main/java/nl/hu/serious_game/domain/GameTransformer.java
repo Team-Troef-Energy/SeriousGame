@@ -15,7 +15,7 @@ import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 public class GameTransformer implements Cloneable {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
     @ManyToOne
     private LevelTransformer template;
@@ -93,13 +93,13 @@ public class GameTransformer implements Cloneable {
         }
     }
 
-    void setHouseSolarPanels(int houseId, int solarPanels) {
+    void setHouseSolarPanels(long houseId, int solarPanels) {
         houses.stream().filter(house -> house.getId() == houseId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setTotalSolarPanels(solarPanels);
     }
 
-    void setHouseBattery(int houseId, int batteries) {
+    void setHouseBattery(long houseId, int batteries) {
         houses.stream().filter(house -> house.getId() == houseId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setBattery(batteries);
