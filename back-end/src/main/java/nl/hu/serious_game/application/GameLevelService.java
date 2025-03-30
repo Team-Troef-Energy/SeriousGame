@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.hu.serious_game.data.GameLevelRepository;
+import nl.hu.serious_game.data.LevelTemplateRepository;
+import nl.hu.serious_game.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +17,33 @@ import nl.hu.serious_game.application.dto.out.GameHouseDTO;
 import nl.hu.serious_game.application.dto.out.GameLevelDTO;
 import nl.hu.serious_game.application.dto.out.ObjectiveDTO;
 import nl.hu.serious_game.application.dto.out.GameTransformerDTO;
-import nl.hu.serious_game.domain.Current;
-import nl.hu.serious_game.domain.GameHouse;
-import nl.hu.serious_game.domain.GameLevel;
-import nl.hu.serious_game.domain.Season;
-import nl.hu.serious_game.domain.GameTransformer;
 
 @Service
 public class GameLevelService {
     private final GameLevelRepository gameLevelRepository;
+    private final LevelTemplateRepository levelTemplateRepository;
 
     @Autowired
-    public GameLevelService(GameLevelRepository gameLevelRepository) {
+    public GameLevelService(GameLevelRepository gameLevelRepository, LevelTemplateRepository levelTemplateRepository) {
         this.gameLevelRepository = gameLevelRepository;
+        this.levelTemplateRepository = levelTemplateRepository;
     }
 
-    public GameLevelDTO startLevel(long levelNumber) {
-        if (levelNumber < 1 || levelNumber > gameLevelRepository.getLevelCount()) {
-            throw new IllegalArgumentException("Invalid level number");
-        }
-        GameLevel level = gameLevelRepository.getGameLevelById(levelNumber).clone();
+    public GameLevelDTO startLevel(int levelNumber) {
+        LevelTemplate levelTemplate = levelTemplateRepository.getLevelTemplateByLevelNumber(levelNumber).orElseThrow(() -> new IllegalArgumentException("Invalid level number"));
+
+        GameLevel level = new GameLevel(
+                levelTemplate,
+                levelTemplate.getTransformers().stream().map(levelTransformer -> new GameTransformer(
+                        levelTransformer,
+                        levelTransformer.getHouses().stream().map(levelHouse -> new GameHouse(
+                                levelHouse,
+                                0
+                        )).toList(),
+                        0
+                )).toList(),
+                new Cost()
+        );
         return runLevel(level);
     }
 

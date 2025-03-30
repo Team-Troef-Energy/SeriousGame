@@ -23,6 +23,7 @@ public class LevelTemplateService {
 
     public LevelTemplateDTO createLevel(LevelTemplateCreateDTO createLevel) {
         LevelTemplate levelTemplate = new LevelTemplate(
+                createLevel.levelNumber(),
                 createLevel.season(),
                 createLevel.startTime(),
                 createLevel.endTime(),

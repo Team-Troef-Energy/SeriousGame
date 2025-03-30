@@ -6,6 +6,7 @@ import nl.hu.serious_game.domain.Season;
 import java.util.List;
 
 public record LevelTemplateCreateDTO(
+        int levelNumber,
         Season season,
         int startTime,
         int endTime,

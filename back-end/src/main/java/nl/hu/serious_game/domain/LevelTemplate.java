@@ -16,6 +16,9 @@ public class LevelTemplate {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
+    private int levelNumber;
+
     @Setter
     private Season season;
     @Setter
@@ -28,7 +31,8 @@ public class LevelTemplate {
     @OneToMany(cascade = CascadeType.ALL)
     private List<LevelTransformer> transformers = new ArrayList<>();
 
-    public LevelTemplate(Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers) {
+    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers) {
+        this.levelNumber = levelNumber;
         this.season = season;
         this.startTime = startTime;
         this.endTime = endTime;
