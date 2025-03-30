@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/templates")
 public class LevelTemplateController {
@@ -16,6 +18,11 @@ public class LevelTemplateController {
     @Autowired
     public LevelTemplateController(LevelTemplateService levelTemplateService) {
         this.levelTemplateService = levelTemplateService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LevelTemplateDTO>> getAllLevels() {
+        return ResponseEntity.ok(levelTemplateService.getAllLevels());
     }
 
     @PostMapping("/create")

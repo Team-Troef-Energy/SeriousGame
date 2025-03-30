@@ -1,3 +1,78 @@
+### Get template list
+GET http://localhost:8080/templates
+
+### Create template
+POST http://localhost:8080/templates/create
+Content-Type: application/json
+
+{
+  "levelNumber": 5,
+  "season": "SUMMER",
+  "startTime": 8,
+  "endTime": 20,
+  "objective": {
+    "maxCO2": 2,
+    "maxCoins": 2
+  },
+  "transformers": [
+    {
+      "maxBatteryCount": 0,
+      "congestion": {
+        "hasCongestion": false,
+        "maxCurrent": 0
+      },
+      "houses": [
+        {
+          "hasElectricVehicle": false,
+          "hasHeatPump": false,
+          "masSolarpanels": 1,
+          "maxBatteries": 1,
+          "congestion": {
+            "hasCongestion": false,
+            "maxCurrent": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+
+### Update template
+POST http://localhost:8080/templates/update/102
+Content-Type: application/json
+
+{
+  "levelNumber": 5,
+  "season": "SUMMER",
+  "startTime": 7,
+  "endTime": 20,
+  "objective": {
+    "maxCO2": 2,
+    "maxCoins": 2
+  },
+  "transformers": [
+    {
+      "maxBatteryCount": 0,
+      "congestion": {
+        "hasCongestion": false,
+        "maxCurrent": 0
+      },
+      "houses": [
+        {
+          "hasElectricVehicle": false,
+          "hasHeatPump": false,
+          "masSolarpanels": 1,
+          "maxBatteries": 1,
+          "congestion": {
+            "hasCongestion": false,
+            "maxCurrent": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+
 ### Start level 1
 GET http://localhost:8080/levels/start/1
 
@@ -6,6 +81,7 @@ GET http://localhost:8080/levels/start/2
 
 ### Update level 1
 POST http://localhost:8080/levels/update/1
+Content-Type: application/json
 
 {
   "transformers": [
@@ -27,6 +103,3 @@ POST http://localhost:8080/levels/update/1
     }
   ]
 }
-
-### Get total levels
-GET http://127.0.0.1:8080/levels/count

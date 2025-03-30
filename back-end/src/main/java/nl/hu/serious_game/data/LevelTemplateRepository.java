@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface LevelTemplateRepository extends JpaRepository<LevelTemplate, Long> {
-    @Query("select count(*) from GameLevel")
+    @Query("select count(*) from LevelTemplate")
     int getLevelCount();
 
     LevelTemplate getLevelTemplateById(Long id);

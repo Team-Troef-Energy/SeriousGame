@@ -12,6 +12,8 @@ import nl.hu.serious_game.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LevelTemplateService {
     private final LevelTemplateRepository levelTemplateRepository;
@@ -44,31 +46,7 @@ public class LevelTemplateService {
 
         levelTemplate = levelTemplateRepository.save(levelTemplate);
 
-        return new LevelTemplateDTO(
-                levelTemplate.getId(),
-                levelTemplate.getSeason(),
-                levelTemplate.getStartTime(),
-                levelTemplate.getEndTime(),
-                new ObjectiveDTO(
-                        levelTemplate.getObjective().getMaxCo2(),
-                        levelTemplate.getObjective().getMaxCoins()
-                ),
-                levelTemplate.getTransformers().stream().map(levelTransformer -> new LevelTransformerDTO(
-                        levelTransformer.getId(),
-                        levelTransformer.getCongestion().isHasCongestion(),
-                        levelTransformer.getCongestion().getMaxCurrent(),
-                        levelTransformer.getMaxBatteryCount(),
-                        levelTransformer.getHouses().stream().map(levelHouse -> new LevelHouseDTO(
-                                levelHouse.getId(),
-                                levelHouse.getHouseOptions().hasCongestion(),
-                                levelHouse.getHouseOptions().maxCurrent(),
-                                levelHouse.getHouseOptions().hasElectricVehicle(),
-                                levelHouse.getHouseOptions().hasHeatPump(),
-                                levelHouse.getHouseOptions().maxSolarPanelCount(),
-                                levelHouse.getHouseOptions().maxBatteryCount()
-                        )).toList()
-                )).toList()
-        );
+        return LevelTemplateDTO.fromEntity(levelTemplate);
     }
 
     public LevelTemplateDTO updateLevel(long id, LevelTemplateUpdateDTO updateLevel) {
@@ -97,30 +75,10 @@ public class LevelTemplateService {
 
         levelTemplate = this.levelTemplateRepository.save(levelTemplate);
 
-        return new LevelTemplateDTO(
-                levelTemplate.getId(),
-                levelTemplate.getSeason(),
-                levelTemplate.getStartTime(),
-                levelTemplate.getEndTime(),
-                new ObjectiveDTO(
-                        levelTemplate.getObjective().getMaxCo2(),
-                        levelTemplate.getObjective().getMaxCoins()
-                ),
-                levelTemplate.getTransformers().stream().map(levelTransformer -> new LevelTransformerDTO(
-                        levelTransformer.getId(),
-                        levelTransformer.getCongestion().isHasCongestion(),
-                        levelTransformer.getCongestion().getMaxCurrent(),
-                        levelTransformer.getMaxBatteryCount(),
-                        levelTransformer.getHouses().stream().map(levelHouse -> new LevelHouseDTO(
-                                levelHouse.getId(),
-                                levelHouse.getHouseOptions().hasCongestion(),
-                                levelHouse.getHouseOptions().maxCurrent(),
-                                levelHouse.getHouseOptions().hasElectricVehicle(),
-                                levelHouse.getHouseOptions().hasHeatPump(),
-                                levelHouse.getHouseOptions().maxSolarPanelCount(),
-                                levelHouse.getHouseOptions().maxBatteryCount()
-                        )).toList()
-                )).toList()
-        );
+        return LevelTemplateDTO.fromEntity(levelTemplate);
+    }
+
+    public List<LevelTemplateDTO> getAllLevels() {
+        return this.levelTemplateRepository.findAll().stream().map(LevelTemplateDTO::fromEntity).toList();
     }
 }

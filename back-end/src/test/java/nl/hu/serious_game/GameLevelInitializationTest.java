@@ -62,12 +62,12 @@ public class GameLevelInitializationTest {
 
     // Test level initialization through the runner
     @Autowired
-    private Runner runner;
+    private SeedLevelTemplateRunner seedLevelTemplateRunner;
 
     @Test
     @DisplayName("Test createLevel1 method of runner")
     void testCreateLevel1() {
-        LevelTemplate level = runner.createLevel1();
+        LevelTemplate level = seedLevelTemplateRunner.createLevel1();
 
         assertNotNull(level, "Level should not be null");
         assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");

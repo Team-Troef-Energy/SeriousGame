@@ -7,4 +7,3 @@ public record GameTransformerUpdateDTO(
         List<GameHouseUpdateDTO> houses,
         int batteries
 ) {}
-

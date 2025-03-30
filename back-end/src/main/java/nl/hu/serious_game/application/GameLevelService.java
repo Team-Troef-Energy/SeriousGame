@@ -81,12 +81,8 @@ public class GameLevelService {
         return gameHouseDTOS; // Return the list of HouseDTOs
     }
 
-    public GameLevelDTO updateLevel(long levelNumber, GameLevelUpdateDTO levelUpdateDTO) {
-        if (levelNumber < 1 || levelNumber > gameLevelRepository.getLevelCount()) {
-            throw new IllegalArgumentException("Invalid level number");
-        }
-
-        GameLevel level = gameLevelRepository.getGameLevelById(levelNumber).clone();
+    public GameLevelDTO updateLevel(long gameLevelId, GameLevelUpdateDTO levelUpdateDTO) {
+        GameLevel level = gameLevelRepository.getGameLevelById(gameLevelId).clone();
 
         levelUpdateDTO.transformers().forEach(transformer -> {
             level.setTransformerBattery(transformer.id(), transformer.batteries());
@@ -142,10 +138,6 @@ public class GameLevelService {
         ObjectiveDTO objective = new ObjectiveDTO(level.getTemplate().getObjective().getMaxCo2(), level.getTemplate().getObjective().getMaxCoins());
 
         return new GameLevelDTO(hours, season, level.getTemplate().getStartTime(), level.getTemplate().getEndTime(), objective, level.getCost(), level.isCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
-    }
-
-    public int getTotalLevels() {
-        return gameLevelRepository.getLevelCount();
     }
 
     private void checkLevelCompletion(GameLevel level) {

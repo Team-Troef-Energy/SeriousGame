@@ -1,7 +1,6 @@
 package nl.hu.serious_game;
 
 import nl.hu.serious_game.data.LevelTemplateRepository;
-import nl.hu.serious_game.data.LevelTemplateRepository;
 import nl.hu.serious_game.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class Runner implements CommandLineRunner {
+public class SeedLevelTemplateRunner implements CommandLineRunner {
     private final LevelTemplateRepository levelTemplateRepository;
 
     @Autowired
-    public Runner(LevelTemplateRepository levelTemplateRepository) {
+    public SeedLevelTemplateRunner(LevelTemplateRepository levelTemplateRepository) {
         this.levelTemplateRepository = levelTemplateRepository;
     }
 
