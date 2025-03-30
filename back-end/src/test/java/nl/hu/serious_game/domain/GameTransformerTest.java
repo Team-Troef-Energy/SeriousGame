@@ -26,7 +26,7 @@ public class GameTransformerTest {
         List<GameHouse> houses = new ArrayList<>();
         houses.add(mockHouse);
 
-        GameTransformer transformer = new GameTransformer(houses, 0);
+        GameTransformer transformer = new GameTransformer(new LevelTransformer(new Congestion(false, 0f), null, 0), houses, 0);
         assertEquals(expected1, transformer.getCalculatedLeftoverCurrentAtHour(1));
         assertEquals(expected2, transformer.getCalculatedLeftoverCurrentAtHour(2));
     }
@@ -46,7 +46,7 @@ public class GameTransformerTest {
 
         // Adding a second battery would break the test
         // because all 6 of the first getcurrent would go into the battery.
-        GameTransformer transformer = new GameTransformer(houses, 1);
+        GameTransformer transformer = new GameTransformer(new LevelTransformer(new Congestion(false, 0f), null, 0), houses, 1);
 
         assertEquals(expected1, transformer.getCalculatedLeftoverCurrentAtHour(1));
         assertEquals(expected2, transformer.getCalculatedLeftoverCurrentAtHour(2));
@@ -76,7 +76,7 @@ public class GameTransformerTest {
         Current expected3 = new Current(9F, Direction.DEMAND);
         Current expected4 = new Current(9F, Direction.PRODUCTION);
 
-        GameTransformer transformer = new GameTransformer(houses, 0);
+        GameTransformer transformer = new GameTransformer(new LevelTransformer(new Congestion(false, 0f), null, 0), houses, 0);
 
         // Checks if production and demand get compensated for eachother.
         assertEquals(expected1, transformer.getCalculatedLeftoverCurrentAtHour(1));
@@ -102,7 +102,7 @@ public class GameTransformerTest {
         // 5 goes into the battery and 1 is left over.
         Current expected = new Current(1F, Direction.PRODUCTION);
 
-        GameTransformer transformer = new GameTransformer(houses, 1);
+        GameTransformer transformer = new GameTransformer(new LevelTransformer(new Congestion(false, 0f), null, 0), houses, 1);
 
         assertEquals(expected, transformer.getCalculatedLeftoverCurrentAtHour(1));
     }
@@ -114,7 +114,7 @@ public class GameTransformerTest {
         when(mockHouse.getCurrentAtHour(1)).thenReturn(new Current(2F, Direction.PRODUCTION));
         List<GameHouse> houses = new ArrayList<>();
         houses.add(mockHouse);
-        GameTransformer transformer = new GameTransformer(houses, 0, new Congestion(true, 1));
+        GameTransformer transformer = new GameTransformer(new LevelTransformer(new Congestion(true, 1f), null, 0), houses, 0);
         Current current = transformer.getCalculatedLeftoverCurrentAtHour(1);
         Current excess = transformer.getExcessCurrent();
         assertAll(
@@ -132,7 +132,7 @@ public class GameTransformerTest {
         when(mockHouse.getCurrentAtHour(1)).thenReturn(new Current(2F, Direction.PRODUCTION));
         List<GameHouse> houses = new ArrayList<>();
         houses.add(mockHouse);
-        GameTransformer transformer = new GameTransformer(houses, 0, new Congestion(true, 10));
+        GameTransformer transformer = new GameTransformer(new LevelTransformer(new Congestion(true, 10), null, 0), houses, 0);
         Current current = transformer.getCalculatedLeftoverCurrentAtHour(1);
         Current excess = transformer.getExcessCurrent();
         assertAll(

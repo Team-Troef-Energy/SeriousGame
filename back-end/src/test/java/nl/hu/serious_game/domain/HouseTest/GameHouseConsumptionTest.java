@@ -4,16 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.stream.Stream;
 
+import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.GameHouse;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.Season;
 
 public class GameHouseConsumptionTest {
     @Test
@@ -28,7 +24,7 @@ public class GameHouseConsumptionTest {
     @Test
     @DisplayName("House Consumption Test 12:00")
     public void HouseConsumptionTestHour12() {
-        GameHouse house = new GameHouse(1, new DayProfile(Season.SUMMER), new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(new DayProfile(Season.SUMMER), new HouseOptions()), 1);
         assertEquals(0.39f, house.getBaseConsumptionAtHour(12));
     }
 
@@ -37,7 +33,7 @@ public class GameHouseConsumptionTest {
     @DisplayName("Season Test house consumption")
     @MethodSource("provideHouseConsumptionSeasonAndTimeExamples")
     public void SeasonTestHouseConsumption(Season season, int hour, float expectedOutput) {
-        GameHouse house = new GameHouse(1, new DayProfile(season), new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(new DayProfile(season), new HouseOptions()), 1);
         assertEquals(expectedOutput, house.getBaseConsumptionAtHour(hour));
     }
 
@@ -63,7 +59,7 @@ public class GameHouseConsumptionTest {
     @DisplayName("House Consumption Test with options")
     @MethodSource("provideHouseConsumptionOptionsAndTimeExamples")
     public void HouseConsumptionTestOptions(Season season, boolean hasElectricVehicle, boolean hasHeatPump, int hour, float expectedOutput) {
-        GameHouse house = new GameHouse(1, new DayProfile(season), new HouseOptions(hasHeatPump, hasElectricVehicle));
+        GameHouse house = new GameHouse(new LevelHouse(new DayProfile(season), new HouseOptions(hasHeatPump, hasElectricVehicle)), 1);
         assertEquals(expectedOutput, house.getTotalConsumptionAtHour(hour));
     }
 

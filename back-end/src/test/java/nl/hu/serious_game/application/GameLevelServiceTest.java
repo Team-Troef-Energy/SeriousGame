@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GameGameLevelServiceTest {
+public class GameLevelServiceTest {
 
     private GameLevelService gameLevelService;
 
@@ -21,7 +21,11 @@ public class GameGameLevelServiceTest {
     public void setUp() {
         GameLevelRepository gameLevelRepository = mock(GameLevelRepository.class);
         // Instead of creating a level, we mock one
-        when(gameLevelRepository.getGameLevelById(1L)).thenReturn(new GameLevel(Season.SUMMER, 8, 18, new Objective(2, 5), List.of(new GameTransformer(List.of(), 10)), new Cost(5, 10)));
+        when(gameLevelRepository.getGameLevelById(1L)).thenReturn(new GameLevel(
+                new LevelTemplate(Season.SUMMER, 8, 18, new Objective(2, 5), List.of()),
+                List.of(),
+                new Cost(0, 0)
+        ));
         when(gameLevelRepository.getLevelCount()).thenReturn(1);
         this.gameLevelService = new GameLevelService(gameLevelRepository);
     }

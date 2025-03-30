@@ -2,16 +2,10 @@ package nl.hu.serious_game.domain.HouseTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import nl.hu.serious_game.domain.Current;
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.Direction;
-import nl.hu.serious_game.domain.GameHouse;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.Season;
 
 public class GameHouseBatteryTest {
 
@@ -19,7 +13,7 @@ public class GameHouseBatteryTest {
 
     @BeforeEach
     public void setUp() {
-        this.house = new GameHouse(14, new DayProfile(Season.SUMMER), new HouseOptions());
+        this.house = new GameHouse(new LevelHouse(new DayProfile(Season.SUMMER), new HouseOptions()), 14);
     }
 
     // One battery can be added to a house

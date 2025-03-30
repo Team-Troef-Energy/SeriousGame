@@ -4,16 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.stream.Stream;
 
+import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.GameHouse;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.Season;
 
 public class GameHouseSolarPanelTest {
     @Test
@@ -27,7 +23,7 @@ public class GameHouseSolarPanelTest {
     @DisplayName("Summer Test with one solar panel")
     public void SummerTestOneSolarPanel() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         assertEquals(0.196428571f, house.getSolarPanelConsumptionAtHour(12));
     }
 
@@ -37,7 +33,7 @@ public class GameHouseSolarPanelTest {
     @MethodSource("provideSolarPanelSeasonAndTimeExamples")
     public void SeasonTestOneSolarPanel(Season season, int hour, float expectedOutput) {
         DayProfile dayProfile = new DayProfile(season);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         assertEquals(expectedOutput, house.getSolarPanelConsumptionAtHour(hour));
     }
 
@@ -65,7 +61,7 @@ public class GameHouseSolarPanelTest {
     @MethodSource("provideSolarPanelAmountExamples")
     public void SolarPanelAmountTest(int solarPanelAmount, int hour, float expectedOutput) {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(solarPanelAmount, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), solarPanelAmount);
         assertEquals(expectedOutput, house.getSolarPanelConsumptionAtHour(hour));
     }
 
@@ -86,7 +82,7 @@ public class GameHouseSolarPanelTest {
     @DisplayName("Invalid Hour Test")
     public void InvalidHourTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         assertThrows(IllegalArgumentException.class, () -> house.getSolarPanelConsumptionAtHour(24));
     }
 
@@ -95,7 +91,7 @@ public class GameHouseSolarPanelTest {
     @DisplayName("Add Negative Solar Panel Amount Test")
     public void AddNegativeSolarPanelAmountTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         assertThrows(IllegalArgumentException.class, () -> house.addSolarPanel(-1));
     }
 
@@ -104,7 +100,7 @@ public class GameHouseSolarPanelTest {
     @DisplayName("Remove Negative Solar Panel Amount Test")
     public void RemoveNegativeSolarPanelAmountTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         assertThrows(IllegalArgumentException.class, () -> house.removeSolarPanel(-1));
     }
 
@@ -113,7 +109,7 @@ public class GameHouseSolarPanelTest {
     @DisplayName("Remove More Solar Panels Than There Are Test")
     public void RemoveMoreSolarPanelsThanThereAreTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         assertThrows(IllegalArgumentException.class, () -> house.removeSolarPanel(2));
     }
 
@@ -122,7 +118,7 @@ public class GameHouseSolarPanelTest {
     @DisplayName("Remove Right Amount Of Solar Panels Test")
     public void RemoveRightAmountOfSolarPanelsTest() {
         DayProfile dayProfile = new DayProfile(Season.SUMMER);
-        GameHouse house = new GameHouse(1, dayProfile, new HouseOptions());
+        GameHouse house = new GameHouse(new LevelHouse(dayProfile, new HouseOptions()), 1);
         house.removeSolarPanel(1);
         assertEquals(0, house.getTotalSolarPanels());
     }

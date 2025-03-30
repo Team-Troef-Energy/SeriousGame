@@ -46,10 +46,10 @@ public class GameLevelInitializationTest {
     @Test
     @DisplayName("Test level initialization")
     public void testLevelInitialization() {
-        GameLevel level = new GameLevel(season, startTime, endTime, objective, (List<GameTransformer>) transformers, new Cost(5, 10));
+        GameLevel level = new GameLevel(new LevelTemplate(season, startTime, endTime, objective, null), transformers, new Cost(5, 10));
 
-        assertNotNull(level.getObjective(), "Objective should be initialized");
-        assertEquals(objective, level.getObjective(), "Objective should match the provided value");
+        assertNotNull(level.getTemplate().getObjective(), "Template objective should be initialized");
+        assertEquals(objective, level.getTemplate().getObjective(), "Template objective should match the provided value");
 
         assertNotNull(level.getTransformers(), "Transformers list should be initialized");
         assertFalse(level.getTransformers().isEmpty(), "Transformers list should not be empty");
@@ -66,8 +66,8 @@ public class GameLevelInitializationTest {
 
     @Test
     @DisplayName("Test createLevel1 method of runner")
-    void testCreateLevel1() throws Exception {
-        GameLevel level = runner.createLevel1();
+    void testCreateLevel1() {
+        LevelTemplate level = runner.createLevel1();
 
         assertNotNull(level, "Level should not be null");
         assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");
