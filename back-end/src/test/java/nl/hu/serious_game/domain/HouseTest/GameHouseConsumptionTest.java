@@ -12,12 +12,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class GameHouseConsumptionTest {
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
-
     // Test for checking what the house consumption is at 12:00 during summer
     // Base house consumption at 12:00 is documented to be: 0.39
     // Expected value is: 0.39

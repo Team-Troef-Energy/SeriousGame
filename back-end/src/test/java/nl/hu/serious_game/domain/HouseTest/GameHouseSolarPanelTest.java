@@ -12,12 +12,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class GameHouseSolarPanelTest {
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
-
     // If its summer and the time is 12:00, the solar panel should have an output of 0.196428571 kwh
     @Test
     @DisplayName("Summer Test with one solar panel")

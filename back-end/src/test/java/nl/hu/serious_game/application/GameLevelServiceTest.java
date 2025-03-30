@@ -30,12 +30,6 @@ public class GameLevelServiceTest {
         this.gameLevelService = new GameLevelService(gameLevelRepository);
     }
 
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
-
     /*
     * Start level service tests
     * All tests for the startLevel method

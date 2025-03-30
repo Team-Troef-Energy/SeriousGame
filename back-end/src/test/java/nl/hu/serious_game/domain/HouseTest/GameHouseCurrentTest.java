@@ -7,12 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class GameHouseCurrentTest {
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
-
     // Test for checking what the house consumption is at 12:00 during summer with 14 solar panels
     // Base house consumption at 12:00 is documented to be: 0.39
     // Solar panel output at 12:00 during summer is documented to be: 2.75
