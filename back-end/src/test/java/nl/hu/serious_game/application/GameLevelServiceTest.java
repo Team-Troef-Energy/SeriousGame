@@ -7,8 +7,6 @@ import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -42,9 +40,9 @@ public class GameLevelServiceTest {
     */
     @Test
     @DisplayName("Starting level 1 provides a DTO with valid base information")
-    public void startLevelTest() {
+    public void startGameTest() {
         // When
-        GameLevelDTO gameLevelDTO = this.gameLevelService.startLevel(1);
+        GameLevelDTO gameLevelDTO = this.gameLevelService.startGame(1);
         // Then
         assertAll(
                 () -> assertNotNull(gameLevelDTO, "LevelDTO should not be null"),
@@ -59,9 +57,9 @@ public class GameLevelServiceTest {
 
     @Test
     @DisplayName("Starting level 1 provides a DTO where the startTime is 8 and the endTime is 18")
-    public void startLevelWithCorrectTimesTest() {
+    public void startGameWithCorrectTimesTest() {
         // When
-        GameLevelDTO gameLevelDTO = this.gameLevelService.startLevel(1);
+        GameLevelDTO gameLevelDTO = this.gameLevelService.startGame(1);
 
         // Then
         assertAll(

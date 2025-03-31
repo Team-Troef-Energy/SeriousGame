@@ -29,7 +29,7 @@ public class GameLevelService {
         this.levelTemplateRepository = levelTemplateRepository;
     }
 
-    public GameLevelDTO startLevel(int levelNumber) {
+    public GameLevelDTO startGame(int levelNumber) {
         LevelTemplate levelTemplate = levelTemplateRepository.getLevelTemplateByLevelNumber(levelNumber).orElseThrow(() -> new IllegalArgumentException("Invalid level number"));
 
         GameLevel level = new GameLevel(
@@ -47,9 +47,8 @@ public class GameLevelService {
 
         level = this.gameLevelRepository.save(level);
 
-        return runLevel(level);
+        return computeGameUpdate(level);
     }
-
 
     private ArrayList<GameHouseDTO> getHouseDTOS(GameTransformer transformer, int hour) {
         ArrayList<GameHouseDTO> gameHouseDTOS = new ArrayList<>();
@@ -81,7 +80,7 @@ public class GameLevelService {
         return gameHouseDTOS; // Return the list of HouseDTOs
     }
 
-    public GameLevelDTO updateLevel(long gameLevelId, GameLevelUpdateDTO levelUpdateDTO) {
+    public GameLevelDTO updateGame(long gameLevelId, GameLevelUpdateDTO levelUpdateDTO) {
         GameLevel level = gameLevelRepository.getGameLevelById(gameLevelId).clone();
 
         levelUpdateDTO.transformers().forEach(transformer -> {
@@ -95,14 +94,15 @@ public class GameLevelService {
 
         checkLevelCompletion(level);
 
-        GameLevelDTO result = runLevel(level);
+        GameLevelDTO result = computeGameUpdate(level);
 
         //this.levelRepository.save(level);
 
         return result;
     }
 
-    private GameLevelDTO runLevel(GameLevel level) {
+    /// Compute new current amounts based on new parameters
+    private GameLevelDTO computeGameUpdate(GameLevel level) {
         List<HourDTO> hours = new ArrayList<>();
         for (int hour = level.getTemplate().getStartTime(); hour <= level.getTemplate().getEndTime(); hour++) { // Loop through each hour in the level
             List<GameTransformerDTO> gameTransformerDTOS = new ArrayList<>();

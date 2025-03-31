@@ -21,7 +21,7 @@ public class GameLevelController {
     @GetMapping("/start/{levelNumber}")
     public ResponseEntity<GameLevelDTO> startLevel(@PathVariable int levelNumber) {
         try {
-            GameLevelDTO level = gameLevelService.startLevel(levelNumber);
+            GameLevelDTO level = gameLevelService.startGame(levelNumber);
             System.out.println("start: levelNumber = " + levelNumber);
             return ResponseEntity.ok(level);
         } catch (IllegalArgumentException e) {
@@ -32,7 +32,7 @@ public class GameLevelController {
     @PostMapping("/update/{levelNumber}")
     public ResponseEntity<GameLevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody GameLevelUpdateDTO levelUpdateDTO) {
         try {
-            GameLevelDTO updatedLevel = gameLevelService.updateLevel(levelNumber, levelUpdateDTO);
+            GameLevelDTO updatedLevel = gameLevelService.updateGame(levelNumber, levelUpdateDTO);
             System.out.println("update: levelNumber = " + levelNumber);
             return ResponseEntity.ok(updatedLevel);
         } catch (IllegalArgumentException e) {
