@@ -43,5 +43,6 @@ public class LevelTemplate {
         this.endTime = endTime;
         this.objective = objective;
         this.transformers = transformers;
+        this.cost = cost;
     }
 }
