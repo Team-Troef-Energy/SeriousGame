@@ -6,9 +6,5 @@ import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
+
 }

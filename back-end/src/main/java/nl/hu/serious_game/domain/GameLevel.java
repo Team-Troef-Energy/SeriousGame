@@ -4,39 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class Level implements Cloneable {
+@AllArgsConstructor // for unit tests
+public class GameLevel implements Cloneable {
     @Id
     @GeneratedValue
-    @Setter // TODO: ids should not be settable. this is to set the id to zero when cloning.
     private Long id;
 
-    private Season season;
-    private int startTime;
-    private int endTime;
-
-
-    private Objective objective;
+    @ManyToOne
+    private LevelTemplate template;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Transformer> transformers = new ArrayList<>();
+    private List<GameTransformer> transformers = new ArrayList<>();
     private Cost cost;
     private boolean isCompleted = false;
     private int totalCosts = 0; // Cost in coins
     private float totalCO2 = 0;
 
-    public Level(Season season, int startTime, int endTime, Objective objective, List<Transformer> transformers, Cost cost) {
-        this.season = season;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.objective = objective;
+    public GameLevel(LevelTemplate template, List<GameTransformer> transformers, Cost cost) {
+        this.template = template;
         this.cost = cost;
         if (!transformers.isEmpty()) {
             this.transformers = transformers;
@@ -45,19 +38,19 @@ public class Level implements Cloneable {
         }
     }
 
-    public void setHouseSolarPanels(int transformerId, int houseId, int amount) {
+    public void setHouseSolarPanels(long transformerId, long houseId, int amount) {
         transformers.stream().filter(transformer -> transformer.getId() == transformerId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setHouseSolarPanels(houseId, amount);
     }
 
-    public void setHouseBattery(int transformerId, int houseId, int amount) {
+    public void setHouseBattery(long transformerId, long houseId, int amount) {
         transformers.stream().filter(transformer -> transformer.getId() == transformerId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setHouseBattery(houseId, amount);
     }
 
-    public void setTransformerBattery(int transformerId, int amount) {
+    public void setTransformerBattery(long transformerId, int amount) {
         transformers.stream().filter(transformer -> transformer.getId() == transformerId)
                 .findFirst().orElseThrow(DoesNotExistException::new)
                 .setBattery(amount);
@@ -69,9 +62,9 @@ public class Level implements Cloneable {
 
     public int getCalculatedTotalCosts() {
         totalCosts = 0;
-        for (Transformer transformer : this.getTransformers()) {
+        for (GameTransformer transformer : this.getTransformers()) {
             totalCosts += transformer.getBattery().getAmount() * this.getCost().getBatteryCost();
-            for (House house : transformer.getHouses()) {
+            for (GameHouse house : transformer.getHouses()) {
                 totalCosts += (house.getTotalSolarPanels() != 0 ? house.getTotalSolarPanels() : 0) * this.getCost().getSolarPanelCost();
                 totalCosts += (house.getBattery() != null ? house.getBattery().getAmount() : 0) * this.getCost().getBatteryCost();
             }
@@ -81,9 +74,9 @@ public class Level implements Cloneable {
 
     public float getCalculatedTotalCO2() {
         totalCO2 = 0;
-        for (int hour = this.getStartTime(); hour <= this.getEndTime(); hour++) {
-            for (Transformer transformer : this.getTransformers()) {
-                for (House house : transformer.getHouses()) {
+        for (int hour = this.template.getStartTime(); hour <= this.template.getEndTime(); hour++) {
+            for (GameTransformer transformer : this.getTransformers()) {
+                for (GameHouse house : transformer.getHouses()) {
                     float consumption = house.getTotalConsumptionAtHour(hour);
                     float solarPanelOutput = house.getSolarPanelConsumptionAtHour(hour);
                     float netConsumption = consumption - solarPanelOutput;
@@ -108,11 +101,11 @@ public class Level implements Cloneable {
     }
 
     // The Level can be cloned to reuse the same structure with different values, avoiding the need to create a new instance each time
-    public Level clone() {
+    public GameLevel clone() {
         try {
-            Level clone = (Level) super.clone();
+            GameLevel clone = (GameLevel) super.clone();
             clone.transformers = new ArrayList<>();
-            for (Transformer transformer : this.transformers) {
+            for (GameTransformer transformer : this.transformers) {
                 clone.transformers.add(transformer.clone());
             }
             return clone;

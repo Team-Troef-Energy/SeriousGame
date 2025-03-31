@@ -4,6 +4,6 @@ import java.util.List;
 
 public record HourDTO(
         int hour,
-        List<TransformerDTO> transformers
+        List<GameTransformerDTO> transformers
 ) {
 }

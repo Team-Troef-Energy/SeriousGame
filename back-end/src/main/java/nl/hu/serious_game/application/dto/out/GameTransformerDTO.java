@@ -4,11 +4,12 @@ import nl.hu.serious_game.domain.Congestion;
 
 import java.util.List;
 
-public record TransformerDTO(
-        int id,
+public record GameTransformerDTO(
+        long id,
+        long templateId,
         CurrentDTO current,
         Congestion congestion,
-        List<HouseDTO> houses,
+        List<GameHouseDTO> houses,
         BatteryDTO batteries,
         int maxBatteryCount) {
 }

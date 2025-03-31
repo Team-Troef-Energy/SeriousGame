@@ -11,10 +11,4 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameControllerIntegrationTest {
 
-
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
 }

@@ -1,39 +1,37 @@
 package nl.hu.serious_game.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class House implements Cloneable {
+@AllArgsConstructor // for unit tests
+public class GameHouse implements Cloneable {
     @Id
     @GeneratedValue
-    @Setter // TODO: ids should not be settable. this is to set the id to zero when cloning.
-    private int id;
+    private Long id;
+
+    @ManyToOne
+    private LevelHouse template;
 
     private int totalSolarPanels;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Battery battery;
-    private DayProfile dayProfile;
-    private HouseOptions houseOptions;
     private Current excessCurrent;
-    //private Integer hour;
-    //private Current current;
+
     @Setter
     private float powerCost; // Cost in euros
     @Setter
     private float totalPowerCost; // Cost in euros
 
-    public House(int totalSolarPanels, DayProfile dayProfile, HouseOptions houseOptions) {
+    public GameHouse(LevelHouse template, int totalSolarPanels) {
+        this.template = template;
         this.totalSolarPanels = totalSolarPanels;
-        this.dayProfile = dayProfile;
-        this.houseOptions = houseOptions;
-        this.powerCost = 0;
     }
 
     public void addSolarPanel(int amount) {
@@ -41,8 +39,8 @@ public class House implements Cloneable {
             throw new IllegalArgumentException("Cannot add a negative amount of solar panels");
         }
 
-        if (amount > houseOptions.maxSolarPanelCount()) {
-            throw new IllegalArgumentException("Cannot exceed the maximum number of solar panels: " + houseOptions.maxSolarPanelCount());
+        if (amount > this.template.getHouseOptions().maxSolarPanelCount()) {
+            throw new IllegalArgumentException("Cannot exceed the maximum number of solar panels: " + this.template.getHouseOptions().maxSolarPanelCount());
         }
         totalSolarPanels += amount;
     }
@@ -52,8 +50,8 @@ public class House implements Cloneable {
             throw new IllegalArgumentException("Cannot set amount of solar panels to negative number");
         }
 
-        if (amount > houseOptions.maxSolarPanelCount()) {
-            throw new IllegalArgumentException("Cannot exceed the maximum number of solar panels: " + houseOptions.maxSolarPanelCount());
+        if (amount > this.template.getHouseOptions().maxSolarPanelCount()) {
+            throw new IllegalArgumentException("Cannot exceed the maximum number of solar panels: " + this.template.getHouseOptions().maxSolarPanelCount());
         }
         this.totalSolarPanels = amount;
     }
@@ -73,26 +71,26 @@ public class House implements Cloneable {
             throw new IllegalArgumentException("Cannot add a negative amount of batteries");
         }
 
-        if (amount > houseOptions.maxBatteryCount()) {
-            throw new IllegalArgumentException("Cannot exceed the maximum number of batteries: " + houseOptions.maxBatteryCount());
+        if (amount > this.template.getHouseOptions().maxBatteryCount()) {
+            throw new IllegalArgumentException("Cannot exceed the maximum number of batteries: " + this.template.getHouseOptions().maxBatteryCount());
         }
         this.battery = new Battery(amount);
     }
 
     public float getSolarPanelConsumptionAtHour(int hour) {
-        return totalSolarPanels * dayProfile.getValueFromColumnAtHour(hour, "SolarPanelProduction");
+        return totalSolarPanels * this.template.getDayProfile().getValueFromColumnAtHour(hour, "SolarPanelProduction");
     }
 
     public float getBaseConsumptionAtHour(int hour) {
-        return dayProfile.getValueFromColumnAtHour(hour, "HouseBaseConsumption");
+        return this.template.getDayProfile().getValueFromColumnAtHour(hour, "HouseBaseConsumption");
     }
 
     public float getHeatPumpConsumptionAtHour(int hour) {
-        return dayProfile.getValueFromColumnAtHour(hour, "HeatPumpConsumption");
+        return this.template.getDayProfile().getValueFromColumnAtHour(hour, "HeatPumpConsumption");
     }
 
     public float getElectricVehicleConsumptionAtHour(int hour) {
-        return dayProfile.getValueFromColumnAtHour(hour, "ElectricVehicleConsumption");
+        return this.template.getDayProfile().getValueFromColumnAtHour(hour, "ElectricVehicleConsumption");
     }
 
     // Returns the current for the house at a specific hour
@@ -127,9 +125,9 @@ public class House implements Cloneable {
             current = battery.chargeOrDischarge(current);
         }
 
-        if (houseOptions.hasCongestion() && current.getAmount() > houseOptions.maxCurrent()) {
-            excessCurrent = new Current(current.getAmount() - houseOptions.maxCurrent(), direction);
-            current = new Current(houseOptions.maxCurrent(), direction);
+        if (this.template.getHouseOptions().hasCongestion() && current.getAmount() > this.template.getHouseOptions().maxCurrent()) {
+            excessCurrent = new Current(current.getAmount() - this.template.getHouseOptions().maxCurrent(), direction);
+            current = new Current(this.template.getHouseOptions().maxCurrent(), direction);
         } else {
             // Direction is not important here.
             excessCurrent = new Current(0f, direction);
@@ -139,15 +137,15 @@ public class House implements Cloneable {
 
     public float getTotalConsumptionAtHour(int hour) {
         float total = getBaseConsumptionAtHour(hour);
-        total += houseOptions.hasHeatPump() ? getHeatPumpConsumptionAtHour(hour) : 0;
-        total += houseOptions.hasElectricVehicle() ? getElectricVehicleConsumptionAtHour(hour) : 0;
+        total += this.template.getHouseOptions().hasHeatPump() ? getHeatPumpConsumptionAtHour(hour) : 0;
+        total += this.template.getHouseOptions().hasElectricVehicle() ? getElectricVehicleConsumptionAtHour(hour) : 0;
         return total;
     }
 
     @Override
-    public House clone() {
+    public GameHouse clone() {
         try {
-            House clone = (House) super.clone();
+            GameHouse clone = (GameHouse) super.clone();
             if (battery != null) {
                 clone.battery = battery.clone();
             }

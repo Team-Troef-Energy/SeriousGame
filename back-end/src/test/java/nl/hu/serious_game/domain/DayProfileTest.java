@@ -6,12 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class DayProfileTest {
-    @Test
-    @DisplayName("Template Test")
-    public void TemplateTest() {
-        assertTrue(true);
-    }
-
     // Test for checking value of 08:00 for a single solar panel during summer
     // Base Solar panel value at 08:00 is documented to be: 0.017857143
     // Summer factor is: 1

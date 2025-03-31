@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class LevelInitializationTest {
+public class GameLevelInitializationTest {
 
     private Season season;
     private int startTime;
     private int endTime;
     private Objective objective;
-    private List<Transformer> transformers;
+    private List<GameTransformer> transformers;
 
     @BeforeEach
     public void setUp() {
@@ -30,9 +30,9 @@ public class LevelInitializationTest {
         objective = mock(Objective.class); // Mock Objective
 
         // Create a mock Transformer with a mock list of Houses
-        Transformer mockTransformer = mock(Transformer.class);
-        House mockHouse = mock(House.class);
-        List<House> houses = new ArrayList<>();
+        GameTransformer mockTransformer = mock(GameTransformer.class);
+        GameHouse mockHouse = mock(GameHouse.class);
+        List<GameHouse> houses = new ArrayList<>();
         houses.add(mockHouse);
 
         // Set up mock behavior for the Transformer
@@ -46,28 +46,28 @@ public class LevelInitializationTest {
     @Test
     @DisplayName("Test level initialization")
     public void testLevelInitialization() {
-        Level level = new Level(season, startTime, endTime, objective, (List<Transformer>) transformers, new Cost(5, 10));
+        GameLevel level = new GameLevel(new LevelTemplate(1, season, startTime, endTime, objective, null), transformers, new Cost(5, 10));
 
-        assertNotNull(level.getObjective(), "Objective should be initialized");
-        assertEquals(objective, level.getObjective(), "Objective should match the provided value");
+        assertNotNull(level.getTemplate().getObjective(), "Template objective should be initialized");
+        assertEquals(objective, level.getTemplate().getObjective(), "Template objective should match the provided value");
 
         assertNotNull(level.getTransformers(), "Transformers list should be initialized");
         assertFalse(level.getTransformers().isEmpty(), "Transformers list should not be empty");
         assertEquals(transformers, level.getTransformers(), "Transformers should match the provided list");
 
-        Transformer transformer = level.getTransformers().get(0);
+        GameTransformer transformer = level.getTransformers().get(0);
         assertNotNull(transformer.getHouses(), "Transformer should have a list of houses initialized");
         assertFalse(transformer.getHouses().isEmpty(), "Transformer should have at least one house");
     }
 
     // Test level initialization through the runner
     @Autowired
-    private Runner runner;
+    private SeedLevelTemplateRunner seedLevelTemplateRunner;
 
     @Test
     @DisplayName("Test createLevel1 method of runner")
-    void testCreateLevel1() throws Exception {
-        Level level = runner.createLevel1();
+    void testCreateLevel1() {
+        LevelTemplate level = seedLevelTemplateRunner.createLevel1();
 
         assertNotNull(level, "Level should not be null");
         assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");
