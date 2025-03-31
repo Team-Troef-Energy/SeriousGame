@@ -1,31 +1,45 @@
 <template>
-    <div class="house-configuration container">
+    <div class="house-configuration">
         <form class="house-configuration-form">
-            <div class="form-row">
+            <div class="form-house-icon form-row">
                 <img src="/icons/house.png" alt="house" />
             </div>
-            <div class="form-row">
-                <label for="hasHeatPump">Heeft warmtepomp</label>
-                <input type="checkbox" id="hasHeatPump" v-model="houseConfiguration.hasHeatPump" />
+            <div class="house-configuration-form-inputs">
+                <div class="form-row">
+                    <label for="hasHeatPump">Heeft warmtepomp</label>
+                    <input type="checkbox" id="hasHeatPump" v-model="localHouseConfiguration.hasHeatPump" />
+                </div>
+                <div class="form-row">
+                    <label for="hasElectricalVehicle">Heeft elektrische auto</label>
+                    <input type="checkbox" id="hasElectricalVehicle"
+                        v-model="localHouseConfiguration.hasElectricalVehicle" />
+                </div>
+                <div class="form-row">
+                    <label for="hasCongestion">Heeft congestie</label>
+                    <input type="checkbox" id="hasCongestion" v-model="localHouseConfiguration.hasCongestion" />
+                </div>
+                <div class="form-row">  
+                    <label for="amountOfBatteries">Aantal batterijen</label>        
+                    <input type="number" id="amountOfBatteries" v-model="localHouseConfiguration.battery.amount"
+                        min="0" />
+                </div>
+                <div class="form-row">
+                    <label for="maxAmountOfBatteries">Maximaal aantal batterijen</label>
+                    <input type="number" id="maxAmountOfBatteries" v-model="localHouseConfiguration.battery.maxAmount"
+                        min="0" />
+                </div>
+                <div class="form-row">
+                    <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
+                    <input type="number" id="amountOfSolarPanels" v-model="localHouseConfiguration.solarPanel.amount"
+                        min="0" />
+                </div>
+                <div class="form-row">
+                    <label for="maxAmountOfSolarPanels">Maximaal aantal zonnepanelen</label>
+                    <input type="number" id="maxAmountOfSolarPanels"
+                        v-model="localHouseConfiguration.solarPanel.maxAmount" min="0" />
+                </div>
             </div>
-            <div class="form-row">
-                <label for="hasElectricalVehicle">Heeft elektrische auto</label>
-                <input type="checkbox" id="hasElectricalVehicle" v-model="houseConfiguration.hasElectricalVehicle" />
-            </div>
-            <div class="form-row">
-                <label for="hasCongestion">Heeft congestie</label>
-                <input type="checkbox" id="hasCongestion" v-model="houseConfiguration.hasCongestion" />
-            </div>
-            <div class="form-row">
-                <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
-                <input type="number" id="amountOfSolarPanels" v-model="houseConfiguration.amountOfSolarPanels"
-                    min="0" />
-            </div>
-            <div class="form-row">
-                <label for="amountOfBatteries">Aantal batterijen</label>
-                <input type="number" id="amountOfBatteries" v-model="houseConfiguration.amountOfBatteries" min="0" />
-            </div>
-            <div class="form-row">
+            <div class="form-cross form-row">
                 <button class="button" @click="removeHouse">
                     <img src="/icons/cross.png" alt="delete" />
                 </button>
@@ -35,32 +49,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { HouseConfiguration } from "../../types/level-editor/HouseConfiguration";
+import { defineComponent, PropType, reactive, watch } from "vue";
+import { houseConfiguration } from "../../types/level-editor/HouseConfiguration";
 
 export default defineComponent({
     name: "HouseConfiguration",
     props: {
         houseConfiguration: {
-            type: Object as PropType<HouseConfiguration>,
-            required: false,
-            default: () => ({
-                houseNumber: 0,
-                hasHeatPump: false,
-                hasElectricalVehicle: false,
-                hasCongestion: false,
-                amountOfSolarPanels: 0,
-                amountOfBatteries: 0,
-            }),
+            type: Object as PropType<houseConfiguration>,
+            required: true,
         },
     },
     setup(props, { emit }) {
+        const localHouseConfiguration = reactive({ ...props.houseConfiguration });
+
+        watch(
+            () => props.houseConfiguration,
+            (newVal) => {
+                Object.assign(localHouseConfiguration, newVal);
+            },
+            { deep: true }
+        );
+
         const removeHouse = () => {
             emit("remove-house");
         };
 
         return {
-            houseConfiguration: props.houseConfiguration,
+            localHouseConfiguration,
             removeHouse,
         };
     },
@@ -75,15 +91,21 @@ export default defineComponent({
 .house-configuration-form {
     display: flex;
     flex-direction: row;
-    align-items: center;
     text-align: center;
     background-color: rgb(243 243 243);
     border-radius: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     overflow: auto;
-    padding: 0rem 1rem 0rem 1rem;
-    height: 7rem;
+    padding: 1rem;
     gap: 1rem;
+}
+
+.house-configuration-form-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 80%;
+    gap: 0.5rem;
 }
 
 .house-configuration-form label,
@@ -104,7 +126,7 @@ export default defineComponent({
 }
 
 .house-configuration-form input {
-    width: 3rem;
+    width: 3.5rem;
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: 1px solid black;
@@ -113,7 +135,12 @@ export default defineComponent({
 .form-row {
     display: flex;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 1rem;
+}
+
+.form-house-icon {
+    align-items: center;
+    justify-content: center;
 }
 
 img {
@@ -126,7 +153,7 @@ button img {
 
 @media (min-width: 1280px) {
     .house-configuration-form {
-        justify-content: center;
+        justify-content: space-between;
     }
 }
 </style>
