@@ -137,7 +137,19 @@ public class GameLevelService {
         Season season = level.getTemplate().getSeason();
         ObjectiveDTO objective = new ObjectiveDTO(level.getTemplate().getObjective().getMaxCo2(), level.getTemplate().getObjective().getMaxCoins());
 
-        return new GameLevelDTO(hours, season, level.getTemplate().getStartTime(), level.getTemplate().getEndTime(), objective, level.getCost(), level.isCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
+        return new GameLevelDTO(
+                level.getId(),
+                level.getTemplate().getId(),
+                hours,
+                season,
+                level.getTemplate().getStartTime(),
+                level.getTemplate().getEndTime(),
+                objective,
+                level.getCost(),
+                level.isCompleted(),
+                level.getTotalCosts(),
+                level.getTotalCO2()
+        );
     }
 
     private void checkLevelCompletion(GameLevel level) {
