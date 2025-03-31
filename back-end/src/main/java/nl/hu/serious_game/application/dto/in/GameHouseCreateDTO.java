@@ -4,7 +4,7 @@ import nl.hu.serious_game.domain.Congestion;
 
 public record GameHouseCreateDTO(
         int maxBatteries,
-        int masSolarpanels,
+        int maxSolarPanels,
         boolean hasElectricVehicle,
         boolean hasHeatpump,
         Congestion congestion

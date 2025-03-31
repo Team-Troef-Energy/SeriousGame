@@ -5,7 +5,7 @@ import nl.hu.serious_game.domain.Congestion;
 public record LevelHouseUpdateDTO(
         long id,
         int maxBatteries,
-        int masSolarpanels,
+        int maxSolarPanels,
         Congestion congestion,
         boolean hasHeatPump,
         boolean hasElectricVehicle
