@@ -30,10 +30,13 @@ public class LevelTemplate {
     @Setter
     private Objective objective;
 
+    @Setter
+    private Cost cost;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<LevelTransformer> transformers = new ArrayList<>();
 
-    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers) {
+    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost) {
         this.levelNumber = levelNumber;
         this.season = season;
         this.startTime = startTime;
