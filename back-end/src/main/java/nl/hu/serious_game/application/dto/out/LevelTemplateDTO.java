@@ -1,5 +1,6 @@
 package nl.hu.serious_game.application.dto.out;
 
+import nl.hu.serious_game.domain.Cost;
 import nl.hu.serious_game.domain.LevelTemplate;
 import nl.hu.serious_game.domain.Season;
 
@@ -12,7 +13,8 @@ public record LevelTemplateDTO(
         int startTime,
         int endTime,
         ObjectiveDTO objective,
-        List<LevelTransformerDTO> transformers
+        List<LevelTransformerDTO> transformers,
+        Cost cost
 ) {
     public static LevelTemplateDTO fromEntity(LevelTemplate levelTemplate) {
         return new LevelTemplateDTO(
@@ -39,7 +41,8 @@ public record LevelTemplateDTO(
                                 levelHouse.getHouseOptions().maxSolarPanelCount(),
                                 levelHouse.getHouseOptions().maxBatteryCount()
                         )).toList()
-                )).toList()
+                )).toList(),
+                levelTemplate.getCost()
         );
     }
 }

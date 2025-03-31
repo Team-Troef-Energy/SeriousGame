@@ -25,7 +25,7 @@ Content-Type: application/json
         {
           "hasElectricVehicle": false,
           "hasHeatPump": false,
-          "masSolarpanels": 1,
+          "maxSolarPanels": 1,
           "maxBatteries": 1,
           "congestion": {
             "hasCongestion": false,
@@ -61,7 +61,7 @@ Content-Type: application/json
         {
           "hasElectricVehicle": false,
           "hasHeatPump": false,
-          "masSolarpanels": 1,
+          "maxSolarPanels": 1,
           "maxBatteries": 1,
           "congestion": {
             "hasCongestion": false,
