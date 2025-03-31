@@ -41,7 +41,8 @@ public class LevelTemplateService {
                                 )
                         )).toList(),
                         createTransformer.maxBatteryCount()
-                )).toList()
+                )).toList(),
+                createLevel.cost()
         );
 
         levelTemplate = levelTemplateRepository.save(levelTemplate);

@@ -23,14 +23,12 @@ public class GameLevel implements Cloneable {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<GameTransformer> transformers = new ArrayList<>();
-    private Cost cost;
     private boolean isCompleted = false;
     private int totalCosts = 0; // Cost in coins
     private float totalCO2 = 0;
 
-    public GameLevel(LevelTemplate template, List<GameTransformer> transformers, Cost cost) {
+    public GameLevel(LevelTemplate template, List<GameTransformer> transformers) {
         this.template = template;
-        this.cost = cost;
         if (!transformers.isEmpty()) {
             this.transformers = transformers;
         } else {
@@ -63,10 +61,10 @@ public class GameLevel implements Cloneable {
     public int getCalculatedTotalCosts() {
         totalCosts = 0;
         for (GameTransformer transformer : this.getTransformers()) {
-            totalCosts += transformer.getBattery().getAmount() * this.getCost().getBatteryCost();
+            totalCosts += transformer.getBattery().getAmount() * this.getTemplate().getCost().getBatteryCost();
             for (GameHouse house : transformer.getHouses()) {
-                totalCosts += (house.getTotalSolarPanels() != 0 ? house.getTotalSolarPanels() : 0) * this.getCost().getSolarPanelCost();
-                totalCosts += (house.getBattery() != null ? house.getBattery().getAmount() : 0) * this.getCost().getBatteryCost();
+                totalCosts += (house.getTotalSolarPanels() != 0 ? house.getTotalSolarPanels() : 0) * this.getTemplate().getCost().getSolarPanelCost();
+                totalCosts += (house.getBattery() != null ? house.getBattery().getAmount() : 0) * this.getTemplate().getCost().getBatteryCost();
             }
         }
         return totalCosts;
@@ -87,7 +85,7 @@ public class GameLevel implements Cloneable {
                     }
 
                     if (netConsumption > 0) {
-                        totalCO2 += netConsumption * this.getCost().getCO2Cost();
+                        totalCO2 += netConsumption * this.getTemplate().getCost().getCO2Cost();
                     }
                 }
 

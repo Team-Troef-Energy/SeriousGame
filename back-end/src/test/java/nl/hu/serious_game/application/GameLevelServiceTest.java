@@ -27,9 +27,9 @@ public class GameLevelServiceTest {
         GameLevelRepository gameLevelRepository = mock(GameLevelRepository.class);
 
         LevelTransformer levelTransformer = new LevelTransformer(1L, new Congestion(), List.of(), 0);
-        LevelTemplate levelTemplate = new LevelTemplate(1, Season.SUMMER, 8, 18, new Objective(2, 5), List.of(levelTransformer));
+        LevelTemplate levelTemplate = new LevelTemplate(1, Season.SUMMER, 8, 18, new Objective(2, 5), List.of(levelTransformer), new Cost());
 
-        when(gameLevelRepository.save(Mockito.any())).thenReturn(new GameLevel(1L, levelTemplate, List.of(new GameTransformer(1L, levelTransformer, List.of(), new Battery(0), new Current())), new Cost(), false, 0, 0));
+        when(gameLevelRepository.save(Mockito.any())).thenReturn(new GameLevel(1L, levelTemplate, List.of(new GameTransformer(1L, levelTransformer, List.of(), new Battery(0), new Current())), false, 0, 0));
         when(levelTemplateRepository.getLevelTemplateByLevelNumber(1)).thenReturn(Optional.of(levelTemplate));
         this.gameLevelService = new GameLevelService(gameLevelRepository, levelTemplateRepository);
     }
