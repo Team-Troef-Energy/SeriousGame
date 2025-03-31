@@ -9,27 +9,27 @@
       <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
       <div ref="gameCanvas" class="game-canvas">
         <svg xmlns="http://www.w3.org/2000/svg" class="line-svg">
-          <template v-for="transformer in transformers">
-            <ConnectionLine v-for="house in transformer.houses" :key="'connection-' + house.id"
-              :x1="(transformerPositions[transformer.id - 1] % 10) * 150 + 350"
-              :y1="Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 125"
-              :x2="(housePositions[house.id - 1] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 60"
+          <template v-for="(transformer, transformerIndex) in transformers">
+            <ConnectionLine v-for="(house, houseIndex) in transformer.houses" :key="'connection-' + transformerIndex + '-' + houseIndex"
+              :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
+              :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
+              :x2="(housePositions[houseIndex] % 10) * 150 + 100"
+              :y2="Math.floor(housePositions[houseIndex] / 10) * 80 * getResolutionFactor() + 60"
               :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
               :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
               @hide-info-box="hideInfoBox" />
           </template>
         </svg>
         <template v-for="transformer in transformers">
-          <transformer v-for="transformer in transformers" :key="'transformer-' + transformer.id" :style="{
+          <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id" :style="{
             position: 'absolute',
-            left: (transformerPositions[transformer.id - 1] % 10) * 150 + 300 + 'px',
-            top: Math.floor(transformerPositions[transformer.id - 1] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+            left: (transformerPositions[transformerIndex] % 10) * 150 + 300 + 'px',
+            top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
           }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
-          <House v-for="house in transformer.houses" :key="'house-' + house.id" :style="{
+          <House v-for="(house, houseIndex) in transformer.houses" :key="'house-' + houseIndex" :style="{
             position: 'absolute',
-            left: (housePositions[house.id - 1] % 10) * 150 + 'px',
-            top: Math.floor(housePositions[house.id - 1] / 10) * 80 * getResolutionFactor() + 'px',
+            left: (housePositions[houseIndex] % 10) * 150 + 'px',
+            top: Math.floor(housePositions[houseIndex] / 10) * 80 * getResolutionFactor() + 'px',
           }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
             :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
             :hasBatteries="house.batteries.amount > 0" />
@@ -77,13 +77,13 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     let levelNumber = route.params.levelNmr;
+    let gameId = "";
 
     // this is to fix the typing, levelnumber should never actually be an object.
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
       console.error("multiple level numbers were passed");
     }
-
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
@@ -202,7 +202,7 @@ export default defineComponent({
             })),
           })),
         };
-        const response = await fetchUpdateLevel(levelNumber, data);
+        const response = await fetchUpdateLevel(gameId, data);
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -241,6 +241,7 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
+        gameId = data.id;
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour

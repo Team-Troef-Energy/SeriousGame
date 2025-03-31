@@ -1,6 +1,5 @@
 package nl.hu.serious_game.application.dto.in;
 
-import nl.hu.serious_game.domain.Congestion;
 import nl.hu.serious_game.domain.LevelTransformer;
 import nl.hu.serious_game.domain.Objective;
 import nl.hu.serious_game.domain.Season;

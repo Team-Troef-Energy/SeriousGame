@@ -52,9 +52,9 @@ export async function fetchUpdateLevel(levelNumber: string | string[], levelUpda
  * Fetches the amount of levels that exist.
  * @returns Promise<any>
  */
-export async function fetchCountLevels(): Promise<any> {
+export async function fetchAllLevels(): Promise<any> {
   try {
-    const response = await fetch(`http://${getHost()}/levels/count`, {
+    const response = await fetch(`http://${getHost()}/templates`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

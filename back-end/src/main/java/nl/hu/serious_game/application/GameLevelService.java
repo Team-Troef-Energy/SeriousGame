@@ -3,20 +3,25 @@ package nl.hu.serious_game.application;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.hu.serious_game.data.GameLevelRepository;
-import nl.hu.serious_game.data.LevelTemplateRepository;
-import nl.hu.serious_game.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import nl.hu.serious_game.application.dto.in.GameLevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.BatteryDTO;
 import nl.hu.serious_game.application.dto.out.CurrentDTO;
-import nl.hu.serious_game.application.dto.out.HourDTO;
 import nl.hu.serious_game.application.dto.out.GameHouseDTO;
 import nl.hu.serious_game.application.dto.out.GameLevelDTO;
-import nl.hu.serious_game.application.dto.out.ObjectiveDTO;
 import nl.hu.serious_game.application.dto.out.GameTransformerDTO;
+import nl.hu.serious_game.application.dto.out.HourDTO;
+import nl.hu.serious_game.application.dto.out.ObjectiveDTO;
+import nl.hu.serious_game.data.GameLevelRepository;
+import nl.hu.serious_game.data.LevelTemplateRepository;
+import nl.hu.serious_game.domain.Current;
+import nl.hu.serious_game.domain.GameHouse;
+import nl.hu.serious_game.domain.GameLevel;
+import nl.hu.serious_game.domain.GameTransformer;
+import nl.hu.serious_game.domain.LevelTemplate;
+import nl.hu.serious_game.domain.Season;
 
 @Service
 public class GameLevelService {
@@ -136,7 +141,19 @@ public class GameLevelService {
         Season season = level.getTemplate().getSeason();
         ObjectiveDTO objective = new ObjectiveDTO(level.getTemplate().getObjective().getMaxCo2(), level.getTemplate().getObjective().getMaxCoins());
 
-        return new GameLevelDTO(hours, season, level.getTemplate().getStartTime(), level.getTemplate().getEndTime(), objective, level.getTemplate().getCost(), level.isCompleted(), level.getTotalCosts(), level.getTotalCO2()); // Return the LevelDTO
+        return new GameLevelDTO(
+                level.getId(),
+                level.getTemplate().getId(),
+                hours,
+                season,
+                level.getTemplate().getStartTime(),
+                level.getTemplate().getEndTime(),
+                objective,
+                level.getTemplate().getCost(),
+                level.isCompleted(),
+                level.getTotalCosts(),
+                level.getTotalCO2()
+        );
     }
 
     private void checkLevelCompletion(GameLevel level) {
