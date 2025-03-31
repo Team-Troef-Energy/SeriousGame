@@ -14,8 +14,8 @@
               :key="'connection-' + transformerIndex + '-' + houseIndex"
               :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
               :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
-              :x2="(housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] / 10) * 80 * getResolutionFactor() + 60"
+              :x2="(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100"
+              :y2="Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60"
               :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
               :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
               @hide-info-box="hideInfoBox" />
@@ -31,8 +31,8 @@
             :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
             :style="{
               position: 'absolute',
-              left: (housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] % 10) * 150 + 'px',
-              top: Math.floor(housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] / 10) * 80 * getResolutionFactor() + 'px',
+              left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
+              top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
             }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
             :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
         </template>
@@ -130,6 +130,12 @@ export default defineComponent({
         positions.push(start + i);
       }
       return positions;
+    };
+
+    const getCumulativeHouseIndex = (transformerIndex: number, houseIndex: number): number => {
+      return houseIndex + transformers.value
+        .slice(0, transformerIndex)
+        .reduce((acc, t) => acc + t.houses.length, 0);
     };
 
     const getResolutionFactor = () => {
@@ -271,6 +277,7 @@ export default defineComponent({
       isPopupOpen,
       popupProperties,
       getResolutionFactor,
+      getCumulativeHouseIndex,
       showHouseDetails,
       showTransformerDetails,
       submitChanges,
