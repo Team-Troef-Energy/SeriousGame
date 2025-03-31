@@ -10,29 +10,31 @@
       <div ref="gameCanvas" class="game-canvas">
         <svg xmlns="http://www.w3.org/2000/svg" class="line-svg">
           <template v-for="(transformer, transformerIndex) in transformers">
-            <ConnectionLine v-for="(house, houseIndex) in transformer.houses" :key="'connection-' + transformerIndex + '-' + houseIndex"
+            <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
+              :key="'connection-' + transformerIndex + '-' + houseIndex"
               :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
               :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
-              :x2="(housePositions[houseIndex] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[houseIndex] / 10) * 80 * getResolutionFactor() + 60"
+              :x2="(housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] % 10) * 150 + 100"
+              :y2="Math.floor(housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] / 10) * 80 * getResolutionFactor() + 60"
               :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
               :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
               @hide-info-box="hideInfoBox" />
           </template>
         </svg>
-        <template v-for="transformer in transformers">
+        <template v-for="(transformer, transformerIndex) in transformers">
           <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id" :style="{
             position: 'absolute',
             left: (transformerPositions[transformerIndex] % 10) * 150 + 300 + 'px',
             top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
           }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
-          <House v-for="(house, houseIndex) in transformer.houses" :key="'house-' + houseIndex" :style="{
-            position: 'absolute',
-            left: (housePositions[houseIndex] % 10) * 150 + 'px',
-            top: Math.floor(housePositions[houseIndex] / 10) * 80 * getResolutionFactor() + 'px',
-          }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
-            :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
-            :hasBatteries="house.batteries.amount > 0" />
+          <House v-for="(house, houseIndex) in transformer.houses"
+            :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
+            :style="{
+              position: 'absolute',
+              left: (housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] % 10) * 150 + 'px',
+              top: Math.floor(housePositions[houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0)] / 10) * 80 * getResolutionFactor() + 'px',
+            }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
+            :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
         </template>
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
