@@ -6,14 +6,14 @@
                     <label for="levelNumber">Level nummer</label>
                     <select id="levelNumber" v-model="levelTemplate.levelNumber" @change="onLevelNumberChange">
                         <option :value="0" selected>Nieuw Level</option>
-                        <option v-for="level in totalAmountOfLevels" :key="level" :value="level">
-                            {{ level }}
+                        <option v-for="level in levels" :key="level.levelNumber" :value="level.levelNumber">
+                            {{ level.levelNumber }}
                         </option>
                     </select>
                 </div>
                 <div class="form-max-co2-input form-row">
                     <label for="maxCo2">Maximale Co2</label>
-                    <input type="number" id="maxCo2" v-model="levelTemplate.objective.maxCo2" min="0" />
+                    <input type="number" id="maxCo2" v-model="levelTemplate.objective.maxCO2" min="0" />
                 </div>
                 <div class="form-max-coins-input form-row">
                     <label for="maxCoins">Maximaal aantal munten</label>
@@ -31,13 +31,13 @@
                 <div class="form-amount-of-batteries-for-transformator-input form-row">
                     <label for="amountOfBatteriesForTransformator">Aantal batterijen voor transformator</label>
                     <input type="number" id="amountOfBatteriesForTransformator"
-                        v-model="levelTemplate.transformator.amountOfBatteries" min="0" />
+                        v-model="levelTemplate.transformators[0].amountOfBatteries" min="0" />
                 </div>
                 <div class="form-max-amount-of-batteries-for-transformator-input form-row">
                     <label for="maxAmountOfBatteriesForTransformator">Maximaal aantal batterijen voor
                         transformator</label>
                     <input type="number" id="maxAmountOfBatteriesForTransformator"
-                        v-model="levelTemplate.transformator.maxAmountOfBatteries" min="0" />
+                        v-model="levelTemplate.transformators[0].maxBatteryCount" min="0" />
                 </div>
                 <div class="form-costs-battery form-row">
                     <label for="costs-battery">Kosten batterij</label>
@@ -66,8 +66,8 @@
             </div>
             <div class="level-editor-house-list">
                 <ComponentHolder>
-                    <HouseConfiguration v-for="(house, index) in levelTemplate.houses" :key="house.houseNumber"
-                        :house-configuration="house" @remove-house="removeHouse(index)" />
+                    <HouseConfiguration v-for="(house, index) in levelTemplate.transformators[0].houses"
+                        :key="house.houseNumber" :house-configuration="house" @remove-house="removeHouse(index)" />
                 </ComponentHolder>
             </div>
             <div class="level-editor-buttons">
@@ -85,8 +85,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { textModal } from '../../types/global/TextModal';
-import { levelTemplate } from '../../types/level-editor/LevelTemplate';
-import { fetchCountLevels, fetchStartLevel } from '../../utils/api';
+import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
+import { fetchAllLevels, fetchStartLevel } from '../../utils/api';
 import TextModal from '../global/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
@@ -95,10 +95,10 @@ export default defineComponent({
     components: { ComponentHolder, HouseConfiguration, TextModal },
     name: 'LevelEditor',
     setup() {
-        let totalAmountOfLevels = ref<number[]>([]);
+        let levels = ref<levelTemplate[]>([]);
 
         onMounted(async () => {
-            totalAmountOfLevels.value = await fetchCountLevels();
+            levels.value = await fetchAllLevels();
         });
 
         let isModalVisible = ref(false)
@@ -111,15 +111,18 @@ export default defineComponent({
         let emptyLevelTemplate: levelTemplate = {
             levelNumber: 0,
             objective: {
-                maxCo2: 0,
+                maxCO2: 0,
                 maxCoins: 0
             },
             season: 'SPRING',
-            transformator: {
-                amountOfBatteries: 0,
-                maxAmountOfBatteries: 0
-            },
-            houses: [],
+            transformators: [
+                {
+                    amountOfBatteries: 0,
+                    maxBatteryCount: 0,
+                    houses: [],
+                }
+
+            ],
             resourceCosts: {
                 battery: 0,
                 solarPanel: 0,
@@ -149,30 +152,32 @@ export default defineComponent({
             const newLevelTemplate = {
                 levelNumber: levelTemplate.value.levelNumber,
                 objective: {
-                    maxCo2: startLevelData.objective.maxCO2,
+                    maxCO2: startLevelData.objective.maxCO2,
                     maxCoins: startLevelData.objective.maxCoins
                 },
                 season: startLevelData.season,
-                transformator: {
-                    amountOfBatteries: transformer.batteries.amount,
-                    maxAmountOfBatteries: transformer.maxBatteryCount
-                },
-                houses: transformer.houses.map((house: any, index: number) => {
-                    return {
-                        houseNumber: index + 1,
-                        hasHeatPump: house.hasHeatpump,
-                        hasElectricalVehicle: house.hasElectricVehicle,
-                        hasCongestion: house.hasCongestion,
-                        battery: {
-                            amount: house.batteries.amount,
-                            maxAmount: house.maxBatteryCount
-                        },
-                        solarPanel: {
-                            amount: house.solarpanels,
-                            maxAmount: house.maxSolarPanelCount
-                        }
-                    };
-                }),
+                transformators: [
+                    {
+                        amountOfBatteries: transformer.batteries.amount,
+                        maxBatteryCount: transformer.maxBatteryCount,
+                        houses: transformer.houses.map((house: any, index: number) => {
+                            return {
+                                houseNumber: index + 1,
+                                hasHeatPump: house.hasHeatpump,
+                                hasElectricalVehicle: house.hasElectricVehicle,
+                                hasCongestion: house.hasCongestion,
+                                battery: {
+                                    amount: house.batteries.amount,
+                                    maxAmount: house.maxBatteryCount
+                                },
+                                solarPanel: {
+                                    amount: house.solarpanels,
+                                    maxAmount: house.maxSolarPanelCount
+                                }
+                            };
+                        }),
+                    }
+                ],
                 resourceCosts: {
                     battery: startLevelData.cost.batteryCost,
                     solarPanel: startLevelData.cost.solarPanelCost,
@@ -194,8 +199,8 @@ export default defineComponent({
         };
 
         const addHouse = () => {
-            levelTemplate.value.houses.push({
-                houseNumber: levelTemplate.value.houses.length + 1,
+            levelTemplate.value.transformators[0].houses.push({
+                houseNumber: levelTemplate.value.transformators[0].houses.length + 1,
                 hasHeatPump: false,
                 hasElectricalVehicle: false,
                 hasCongestion: false,
@@ -211,24 +216,24 @@ export default defineComponent({
         };
 
         const removeHouse = (index: number) => {
-            levelTemplate.value.houses.splice(index, 1);
+            levelTemplate.value.transformators[0].houses.splice(index, 1);
         };
 
         const saveOrEditLevel = () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
-            if (levelTemplate.value.objective.maxCo2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
-            if (levelTemplate.value.transformator.amountOfBatteries < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
-            if (levelTemplate.value.transformator.maxAmountOfBatteries < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
-            if (levelTemplate.value.transformator.amountOfBatteries > levelTemplate.value.transformator.maxAmountOfBatteries) return showModal('Fout', 'Aantal batterijen voor transformator mag niet groter zijn dan maximaal aantal batterijen voor transformator');
+            if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
+            if (levelTemplate.value.transformators[0].amountOfBatteries < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
+            if (levelTemplate.value.transformators[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
+            if (levelTemplate.value.transformators[0].amountOfBatteries > levelTemplate.value.transformators[0].maxBatteryCount) return showModal('Fout', 'Aantal batterijen voor transformator mag niet groter zijn dan maximaal aantal batterijen voor transformator');
             if (levelTemplate.value.resourceCosts.battery < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
             if (levelTemplate.value.resourceCosts.solarPanel < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
             if (levelTemplate.value.resourceCosts.co2 < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
             if (levelTemplate.value.startTime < 0 || levelTemplate.value.startTime > 24) return showModal('Fout', 'Start tijd moet tussen 0 en 24 zijn');
             if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 24) return showModal('Fout', 'Eind tijd moet tussen 0 en 24 zijn');
             if (levelTemplate.value.startTime >= levelTemplate.value.endTime) return showModal('Fout', 'Start tijd moet voor eind tijd zijn');
-            if (levelTemplate.value.houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
+            if (levelTemplate.value.transformators[0].houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
 
-            for (const house of levelTemplate.value.houses) {
+            for (const house of levelTemplate.value.transformators[0].houses) {
                 if (house.battery.amount < 0) return showModal('Fout', 'Aantal batterijen mag niet negatief zijn voor een huis');
                 if (house.solarPanel.amount < 0) return showModal('Fout', 'Aantal zonnepanelen mag niet negatief zijn voor een huis');
                 if (house.battery.maxAmount < 0) return showModal('Fout', 'Maximaal aantal batterijen mag niet negatief zijn voor een huis');
@@ -254,7 +259,7 @@ export default defineComponent({
 
         return {
             levelTemplate,
-            totalAmountOfLevels,
+            levels,
             isModalVisible,
             showModal,
             modalContent,

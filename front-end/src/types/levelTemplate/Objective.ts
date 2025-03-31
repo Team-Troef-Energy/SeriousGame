@@ -1,4 +1,4 @@
 export interface objective {
-    maxCo2: number;
+    maxCO2: number;
     maxCoins: number;
 }
