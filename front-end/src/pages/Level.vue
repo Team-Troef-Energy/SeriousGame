@@ -77,13 +77,13 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     let levelNumber = route.params.levelNmr;
+    let gameId = "";
 
     // this is to fix the typing, levelnumber should never actually be an object.
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
       console.error("multiple level numbers were passed");
     }
-
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
@@ -202,7 +202,7 @@ export default defineComponent({
             })),
           })),
         };
-        const response = await fetchUpdateLevel(levelNumber, data);
+        const response = await fetchUpdateLevel(gameId, data);
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -241,6 +241,7 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const data = await fetchStartLevel(levelNumber);
+        gameId = data.id;
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
