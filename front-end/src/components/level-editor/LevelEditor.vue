@@ -4,12 +4,13 @@
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level nummer</label>
-                    <select id="levelNumber" v-model="levelTemplate.levelNumber" @change="onLevelNumberChange">
-                        <option :value="0" selected>Nieuw Level</option>
+                    <input id="levelNumber" list="levelNumbers" v-model="levelTemplate.levelNumber"
+                        @change="onLevelNumberChange" min="0" />
+                    <datalist id="levelNumbers">
                         <option v-for="level in levels" :key="level.levelNumber" :value="level.levelNumber">
                             {{ level.levelNumber }}
                         </option>
-                    </select>
+                    </datalist>
                 </div>
                 <div class="form-max-co2-input form-row">
                     <label for="maxCo2">Maximale Co2</label>
@@ -142,6 +143,11 @@ export default defineComponent({
 
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
+
+            if (!doesLevelExist(savedLevelValue)) {
+                return;
+            }
+
             const startLevelData = await fetchStartLevel(savedLevelValue.toString());
 
             clearLevelTemplate();
@@ -219,6 +225,10 @@ export default defineComponent({
             levelTemplate.value.transformators[0].houses.splice(index, 1);
         };
 
+        const doesLevelExist = (levelNumber: number) => {
+            return levels.value.some(level => level.levelNumber == levelNumber);
+        };
+
         const saveOrEditLevel = () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
@@ -242,10 +252,10 @@ export default defineComponent({
                 if (house.solarPanel.amount > house.solarPanel.maxAmount) return showModal('Fout', 'Aantal zonnepanelen mag niet groter zijn dan maximaal aantal zonnepanelen voor een huis');
             }
 
-            if (levelTemplate.value.levelNumber == 0) {
-                // TODO: Save level
-            } else {
+            if (doesLevelExist(levelTemplate.value.levelNumber)) {
                 // TODO: Edit level
+            } else {
+                // TODO: Save level
             }
 
         };
