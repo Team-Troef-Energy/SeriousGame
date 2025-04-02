@@ -286,9 +286,16 @@ export default defineComponent({
         };
 
         const deleteLevel = () => {
-            if (levelTemplate.value.levelNumber == 0) return showModal('Fout', 'Kan geen nieuw level verwijderen');
+            if (!doesLevelExist(levelTemplate.value.levelNumber)) return showModal('Fout', 'Kan geen nieuw level verwijderen');
+            templateLevelService.deleteLevelTemplate(levelTemplate.value.levelNumber).then(() => {
+                showModal('Succes', 'Level is succesvol verwijderd');
+                clearLevelTemplate();
+            }).catch((error) => {
+                console.error(error);
+                showModal('Fout', 'Er is een fout opgetreden bij het verwijderen van het level');
+            });
 
-            // TODO: Delete level
+            clearLevelTemplate();
         }
 
 

@@ -11,6 +11,8 @@ class HTTPRequestManager {
         });
 
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
