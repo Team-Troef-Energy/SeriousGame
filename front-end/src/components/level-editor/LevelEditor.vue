@@ -254,9 +254,19 @@ export default defineComponent({
             }
 
             if (doesLevelExist(levelTemplate.value.levelNumber)) {
-                // TODO: Edit level
+                templateLevelService.updateLevelTemplate(levelTemplate.value.levelNumber, levelTemplate.value).then(() => {
+                    showModal('Succes', 'Level is succesvol gewijzigd');
+                }).catch((error) => {
+                    console.error(error);
+                    showModal('Fout', 'Er is een fout opgetreden bij het opslaan van het level');
+                });
             } else {
-                // TODO: Save level
+                templateLevelService.createLevelTemplate(levelTemplate.value).then(() => {
+                    showModal('Succes', 'Level is succesvol aangemaakt');
+                }).catch((error) => {
+                    console.error(error);
+                    showModal('Fout', 'Er is een fout opgetreden bij het opslaan van het level');
+                });
             }
 
         };

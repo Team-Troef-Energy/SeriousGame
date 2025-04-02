@@ -1,7 +1,7 @@
 let HOST = location.hostname === "localhost" ? "http://localhost:8080" : "https://troefgame.duckdns.org:5001";
 class HTTPRequestManager {
 
-    async doFetch(path: string, method = 'GET', body = undefined, hasJsonResponse = true) {
+    async doFetch(path: string, method = 'GET', body: any = undefined, hasJsonResponse = true) {
         let isBodyPresent = !["GET", "HEAD"].includes(method)
 
         const response = await fetch(`${HOST}${path}`, {
