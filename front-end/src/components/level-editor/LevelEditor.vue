@@ -133,7 +133,6 @@ export default defineComponent({
                     },
                     houses: [],
                 }
-
             ],
             cost: {
                 batteryCost: 0,
@@ -166,7 +165,7 @@ export default defineComponent({
             levelTemplate.value.levelNumber = savedLevelValue;
 
             const transformer = startLevelData.hours[startLevelData.hours.length - 1].transformers[0];
-            console.log(transformer);
+
             const newLevelTemplate: levelTemplate = {
                 levelNumber: levelTemplate.value.levelNumber,
                 objective: {
@@ -236,7 +235,6 @@ export default defineComponent({
             if (JSON.stringify(currentHouse) !== JSON.stringify(updatedHouse)) {
                 levelTemplate.value.transformers[0].houses[index] = updatedHouse;
             }
-
         };
 
         const removeHouse = (index: number) => {
@@ -281,7 +279,6 @@ export default defineComponent({
                     showModal('Fout', 'Er is een fout opgetreden bij het opslaan van het level');
                 });
             }
-
         };
 
         const deleteLevel = () => {
@@ -296,7 +293,6 @@ export default defineComponent({
 
             clearLevelTemplate();
         }
-
 
         return {
             levelTemplate,
@@ -507,7 +503,5 @@ input[type="checkbox"] {
     .level-editor-house-button {
         width: 100%;
     }
-
-
 }
 </style>
