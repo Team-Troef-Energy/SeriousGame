@@ -19,7 +19,7 @@ public class GameTransformer implements Cloneable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private LevelTransformer template;
 
     @OneToMany(cascade = CascadeType.ALL)

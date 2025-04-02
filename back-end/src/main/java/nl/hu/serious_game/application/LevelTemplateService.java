@@ -1,18 +1,21 @@
 package nl.hu.serious_game.application;
 
-import jakarta.persistence.EntityNotFoundException;
-import nl.hu.serious_game.application.dto.in.LevelTemplateCreateDTO;
-import nl.hu.serious_game.application.dto.out.LevelHouseDTO;
-import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
-import nl.hu.serious_game.application.dto.in.LevelTemplateUpdateDTO;
-import nl.hu.serious_game.application.dto.out.LevelTransformerDTO;
-import nl.hu.serious_game.application.dto.out.ObjectiveDTO;
-import nl.hu.serious_game.data.LevelTemplateRepository;
-import nl.hu.serious_game.domain.*;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
+import nl.hu.serious_game.application.dto.in.LevelTemplateCreateDTO;
+import nl.hu.serious_game.application.dto.in.LevelTemplateUpdateDTO;
+import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
+import nl.hu.serious_game.data.LevelTemplateRepository;
+import nl.hu.serious_game.domain.DayProfile;
+import nl.hu.serious_game.domain.HouseOptions;
+import nl.hu.serious_game.domain.LevelHouse;
+import nl.hu.serious_game.domain.LevelTemplate;
+import nl.hu.serious_game.domain.LevelTransformer;
+import nl.hu.serious_game.domain.Objective;
 
 @Service
 public class LevelTemplateService {
@@ -37,7 +40,9 @@ public class LevelTemplateService {
                                 new HouseOptions(
                                         createHouse.hasHeatPump(),
                                         createHouse.hasElectricVehicle(),
-                                        createHouse.congestion()
+                                        createHouse.congestion(),
+                                        createHouse.maxSolarPanels(),
+                                        createHouse.maxBatteries()
                                 )
                         )).toList(),
                         createTransformer.maxBatteryCount()
@@ -55,8 +60,9 @@ public class LevelTemplateService {
 
         levelTemplate.setStartTime(updateLevel.startTime());
         levelTemplate.setEndTime(updateLevel.endTime());
-        levelTemplate.setObjective(updateLevel.objective());
+        levelTemplate.setObjective(new Objective(updateLevel.objective().maxCO2(), updateLevel.objective().maxCoins()));
         levelTemplate.setSeason(updateLevel.season());
+        levelTemplate.setCost(updateLevel.cost());
 
         levelTemplate.getTransformers().clear();
         levelTemplate.getTransformers().addAll(
@@ -67,7 +73,9 @@ public class LevelTemplateService {
                                 new HouseOptions(
                                         updateHouse.hasHeatPump(),
                                         updateHouse.hasElectricVehicle(),
-                                        updateHouse.congestion()
+                                        updateHouse.congestion(),
+                                        updateHouse.maxSolarPanels(),
+                                        updateHouse.maxBatteries()
                                 )
                         )).toList(),
                         updateTransformer.maxBatteryCount()
@@ -81,5 +89,9 @@ public class LevelTemplateService {
 
     public List<LevelTemplateDTO> getAllLevels() {
         return this.levelTemplateRepository.findAll().stream().map(LevelTemplateDTO::fromEntity).toList();
+    }
+
+    public void deleteLevel(long id) {
+        this.levelTemplateRepository.deleteById(id);
     }
 }

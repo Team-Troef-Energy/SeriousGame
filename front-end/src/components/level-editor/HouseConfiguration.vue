@@ -10,33 +10,29 @@
                     <input type="checkbox" id="hasHeatPump" v-model="localHouseConfiguration.hasHeatPump" />
                 </div>
                 <div class="form-row">
-                    <label for="hasElectricalVehicle">Heeft elektrische auto</label>
-                    <input type="checkbox" id="hasElectricalVehicle"
-                        v-model="localHouseConfiguration.hasElectricalVehicle" />
+                    <label for="hasElectricVehicle">Heeft elektrische auto</label>
+                    <input type="checkbox" id="hasElectricVehicle"
+                        v-model="localHouseConfiguration.hasElectricVehicle" />
                 </div>
                 <div class="form-row">
                     <label for="hasCongestion">Heeft congestie</label>
-                    <input type="checkbox" id="hasCongestion" v-model="localHouseConfiguration.hasCongestion" />
+                    <input type="checkbox" id="hasCongestion"
+                        v-model="localHouseConfiguration.congestion.hasCongestion" />
                 </div>
-                <div class="form-row">  
-                    <label for="amountOfBatteries">Aantal batterijen</label>        
-                    <input type="number" id="amountOfBatteries" v-model="localHouseConfiguration.battery.amount"
+                <div class="form-row" v-if="localHouseConfiguration.congestion.hasCongestion">
+                    <label for="maxCurrent">Maximale stroom</label>
+                    <input type="number" id="maxCurrent" v-model="localHouseConfiguration.congestion.maxCurrent"
                         min="0" />
                 </div>
                 <div class="form-row">
                     <label for="maxAmountOfBatteries">Maximaal aantal batterijen</label>
-                    <input type="number" id="maxAmountOfBatteries" v-model="localHouseConfiguration.battery.maxAmount"
-                        min="0" />
-                </div>
-                <div class="form-row">
-                    <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
-                    <input type="number" id="amountOfSolarPanels" v-model="localHouseConfiguration.solarPanel.amount"
+                    <input type="number" id="maxAmountOfBatteries" v-model="localHouseConfiguration.maxBatteries"
                         min="0" />
                 </div>
                 <div class="form-row">
                     <label for="maxAmountOfSolarPanels">Maximaal aantal zonnepanelen</label>
-                    <input type="number" id="maxAmountOfSolarPanels"
-                        v-model="localHouseConfiguration.solarPanel.maxAmount" min="0" />
+                    <input type="number" id="maxAmountOfSolarPanels" v-model="localHouseConfiguration.maxSolarPanels"
+                        min="0" />
                 </div>
             </div>
             <div class="form-cross form-row">
@@ -61,12 +57,22 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
-        const localHouseConfiguration = reactive({ ...props.houseConfiguration });
+        const localHouseConfiguration = reactive(
+            JSON.parse(JSON.stringify(props.houseConfiguration))
+        );
+
+        watch(
+            () => localHouseConfiguration,
+            (newVal) => {
+                emit("update:houseConfiguration", JSON.parse(JSON.stringify(newVal)));
+            },
+            { deep: true, immediate: false }
+        );
 
         watch(
             () => props.houseConfiguration,
             (newVal) => {
-                Object.assign(localHouseConfiguration, newVal);
+                Object.assign(localHouseConfiguration, JSON.parse(JSON.stringify(newVal)));
             },
             { deep: true }
         );

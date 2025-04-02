@@ -1,7 +1,7 @@
-import { defineComponent, ref, onMounted, provide } from 'vue';
-import { auth, db } from '../utils/firebase-service';
-import { doc, getDoc } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { defineComponent, onMounted, provide, ref } from 'vue';
+import { firebaseService } from '../services/firebase/FirebaseService';
 
 export const AuthContext = Symbol('AuthContext');
 
@@ -15,7 +15,7 @@ export default defineComponent({
     const setUser = async (newUser: User | null) => {
       user.value = newUser;
       if (newUser) {
-        const userDocRef = doc(db, 'users', newUser.email!);
+        const userDocRef = doc(firebaseService.db, 'users', newUser.email!);
         const userDoc = await getDoc(userDocRef);
         role.value = userDoc.exists() ? userDoc.data().role : null;
       } else {
@@ -24,7 +24,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      const unsubscribe = auth.onAuthStateChanged(async (currentUser: any) => {
+      const unsubscribe = firebaseService.auth.onAuthStateChanged(async (currentUser: any) => {
         await setUser(currentUser);
         loading.value = false;
       });

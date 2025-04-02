@@ -20,12 +20,10 @@
   </div>
 </template>
 
-
-
 <script setup>
-import { ref, inject } from 'vue';
-import { signInEmailAndPassword, signInGoogle, signInWithGitHub } from '../utils/auth-service';
+import { inject, ref } from 'vue';
 import { AuthContext } from '../context/AuthProvider';
+import { authenticationService } from '../services/firebase/AuthenticationService';
 
 const authState = inject(AuthContext);
 
@@ -41,7 +39,7 @@ const password = ref('');
 async function handleLogin(e) {
   e.preventDefault();
   try {
-    await signInEmailAndPassword(email.value, password.value);
+    await authenticationService.signInEmailAndPassword(email.value, password.value);
     console.log('Logged in!');
   } catch (error) {
     window.alert(error);
@@ -50,8 +48,8 @@ async function handleLogin(e) {
 
 async function handleGoogleLogin() {
   try {
-    const userData = await signInGoogle();
-    await setUser(userData._value); 
+    const userData = await authenticationService.signInGoogle();
+    await setUser(userData._value);
     window.location.reload();
   } catch (error) {
     console.error(error);
@@ -61,8 +59,8 @@ async function handleGoogleLogin() {
 
 async function handleGitHubLogin() {
   try {
-    const userData = await signInWithGitHub();
-    await setUser(userData); 
+    const userData = await authenticationService.signInWithGitHub();
+    await setUser(userData);
   } catch (error) {
     console.error(error);
     window.location.assign('/register');
@@ -73,74 +71,74 @@ async function handleGitHubLogin() {
 
 <style scoped>
 .login-page-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
 }
 
 .login-page-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    flex-direction: column;
-    max-width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  max-width: 300px;
 }
 
 .login-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
 }
 
 .login-form input {
-    padding: 8px 20px;
-    border: solid 1px rgba(0, 0, 0, .1);
-    border-radius: 4px;
-    margin: 3px 0;
-    font-size: 14px;
-    width: 100%;
+  padding: 8px 20px;
+  border: solid 1px rgba(0, 0, 0, .1);
+  border-radius: 4px;
+  margin: 3px 0;
+  font-size: 14px;
+  width: 100%;
 }
 
 .login-btn {
-    width: 100%;
-    border-radius: 4px;
-    padding: 6px 12px;
-    background-color: rgb(21, 129, 230);
-    margin: 4px 0 0 0;
-    color: white;
-    font-size: 14px;
+  width: 100%;
+  border-radius: 4px;
+  padding: 6px 12px;
+  background-color: rgb(21, 129, 230);
+  margin: 4px 0 0 0;
+  color: white;
+  font-size: 14px;
 }
 
 .providers-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 5px;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 5px;
+  width: 100%;
 }
 
 .providers-container button {
-    border: solid 1px rgba(0, 0, 0, .1);
-    background-color: white;
-    padding: 8px 20px;
-    width: 100%;
-    font-size: 13px;
-    display: flex;
-    margin-bottom: 5px;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  border: solid 1px rgba(0, 0, 0, .1);
+  background-color: white;
+  padding: 8px 20px;
+  width: 100%;
+  font-size: 13px;
+  display: flex;
+  margin-bottom: 5px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .providers-container button img {
-    width: 16px;
-    height: 16px;
+  width: 16px;
+  height: 16px;
 }
 </style>

@@ -27,7 +27,7 @@
 import { signOut } from 'firebase/auth';
 import { inject } from 'vue';
 import { AuthContext } from '../../context/AuthProvider';
-import { auth } from '../../utils/firebase-service';
+import { firebaseService } from '../../services/firebase/FirebaseService';
 
 const authState = inject(AuthContext);
 
@@ -39,7 +39,7 @@ const { user, setUser }: any = authState;
 
 async function logout() {
     try {
-        await signOut(auth);
+        await signOut(firebaseService.auth);
         setUser(null);
         console.log("User logged out successfully");
     } catch (error) {

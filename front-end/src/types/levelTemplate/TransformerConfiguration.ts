@@ -1,7 +1,8 @@
+import { congestion } from "./Congestion";
 import { houseConfiguration } from "./HouseConfiguration";
 
-export interface transformator {
-    amountOfBatteries: number;
+export interface TransformerConfiguration {
     maxBatteryCount: number;
+    congestion: congestion;
     houses: houseConfiguration[];
 }
