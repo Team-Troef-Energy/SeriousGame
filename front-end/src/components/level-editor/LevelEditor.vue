@@ -106,8 +106,13 @@ export default defineComponent({
     setup() {
         let levels = ref<levelTemplate[]>([]);
 
+        const fetchAllLevels = async () => {
+            const fetchedLevels = await templateLevelService.fetchAllLevels();
+            levels.value = [...fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber)];
+        };
+
         onMounted(async () => {
-            levels.value = await templateLevelService.fetchAllLevels();
+            await fetchAllLevels();
         });
 
         let isModalVisible = ref(false)
@@ -154,7 +159,7 @@ export default defineComponent({
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
 
-            if (!doesLevelExist(savedLevelValue)) {
+            if (!(await doesLevelExist(savedLevelValue))) {
                 return;
             }
 
@@ -241,11 +246,12 @@ export default defineComponent({
             levelTemplate.value.transformers[0].houses.splice(index, 1);
         };
 
-        const doesLevelExist = (levelNumber: number) => {
+        const doesLevelExist = async (levelNumber: number) => {
+            await fetchAllLevels();
             return levels.value.some(level => level.levelNumber == levelNumber);
         };
 
-        const saveOrEditLevel = () => {
+        const saveOrEditLevel = async () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
@@ -264,7 +270,7 @@ export default defineComponent({
                 if (house.congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom mag niet negatief zijn voor een huis');
             }
 
-            if (doesLevelExist(levelTemplate.value.levelNumber)) {
+            if (await doesLevelExist(levelTemplate.value.levelNumber)) {
                 templateLevelService.updateLevelTemplate(levelTemplate.value.levelNumber, levelTemplate.value).then(() => {
                     showModal('Succes', 'Level is succesvol gewijzigd');
                 }).catch((error) => {
@@ -281,8 +287,8 @@ export default defineComponent({
             }
         };
 
-        const deleteLevel = () => {
-            if (!doesLevelExist(levelTemplate.value.levelNumber)) return showModal('Fout', 'Kan geen nieuw level verwijderen');
+        const deleteLevel = async () => {
+            if (!(await doesLevelExist(levelTemplate.value.levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
             templateLevelService.deleteLevelTemplate(levelTemplate.value.levelNumber).then(() => {
                 showModal('Succes', 'Level is succesvol verwijderd');
                 clearLevelTemplate();
