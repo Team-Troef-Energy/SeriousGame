@@ -1,3 +1,33 @@
+<script setup lang="ts">
+import { inject } from 'vue';
+import { AuthContext } from '../../context/AuthProvider';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../utils/firebase-service';
+
+const authState = inject(AuthContext);
+
+if (!authState) {
+    throw new Error('AuthProvider is missing.');
+}
+
+const { user, setUser }: any = authState;
+
+async function logout() {
+    try {
+        await signOut(auth);
+        setUser(null);
+        console.log("User logged out successfully");
+    } catch (error) {
+        console.error("Logout failed:", error);
+    }
+}
+
+function trimString(string: string) {
+    const length = 10;
+    return string.substring(0, length) + '...';
+}
+</script>
+
 <template>
     <header>
         <div class="header-grid">
@@ -6,22 +36,22 @@
             </a>
             <div class="header-links">
                 <a href="/">Home</a>
-                <a href="/register">Register</a>
-                <a href="/login">Login</a>
                 <a href="/terms">Terms</a>
                 <a href="/dashboard">Dashboard</a>
-          </div>
+
+                <template v-if="user">
+                    <p class="user-email">{{ trimString(user.email) }}</p>
+                    <button class="logoutbtn" @click="logout">Log uit</button>
+                </template>
+                <template v-else>
+                    <a href="/register">Register</a>
+                    <a href="/login">Login</a>
+                </template>
+
+            </div>
         </div>
     </header>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-    name: 'Header',
-});
-</script>
 
 <style>
 header {
@@ -65,5 +95,17 @@ header h1 {
 
 .header-links a:hover {
     text-decoration: underline;
+}
+
+.logoutbtn {
+    padding: 8px 20px;
+    background-color: white;
+    border: rgba(0, 0, 0, .1) solid 1px;
+    font-size: 13px;
+    border-radius: 3px;
+}
+
+.user-email {
+    font-size: 14px;
 }
 </style>

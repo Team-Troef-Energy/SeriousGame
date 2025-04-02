@@ -1,75 +1,72 @@
-<template>
-    <div class="login-page-container">
-
-        <div class="login-page-content">
-            <form @submit="handleLogin" class="login-form">
-                <input v-model="email" type="email" placeholder="Enter email" required />
-                <input v-model="password" type="password" placeholder="Enter password" required />
-                <button type="submit" class="login-btn">Login</button>
-            </form>
-            <div class="providers-container">
-                <button @click="handleGoogleLogin">
-                    <img src="../assets/google_icon.png" alt="Google icon">
-                    Login met Google
-                </button>
-                <button @click="handleGitHubLogin">
-                    <img src="../assets/github_icon.png" alt="GitHub icon">
-                    Login met GitHub
-                </button>
-            </div>
-        </div>
-    </div>
-</template>
-
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup>
+import { ref, inject } from 'vue';
 import { signInEmailAndPassword, signInGoogle, signInWithGitHub } from '../utils/auth-service';
+import { AuthContext } from '../context/AuthProvider';
 
-export default defineComponent({
-    name: 'LoginPage',
-    setup() {
-        const email = ref('');
-        const password = ref('');
+const authState = inject(AuthContext);
 
-        function handleLogin(e: any) {
-            e.preventDefault();
-            signInEmailAndPassword(email.value, password.value)
-                .then(() => {
-                    console.log('ingelogd!');
-                })
-                .catch((error: any) => {
-                    window.alert(error);
-                })
-        }
+if (!authState) {
+  throw new Error('AuthProvider is missing! Make sure it wraps this component.');
+}
 
-        async function handleGoogleLogin() {
-            try {
-                const userData = await signInGoogle();
-            } catch (error) {
-                console.error(error);
-                window.location.assign('/register');
-            }
-        }
+const { setUser } = authState;
 
-        async function handleGitHubLogin() {
-            try {
-                const userData = await signInWithGitHub();
-            } catch (error) {
-                console.error(error);
-                window.location.assign('/register');
-            }
-        }
+const email = ref('');
+const password = ref('');
 
-        return {
-            email,
-            password,
-            handleLogin,
-            handleGoogleLogin,
-            handleGitHubLogin
-        };
-    }
-});
+async function handleLogin(e) {
+  e.preventDefault();
+  try {
+    await signInEmailAndPassword(email.value, password.value);
+    console.log('Logged in!');
+  } catch (error) {
+    window.alert(error);
+  }
+}
+
+async function handleGoogleLogin() {
+  try {
+    const userData = await signInGoogle();
+    await setUser(userData._value); 
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+    window.location.assign('/register');
+  }
+}
+
+async function handleGitHubLogin() {
+  try {
+    const userData = await signInWithGitHub();
+    await setUser(userData); 
+  } catch (error) {
+    console.error(error);
+    window.location.assign('/register');
+  }
+}
 </script>
+
+<template>
+  <div class="login-page-container">
+    <div class="login-page-content">
+      <form @submit="handleLogin" class="login-form">
+        <input v-model="email" type="email" placeholder="Enter email" required />
+        <input v-model="password" type="password" placeholder="Enter password" required />
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      <div class="providers-container">
+        <button @click="handleGoogleLogin">
+          <img src="../assets/google_icon.png" alt="Google icon" />
+          Login with Google
+        </button>
+        <button @click="handleGitHubLogin">
+          <img src="../assets/github_icon.png" alt="GitHub icon" />
+          Login with GitHub
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .login-page-container {
