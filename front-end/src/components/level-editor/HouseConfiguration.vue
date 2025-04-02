@@ -19,25 +19,20 @@
                     <input type="checkbox" id="hasCongestion"
                         v-model="localHouseConfiguration.congestion.hasCongestion" />
                 </div>
-                <div class="form-row">
-                    <label for="amountOfBatteries">Aantal batterijen</label>
-                    <input type="number" id="amountOfBatteries" v-model="localHouseConfiguration.battery.amount"
+                <div class="form-row" v-if="localHouseConfiguration.congestion.hasCongestion">
+                    <label for="maxCurrent">Maximale stroom</label>
+                    <input type="number" id="maxCurrent" v-model="localHouseConfiguration.congestion.maxCurrent"
                         min="0" />
                 </div>
                 <div class="form-row">
                     <label for="maxAmountOfBatteries">Maximaal aantal batterijen</label>
-                    <input type="number" id="maxAmountOfBatteries" v-model="localHouseConfiguration.battery.maxAmount"
-                        min="0" />
-                </div>
-                <div class="form-row">
-                    <label for="amountOfSolarPanels">Aantal zonnepanelen</label>
-                    <input type="number" id="amountOfSolarPanels" v-model="localHouseConfiguration.solarPanel.amount"
+                    <input type="number" id="maxAmountOfBatteries" v-model="localHouseConfiguration.maxBatteries"
                         min="0" />
                 </div>
                 <div class="form-row">
                     <label for="maxAmountOfSolarPanels">Maximaal aantal zonnepanelen</label>
-                    <input type="number" id="maxAmountOfSolarPanels"
-                        v-model="localHouseConfiguration.solarPanel.maxAmount" min="0" />
+                    <input type="number" id="maxAmountOfSolarPanels" v-model="localHouseConfiguration.maxSolarPanels"
+                        min="0" />
                 </div>
             </div>
             <div class="form-cross form-row">

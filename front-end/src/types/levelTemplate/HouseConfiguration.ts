@@ -1,12 +1,10 @@
-import { battery } from "./Battery";
 import { congestion } from "./Congestion";
-import { solarPanel } from "./SolarPanel";
 
 export interface houseConfiguration {
     houseNumber: number;
+    congestion: congestion;
     hasHeatPump: boolean;
     hasElectricVehicle: boolean;
-    congestion: congestion;
-    battery: battery,
-    solarPanel: solarPanel
+    maxBatteries: number;
+    maxSolarPanels: number;
 }

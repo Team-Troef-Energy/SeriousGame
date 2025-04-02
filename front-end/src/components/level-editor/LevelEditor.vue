@@ -29,16 +29,22 @@
                         <option value="WINTER">Winter</option>
                     </select>
                 </div>
-                <div class="form-amount-of-batteries-for-transformator-input form-row">
-                    <label for="amountOfBatteriesForTransformator">Aantal batterijen voor transformator</label>
-                    <input type="number" id="amountOfBatteriesForTransformator"
-                        v-model="levelTemplate.transformers[0].amountOfBatteries" min="0" />
-                </div>
                 <div class="form-max-amount-of-batteries-for-transformator-input form-row">
                     <label for="maxAmountOfBatteriesForTransformator">Maximaal aantal batterijen voor
                         transformator</label>
                     <input type="number" id="maxAmountOfBatteriesForTransformator"
                         v-model="levelTemplate.transformers[0].maxBatteryCount" min="0" />
+                </div>
+                <div class="form-congestion-input form-row">
+                    <label for="congestion">Heeft de transformator congestie</label>
+                    <input type="checkbox" id="congestion"
+                        v-model="levelTemplate.transformers[0].congestion.hasCongestion" />
+                </div>
+                <div class="form-max-current-input form-row"
+                    v-if="levelTemplate.transformers[0].congestion.hasCongestion">
+                    <label for="maxCurrent">Maximale stroom voor de transformator</label>
+                    <input type="number" id="maxCurrent" v-model="levelTemplate.transformers[0].congestion.maxCurrent"
+                        min="0" />
                 </div>
                 <div class="form-costs-battery form-row">
                     <label for="costs-battery">Kosten batterij</label>
@@ -120,7 +126,6 @@ export default defineComponent({
             season: 'SPRING',
             transformers: [
                 {
-                    amountOfBatteries: 0,
                     maxBatteryCount: 0,
                     congestion: {
                         hasCongestion: false,
@@ -171,7 +176,6 @@ export default defineComponent({
                 season: startLevelData.season,
                 transformers: [
                     {
-                        amountOfBatteries: transformer.batteries.amount,
                         maxBatteryCount: transformer.maxBatteryCount,
                         congestion: {
                             hasCongestion: transformer.congestion.hasCongestion,
@@ -179,21 +183,15 @@ export default defineComponent({
                         },
                         houses: transformer.houses.map((house: any, index: number) => {
                             return {
-                                houseNumber: index + 1,
-                                hasHeatPump: house.hasHeatpump,
-                                hasElectricVehicle: house.hasElectricVehicle,
                                 congestion: {
                                     hasCongestion: house.hasCongestion,
                                     maxCurrent: house.maxCurrent
                                 },
-                                battery: {
-                                    amount: house.batteries.amount,
-                                    maxAmount: house.maxBatteryCount
-                                },
-                                solarPanel: {
-                                    amount: house.solarpanels,
-                                    maxAmount: house.maxSolarPanelCount
-                                }
+                                houseNumber: index + 1,
+                                hasHeatPump: house.hasHeatpump,
+                                hasElectricVehicle: house.hasElectricVehicle,
+                                maxBatteries: house.maxBatteryCount,
+                                maxSolarPanels: house.maxSolarPanelCount
                             };
                         }),
                     }
@@ -221,20 +219,14 @@ export default defineComponent({
         const addHouse = () => {
             levelTemplate.value.transformers[0].houses.push({
                 houseNumber: levelTemplate.value.transformers[0].houses.length + 1,
-                hasHeatPump: false,
-                hasElectricVehicle: false,
                 congestion: {
                     hasCongestion: false,
                     maxCurrent: 0
                 },
-                battery: {
-                    amount: 0,
-                    maxAmount: 0
-                },
-                solarPanel: {
-                    amount: 0,
-                    maxAmount: 0
-                }
+                hasHeatPump: false,
+                hasElectricVehicle: false,
+                maxBatteries: 0,
+                maxSolarPanels: 0,
             });
         };
 
@@ -258,9 +250,8 @@ export default defineComponent({
         const saveOrEditLevel = () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
-            if (levelTemplate.value.transformers[0].amountOfBatteries < 0) return showModal('Fout', 'Aantal batterijen voor transformator mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
-            if (levelTemplate.value.transformers[0].amountOfBatteries > levelTemplate.value.transformers[0].maxBatteryCount) return showModal('Fout', 'Aantal batterijen voor transformator mag niet groter zijn dan maximaal aantal batterijen voor transformator');
+            if (levelTemplate.value.transformers[0].congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom voor transformator mag niet negatief zijn');
             if (levelTemplate.value.cost.batteryCost < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
             if (levelTemplate.value.cost.solarPanelCost < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
             if (levelTemplate.value.cost.CO2Cost < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
@@ -270,15 +261,13 @@ export default defineComponent({
             if (levelTemplate.value.transformers[0].houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
 
             for (const house of levelTemplate.value.transformers[0].houses) {
-                if (house.battery.amount < 0) return showModal('Fout', 'Aantal batterijen mag niet negatief zijn voor een huis');
-                if (house.solarPanel.amount < 0) return showModal('Fout', 'Aantal zonnepanelen mag niet negatief zijn voor een huis');
-                if (house.battery.maxAmount < 0) return showModal('Fout', 'Maximaal aantal batterijen mag niet negatief zijn voor een huis');
-                if (house.solarPanel.maxAmount < 0) return showModal('Fout', 'Maximaal aantal zonnepanelen mag niet negatief zijn voor een huis');
-                if (house.battery.amount > house.battery.maxAmount) return showModal('Fout', 'Aantal batterijen mag niet groter zijn dan maximaal aantal batterijen voor een huis');
-                if (house.solarPanel.amount > house.solarPanel.maxAmount) return showModal('Fout', 'Aantal zonnepanelen mag niet groter zijn dan maximaal aantal zonnepanelen voor een huis');
+                if (house.maxBatteries < 0) return showModal('Fout', 'Maximaal aantal batterijen mag niet negatief zijn voor een huis');
+                if (house.maxSolarPanels < 0) return showModal('Fout', 'Maximaal aantal zonnepanelen mag niet negatief zijn voor een huis');
+                if (house.congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom mag niet negatief zijn voor een huis');
             }
 
             if (doesLevelExist(levelTemplate.value.levelNumber)) {
+                console.log(levelTemplate.value.transformers);
                 templateLevelService.updateLevelTemplate(levelTemplate.value.levelNumber, levelTemplate.value).then(() => {
                     showModal('Succes', 'Level is succesvol gewijzigd');
                 }).catch((error) => {
@@ -372,6 +361,10 @@ export default defineComponent({
     border: 1px solid black;
 }
 
+input[type="checkbox"] {
+    width: 2rem;
+}
+
 .form-row {
     display: flex;
     justify-content: space-between;
@@ -437,6 +430,10 @@ export default defineComponent({
     .level-editor-form select {
         width: 5rem;
         height: 3rem;
+    }
+
+    input[type="checkbox"] {
+        width: 2rem;
     }
 
     .form-row {
