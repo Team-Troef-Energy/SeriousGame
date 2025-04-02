@@ -20,7 +20,7 @@ class TemplateLevelService {
      * @returns 
      */
     updateLevelTemplate = async (templateId:number, levelTemplate: levelTemplate) => {
-        return await httpRequestManager.doFetch(`${BASE_NAME}/${templateId}`, 'PUT', levelTemplate);
+        return await httpRequestManager.doFetch(`${BASE_NAME}/${templateId}`, 'POST', levelTemplate);
     };
 
     /**

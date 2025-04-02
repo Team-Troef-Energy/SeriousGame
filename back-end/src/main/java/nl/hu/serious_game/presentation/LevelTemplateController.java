@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("")
-    public ResponseEntity<LevelTemplateDTO> createLevelTemplate(@RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
+    public ResponseEntity<LevelTemplateDTO> createLevelTemplate(@Validated @RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
         try {
             LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateCreateDTO);
             return ResponseEntity.ok(levelTemplate);
@@ -45,7 +46,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<LevelTemplateDTO> updateLevelTemplate(@PathVariable long id, @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
+    public ResponseEntity<LevelTemplateDTO> updateLevelTemplate(@PathVariable long id, @Validated @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
         try {
             LevelTemplateDTO updatedTemplate = levelTemplateService.updateLevel(id, levelTemplateUpdateDTO);
             return ResponseEntity.ok(updatedTemplate);

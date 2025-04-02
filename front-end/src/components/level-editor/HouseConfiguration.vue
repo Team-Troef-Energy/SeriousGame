@@ -10,16 +10,17 @@
                     <input type="checkbox" id="hasHeatPump" v-model="localHouseConfiguration.hasHeatPump" />
                 </div>
                 <div class="form-row">
-                    <label for="hasElectricalVehicle">Heeft elektrische auto</label>
-                    <input type="checkbox" id="hasElectricalVehicle"
-                        v-model="localHouseConfiguration.hasElectricalVehicle" />
+                    <label for="hasElectricVehicle">Heeft elektrische auto</label>
+                    <input type="checkbox" id="hasElectricVehicle"
+                        v-model="localHouseConfiguration.hasElectricVehicle" />
                 </div>
                 <div class="form-row">
                     <label for="hasCongestion">Heeft congestie</label>
-                    <input type="checkbox" id="hasCongestion" v-model="localHouseConfiguration.hasCongestion" />
+                    <input type="checkbox" id="hasCongestion"
+                        v-model="localHouseConfiguration.congestion.hasCongestion" />
                 </div>
-                <div class="form-row">  
-                    <label for="amountOfBatteries">Aantal batterijen</label>        
+                <div class="form-row">
+                    <label for="amountOfBatteries">Aantal batterijen</label>
                     <input type="number" id="amountOfBatteries" v-model="localHouseConfiguration.battery.amount"
                         min="0" />
                 </div>
@@ -61,12 +62,22 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
-        const localHouseConfiguration = reactive({ ...props.houseConfiguration });
+        const localHouseConfiguration = reactive(
+            JSON.parse(JSON.stringify(props.houseConfiguration))
+        );
+
+        watch(
+            () => localHouseConfiguration,
+            (newVal) => {
+                emit("update:houseConfiguration", JSON.parse(JSON.stringify(newVal)));
+            },
+            { deep: true, immediate: false }
+        );
 
         watch(
             () => props.houseConfiguration,
             (newVal) => {
-                Object.assign(localHouseConfiguration, newVal);
+                Object.assign(localHouseConfiguration, JSON.parse(JSON.stringify(newVal)));
             },
             { deep: true }
         );
