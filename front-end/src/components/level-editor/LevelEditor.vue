@@ -251,6 +251,19 @@ export default defineComponent({
             return levels.value.some(level => level.levelNumber == levelNumber);
         };
 
+        const getTemplateIdFromLevelNumber = async (levelNumber: number): Promise<number> => {
+            await fetchAllLevels();
+
+            const level = levels.value.find(level => level.levelNumber == levelNumber);
+
+            if (level?.id) {
+                return level.id;
+            } else {
+                showModal('Fout', 'Level bestaat niet');
+                throw new Error(`Level with number ${levelNumber} does not exist`);
+            }
+        };
+
         const saveOrEditLevel = async () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
@@ -270,8 +283,10 @@ export default defineComponent({
                 if (house.congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom mag niet negatief zijn voor een huis');
             }
 
-            if (await doesLevelExist(levelTemplate.value.levelNumber)) {
-                templateLevelService.updateLevelTemplate(levelTemplate.value.levelNumber, levelTemplate.value).then(() => {
+            let levelNumber = levelTemplate.value.levelNumber;
+            if (await doesLevelExist(levelNumber)) {
+                let templateId = await getTemplateIdFromLevelNumber(levelNumber);
+                templateLevelService.updateLevelTemplate(templateId, levelTemplate.value).then(() => {
                     showModal('Succes', 'Level is succesvol gewijzigd');
                 }).catch((error) => {
                     console.error(error);
@@ -288,8 +303,10 @@ export default defineComponent({
         };
 
         const deleteLevel = async () => {
-            if (!(await doesLevelExist(levelTemplate.value.levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
-            templateLevelService.deleteLevelTemplate(levelTemplate.value.levelNumber).then(() => {
+            let levelNumber = levelTemplate.value.levelNumber;
+            let templateId = await getTemplateIdFromLevelNumber(levelNumber);
+            if (!(await doesLevelExist(levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
+            templateLevelService.deleteLevelTemplate(templateId).then(() => {
                 showModal('Succes', 'Level is succesvol verwijderd');
                 clearLevelTemplate();
             }).catch((error) => {

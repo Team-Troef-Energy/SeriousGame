@@ -4,6 +4,7 @@ import season from "./Season";
 import { TransformerConfiguration } from "./TransformerConfiguration";
 
 export interface levelTemplate {
+    id?: number;
     levelNumber: number;
     objective: objective;
     season: season;
