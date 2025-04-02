@@ -251,7 +251,7 @@ export default defineComponent({
             return levels.value.some(level => level.levelNumber == levelNumber);
         };
 
-        const getTemplateIdFromLevelNumber = async (levelNumber: number): Promise<number> => {
+        const getTemplateIdFromLevelNumber = async (levelNumber: number) => {
             await fetchAllLevels();
 
             const level = levels.value.find(level => level.levelNumber == levelNumber);
@@ -304,8 +304,8 @@ export default defineComponent({
 
         const deleteLevel = async () => {
             let levelNumber = levelTemplate.value.levelNumber;
-            let templateId = await getTemplateIdFromLevelNumber(levelNumber);
             if (!(await doesLevelExist(levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
+            let templateId = await getTemplateIdFromLevelNumber(levelNumber);
             templateLevelService.deleteLevelTemplate(templateId).then(() => {
                 showModal('Succes', 'Level is succesvol verwijderd');
                 clearLevelTemplate();
