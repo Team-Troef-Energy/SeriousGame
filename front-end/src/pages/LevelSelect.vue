@@ -53,21 +53,13 @@ export default defineComponent({
 .level-select {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.level-select::before {
-  content: '';
-  position: absolute;
-  top: 30%;
-  bottom: 10%;
-  left: 50%;
-  width: 2px;
-  background-color: #2196f3;
-  z-index: -1;
+  width: 95%;
+  max-height: 45%;
+  margin: 1rem;
+  padding: 1rem;
+  gap: 3rem;
+  overflow: auto;
 }
 
 .level-select::after {
@@ -85,23 +77,16 @@ export default defineComponent({
 @media (min-width: 768px) {
 
   .page-header {
-    position: absolute;
     white-space: nowrap;
     width: 25rem;
+    margin-bottom: 5rem;
   }
 
   .level-select {
     flex-direction: row;
-    height: 5rem;
-  }
-
-  .level-select::before {
-    top: 53%;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: unset;
-    height: 2px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5rem;
   }
 }
 </style>
