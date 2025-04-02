@@ -60,7 +60,7 @@ public class LevelTemplateService {
 
         levelTemplate.setStartTime(updateLevel.startTime());
         levelTemplate.setEndTime(updateLevel.endTime());
-        levelTemplate.setObjective(updateLevel.objective());
+        levelTemplate.setObjective(new Objective(updateLevel.objective().maxCO2(), updateLevel.objective().maxCoins()));
         levelTemplate.setSeason(updateLevel.season());
         levelTemplate.setCost(updateLevel.cost());
 

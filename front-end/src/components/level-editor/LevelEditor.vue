@@ -14,7 +14,7 @@
                 </div>
                 <div class="form-max-co2-input form-row">
                     <label for="maxCo2">Maximale Co2</label>
-                    <input type="number" id="maxCo2" v-model="levelTemplate.objective.maxCo2" min="0" />
+                    <input type="number" id="maxCo2" v-model="levelTemplate.objective.maxCO2" min="0" />
                 </div>
                 <div class="form-max-coins-input form-row">
                     <label for="maxCoins">Maximaal aantal munten</label>
@@ -120,7 +120,7 @@ export default defineComponent({
         let emptyLevelTemplate: levelTemplate = {
             levelNumber: 0,
             objective: {
-                maxCo2: 0,
+                maxCO2: 0,
                 maxCoins: 0
             },
             season: 'SPRING',
@@ -169,7 +169,7 @@ export default defineComponent({
             const newLevelTemplate: levelTemplate = {
                 levelNumber: levelTemplate.value.levelNumber,
                 objective: {
-                    maxCo2: startLevelData.objective.maxCO2,
+                    maxCO2: startLevelData.objective.maxCO2,
                     maxCoins: startLevelData.objective.maxCoins
                 },
                 season: startLevelData.season,
@@ -247,7 +247,7 @@ export default defineComponent({
 
         const saveOrEditLevel = () => {
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
-            if (levelTemplate.value.objective.maxCo2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
+            if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom voor transformator mag niet negatief zijn');
             if (levelTemplate.value.cost.batteryCost < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
