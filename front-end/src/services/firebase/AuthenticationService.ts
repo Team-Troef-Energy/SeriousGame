@@ -8,6 +8,8 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firebaseService } from "./FirebaseService";
+const provider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
 class AuthenticationService {
     /**
@@ -26,7 +28,6 @@ class AuthenticationService {
      * @returns The authenticated user.
      */
     async registerWithGoogle() {
-        const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(firebaseService.auth, provider);
         const user = result.user;
 
@@ -52,7 +53,6 @@ class AuthenticationService {
      * @returns The authenticated user.
      */
     async registerWithGitHub() {
-        const provider = new GithubAuthProvider();
         const result = await signInWithPopup(firebaseService.auth, provider);
         const user = result.user;
 
@@ -90,6 +90,42 @@ class AuthenticationService {
     async signInEmailAndPassword(email: string, password: string) {
         const userCredential = await signInWithEmailAndPassword(firebaseService.auth, email, password);
         return userCredential.user;
+    }
+
+    /**
+     * Sign in a user with Google authentication.
+     * @returns The authenticated user.
+     */
+    async signInGoogle() {
+        try {
+            const result = await signInWithPopup(firebaseService.auth, provider);
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const accessToken = credential?.accessToken;  // Get the access token
+
+            return {
+                user: result.user,
+                accessToken: accessToken
+            };
+        } catch (error) {
+            console.error("Error during Google login:", error);
+            throw error;
+        }
+    };
+
+    /**
+     * Sign in a user with GitHub authentication.
+     * @returns The authenticated user.
+     */
+    async signInWithGitHub() {
+        try {
+            const result = await signInWithPopup(firebaseService.auth, githubProvider);
+            const user = result.user;
+            console.log("User Info:", user);
+
+            return user;
+        } catch (error) {
+            console.error("Error during GitHub sign-in:", error);
+        }
     }
 }
 

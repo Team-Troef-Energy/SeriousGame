@@ -5,8 +5,18 @@
             <form @submit="handleLogin" class="login-form">
                 <input v-model="email" type="email" placeholder="Enter email" required />
                 <input v-model="password" type="password" placeholder="Enter password" required />
-                <button type="submit" class="login-btn">Register</button>
+                <button type="submit" class="login-btn">Login</button>
             </form>
+            <div class="providers-container">
+                <button @click="handleGoogleLogin">
+                    <img src="../assets/google_icon.png" alt="Google icon">
+                    Login met Google
+                </button>
+                <button @click="handleGitHubLogin">
+                    <img src="../assets/github_icon.png" alt="GitHub icon">
+                    Login met GitHub
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -32,10 +42,30 @@ export default defineComponent({
                 })
         }
 
+        async function handleGoogleLogin() {
+            try {
+                const userData = await authenticationService.signInGoogle();
+            } catch (error) {
+                console.error(error);
+                window.location.assign('/register');
+            }
+        }
+
+        async function handleGitHubLogin() {
+            try {
+                const userData = await authenticationService.signInWithGitHub();
+            } catch (error) {
+                console.error(error);
+                window.location.assign('/register');
+            }
+        }
+
         return {
             email,
             password,
-            handleLogin
+            handleLogin,
+            handleGoogleLogin,
+            handleGitHubLogin
         };
     }
 });
@@ -85,5 +115,32 @@ export default defineComponent({
     margin: 4px 0 0 0;
     color: white;
     font-size: 14px;
+}
+
+.providers-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.providers-container button {
+    border: solid 1px rgba(0, 0, 0, .1);
+    background-color: white;
+    padding: 8px 20px;
+    width: 100%;
+    font-size: 13px;
+    display: flex;
+    margin-bottom: 5px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.providers-container button img {
+    width: 16px;
+    height: 16px;
 }
 </style>
