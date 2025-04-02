@@ -157,6 +157,7 @@ export default defineComponent({
     padding: 8px 20px;
     width: 100%;
     font-size: 13px;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
