@@ -1,5 +1,4 @@
-const HOST = location.hostname === "localhost" ? "localhost:8080" : "troefgame.duckdns.org:5001";
-
+let HOST = location.hostname === "localhost" ? "http://localhost:8080" : "https://troefgame.duckdns.org:5001";
 class HTTPRequestManager {
 
     async doFetch(path: string, method = 'GET', body = undefined, hasJsonResponse = true) {

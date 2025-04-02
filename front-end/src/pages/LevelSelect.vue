@@ -10,8 +10,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import LevelSelectButton from "../components/LevelSelectButton.vue";
+import { templateLevelService } from "../services/game/TemplateLevelService";
 import { levelTemplate } from "../types/levelTemplate/LevelTemplate";
-import { fetchAllLevels } from "../utils/api";
 
 export default defineComponent({
   name: "Level",
@@ -22,7 +22,7 @@ export default defineComponent({
     let levels = ref<levelTemplate[]>([]);
 
     onMounted(async () => {
-      levels.value = await fetchAllLevels();
+      levels.value = await templateLevelService.fetchAllLevels();
     });
 
     return {

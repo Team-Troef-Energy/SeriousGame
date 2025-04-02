@@ -85,9 +85,10 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
+import { gameLevelService } from '../../services/game/GameLevelService';
+import { templateLevelService } from '../../services/game/TemplateLevelService';
 import { textModal } from '../../types/global/TextModal';
 import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
-import { fetchAllLevels, fetchStartLevel } from '../../utils/api';
 import TextModal from '../global/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
@@ -99,7 +100,7 @@ export default defineComponent({
         let levels = ref<levelTemplate[]>([]);
 
         onMounted(async () => {
-            levels.value = await fetchAllLevels();
+            levels.value = await templateLevelService.fetchAllLevels();
         });
 
         let isModalVisible = ref(false)
@@ -148,7 +149,7 @@ export default defineComponent({
                 return;
             }
 
-            const startLevelData = await fetchStartLevel(savedLevelValue.toString());
+            const startLevelData = await gameLevelService.fetchStartLevel(savedLevelValue.toString());
 
             clearLevelTemplate();
 

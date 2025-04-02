@@ -60,8 +60,8 @@ import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
+import { gameLevelService } from "../services/game/GameLevelService";
 import { house, levelData, transformer } from "../types";
-import { fetchStartLevel, fetchUpdateLevel } from "../utils/api";
 
 export default defineComponent({
   name: "Level",
@@ -202,7 +202,7 @@ export default defineComponent({
             })),
           })),
         };
-        const response = await fetchUpdateLevel(gameId, data);
+        const response = await gameLevelService.fetchUpdateLevel(gameId, data);
         const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -240,7 +240,7 @@ export default defineComponent({
     // When the page loads
     onMounted(async () => {
       try {
-        const data = await fetchStartLevel(levelNumber);
+        const data = await gameLevelService.fetchStartLevel(levelNumber);
         gameId = data.id;
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;
