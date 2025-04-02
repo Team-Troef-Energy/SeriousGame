@@ -40,7 +40,9 @@ public class LevelTemplateService {
                                 new HouseOptions(
                                         createHouse.hasHeatPump(),
                                         createHouse.hasElectricVehicle(),
-                                        createHouse.congestion()
+                                        createHouse.congestion(),
+                                        createHouse.maxSolarPanels(),
+                                        createHouse.maxBatteries()
                                 )
                         )).toList(),
                         createTransformer.maxBatteryCount()
@@ -60,6 +62,7 @@ public class LevelTemplateService {
         levelTemplate.setEndTime(updateLevel.endTime());
         levelTemplate.setObjective(updateLevel.objective());
         levelTemplate.setSeason(updateLevel.season());
+        levelTemplate.setCost(updateLevel.cost());
 
         levelTemplate.getTransformers().clear();
         levelTemplate.getTransformers().addAll(
