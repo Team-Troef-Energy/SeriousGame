@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { signInEmailAndPassword } from '../utils/auth-service';
+import { authenticationService } from '../services/firebase/AuthenticationService';
 
 export default defineComponent({
     name: 'LoginPage',
@@ -23,7 +23,7 @@ export default defineComponent({
 
         function handleLogin(e: any) {
             e.preventDefault();
-            signInEmailAndPassword(email.value, password.value)
+            authenticationService.signInEmailAndPassword(email.value, password.value)
                 .then(() => {
                     console.log('ingelogd!');
                 })

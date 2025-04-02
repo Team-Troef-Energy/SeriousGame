@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { registerWithGitHub, registerWithGoogle, signUpEmailAndPassword } from '../utils/auth-service';
+import { authenticationService } from '../services/firebase/AuthenticationService';
 
 export default defineComponent({
     name: 'RegisterPage',
@@ -44,7 +44,7 @@ export default defineComponent({
                 return;
             }
 
-            signUpEmailAndPassword(email.value, password.value)
+            authenticationService.signUpEmailAndPassword(email.value, password.value)
                 .then(() => {
                     console.log('ingelogd!');
                 })
@@ -62,7 +62,7 @@ export default defineComponent({
             }
 
             try {
-                await registerWithGoogle();
+                await authenticationService.registerWithGoogle();
             } catch (error) {
                 window.alert(error);
             }
@@ -77,7 +77,7 @@ export default defineComponent({
             }
 
             try {
-                await registerWithGitHub();
+                await authenticationService.registerWithGitHub();
                 window.location.reload();
             } catch (error) {
                 window.alert(error);
