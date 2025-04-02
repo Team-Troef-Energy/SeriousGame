@@ -1,12 +1,21 @@
 package nl.hu.serious_game;
 
-import nl.hu.serious_game.data.LevelTemplateRepository;
-import nl.hu.serious_game.domain.*;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import nl.hu.serious_game.data.LevelTemplateRepository;
+import nl.hu.serious_game.domain.Congestion;
+import nl.hu.serious_game.domain.Cost;
+import nl.hu.serious_game.domain.DayProfile;
+import nl.hu.serious_game.domain.HouseOptions;
+import nl.hu.serious_game.domain.LevelHouse;
+import nl.hu.serious_game.domain.LevelTemplate;
+import nl.hu.serious_game.domain.LevelTransformer;
+import nl.hu.serious_game.domain.Objective;
+import nl.hu.serious_game.domain.Season;
 
 @Component
 public class SeedLevelTemplateRunner implements CommandLineRunner {
@@ -41,7 +50,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         LevelHouse house2 = new LevelHouse(dayProfile, new HouseOptions());
 
         // Create a single transformer
-        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2), 0);
+        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2), 4);
 
         LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
 
@@ -65,7 +74,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         LevelHouse house3 = new LevelHouse(dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3), 0);
+        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3), 4);
 
         LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
 
@@ -90,7 +99,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         LevelHouse house4 = new LevelHouse(dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4), 0);
+        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4), 4);
 
         LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
 
@@ -116,7 +125,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         LevelHouse house5 = new LevelHouse(dayProfile, new HouseOptions(false, false));
 
         // Create a single transformer
-        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4, house5), 0);
+        LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4, house5), 4);
 
         LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
 

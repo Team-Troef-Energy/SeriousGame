@@ -1,8 +1,8 @@
 package nl.hu.serious_game.domain;
 
-import jakarta.persistence.Embeddable;
-
 import java.util.Objects;
+
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class HouseOptions {
@@ -28,6 +28,14 @@ public class HouseOptions {
         this.hasHeatPump = hasHeatPump;
         this.hasElectricVehicle = hasElectricVehicle;
         this.congestion = congestion;
+    }
+
+    public HouseOptions(boolean hasHeatPump, boolean hasElectricVehicle, Congestion congestion, int maxSolarPanelCount, int maxBatteryCount) {
+        this.hasHeatPump = hasHeatPump;
+        this.hasElectricVehicle = hasElectricVehicle;
+        this.congestion = congestion;
+        this.maxSolarPanelCount = maxSolarPanelCount;
+        this.maxBatteryCount = maxBatteryCount;
     }
 
     public boolean hasHeatPump() {
