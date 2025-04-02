@@ -1,7 +1,32 @@
+<template>
+    <header>
+        <div class="header-grid">
+            <a href="/">
+                <img src="/troef-logo.png" alt="logo" />
+            </a>
+            <div class="header-links">
+                <a href="/">Home</a>
+                <a href="/terms">Terms</a>
+                <a href="/dashboard">Dashboard</a>
+
+                <template v-if="user">
+                    <p class="user-email">{{ trimString(user.email) }}</p>
+                    <button class="logoutbtn" @click="logout">Log uit</button>
+                </template>
+                <template v-else>
+                    <a href="/register">Register</a>
+                    <a href="/login">Login</a>
+                </template>
+
+            </div>
+        </div>
+    </header>
+</template>
+
 <script setup lang="ts">
+import { signOut } from 'firebase/auth';
 import { inject } from 'vue';
 import { AuthContext } from '../../context/AuthProvider';
-import { signOut } from 'firebase/auth';
 import { auth } from '../../utils/firebase-service';
 
 const authState = inject(AuthContext);
@@ -27,31 +52,6 @@ function trimString(string: string) {
     return string.substring(0, length) + '...';
 }
 </script>
-
-<template>
-    <header>
-        <div class="header-grid">
-            <a href="/">
-                <img src="/troef-logo.png" alt="logo" />
-            </a>
-            <div class="header-links">
-                <a href="/">Home</a>
-                <a href="/terms">Terms</a>
-                <a href="/dashboard">Dashboard</a>
-
-                <template v-if="user">
-                    <p class="user-email">{{ trimString(user.email) }}</p>
-                    <button class="logoutbtn" @click="logout">Log uit</button>
-                </template>
-                <template v-else>
-                    <a href="/register">Register</a>
-                    <a href="/login">Login</a>
-                </template>
-
-            </div>
-        </div>
-    </header>
-</template>
 
 <style>
 header {
