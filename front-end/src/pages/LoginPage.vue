@@ -1,3 +1,27 @@
+<template>
+  <div class="login-page-container">
+    <div class="login-page-content">
+      <form @submit="handleLogin" class="login-form">
+        <input v-model="email" type="email" placeholder="Enter email" required />
+        <input v-model="password" type="password" placeholder="Enter password" required />
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      <div class="providers-container">
+        <button @click="handleGoogleLogin">
+          <img src="../assets/google_icon.png" alt="Google icon" />
+          Login with Google
+        </button>
+        <button @click="handleGitHubLogin">
+          <img src="../assets/github_icon.png" alt="GitHub icon" />
+          Login with GitHub
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+
 <script setup>
 import { ref, inject } from 'vue';
 import { signInEmailAndPassword, signInGoogle, signInWithGitHub } from '../utils/auth-service';
@@ -46,27 +70,6 @@ async function handleGitHubLogin() {
 }
 </script>
 
-<template>
-  <div class="login-page-container">
-    <div class="login-page-content">
-      <form @submit="handleLogin" class="login-form">
-        <input v-model="email" type="email" placeholder="Enter email" required />
-        <input v-model="password" type="password" placeholder="Enter password" required />
-        <button type="submit" class="login-btn">Login</button>
-      </form>
-      <div class="providers-container">
-        <button @click="handleGoogleLogin">
-          <img src="../assets/google_icon.png" alt="Google icon" />
-          Login with Google
-        </button>
-        <button @click="handleGitHubLogin">
-          <img src="../assets/github_icon.png" alt="GitHub icon" />
-          Login with GitHub
-        </button>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .login-page-container {
