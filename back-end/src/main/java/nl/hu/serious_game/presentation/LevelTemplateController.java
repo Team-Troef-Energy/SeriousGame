@@ -5,6 +5,7 @@ import nl.hu.serious_game.application.dto.in.LevelTemplateCreateDTO;
 import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
 import nl.hu.serious_game.application.dto.in.LevelTemplateUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,5 +44,11 @@ public class LevelTemplateController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLevel(@PathVariable long id) {
+        levelTemplateService.deleteLevel(id);
     }
 }

@@ -82,4 +82,8 @@ public class LevelTemplateService {
     public List<LevelTemplateDTO> getAllLevels() {
         return this.levelTemplateRepository.findAll().stream().map(LevelTemplateDTO::fromEntity).toList();
     }
+
+    public void deleteLevel(long id) {
+        this.levelTemplateRepository.deleteById(id);
+    }
 }

@@ -1,6 +1,9 @@
 ### Get template list
 GET http://localhost:8080/templates
 
+### Get template list
+DELETE http://localhost:8080/templates/delete/5
+
 ### Create template
 POST http://localhost:8080/templates/create
 Content-Type: application/json
