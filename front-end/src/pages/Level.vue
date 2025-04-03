@@ -47,6 +47,14 @@
         :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
         :season="dashboardData.season" />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
+      <div class="chat-bot-message-input">
+          <label for="chat-bot-input">Praat met de chatbot</label>
+          <input v-model="chatbotInput" id="chat-bot-input"/>
+          <button @click="handleChatBotInput">
+            Verstuur bericht
+          </button>
+          <p>{{ chatbotOuput }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -113,6 +121,8 @@ export default defineComponent({
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
+    const chatbotInput = ref("");
+    const chatbotOuput = ref("");
     const infoBoxStyle: Ref<CSSProperties> = ref({
       position: "absolute",
       top: "0px",
@@ -123,6 +133,15 @@ export default defineComponent({
       borderRadius: "5px",
       pointerEvents: "none",
     });
+
+    const handleChatBotInput = async () => {
+      await gameLevelService.fetchChatBotMessage(chatbotInput.value).then((response) => {
+        chatbotOuput.value = response.response
+        console.log(response)
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions: number[] = [];
@@ -183,7 +202,8 @@ export default defineComponent({
 
       const totalProduction = totalGreenProduction + totalGreyProduction;
       const greenProducedEnergyPercentage = totalProduction == 0 ? 0 : (totalGreenProduction / totalProduction) * 100;
-
+      
+      // @TRISTAN kijk hiernaar voor python backend gedeelte
       dashboardData.value = {
         coinsUsed: data.totalCosts,
         maxCoins: data.objective.maxCoins,
@@ -199,6 +219,7 @@ export default defineComponent({
 
     const submitChanges = async () => {
       try {
+        // @TRISTAN kijk hiernaar voor python backend gedeelte
         const data = {
           transformers: transformers.value.map((transformer) => ({
             id: transformer.id,
@@ -269,6 +290,9 @@ export default defineComponent({
     });
 
     return {
+      chatbotInput,
+      chatbotOuput,
+      handleChatBotInput,
       gameCanvas,
       transformerPositions,
       housePositions,
