@@ -77,6 +77,7 @@ export default defineComponent({
     padding: 1rem;
     width: 95%;
     height: 100%;
+    overflow: auto;
 }
 
 .header {
@@ -87,7 +88,7 @@ export default defineComponent({
 .content {
     display: flex;
     gap: 4rem;
-    padding-left: 2rem;
+    padding-left: 5%;
 }
 
 .tutorial {
