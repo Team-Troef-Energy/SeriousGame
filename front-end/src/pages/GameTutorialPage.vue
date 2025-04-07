@@ -3,18 +3,34 @@
         <div class="page-content">
             <div class="header">
                 <h1>Game Uitleg</h1>
-                <p>Leer hoe je het Troef spel speelt!</p>
+                <p>Leer hoe je het Troef serious spel speelt!</p>
             </div>
             <div class="content">
-                <div class="content">
+                <div class="tutorial">
+                    <section class="what-is-the-game">
+                        <h3 id="what-is-the-game">Wat is het Troef serious spel?</h3>
+                        <p> Het Troef serious spel is een educatief spel dat is ontworpen om spelers te helpen de
+                            concepten en uitdagingen van de energietransitie te begrijpen. Het spel is bedoeld voor
+                            zowel studenten als burgers en ambtenaren.
+                        </p>
+                    </section>
                     <section class="goal">
-                        <h3 id="goal">Doel</h3>
-                        <p></p>
+                        <h3 id="goal">Het doel</h3>
+                        <p> Het doel van het spel is om de hoeveelheid CO2-uitstoot te verminderen en dat doe je met
+                            behulp van groen stroom!
+                            Elk level speelt zich af in een wijk met meerdere huizen en een transformator. Je wekt
+                            groene stroom op door zonnepanelen aan de huizen toe te voegen. Daarnaast kun je batterijen
+                            plaatsen bij zowel de huizen als de transformator.
+                            Maar let op: je hebt een beperkt budget!
+                            Je wint elk level alleen als je slimme keuzes maakt, binnen het budget blijft én genoeg CO2
+                            weet te besparen.
+                        </p>
                     </section>
                 </div>
                 <div class="table-of-contents">
                     <h2>Table of Contents</h2>
                     <ul>
+                        <li><a href="#what-is-the-game">Wat is het Troef serious spel?</a></li>
                         <li><a href="#goal">Doel</a></li>
                     </ul>
                 </div>
@@ -70,8 +86,15 @@ export default defineComponent({
 
 .content {
     display: flex;
-    justify-content: center;
     gap: 4rem;
+    padding-left: 2rem;
+}
+
+.tutorial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     flex: 2;
 }
 
