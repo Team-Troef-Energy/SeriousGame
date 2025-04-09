@@ -1,5 +1,5 @@
 <template>
-    <div class="game-tutorial container">
+    <div class="tutorial container">
         <div class="page-content">
             <div class="header">
                 <h1>Game Uitleg</h1>
@@ -43,14 +43,14 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: 'GameTutorialPage',
+    name: 'TutorialPage',
     setup() {
     }
 });
 </script>
 
 <style scoped>
-.game-tutorial {
+.tutorial {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,7 +60,7 @@ export default defineComponent({
     gap: 1rem;
 }
 
-.game-tutorial::after {
+.tutorial::after {
     content: '';
     position: absolute;
     top: 0;
