@@ -6,6 +6,7 @@
             </a>
             <div class="header-links">
                 <a href="/">Home</a>
+                <a href="/tutorial">Spel uitleg</a>
                 <a href="/terms">Terms</a>
                 <a href="/dashboard">Dashboard</a>
 
