@@ -85,10 +85,11 @@
                     </section>
                 </div>
                 <div class="table-of-contents">
-                    <h2>Table of Contents</h2>
+                    <h2>Inhoudsopgave</h2>
                     <ul>
                         <li><a href="#what-is-the-game">Wat is het Troef serious spel?</a></li>
                         <li><a href="#goal">Doel</a></li>
+                        <li><a href="#dashboard">Dashboard</a></li>
                     </ul>
                 </div>
             </div>
@@ -169,8 +170,24 @@ export default defineComponent({
     padding-top: 5%;
 }
 
+ul {
+    list-style-type: none;
+    padding-top: 0.5rem;
+    line-height: 1.7rem;
+}
+
+li {
+    width: 15rem;
+}
+
 a {
     text-decoration: none;
+    color: inherit;
+}
+
+a[href]:hover {
+    font-weight: bold;
+    color: var(--troef-green);
 }
 
 section {
