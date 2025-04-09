@@ -1,5 +1,5 @@
 <template>
-    <div class="tutorial container">
+    <div class="tutorial-page container">
         <div class="page-content">
             <div class="header">
                 <h1>Game Uitleg</h1>
@@ -52,13 +52,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.tutorial {
+.tutorial-page {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 100%;
-    height: 100%;
+    height: 90vh;
     gap: 1rem;
 }
 

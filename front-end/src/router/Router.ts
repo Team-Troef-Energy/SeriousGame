@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DashboardPage from "../pages/DashboardPage.vue";
-import TutorialPage from "../pages/GameTutorialPage.vue";
 import Home from "../pages/Home.vue";
 import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
 import LoginPage from "../pages/LoginPage.vue";
 import RegisterPage from '../pages/RegisterPage.vue';
 import TermsPage from "../pages/TermsPage.vue";
+import TutorialPage from "../pages/TutorialPage.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
