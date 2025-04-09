@@ -83,6 +83,19 @@
                             </tbody>
                         </table>
                     </section>
+                    <section class="transformator">
+                        <h3 id="transformator">De Transformator</h3>
+                        <p>
+                            De transformator zet de hoogspanning van het elektriciteitsnet om in laagspanning die
+                            geschikt is voor de huizen. Vervolgens verdeelt hij de stroom naar de huizen in de wijk.
+                            Wanneer er een tekort aan energie is, gebruikt de transformator eerst de energie die is
+                            opgeslagen in zijn batterijen. Als die batterijen niet aanwezig zijn of leeg zijn, schakelt
+                            de transformator over op energie van het elektriciteitsnet.
+                        </p>
+
+                        <p><b>Hint:</b> De energie van het elektriciteitsnet
+                            is niet volledig groen, dus we willen zo min mogelijk energie daar vandaan halen. </p>
+                    </section>
                 </div>
                 <div class="table-of-contents">
                     <h2>Inhoudsopgave</h2>
@@ -90,6 +103,7 @@
                         <li><a href="#what-is-the-game">Wat is het Troef serious spel?</a></li>
                         <li><a href="#goal">Doel</a></li>
                         <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#transformator">Transformator</a></li>
                     </ul>
                 </div>
             </div>
@@ -192,6 +206,10 @@ a[href]:hover {
 
 section {
     width: 100%;
+}
+
+section p {
+    padding-bottom: 0.5rem;
 }
 
 table {
