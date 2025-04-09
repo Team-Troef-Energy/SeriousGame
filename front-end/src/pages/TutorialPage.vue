@@ -83,8 +83,8 @@
                             </tbody>
                         </table>
                     </section>
-                    <section class="transformator">
-                        <h3 id="transformator">De Transformator</h3>
+                    <section class="transformer">
+                        <h3 id="transformer">De Transformator</h3>
                         <p>
                             De transformator zet de hoogspanning van het elektriciteitsnet om in laagspanning die
                             geschikt is voor de huizen. Vervolgens verdeelt hij de stroom naar de huizen in de wijk.
@@ -96,6 +96,28 @@
                         <p><b>Hint:</b> De energie van het elektriciteitsnet
                             is niet volledig groen, dus we willen zo min mogelijk energie daar vandaan halen. </p>
                     </section>
+                    <section class="solar-panels">
+                        <h3 id="solar-panels">Zonnepanelen</h3>
+                        <p>
+                            Zonnepanelen kan je op huizen plaatsen. Ze zetten zonlicht om in elektriciteit. De
+                            hoeveelheid elektriciteit die ze
+                            produceren, hangt af van de hoeveelheid zonlicht die ze ontvangen. Dit kan variëren
+                            afhankelijk van het seizoen en het tijdstip van de dag. Het seizoen en tijdstip van de dag
+                            kan je vinden op het <i><a href="#dashboard">dashboard</a></i>.
+                        </p>
+                    </section>
+                    <section class="batteries">
+                        <h3 id="batteries">Batterijen</h3>
+                        <p>
+                            Batterijen slaan ongebruikte energie op, die weer gebruikt kan worden op momenten van
+                            energietekort. Ongebruikte energie is de energie die niet door de huizen wordt verbruikt.
+                            Dit kan bijvoorbeeld zijn omdat de huizen op dat moment geen energie nodig hebben, of omdat
+                            er teveel energie is geproduceerd door de zonnepanelen. De ongebruikte energie wordt
+                            teruggeleverd aan het elektriciteitsnet, wanneer de batterijen niet aanwezig of vol zijn
+                        </p>
+
+                        <p>Batterijen kunnen worden geplaatst bij zowel de huizen als de <i><a href="#transformer">transformator</a></i>.</p>
+                    </section>
                 </div>
                 <div class="table-of-contents">
                     <h2>Inhoudsopgave</h2>
@@ -103,7 +125,9 @@
                         <li><a href="#what-is-the-game">Wat is het Troef serious spel?</a></li>
                         <li><a href="#goal">Doel</a></li>
                         <li><a href="#dashboard">Dashboard</a></li>
-                        <li><a href="#transformator">Transformator</a></li>
+                        <li><a href="#transformer">Transformator</a></li>
+                        <li><a href="#solar-panels">Zonnepanelen</a></li>
+                        <li><a href="#batteries">Batterijen</a></li>
                     </ul>
                 </div>
             </div>
@@ -181,7 +205,7 @@ export default defineComponent({
     align-items: center;
     flex: 1;
     background-color: rgb(249 249 249);
-    padding-top: 5%;
+    padding-top: 1rem;
 }
 
 ul {
