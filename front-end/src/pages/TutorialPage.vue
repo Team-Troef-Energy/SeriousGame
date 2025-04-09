@@ -113,7 +113,7 @@
                             energietekort. Ongebruikte energie is de energie die niet door de huizen wordt verbruikt.
                             Dit kan bijvoorbeeld zijn omdat de huizen op dat moment geen energie nodig hebben, of omdat
                             er teveel energie is geproduceerd door de zonnepanelen. De ongebruikte energie wordt
-                            teruggeleverd aan het elektriciteitsnet, wanneer de batterijen niet aanwezig of vol zijn
+                            teruggeleverd aan het elektriciteitsnet, wanneer de batterijen niet aanwezig of vol zijn.
                         </p>
 
                         <p>Batterijen kunnen worden geplaatst bij zowel de huizen als de <i><a href="#transformer">transformator</a></i>.</p>
