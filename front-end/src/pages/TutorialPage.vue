@@ -28,6 +28,61 @@
                             te besparen.
                         </p>
                     </section>
+                    <section class="dashboard">
+                        <h3 id="dashboard">Het Dashboard</h3>
+                        <p> Het dashboard bevat meerdere waarden. Waar elke waarden voor staat, staat in het
+                            onderstaande tabel weergegeven.
+                        </p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Waarden</th>
+                                    <th>Betekenis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Huidige munten</td>
+                                    <td>De hoeveelheid munten dat je momenteel hebt gespendeerd. Munten heb je nodig
+                                        voor zonnepanelen en batterijen.</td>
+                                </tr>
+                                <tr>
+                                    <td>Max. aantal munten</td>
+                                    <td>De maximale munten is eigenlijk het budget. Je kan over het budget heen gaan,
+                                        maar dan heb je het level niet gehaald. Zorg er dus voor dat de huidige munten
+                                        kleiner of gelijk zijn aan het maximaal aantal munten dat je mag gebruiken.</td>
+                                </tr>
+                                <tr>
+                                    <td>Huidige CO2-uitstoot</td>
+                                    <td>De hoeveelheid CO2 in kg dat wordt uitgestoten door de gehele wijk.</td>
+                                </tr>
+                                <tr>
+                                    <td>Max. CO2-uitstoot</td>
+                                    <td>De maximale hoeveelheid CO2 in kg dat de wijk mag uitstoten. De huidige
+                                        CO2-uitstoot moet gelijk of onder de maximale CO2-uitstoot zitten om het level
+                                        te kunnen behalen.</td>
+                                </tr>
+                                <tr>
+                                    <td>Totale energieconsumptie</td>
+                                    <td>De hoeveelheid energie in kWh dat wordt uitgestoken door de gehele wijk.</td>
+                                </tr>
+                                <tr>
+                                    <td>Groen geproduceerde energiepercentage</td>
+                                    <td>Het percentage groene stroom ten opzichte van de totale energieproductie.</td>
+                                </tr>
+                                <tr>
+                                    <td>Start- en eindtijd</td>
+                                    <td>Het dag bereik waar in het level plaatsvindt. Dit kan lopen van 0h tot 24h, of
+                                        te wel van 00:00 t/m 23:59 uur.</td>
+                                </tr>
+                                <tr>
+                                    <td>Seizoen</td>
+                                    <td>Het seizoen waarin het level plaatsvindt. Dit kunnen de volgende seizoen zijn:
+                                        herfst, winter, lente en zomer. </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
                 </div>
                 <div class="table-of-contents">
                     <h2>Table of Contents</h2>
@@ -57,7 +112,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 90vh;
+    height: 94vh;
     gap: 1rem;
 }
 
@@ -75,7 +130,6 @@ export default defineComponent({
 
 .page-content {
     background-color: white;
-    padding: 1rem;
     width: 95%;
     height: 100%;
     overflow: auto;
@@ -83,13 +137,17 @@ export default defineComponent({
 
 .header {
     text-align: center;
+    position: relative;
     padding: 1rem;
+    background-color: var(--troef-green);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 5;
 }
 
 .content {
     display: flex;
-    gap: 4rem;
     padding-left: 5%;
+    height: 85%;
 }
 
 .tutorial {
@@ -97,7 +155,9 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    flex: 2;
+    flex: 3;
+    overflow: auto;
+    padding: 1rem 0rem 1rem 0rem;
 }
 
 .table-of-contents {
@@ -105,5 +165,36 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     flex: 1;
+    background-color: rgb(249 249 249);
+    padding-top: 5%;
+}
+
+a {
+    text-decoration: none;
+}
+
+section {
+    width: 100%;
+}
+
+table {
+    border: 2px solid var(--troef-green);
+    border-radius: 3px;
+    background-color: #fff;
+}
+
+th {
+    background-color: var(--troef-green);
+    color: rgb(255, 255, 255);
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+th,
+td {
+    width: 45%;
+    padding: 10px 20px;
 }
 </style>
