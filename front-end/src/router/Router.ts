@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DashboardPage from "../pages/DashboardPage.vue";
+import TutorialPage from "../pages/GameTutorialPage.vue";
 import Home from "../pages/Home.vue";
 import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
@@ -13,6 +14,7 @@ const routes = [
   { path: "/levelSelect", name: "levelSelect", component: LevelSelect },
   { path: "/register", name: 'RegisterPage', component: RegisterPage },
   { path: "/terms", name: 'TermsPage', component: TermsPage },
+  { path: "/tutorial", name: 'TutorialPage', component: TutorialPage },
   { path: "/login", name: 'LoginPage', component: LoginPage },
   { path: "/dashboard", name: 'DashboardPage', component: DashboardPage }
 ];
