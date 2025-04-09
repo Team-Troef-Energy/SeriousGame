@@ -21,7 +21,7 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 90vh;
 }
 
 .dashboard-page::after {

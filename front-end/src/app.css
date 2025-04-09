@@ -1,39 +1,43 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  
-  background-color: #fff;
+/* Import for HK Grotesk from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
 
+body {
+  /* Some standard CSS measures to prevent the automated CSS from browsers overwritting our styles. */
+  font-family: 'Hanken Grotesk', 'sans-serif';
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #000;
+
+  /* Custom colors */
+  --troef-green: #73c177;
+  --troef-blue: #1098e6;
+  --basic-white: #fff;
+  --basic-black: #000;
+
+  /* 
+  What's the point of this?
+  I let these stand here due to the previous group working on it, 
+  but I have no fucking clue why it's there as there were no comments. 
+  */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
 }
 
-html,
-body, .root-element {
-    height: 100%;
-}
-
-html {
-    overflow-y: auto !important;
-}
-
-body, .root-element {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-}
-
-* {
-    box-sizing: border-box;
-    line-height: calc(1em + 0.5rem);
-}
+/* No idea what these elements should do. */
 
 main {
-    flex: 1;
-    overflow: auto;
+  flex: 1;
+  overflow: auto;
+  height: 100%;
 }
 
 .container {
@@ -42,79 +46,47 @@ main {
   margin-right: auto;
 }
 
-#app {
-  height: 100%;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
+/* Responsiveness */
 
 @media (min-width: 475px) {
   .container {
-      max-width: 475px;
+    max-width: 475px;
   }
 }
 
 @media (min-width: 640px) {
   .container {
-      max-width: 640px;
+    max-width: 640px;
   }
 }
 
 @media (min-width: 768px) {
   .container {
-      max-width: 768px;
+    max-width: 768px;
   }
 }
 
 @media (min-width: 1024px) {
   .container {
-      max-width: 1024px;
+    max-width: 1024px;
   }
 }
 
 @media (min-width: 1280px) {
   .container {
-      max-width: 1280px;
+    max-width: 1280px;
   }
 }
 
 @media (min-width: 1536px) {
   .container {
-      max-width: 1536px;
+    max-width: 1536px;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
   }
 }

@@ -503,9 +503,9 @@ input[type="checkbox"] {
         width: 100%;
     }
 
-    .level-editor-house-list {
+    /* .level-editor-house-list {
         height: 20rem;
-    }
+    } */
 
     .level-editor-form label,
     .level-editor-form input,
