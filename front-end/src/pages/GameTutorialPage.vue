@@ -18,12 +18,14 @@
                         <h3 id="goal">Het doel</h3>
                         <p> Het doel van het spel is om de hoeveelheid CO2-uitstoot te verminderen en dat doe je met
                             behulp van groen stroom!
-                            Elk level speelt zich af in een wijk met meerdere huizen en een transformator. Je wekt
-                            groene stroom op door zonnepanelen aan de huizen toe te voegen. Daarnaast kun je batterijen
+                            Elk level speelt zich af in een wijk met meerdere huizen en een transformator. Aan elk huis
+                            kan je zonnepanelen toewijzen om zo groen stroom op te wekken.
+                            Daarnaast kun je batterijen
                             plaatsen bij zowel de huizen als de transformator.
                             Maar let op: je hebt een beperkt budget!
-                            Je wint elk level alleen als je slimme keuzes maakt, binnen het budget blijft én genoeg CO2
-                            weet te besparen.
+                            Je wint elk level alleen als je slimme keuzes maakt, door binnen het budget te blijven én
+                            tegelijkertijd voldoende CO2
+                            te besparen.
                         </p>
                     </section>
                 </div>
