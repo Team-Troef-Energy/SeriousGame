@@ -3,12 +3,21 @@ services:
     image: postgres
     ports:
       - "15432:5432"
+    expose:
+      - 5432
     environment:
       POSTGRES_USER: troef
       POSTGRES_PASSWORD: troef
       POSTGRES_DB: troef-data
     volumes:
       - "database-data:/var/lib/postgresql/data/"
+
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/troef-data
 
 volumes:
   database-data:
