@@ -7,6 +7,7 @@ on:
       - "feature/303" # remove when branch is ready to merge
     paths:
       - back-end
+      - .github/workflows/docker-backend.yml
 
 env:
   REGISTRY: ghcr.io
