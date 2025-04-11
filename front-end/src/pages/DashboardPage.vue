@@ -23,16 +23,4 @@ export default defineComponent({
     align-items: center;
     height: 90vh;
 }
-
-.dashboard-page::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/green-happy-background.png');
-    background-size: cover;
-    z-index: -2;
-}
 </style>
