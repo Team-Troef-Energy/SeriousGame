@@ -111,6 +111,7 @@ header {
     justify-content: center;
     width: 100%;
     color: #000000;
+    background-color: #fff;
     border-bottom: rgba(0, 0, 0, .1) solid 1px;
     height: 54px;
 }
