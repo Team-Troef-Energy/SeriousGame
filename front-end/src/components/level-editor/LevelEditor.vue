@@ -339,8 +339,8 @@ export default defineComponent({
 .level-editor {
     display: flex;
     justify-content: center;
-    height: 95%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     overflow-y: auto;
 }
 
@@ -350,9 +350,7 @@ export default defineComponent({
     align-items: center;
     text-align: center;
     background-color: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 1rem 0rem 1rem 0rem;
     overflow: auto;
 }
 
