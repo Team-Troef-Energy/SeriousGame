@@ -116,7 +116,29 @@
                             teruggeleverd aan het elektriciteitsnet, wanneer de batterijen niet aanwezig of vol zijn.
                         </p>
 
-                        <p>Batterijen kunnen worden geplaatst bij zowel de huizen als de <i><a href="#transformer">transformator</a></i>.</p>
+                        <p>Batterijen kunnen worden geplaatst bij zowel de huizen als de <i><a
+                                    href="#transformer">transformator</a></i>.</p>
+                    </section>
+                    <section class="heat-pump">
+                        <h3 id="heat-pump">Warmtepomp</h3>
+                        <p>
+                            Een warmtepomp haalt warmte uit de buitenlucht, grondwater of de bodem en gebruikt deze om
+                            een huis
+                            te verwarmen. Dit is een duurzame manier van verwarmen, omdat het gebruik maakt van
+                            hernieuwbare energiebronnen. De warmtepomp kan ook gebruikt worden om een huis te koelen.
+                        </p>
+
+                        <i>In de game zorgt de warmtepomp alleen maar voor extra energie consumptie.</i>
+                    </section>
+                    <section class="electric-car">
+                        <h3 id="electric-car">Elektrische auto</h3>
+                        <p>
+                            Een elektrische auto is een voertuig dat wordt aangedreven door een elektromotor in plaats
+                            van een verbrandingsmotor. Dit resulteert in minder CO2-uitstoot. Het opladen van de auto kan met behulp van zonnepanelen of het
+                            elektriciteitsnet.
+                        </p>
+                        
+                        <i>In de game zorgt de elektrische auto alleen maar voor extra energie consumptie.</i>
                     </section>
                 </div>
                 <div class="table-of-contents">
@@ -128,6 +150,8 @@
                         <li><a href="#transformer">Transformator</a></li>
                         <li><a href="#solar-panels">Zonnepanelen</a></li>
                         <li><a href="#batteries">Batterijen</a></li>
+                        <li><a href="#heat-pump">Warmtepomp</a></li>
+                        <li><a href="#electric-car">Elektrische auto</a></li>
                     </ul>
                 </div>
             </div>
