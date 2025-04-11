@@ -37,37 +37,6 @@
           </svg>
         </a>
       </div>
-
-
-
-
-
-
-      <!-- <img src="../../public/troef-logo.png" alt="TROEF Energy logo" class="home-logo">
-
-
-      <div class="welcome-text">
-        <p>
-          Welkom! Dit is de digitale versie van de Troef serious game.
-          Dit spel is er om mensen op een leuke manier kennis te laten maken met concepten en uitdagingen
-          die bij de energietransitie komen kijken. </p>
-      </div>
-      <div class="welcome-text-sub">
-        <i>
-          Je wint een level door het doel te behalen. Het doel van een level kan bijvoorbeeld zijn om
-          alleen maar groene stroom te gebruiken.
-          Om hiernaar toe te werken kan je bij huizen zonnepanelen en thuis accu's plaatsen, en de transformator
-          transformator voorzien van accu's.
-          Het toevoegen van deze onderdelen kost munten en de uitdaging is dus het doel te behalen binnen het budget.
-        </i>
-      </div> -->
-
-      <!-- 
-        What is this shit? Why is there a component for only ONE button?😭 
-        This should just be an <a> element, but I'll just leave it here because I don't know why it was placed here in the first place (maybe there's a good reason?).
-      -->
-      <!-- <NavigateButton to="/levelSelect" label="Speel" class="welcome-button" /> -->
-
     </div>
   </div>
 </template>
