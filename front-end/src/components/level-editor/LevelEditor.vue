@@ -420,7 +420,7 @@ input[type="checkbox"] {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     border: none;
-    background-color: #007bff;
+    background-color: var(--troef-blue);
     color: white;
     cursor: pointer;
 }
