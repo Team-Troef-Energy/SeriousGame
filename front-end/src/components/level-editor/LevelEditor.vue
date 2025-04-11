@@ -350,7 +350,7 @@ export default defineComponent({
     align-items: center;
     text-align: center;
     background-color: white;
-    padding: 1rem 0rem 1rem 0rem;
+    padding: 1rem;
     overflow: auto;
 }
 
@@ -443,6 +443,10 @@ input[type="checkbox"] {
     .level-editor-form-global-inputs {
         flex-direction: row;
         flex-wrap: wrap;
+    }
+
+    .level-editor-form {
+        padding: 1rem 5rem 1rem 5rem;
     }
 
     .level-editor-form-global-inputs {
