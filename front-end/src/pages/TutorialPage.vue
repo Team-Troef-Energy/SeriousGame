@@ -134,11 +134,21 @@
                         <h3 id="electric-car">Elektrische auto</h3>
                         <p>
                             Een elektrische auto is een voertuig dat wordt aangedreven door een elektromotor in plaats
-                            van een verbrandingsmotor. Dit resulteert in minder CO2-uitstoot. Het opladen van de auto kan met behulp van zonnepanelen of het
+                            van een verbrandingsmotor. Dit resulteert in minder CO2-uitstoot. Het opladen van de auto
+                            kan met behulp van zonnepanelen of het
                             elektriciteitsnet.
                         </p>
-                        
+
                         <i>In de game zorgt de elektrische auto alleen maar voor extra energie consumptie.</i>
+                    </section>
+                    <section class="congestion">
+                        <h3 id="congestion">Congestie</h3>
+                        <p>
+                            Bij congestie is de maximale stroomcapaciteit bereikt.
+                            Dit kan optreden zowel bij de huizen als bij de transformator. Congestie ontstaat wanneer er
+                            te veel energie wordt verbruikt door de huizen, of wanneer er een overschot aan energie
+                            wordt geproduceerd, door bijvoorbeeld zonnepanelen. Op het moment van congestie is het niet meer mogelijk om extra elektriciteit te gebruiken en/of terug te leveren aan het elektriciteitsnet.
+                        </p>
                     </section>
                 </div>
                 <div class="table-of-contents">
@@ -152,6 +162,7 @@
                         <li><a href="#batteries">Batterijen</a></li>
                         <li><a href="#heat-pump">Warmtepomp</a></li>
                         <li><a href="#electric-car">Elektrische auto</a></li>
+                        <li><a href="#congestion">Congestie</a></li>
                     </ul>
                 </div>
             </div>
