@@ -93,6 +93,7 @@ export default defineComponent({
 
 .home-description {
   font-size: 14px;
+  font-weight: 400;
   width: 90%;
   line-height: 1.56;
 }
@@ -102,6 +103,7 @@ export default defineComponent({
   align-items: center;
   gap: 20px;
   margin-top: 20px;
+  font-weight: 500;
 }
 
 .play-btn {
@@ -164,5 +166,15 @@ export default defineComponent({
 
 .home-right img {
   width: 100%;
+}
+
+@media screen and (max-width: 900px) {
+  .home-content {
+    flex-direction: column-reverse;
+  }
+
+  .home-right {
+    margin-bottom: 30px;
+  }
 }
 </style>
