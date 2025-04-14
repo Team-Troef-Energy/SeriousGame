@@ -98,9 +98,8 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     text-align: center;
-    background-color: rgb(243 243 243);
     border-radius: 1rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     overflow: auto;
     padding: 1rem;
     gap: 1rem;

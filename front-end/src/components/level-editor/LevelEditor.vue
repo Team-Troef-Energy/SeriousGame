@@ -339,8 +339,8 @@ export default defineComponent({
 .level-editor {
     display: flex;
     justify-content: center;
-    height: 95%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     overflow-y: auto;
 }
 
@@ -350,9 +350,7 @@ export default defineComponent({
     align-items: center;
     text-align: center;
     background-color: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
     overflow: auto;
 }
 
@@ -422,7 +420,7 @@ input[type="checkbox"] {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     border: none;
-    background-color: #007bff;
+    background-color: var(--troef-blue);
     color: white;
     cursor: pointer;
 }
@@ -445,6 +443,10 @@ input[type="checkbox"] {
     .level-editor-form-global-inputs {
         flex-direction: row;
         flex-wrap: wrap;
+    }
+
+    .level-editor-form {
+        padding: 1rem 5rem 1rem 5rem;
     }
 
     .level-editor-form-global-inputs {

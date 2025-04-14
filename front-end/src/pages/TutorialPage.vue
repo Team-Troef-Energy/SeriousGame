@@ -1,11 +1,11 @@
 <template>
-    <div class="tutorial-page container">
+    <div class="tutorial-page">
         <div class="page-content">
             <div class="header">
-                <h1>Game Uitleg</h1>
+                <h3>Game Uitleg</h3>
                 <p>Leer hoe je het Troef serious spel speelt!</p>
             </div>
-            <div class="content">
+            <div class="content container">
                 <div class="tutorial">
                     <section class="what-is-the-game">
                         <h3 id="what-is-the-game">Wat is het Troef serious spel?</h3>
@@ -190,21 +190,9 @@ export default defineComponent({
     gap: 1rem;
 }
 
-.tutorial::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/green-happy-background.png');
-    background-size: cover;
-    z-index: -2;
-}
-
 .page-content {
     background-color: white;
-    width: 95%;
+    width: 100%;
     height: 100%;
     overflow: auto;
 }
@@ -213,14 +201,14 @@ export default defineComponent({
     text-align: center;
     position: relative;
     padding: 1rem;
-    background-color: var(--troef-green);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
     z-index: 5;
 }
 
 .content {
     display: flex;
-    padding-left: 5%;
+    flex-direction: column-reverse;
+    padding-left: 3%;
     height: 85%;
 }
 
@@ -229,9 +217,9 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    flex: 3;
+    flex: 5;
     overflow: auto;
-    padding: 1rem 0rem 1rem 0rem;
+    padding: 1rem 1rem 1rem 0rem;
 }
 
 .table-of-contents {
@@ -239,8 +227,6 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     flex: 1;
-    background-color: rgb(249 249 249);
-    padding-top: 1rem;
 }
 
 ul {
@@ -291,4 +277,15 @@ td {
     width: 45%;
     padding: 10px 20px;
 }
+
+@media (min-width: 768px) {
+  .content {
+    flex-direction: unset;
+  }
+
+  .table-of-contents {
+    padding: 1rem 0rem 0rem 2rem;
+  }
+}
+
 </style>

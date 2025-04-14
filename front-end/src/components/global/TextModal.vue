@@ -49,7 +49,7 @@ export default defineComponent({
 
 <style scoped>
 h3 {
-    color: #42b983;
+    color: var(--troef-blue);
 }
 
 p {
@@ -57,7 +57,9 @@ p {
 }
 
 button {
-    background-color: cadetblue;
+    background-color: var(--troef-blue);
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border-radius: 0.5rem;
 }
 
 .modal-mask {
@@ -84,7 +86,7 @@ button {
 
 .modal-header h3 {
     margin-top: 0;
-    color: #42b983;
+    color: var(--troef-blue);
 }
 
 .modal-body {
