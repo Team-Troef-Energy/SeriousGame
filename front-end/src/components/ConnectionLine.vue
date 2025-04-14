@@ -1,14 +1,12 @@
 <template>
- <div class="connection-line" :style="containerStyle">
-    <div class="led-strip" :class="{'leds-direction-up': isProduction, 'leds-direction-down': !isProduction, }">
-      <div
-        v-for="(led, index) in getLedsForLine"
-        :key="index"
-        class="led"
-        :style="led.style"
-        @mouseover="showInfoBox"
-        @mouseout="hideInfoBox">
+  <div class="connection-line" :style="containerStyle">
+    <div class="led-strip" :class="{ 'leds-direction-up': isProduction, 'leds-direction-down': !isProduction, }"
+      @mouseover="showInfoBox" @mouseout="hideInfoBox">
+      <div v-for="(led, index) in getLedsForLine" :key="index" class="led" :style="led.style">
       </div>
+    </div>
+    <div v-if="hasCongestion" class="congestion-text-indicator">
+      Congestie
     </div>
   </div>
 </template>
@@ -39,7 +37,8 @@ export default {
         top: `${this.y1}px`,
         left: `${this.x1}px`,
         zIndex: "10", // Ensure it's on top
-      }},
+      }
+    },
     rotationTransform() {
       const marginX = 15;
       const marginY = 15;
@@ -66,7 +65,7 @@ export default {
 
       const lineLength = Math.sqrt(dx * dx + dy * dy);
       const ledSpacing = 55;
-      const ledCount =  Math.max(1, Math.floor(lineLength / ledSpacing));
+      const ledCount = Math.max(1, Math.floor(lineLength / ledSpacing));
 
       const activeDuration = ledCount * 0.5;
       const totalDuration = activeDuration + 1;
@@ -77,10 +76,11 @@ export default {
           style: {
             animation: `pulse ${totalDuration}s infinite`,
             animationDelay: `${i * animationDelay}s`,
-            backgroundColor: this.hasCongestion ? "red" : "green",
+            backgroundColor: this.isProduction ? "green" : "gray",
           },
         };
-      })},
+      })
+    },
   },
   methods: {
     showInfoBox(event: any) {
@@ -140,13 +140,19 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 20% {
+
+  0%,
+  20% {
     opacity: 0.2;
   }
-  30%, 70% {
+
+  30%,
+  70% {
     opacity: 1;
   }
-  80%, 100% {
+
+  80%,
+  100% {
     opacity: 0.2;
   }
 }
