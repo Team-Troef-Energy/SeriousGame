@@ -8,7 +8,7 @@
     <div class="level-container">
       <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
       <div ref="gameCanvas" class="game-canvas">
-          <div class="connection-line-container">
+        <div class="connection-line-container">
           <template v-for="(transformer, transformerIndex) in transformers">
             <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
               :key="'connection-' + transformerIndex + '-' + houseIndex"
@@ -17,24 +17,26 @@
               :x2="(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100"
               :y2="Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60"
               :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
-              :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
-              @hide-info-box="hideInfoBox" />
+              :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
+              @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
           </template>
-          </div>
+        </div>
         <template v-for="(transformer, transformerIndex) in transformers">
-          <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id" :style="{
-            position: 'absolute',
-            left: (transformerPositions[transformerIndex] % 10) * 150 + 300 + 'px',
-            top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
-          }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
+          <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
+            :style="{
+              position: 'absolute',
+              left: (transformerPositions[transformerIndex] % 10) * 150 + 300 + 'px',
+              top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+            }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
           <House v-for="(house, houseIndex) in transformer.houses"
             :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
             :style="{
               position: 'absolute',
               left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
               top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
-            }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle" :hasHeatPump="house.hasHeatpump"
-            :hasSolarPanels="house.solarpanels > 0" :hasBatteries="house.batteries.amount > 0" />
+            }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
+            :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
+            :hasBatteries="house.batteries.amount > 0" />
         </template>
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
@@ -52,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { CSSProperties, defineComponent, onMounted, ref, Ref } from "vue";
+import { computed, CSSProperties, defineComponent, onMounted, ref, Ref } from "vue";
 import { useRoute } from "vue-router";
 import ConnectionLine from "../components/ConnectionLine.vue";
 import Dashboard from "../components/Dashboard.vue";
@@ -154,6 +156,18 @@ export default defineComponent({
 
       return factor;
     }
+
+    const getMaxHouseCurrent = computed(() => {
+      let maxCurrent = 0;
+      transformers.value.forEach((transformer) => {
+        transformer.houses.forEach((house) => {
+          if (house.current.amount > maxCurrent) {
+            maxCurrent = house.current.amount;
+          }
+        });
+      });
+      return maxCurrent;
+    });
 
     const showHouseDetails = (house: house) => {
       isPopupOpen.value = true;
@@ -277,6 +291,7 @@ export default defineComponent({
       isPopupOpen,
       popupProperties,
       getResolutionFactor,
+      getMaxHouseCurrent,
       getCumulativeHouseIndex,
       showHouseDetails,
       showTransformerDetails,

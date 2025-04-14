@@ -22,6 +22,7 @@ export default {
     maxCurrent: { type: Number, default: 0 },
     isProduction: { type: Boolean, default: false },
     current: { type: Number, default: 0 },
+    maxHouseCurrent: { type: Number, default: 0 }
   },
   computed: {
     containerStyle(): Record<string, string> {
@@ -59,6 +60,10 @@ export default {
     innerLineColor() {
       return this.hasCongestion ? "red" : "white";
     },
+    maxLedOpacity(): number {
+      return Math.min(1, this.current / this.maxHouseCurrent);
+    },
+
     getLedsForLine() {
       const dx = this.x2 - this.x1;
       const dy = this.y2 - this.y1;
@@ -77,6 +82,7 @@ export default {
             animation: `pulse ${totalDuration}s infinite`,
             animationDelay: `${i * animationDelay}s`,
             backgroundColor: this.isProduction ? "green" : "gray",
+            '--max-led-opacity': this.maxLedOpacity,
           },
         };
       })
@@ -148,7 +154,7 @@ export default {
 
   30%,
   70% {
-    opacity: 1;
+    opacity: var(--max-led-opacity);
   }
 
   80%,
