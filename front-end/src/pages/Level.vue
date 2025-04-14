@@ -8,7 +8,7 @@
     <div class="level-container">
       <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
       <div ref="gameCanvas" class="game-canvas">
-        <svg xmlns="http://www.w3.org/2000/svg" class="line-svg">
+          <div class="connection-line-container">
           <template v-for="(transformer, transformerIndex) in transformers">
             <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
               :key="'connection-' + transformerIndex + '-' + houseIndex"
@@ -20,7 +20,7 @@
               :current="house.current.amount" :maxCurrent="house.maxCurrent" @show-info-box="showInfoBox"
               @hide-info-box="hideInfoBox" />
           </template>
-        </svg>
+          </div>
         <template v-for="(transformer, transformerIndex) in transformers">
           <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id" :style="{
             position: 'absolute',

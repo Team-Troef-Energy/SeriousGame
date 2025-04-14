@@ -1,51 +1,15 @@
 <template>
-  <g>
-    <defs>
-      <marker
-        id="start-arrowhead"
-        markerWidth="5"
-        markerHeight="7"
-        refX="-5"
-        refY="2"
-        orient="auto">
-        <polygon points="0 2, 5 0, 5 4" fill="black" />
-      </marker>
-      <marker id="end-arrowhead" markerWidth="5" markerHeight="7" refX="10" refY="2" orient="auto">
-        <polygon points="0 0, 5 2, 0 4" fill="black" />
-      </marker>
-    </defs>
-    <text
-      class="congestion-text-indicator"
-      v-if="hasCongestion"
-      :x="(x1 + x2) / 2"
-      :y="(y1 + y2) / 2"
-      :transform="rotationTransform"
-      fill="red">
-      Congestie
-    </text>
-    <!-- Line with inner and outer colors -->
-    <line
-      :x1="x1"
-      :y1="y1"
-      :x2="x2"
-      :y2="y2"
-      stroke="black"
-      stroke-width="6"
-      :marker-start="current > 0 && isProduction ? 'url(#start-arrowhead)' : ''"
-      :marker-end="current > 0 && !isProduction ? 'url(#end-arrowhead)' : ''" />
-    <line :x1="x1" :y1="y1" :x2="x2" :y2="y2" :stroke="innerLineColor" stroke-width="2" />
-    <!-- Invisible line with margin for easier hovering -->
-    <line
-      class="infoBox-trigger"
-      :x1="x1"
-      :y1="y1"
-      :x2="x2"
-      :y2="y2"
-      stroke="transparent"
-      stroke-width="30"
-      @mouseover="showInfoBox"
-      @mouseout="hideInfoBox" />
-  </g>
+ <div class="connection-line" :style="containerStyle">
+    <div class="led-strip" :class="{'leds-direction-down': isProduction, 'leds-direction-up': !isProduction}">
+      <div
+        v-for="(_, index) in getLedsForLine"
+        :key="index"
+        class="led"
+        @mouseover="showInfoBox"
+        @mouseout="hideInfoBox">
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -60,7 +24,25 @@ export default {
     isProduction: { type: Boolean, default: false },
     current: { type: Number, default: 0 },
   },
+  data() {
+    return {
+      offset: 0, // Offset to control LED movement
+    }},
   computed: {
+    containerStyle(): Record<string, string> {
+      const dx = this.x2 - this.x1;
+      const dy = this.y2 - this.y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      return {
+        width: `${length}px`,
+        transform: `rotate(${angle}deg)`,
+        transformOrigin: "0 0",
+        position: "absolute",
+        top: `${this.y1}px`,
+        left: `${this.x1}px`,
+        zIndex: "10", // Ensure it's on top
+      }},
     rotationTransform() {
       const marginX = 15;
       const marginY = 15;
@@ -81,6 +63,25 @@ export default {
     innerLineColor() {
       return this.hasCongestion ? "red" : "white";
     },
+    getLedsForLine() {
+      const dx = this.x2 - this.x1;
+      const dy = this.y2 - this.y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const ledSpacing = 20; // Spacing between LEDs in pixels
+      const ledCount =  Math.max(1, Math.floor(length / ledSpacing)); // Calculate number of LEDs based on length
+      const direction = this.isProduction ? 1 : -1; // Direction based on production
+
+      return Array.from({ length: ledCount }, (_, i) => {
+        const adjustedIndex = (i + this.offset * direction) % ledCount;
+        const normalizedIndex = adjustedIndex < 0 ? ledCount + adjustedIndex : adjustedIndex;
+        return {
+          style: {
+            animation: `pulse 1.4s infinite`,
+            animationDelay: `${normalizedIndex * 0.2}s`,
+            backgroundColor: this.hasCongestion ? "red" : "green",
+          },
+        };
+      })},
   },
   methods: {
     showInfoBox(event: any) {
@@ -98,8 +99,51 @@ export default {
 </script>
 
 <style scoped>
-.infoBox-trigger {
-  cursor: help;
-  z-index: 1000;
+.connection-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.led-strip {
+  height: 20px;
+  background: #111;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+.leds-top-down {
+  flex-direction: row;
+}
+
+.leds-bottom-up {
+  flex-direction: row-reverse;
+}
+
+.led {
+  width: 20px;
+  height: 100%;
+  border-radius: 10px;
+  animation: pulse 1.4s infinite;
+}
+
+.congestion-text-indicator {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.2;
+    box-shadow: none;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
 }
 </style>
