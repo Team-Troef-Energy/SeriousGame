@@ -31,7 +31,6 @@ export default {
       const dy = this.y2 - this.y1;
       const length = Math.sqrt(dx * dx + dy * dy);
       const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-      console.log(this.isProduction)
       return {
         width: `${length}px`,
         transform: `rotate(${angle}deg)`,
@@ -64,17 +63,20 @@ export default {
     getLedsForLine() {
       const dx = this.x2 - this.x1;
       const dy = this.y2 - this.y1;
+
       const lineLength = Math.sqrt(dx * dx + dy * dy);
       const ledSpacing = 55;
       const ledCount =  Math.max(1, Math.floor(lineLength / ledSpacing));
 
+      const activeDuration = ledCount * 0.5;
+      const totalDuration = activeDuration + 1;
+      const animationDelay = activeDuration / ledCount;
+
       return Array.from({ length: ledCount }, (_, i) => {
-        const adjustedIndex = i % ledCount;
-        const normalizedIndex = adjustedIndex < 0 ? ledCount + adjustedIndex : adjustedIndex;
         return {
           style: {
-            animation: `pulse 1.4s infinite`,
-            animationDelay: `${normalizedIndex * 0.2}s`,
+            animation: `pulse ${totalDuration}s infinite`,
+            animationDelay: `${i * animationDelay}s`,
             backgroundColor: this.hasCongestion ? "red" : "green",
           },
         };
@@ -138,13 +140,14 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%, 20% {
     opacity: 0.2;
-    box-shadow: none;
   }
-  50% {
+  30%, 70% {
     opacity: 1;
-    /* box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; */
+  }
+  80%, 100% {
+    opacity: 0.2;
   }
 }
 </style>
