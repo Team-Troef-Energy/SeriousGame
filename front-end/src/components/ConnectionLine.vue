@@ -1,10 +1,11 @@
 <template>
  <div class="connection-line" :style="containerStyle">
-    <div class="led-strip" :class="{'leds-direction-down': isProduction, 'leds-direction-up': !isProduction}">
+    <div class="led-strip" :class="{'leds-direction-up': isProduction, 'leds-direction-down': !isProduction, }">
       <div
-        v-for="(_, index) in getLedsForLine"
+        v-for="(led, index) in getLedsForLine"
         :key="index"
         class="led"
+        :style="led.style"
         @mouseover="showInfoBox"
         @mouseout="hideInfoBox">
       </div>
@@ -24,16 +25,13 @@ export default {
     isProduction: { type: Boolean, default: false },
     current: { type: Number, default: 0 },
   },
-  data() {
-    return {
-      offset: 0, // Offset to control LED movement
-    }},
   computed: {
     containerStyle(): Record<string, string> {
       const dx = this.x2 - this.x1;
       const dy = this.y2 - this.y1;
       const length = Math.sqrt(dx * dx + dy * dy);
       const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      console.log(this.isProduction)
       return {
         width: `${length}px`,
         transform: `rotate(${angle}deg)`,
@@ -66,13 +64,12 @@ export default {
     getLedsForLine() {
       const dx = this.x2 - this.x1;
       const dy = this.y2 - this.y1;
-      const length = Math.sqrt(dx * dx + dy * dy);
-      const ledSpacing = 20; // Spacing between LEDs in pixels
-      const ledCount =  Math.max(1, Math.floor(length / ledSpacing)); // Calculate number of LEDs based on length
-      const direction = this.isProduction ? 1 : -1; // Direction based on production
+      const lineLength = Math.sqrt(dx * dx + dy * dy);
+      const ledSpacing = 55;
+      const ledCount =  Math.max(1, Math.floor(lineLength / ledSpacing));
 
       return Array.from({ length: ledCount }, (_, i) => {
-        const adjustedIndex = (i + this.offset * direction) % ledCount;
+        const adjustedIndex = i % ledCount;
         const normalizedIndex = adjustedIndex < 0 ? ledCount + adjustedIndex : adjustedIndex;
         return {
           style: {
@@ -98,7 +95,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .connection-line {
   display: flex;
   flex-direction: column;
@@ -107,26 +104,30 @@ export default {
 }
 
 .led-strip {
-  height: 20px;
-  background: #111;
-  border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  padding: 0 5px;
+  align-items: center;
+  height: 1.5rem;
+  width: 90%;
+  background: #dddddd;
+  border: 1px solid #000000;
+  border-radius: 1rem;
+  padding: 0rem 0.5rem;
 }
 
-.leds-top-down {
-  flex-direction: row;
+.leds-direction-down {
+  flex-direction: unset;
 }
 
-.leds-bottom-up {
+.leds-direction-up {
   flex-direction: row-reverse;
 }
 
 .led {
-  width: 20px;
-  height: 100%;
-  border-radius: 10px;
+  height: 0.6rem;
+  width: 0.6rem;
+  margin: 0rem 1rem 0rem 1rem;
+  border-radius: 1rem;
   animation: pulse 1.4s infinite;
 }
 
@@ -143,7 +144,7 @@ export default {
   }
   50% {
     opacity: 1;
-    box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+    /* box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; */
   }
 }
 </style>
