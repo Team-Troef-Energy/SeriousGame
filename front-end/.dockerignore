@@ -1,0 +1,11 @@
+.gitignore
+
+.vscode
+.idea
+*.kate-swp
+*.code-workspace
+
+Dockerfile
+.dockerignore
+
+README.md
