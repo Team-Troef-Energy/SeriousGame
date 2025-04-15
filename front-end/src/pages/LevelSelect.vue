@@ -77,8 +77,8 @@ export default defineComponent({
 }
 
 .level-select-grid {
-  display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(50px, 1fr) );
+  display: flex;
+  flex-wrap: wrap; 
   width: 100%;
   gap: 20px;
 }
