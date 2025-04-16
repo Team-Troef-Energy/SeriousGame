@@ -20,6 +20,13 @@ class AuthenticationService {
      */
     async signUpEmailAndPassword(email: string, password: string) {
         const userCredential = await createUserWithEmailAndPassword(firebaseService.auth, email, password);
+
+        await setDoc(doc(firebaseService.db, "users", userCredential.user.uid), {
+            email: userCredential.user.email,
+            role: "user",
+            createdAt: new Date().toISOString()
+        });
+
         return userCredential.user;
     }
 
@@ -39,12 +46,12 @@ class AuthenticationService {
                 uid: user.uid,
                 name: user.displayName,
                 email: user.email,
+                role: "user",
                 photoURL: user.photoURL,
                 createdAt: new Date()
             });
         }
 
-        console.log(user);
         return user;
     }
 
@@ -64,12 +71,12 @@ class AuthenticationService {
                 uid: user.uid,
                 name: user.displayName,
                 email: user.email,
+                role: "user",
                 photoURL: user.photoURL,
                 createdAt: new Date()
             });
         }
 
-        console.log(user);
         return user;
     }
 
@@ -89,6 +96,7 @@ class AuthenticationService {
      */
     async signInEmailAndPassword(email: string, password: string) {
         const userCredential = await signInWithEmailAndPassword(firebaseService.auth, email, password);
+
         return userCredential.user;
     }
 
@@ -119,10 +127,7 @@ class AuthenticationService {
     async signInWithGitHub() {
         try {
             const result = await signInWithPopup(firebaseService.auth, githubProvider);
-            const user = result.user;
-            console.log("User Info:", user);
-
-            return user;
+            return result.user;
         } catch (error) {
             console.error("Error during GitHub sign-in:", error);
         }

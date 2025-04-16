@@ -67,7 +67,7 @@ export default defineComponent({
 
             authenticationService.signUpEmailAndPassword(email.value, password.value)
                 .then(() => {
-                    console.log('ingelogd!');
+                    window.location.assign("/login");
                 })
                 .catch((error: any) => {
                     window.alert(error);
