@@ -328,13 +328,13 @@ export default defineComponent({
   height: 100%;
   position: relative;
   background: 
-    linear-gradient(45deg, rgba(16, 152, 230, 0.6), rgba(115, 193, 119, 0.6)), /* Gradient layer */
-    url("/Cartoon_green_texture_grass.jpg"); /* Image layer */
-  background-size: 200% 200%, cover; /* Gradient spans larger area, image stays static */
-  background-position: 0% 50%, center; /* Initial positions for gradient and image */
-  animation: gradientMove 6s infinite linear; /* Animate only the gradient */
+    linear-gradient(45deg, rgba(16, 152, 230, 0.6), rgba(115, 193, 119, 0.6)),
+    url("/Cartoon_green_texture_grass.jpg");
+  background-size: 200% 200%, 120%; 
+  background-position: 0% 50%, center; 
+  background-repeat: no-repeat, no-repeat;
+  animation: gradientMove 6s infinite linear; 
 }
-
 @keyframes gradientMove {
   0% {
     background-position: 0% 50%, center; /* Gradient moves, image stays centered */
