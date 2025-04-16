@@ -1,6 +1,7 @@
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, where, query } from "firebase/firestore";
 import { openDB } from "idb";
 import { firebaseService } from "./FirebaseService";
+
 
 class DatabaseService {
     private indexedDBName = "users";
@@ -58,6 +59,24 @@ class DatabaseService {
         }
 
         return users;
+    }
+
+    /**
+     * Fetches a single user from Firestore by their email.
+     * @param email - The email of the user to fetch.
+     * @returns A promise that resolves to the user data, or null if not found.
+     */
+    async getUserByEmail(email: string) {
+        const usersCollectionRef = collection(firebaseService.db, "users");
+        const userQuery = query(usersCollectionRef, where("email", "==", email));
+        const querySnapshot = await getDocs(userQuery);
+
+        if (querySnapshot.empty) {
+            console.warn(`No user found with email: ${email}`);
+            return null;
+        }
+
+        return querySnapshot.docs[0].data();
     }
 }
 
