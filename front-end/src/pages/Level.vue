@@ -327,22 +327,27 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   position: relative;
-  background: linear-gradient(45deg, #1098e6, #73c177, #fff); 
-  background-size: 200% 200%;
-  animation: gradientGameCanvas 12s infinite linear;
+  background: 
+    linear-gradient(45deg, rgba(16, 152, 230, 0.6), rgba(115, 193, 119, 0.6)), /* Gradient layer */
+    url("/Cartoon_green_texture_grass.jpg"); /* Image layer */
+  background-size: 200% 200%, cover; /* Gradient spans larger area, image stays static */
+  background-position: 0% 50%, center; /* Initial positions for gradient and image */
+  animation: gradientMove 6s infinite linear; /* Animate only the gradient */
 }
 
-@keyframes gradientGameCanvas {
+@keyframes gradientMove {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 50%, center; /* Gradient moves, image stays centered */
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 50%, center; /* Gradient moves to the right */
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 50%, center; /* Gradient returns to the start */
   }
 }
+
+
 
 .line-svg {
   width: 100%;
