@@ -78,6 +78,23 @@ class DatabaseService {
 
         return querySnapshot.docs[0].data();
     }
+
+    async getCurrentUserRole() {
+        return new Promise((resolve, reject) => {
+            firebaseService.auth.onAuthStateChanged(async (user: any) => {
+                if (user) {
+                    try {
+                        const userWithRole: any = await databaseService.getUserByEmail(user.email);
+                        resolve(userWithRole.role);
+                    } catch (error) {
+                        reject(error);
+                    }
+                } else {
+                    resolve("user");
+                }
+            });
+        });
+    }
 }
 
 export const databaseService = new DatabaseService();

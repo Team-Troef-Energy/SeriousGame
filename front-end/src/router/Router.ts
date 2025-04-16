@@ -26,26 +26,8 @@ const router = createRouter({
   routes,
 });
 
-// Utility to get user role
-async function getCurrentUserRole(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    firebaseService.auth.onAuthStateChanged(async (user: any) => {
-      if (user) {
-        try {
-          const userWithRole: any = await databaseService.getUserByEmail(user.email);
-          resolve(userWithRole.role);
-        } catch (error) {
-          reject(error);
-        }
-      } else {
-        resolve("user");
-      }
-    });
-  });
-}
-
 router.beforeEach(async (to, from, next) => {
-  const role = await getCurrentUserRole();
+  const role = await databaseService.getCurrentUserRole();
 
   if (to.name === "DashboardPage" && role !== "admin") {
     return next({ name: "Home" }); // redirect non-admins to home
