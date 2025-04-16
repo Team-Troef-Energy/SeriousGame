@@ -20,6 +20,21 @@ class DatabaseService {
         });
     }
 
+    async assignUserRole(user: any) {
+        const userData = {
+            uid: user.uid,
+            email: user.email,
+            role: "user",
+            assignedAt: new Date().toISOString(),
+        };
+    
+        // Save in Firestore
+        await setDoc(doc(firebaseService.db, "users", user.uid), userData);
+    
+        const idb = await this.initIndexedDB();
+        await idb.put("users", userData);
+    };
+
     /**
      * Assigns a user by saving their data to Firestore and IndexedDB.
      * @param user - The user object to assign.
@@ -28,6 +43,7 @@ class DatabaseService {
         const userData = {
             uid: user.uid,
             email: user.email,
+            role: "user",
             assignedAt: new Date().toISOString(),
         };
 

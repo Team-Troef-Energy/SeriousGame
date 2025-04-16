@@ -61,7 +61,7 @@ async function handleLogin(e) {
   e.preventDefault();
   try {
     await authenticationService.signInEmailAndPassword(email.value, password.value);
-    console.log('Logged in!');
+    window.location.assign("/");
   } catch (error) {
     window.alert(error);
   }
