@@ -1,7 +1,7 @@
 
 import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
 import { httpRequestManager } from '../HTTPRequestManager';
-const BASE_NAME = '/templates';
+const BASE_URL = '/templates';
 
 class TemplateLevelService {
 
@@ -11,7 +11,7 @@ class TemplateLevelService {
      * @returns 
      */
     createLevelTemplate = async (levelTemplate: levelTemplate) => {
-        return await httpRequestManager.doFetch(BASE_NAME, 'POST', levelTemplate);
+        return await httpRequestManager.doFetch(BASE_URL, 'POST', levelTemplate);
     };
 
     /**
@@ -20,7 +20,7 @@ class TemplateLevelService {
      * @returns 
      */
     updateLevelTemplate = async (templateId:number, levelTemplate: levelTemplate) => {
-        return await httpRequestManager.doFetch(`${BASE_NAME}/${templateId}`, 'POST', levelTemplate);
+        return await httpRequestManager.doFetch(`${BASE_URL}/${templateId}`, 'POST', levelTemplate);
     };
 
     /**
@@ -29,7 +29,7 @@ class TemplateLevelService {
      * @returns 
      */	
     deleteLevelTemplate = async (templateId:number) => {
-        return await httpRequestManager.doFetch(`${BASE_NAME}/${templateId}`, 'DELETE');
+        return await httpRequestManager.doFetch(`${BASE_URL}/${templateId}`, 'DELETE');
     };
 
     /**
@@ -37,7 +37,7 @@ class TemplateLevelService {
      * @returns Promise<any>
      */
     fetchAllLevels = async () => {
-        return await httpRequestManager.doFetch(BASE_NAME, 'GET');
+        return await httpRequestManager.doFetch(BASE_URL, 'GET');
     };
 }
 

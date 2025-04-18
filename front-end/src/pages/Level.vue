@@ -38,16 +38,16 @@
             :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
             :hasBatteries="house.batteries.amount > 0" />
         </template>
-      </div>
-      <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
-      <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
-        :transformers=transformers @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
-      <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
+        <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
         :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
         :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
         :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
         :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
         :season="dashboardData.season" />
+      </div>
+      <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
+      <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
+        :transformers=transformers @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
     </div>
   </div>
@@ -310,7 +310,7 @@ export default defineComponent({
 
 <style scoped>
 .level {
-  height: 94vh;
+  height: 94.3vh;
   min-width: 100%;
 }
 
@@ -322,12 +322,31 @@ export default defineComponent({
 }
 
 .game-canvas {
+  display: flex;
+  align-items: end;
   width: 100%;
   height: 100%;
   position: relative;
-  background: url("/Cartoon_green_texture_grass.jpg") repeat center center;
-  background-size: 25%, 25%;
+  background: 
+    linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
+    url("/Cartoon_green_texture_grass.jpg");
+  background-size: 200% 200%, 25%; 
+  background-position: 0% 50%, center; 
+  animation: gradientMove 6s infinite linear; 
 }
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%, center; /* Gradient moves, image stays centered */
+  }
+  50% {
+    background-position: 100% 50%, center; /* Gradient moves to the right */
+  }
+  100% {
+    background-position: 0% 50%, center; /* Gradient returns to the start */
+  }
+}
+
+
 
 .line-svg {
   width: 100%;
