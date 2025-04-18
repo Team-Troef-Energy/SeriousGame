@@ -328,11 +328,10 @@ export default defineComponent({
   height: 100%;
   position: relative;
   background: 
-    linear-gradient(45deg, rgba(16, 152, 230, 0.6), rgba(115, 193, 119, 0.6)),
+    linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
     url("/Cartoon_green_texture_grass.jpg");
-  background-size: 200% 200%, 120%; 
+  background-size: 200% 200%, 25%; 
   background-position: 0% 50%, center; 
-  background-repeat: no-repeat, no-repeat;
   animation: gradientMove 6s infinite linear; 
 }
 @keyframes gradientMove {
