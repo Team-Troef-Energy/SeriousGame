@@ -30,14 +30,6 @@
 <script lang="ts">
 export default {
   props: {
-    width: {
-      type: Number,
-      default: 200,
-    },
-    height: {
-      type: Number,
-      default: 200,
-    },
     hasSolarPanels: {
       type: Boolean,
       default: false,
