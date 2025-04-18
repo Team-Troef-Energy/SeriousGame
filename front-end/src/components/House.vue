@@ -7,15 +7,11 @@
     <img
       v-if="hasSolarPanels" class="solar-panels"
       src="/solar-panels.png"
-      :width="width * 0.5"
-      :height="height * 0.5"
       alt="Solar Panels"
     />
     <img
       v-if="hasElectricCar" class="electric-car"
       src="/electric-car.png"
-      :width="width * 0.5"
-      :height="height * 0.5"
       alt="Electric Car"
     /> 
     <img
@@ -26,8 +22,6 @@
     <img
       v-if="hasHeatPump" class="heat-pump"
       src="/heat-pump.png"
-      :width="width * 0.5"
-      :height="height * 0.5"
       alt="Heat Pump"
     /> 
   </div>
