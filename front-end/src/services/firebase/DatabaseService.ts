@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, setDoc, where, query } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, where, query, updateDoc } from "firebase/firestore";
 import { openDB } from "idb";
 import { firebaseService } from "./FirebaseService";
 
@@ -28,10 +28,10 @@ class DatabaseService {
             role: "user",
             assignedAt: new Date().toISOString(),
         };
-    
+
         // Save in Firestore
         await setDoc(doc(firebaseService.db, "users", user.uid), userData);
-    
+
         const idb = await this.initIndexedDB();
         await idb.put("users", userData);
     };
@@ -110,6 +110,38 @@ class DatabaseService {
                 }
             });
         });
+    }
+
+    async updateUserRole(email: string, newRole: string): Promise<void> {
+        try {
+            // Find user with correspondig email
+            const usersCollection = collection(firebaseService.db, 'users');
+            const q = query(usersCollection, where('email', '==', email));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.size > 1) {
+                console.error(`Multiple users found with email: ${email}`);
+                throw new Error(`Multiple users found with email: ${email}. Please ensure email uniqueness.`);
+            }
+
+            // Get the single matching user document
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            const userId = userDoc.id;
+
+            // Update the role in memory
+            const updatedUserData = {
+                ...userData,
+                role: newRole
+            };
+
+            // Update the document in Firestore
+            const userRef = doc(firebaseService.db, 'users', userId);
+            await setDoc(userRef, updatedUserData, { merge: true });
+        } catch (error: any) {
+            console.error(`Failed to update user with email ${email}:`, error);
+            throw new Error(`Failed to update user: ${error.message}`);
+        }
     }
 }
 
