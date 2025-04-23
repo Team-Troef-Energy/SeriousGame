@@ -25,7 +25,7 @@
           <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
             :style="{
               position: 'absolute',
-              left: (transformerPositions[transformerIndex] % 10) * 150 + 300 + 'px',
+              left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
               top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
             }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
           <House v-for="(house, houseIndex) in transformer.houses"
