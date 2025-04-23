@@ -135,7 +135,21 @@ export default defineComponent({
     });
 
     const handleChatBotInput = async () => {
-      await gameLevelService.fetchChatBotMessage(chatbotInput.value).then((response) => {
+      const data = {
+        transformers: transformers.value.map((transformer) => ({
+          id: transformer.id,
+          batteries: transformer.batteries.amount,
+          houses: transformer.houses.map((house) => ({
+            id: house.id,
+            batteries: house.batteries.amount,
+            solarpanels: house.solarpanels,
+          })),
+        })),
+        inputMessage: chatbotInput.value,
+        dashboard: dashboardData.value
+      };
+
+      await gameLevelService.fetchChatBotMessage(data).then((response) => {
         chatbotOuput.value = response.response
         console.log(response)
         }).catch((error) => {
@@ -203,7 +217,6 @@ export default defineComponent({
       const totalProduction = totalGreenProduction + totalGreyProduction;
       const greenProducedEnergyPercentage = totalProduction == 0 ? 0 : (totalGreenProduction / totalProduction) * 100;
       
-      // @TRISTAN kijk hiernaar voor python backend gedeelte
       dashboardData.value = {
         coinsUsed: data.totalCosts,
         maxCoins: data.objective.maxCoins,

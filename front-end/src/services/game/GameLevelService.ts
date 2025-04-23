@@ -23,7 +23,7 @@ class GameLevelService {
         return await httpRequestManager.doFetch(`${BASE_NAME}/update/${levelNumber}`, 'POST', levelUpdateDto);
     };
 
-    fetchChatBotMessage = async (message: string) => {
+    fetchChatBotMessage = async (message: { [key: string]: any }) => {
         try {
           const response = await fetch("http://localhost:5000/python-data", {
             method: "POST",
