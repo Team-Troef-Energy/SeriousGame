@@ -1,17 +1,20 @@
 <template>
     <div class="dashboard-page container">
         <LevelEditor />
+        <UsersSearchList />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LevelEditor from '../components/level-editor/LevelEditor.vue';
+import UsersSearchList from '../components/users-search-list.vue'
 
 export default defineComponent({
     name: 'DashboardPage',
     components: {
-        LevelEditor
+        LevelEditor,
+        UsersSearchList
     }
 });
 </script>
