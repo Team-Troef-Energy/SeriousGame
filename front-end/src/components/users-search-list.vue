@@ -27,6 +27,11 @@ const searchQuery = ref('');
 
 const promoteToAdmin = async (user: any) => {
   try {
+    if (user.role === 'admin') {
+      window.alert("De gebruiker met email " + user.email + " is al een admin.");
+      return;
+    }
+
     await databaseService.updateUserRole(user.email, 'admin');
     user.role = 'admin';
     window.alert(user.email + ' is nu een admin!');
