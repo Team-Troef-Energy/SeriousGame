@@ -1,6 +1,6 @@
 
 import { httpRequestManager } from '../HTTPRequestManager';
-const BASE_NAME = '/levels';
+const BASE_URL = '/levels';
 
 class GameLevelService {
 
@@ -10,7 +10,7 @@ class GameLevelService {
      * @returns Promise<any>
      */
     fetchStartLevel = async (levelNumber: string | string[]) => {
-        return await httpRequestManager.doFetch(`${BASE_NAME}/start/${levelNumber}`);
+        return await httpRequestManager.doFetch(`${BASE_URL}/start/${levelNumber}`);
     };
 
     /**
@@ -20,7 +20,7 @@ class GameLevelService {
      * @returns Promise<any>
      */
     fetchUpdateLevel = async (levelNumber: string | string[], levelUpdateDto: any) => {
-        return await httpRequestManager.doFetch(`${BASE_NAME}/update/${levelNumber}`, 'POST', levelUpdateDto);
+        return await httpRequestManager.doFetch(`${BASE_URL}/update/${levelNumber}`, 'POST', levelUpdateDto);
     };
 }
 
