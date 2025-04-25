@@ -60,7 +60,7 @@ jobs:
           push-to-registry: true
 
       - name: Trigger update
-        uses: Foxite/trigger-update@v0.2.3
+        uses: Foxite/trigger-update@v1.0
         with:
           keyId: ${{ env.GLUE_KEY_ID }}
           algorithm: ${{ env.GLUE_KEY_ALG }}
