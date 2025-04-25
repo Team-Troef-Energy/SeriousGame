@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, setDoc, where, query, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, where, query } from "firebase/firestore";
 import { openDB } from "idb";
 import { firebaseService } from "./FirebaseService";
 

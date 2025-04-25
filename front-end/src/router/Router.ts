@@ -7,7 +7,6 @@ import LoginPage from "../pages/LoginPage.vue";
 import RegisterPage from "../pages/RegisterPage.vue";
 import TermsPage from "../pages/TermsPage.vue";
 import TutorialPage from "../pages/TutorialPage.vue";
-import { firebaseService } from "../services/firebase/FirebaseService";
 import { databaseService } from "../services/firebase/DatabaseService";
 
 const routes = [
