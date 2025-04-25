@@ -7,7 +7,7 @@ name: Build and push frontend image
 on:
   push:
     paths:
-      - front-end
+      - front-end/**
       - .github/workflows/docker-frontend.yml
 
 env:
