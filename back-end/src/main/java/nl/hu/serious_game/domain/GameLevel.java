@@ -38,7 +38,7 @@ public class GameLevel implements Cloneable {
             throw new IllegalArgumentException("transformers is empty");
         }
 
-        for (var transformer : transformers) {
+        for (GameTransformer transformer : transformers) {
             transformer.setLevel(this);
         }
     }
@@ -92,7 +92,7 @@ public class GameLevel implements Cloneable {
                     }
 
                     if (netConsumption > 0) {
-                        totalCO2 += netConsumption * this.getTemplate().getCost().getCO2Cost();
+                        totalCO2 += netConsumption * this.getTemplate().getCost().getCo2Cost();
                     }
                 }
 

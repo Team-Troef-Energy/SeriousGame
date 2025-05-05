@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 
 ### Update template
-POST http://localhost:8080/templates/102
+POST http://localhost:8080/templates/5
 Content-Type: application/json
 
 {
@@ -73,7 +73,12 @@ Content-Type: application/json
         }
       ]
     }
-  ]
+  ],
+  "cost": {
+    "co2Cost": 1222.0,
+    "solarPanelCost": 111,
+    "batteryCost": 15
+  }
 }
 
 ### Start level 1

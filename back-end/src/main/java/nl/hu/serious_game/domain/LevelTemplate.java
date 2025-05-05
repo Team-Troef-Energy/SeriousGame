@@ -45,7 +45,7 @@ public class LevelTemplate {
         this.transformers = transformers;
         this.cost = cost;
 
-        for (var transformer : transformers) {
+        for (LevelTransformer transformer : transformers) {
             transformer.setLevel(this);
         }
     }
