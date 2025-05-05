@@ -42,7 +42,7 @@ public class GameTransformer implements Cloneable {
         this.houses = houses;
         this.battery = new Battery(batteries);
 
-        for (var house : houses) {
+        for (GameHouse house : houses) {
             house.setTransformer(this);
         }
     }
@@ -53,7 +53,7 @@ public class GameTransformer implements Cloneable {
         this.houses = houses;
         this.battery = new Battery(batteries);
 
-        for (var house : houses) {
+        for (GameHouse house : houses) {
             house.setTransformer(this);
         }
     }

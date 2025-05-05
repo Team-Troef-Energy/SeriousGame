@@ -83,7 +83,7 @@ public class LevelTemplateService {
                 )).toList()
         );
 
-        var savedLevelTemplate = this.levelTemplateRepository.save(levelTemplate);
+        LevelTemplate savedLevelTemplate = this.levelTemplateRepository.save(levelTemplate);
 
         return LevelTemplateDTO.fromEntity(savedLevelTemplate);
     }

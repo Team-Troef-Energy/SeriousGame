@@ -38,7 +38,7 @@ public class GameLevel implements Cloneable {
             throw new IllegalArgumentException("transformers is empty");
         }
 
-        for (var transformer : transformers) {
+        for (GameTransformer transformer : transformers) {
             transformer.setLevel(this);
         }
     }

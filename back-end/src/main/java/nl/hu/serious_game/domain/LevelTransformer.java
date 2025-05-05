@@ -35,7 +35,7 @@ public class LevelTransformer {
         this.houses = houses;
         this.maxBatteryCount = maxBatteryCount;
 
-        for (var house : houses) {
+        for (LevelHouse house : houses) {
             house.setTransformer(this);
         }
     }
@@ -46,7 +46,7 @@ public class LevelTransformer {
         this.level = levelTemplate;
         this.maxBatteryCount = maxBatteryCount;
 
-        for (var house : houses) {
+        for (LevelHouse house : houses) {
             house.setTransformer(this);
         }
     }
@@ -57,7 +57,7 @@ public class LevelTransformer {
         this.houses = houses;
         this.maxBatteryCount = maxBatteryCount;
 
-        for (var house : houses) {
+        for (LevelHouse house : houses) {
             house.setTransformer(this);
         }
     }
