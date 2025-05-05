@@ -47,6 +47,17 @@ public class GameTransformer implements Cloneable {
         }
     }
 
+    public GameTransformer(long id, LevelTransformer template, List<GameHouse> houses, int batteries) {
+        this.id = id;
+        this.template = template;
+        this.houses = houses;
+        this.battery = new Battery(batteries);
+
+        for (var house : houses) {
+            house.setTransformer(this);
+        }
+    }
+
     public Current getCalculatedLeftoverCurrentAtHour(int hour) {
         float demand = 0;
         float production = 0;
