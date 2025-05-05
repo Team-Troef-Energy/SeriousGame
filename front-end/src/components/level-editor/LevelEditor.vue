@@ -217,6 +217,7 @@ export default defineComponent({
         };
 
         const clearLevelTemplate = () => {
+            levelTemplate.value.transformers[0].houses = [];
             levelTemplate.value = { ...emptyLevelTemplate };
         };
 
