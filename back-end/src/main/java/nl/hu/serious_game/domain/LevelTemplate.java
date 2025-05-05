@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ public class LevelTemplate {
 
     @Setter
     private Season season;
-    @Setter
+
     private int startTime;
-    @Setter
     private int endTime;
+
     @Setter
     private Objective objective;
 
@@ -37,6 +38,10 @@ public class LevelTemplate {
     private List<LevelTransformer> transformers = new ArrayList<>();
 
     public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost) {
+        if (startTime < 0 || startTime > 23 || endTime < 0 || endTime > 23) {
+            throw new IllegalArgumentException("startTime and endTime must be within 0 and 23");
+        }
+
         this.levelNumber = levelNumber;
         this.season = season;
         this.startTime = startTime;
@@ -48,5 +53,21 @@ public class LevelTemplate {
         for (LevelTransformer transformer : transformers) {
             transformer.setLevel(this);
         }
+    }
+
+    public void setStartTime(int startTime) {
+        if (startTime < 0 || startTime > 23) {
+            throw new IllegalArgumentException("startTime must be within 0 and 23");
+        }
+
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(int endTime) {
+        if (endTime < 0 || endTime > 23) {
+            throw new IllegalArgumentException("endTime must be within 0 and 23");
+        }
+
+        this.endTime = endTime;
     }
 }

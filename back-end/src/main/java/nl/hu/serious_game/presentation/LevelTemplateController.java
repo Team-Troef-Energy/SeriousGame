@@ -36,7 +36,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("")
-    public ResponseEntity<LevelTemplateDTO> createLevelTemplate(@Validated @RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
+    public ResponseEntity<?> createLevelTemplate(@Validated @RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
         try {
             LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateCreateDTO);
             return ResponseEntity.ok(levelTemplate);
@@ -46,7 +46,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<LevelTemplateDTO> updateLevelTemplate(@PathVariable long id, @Validated @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
+    public ResponseEntity<?> updateLevelTemplate(@PathVariable long id, @Validated @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
         try {
             LevelTemplateDTO updatedTemplate = levelTemplateService.updateLevel(id, levelTemplateUpdateDTO);
             return ResponseEntity.ok(updatedTemplate);

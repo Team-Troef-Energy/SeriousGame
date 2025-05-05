@@ -60,11 +60,11 @@
                 </div>
                 <div class="form-start-time form-row">
                     <label for="start-time">Start tijd</label>
-                    <input type="number" id="start-time" v-model="levelTemplate.startTime" min="0" max="24" />
+                    <input type="number" id="start-time" v-model="levelTemplate.startTime" min="0" max="23" />
                 </div>
                 <div class="form-end-time form-row">
                     <label for="end-time">Eind tijd</label>
-                    <input type="number" id="end-time" v-model="levelTemplate.endTime" min="0" max="24" />
+                    <input type="number" id="end-time" v-model="levelTemplate.endTime" min="0" max="23" />
                 </div>
             </div>
             <div class="level-editor-house-button form-row">
@@ -273,8 +273,8 @@ export default defineComponent({
             if (levelTemplate.value.cost.batteryCost < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
             if (levelTemplate.value.cost.solarPanelCost < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
             if (levelTemplate.value.cost.co2Cost < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
-            if (levelTemplate.value.startTime < 0 || levelTemplate.value.startTime > 24) return showModal('Fout', 'Start tijd moet tussen 0 en 24 zijn');
-            if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 24) return showModal('Fout', 'Eind tijd moet tussen 0 en 24 zijn');
+            if (levelTemplate.value.startTime < 0 || levelTemplate.value.startTime > 23) return showModal('Fout', 'Start tijd moet tussen 0 en 23 zijn');
+            if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 23) return showModal('Fout', 'Eind tijd moet tussen 0 en 23 zijn');
             if (levelTemplate.value.startTime >= levelTemplate.value.endTime) return showModal('Fout', 'Start tijd moet voor eind tijd zijn');
             if (levelTemplate.value.transformers[0].houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
 
