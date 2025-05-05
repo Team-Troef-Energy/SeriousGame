@@ -75,7 +75,7 @@ Content-Type: application/json
     }
   ],
   "cost": {
-    "CO2Cost": 10,
+    "co2Cost": 1222.0,
     "solarPanelCost": 111,
     "batteryCost": 15
   }

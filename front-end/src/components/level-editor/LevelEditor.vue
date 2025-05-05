@@ -56,7 +56,7 @@
                 </div>
                 <div class="form-costs-co2 form-row">
                     <label for="costs-co2">Kosten Co2</label>
-                    <input type="number" id="costs-co2" v-model="levelTemplate.cost.CO2Cost" min="0" />
+                    <input type="number" id="costs-co2" v-model="levelTemplate.cost.co2Cost" min="0" />
                 </div>
                 <div class="form-start-time form-row">
                     <label for="start-time">Start tijd</label>
@@ -142,7 +142,7 @@ export default defineComponent({
             cost: {
                 batteryCost: 0,
                 solarPanelCost: 0,
-                CO2Cost: 0,
+                co2Cost: 0,
             },
             startTime: 0,
             endTime: 0
@@ -203,7 +203,7 @@ export default defineComponent({
                 cost: {
                     batteryCost: startLevelData.cost.batteryCost,
                     solarPanelCost: startLevelData.cost.solarPanelCost,
-                    CO2Cost: startLevelData.cost.co2Cost,
+                    co2Cost: startLevelData.cost.co2Cost,
                 },
                 startTime: startLevelData.startTime,
                 endTime: startLevelData.endTime
@@ -272,7 +272,7 @@ export default defineComponent({
             if (levelTemplate.value.transformers[0].congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom voor transformator mag niet negatief zijn');
             if (levelTemplate.value.cost.batteryCost < 0) return showModal('Fout', 'Kosten batterij mag niet negatief zijn');
             if (levelTemplate.value.cost.solarPanelCost < 0) return showModal('Fout', 'Kosten zonnepaneel mag niet negatief zijn');
-            if (levelTemplate.value.cost.CO2Cost < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
+            if (levelTemplate.value.cost.co2Cost < 0) return showModal('Fout', 'Kosten Co2 mag niet negatief zijn');
             if (levelTemplate.value.startTime < 0 || levelTemplate.value.startTime > 24) return showModal('Fout', 'Start tijd moet tussen 0 en 24 zijn');
             if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 24) return showModal('Fout', 'Eind tijd moet tussen 0 en 24 zijn');
             if (levelTemplate.value.startTime >= levelTemplate.value.endTime) return showModal('Fout', 'Start tijd moet voor eind tijd zijn');

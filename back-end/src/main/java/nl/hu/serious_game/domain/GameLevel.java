@@ -92,7 +92,7 @@ public class GameLevel implements Cloneable {
                     }
 
                     if (netConsumption > 0) {
-                        totalCO2 += netConsumption * this.getTemplate().getCost().getCO2Cost();
+                        totalCO2 += netConsumption * this.getTemplate().getCost().getCo2Cost();
                     }
                 }
 

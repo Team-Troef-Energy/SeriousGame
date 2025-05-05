@@ -56,7 +56,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2), 4);
 
-        LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
         logger.info("Level 1 created! {}", level);
 
@@ -79,7 +79,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3), 4);
 
-        LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
         logger.info("Level 2 created! {}", level);
 
@@ -103,7 +103,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4), 4);
 
-        LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
         logger.info("Level 3 created! {}", level);
 
@@ -128,7 +128,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4, house5), 4);
 
-        LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
         logger.info("Level 4 created! {}", level);
 
