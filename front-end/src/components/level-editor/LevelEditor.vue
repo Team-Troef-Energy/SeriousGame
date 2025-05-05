@@ -284,7 +284,6 @@ export default defineComponent({
                 if (house.congestion.maxCurrent < 0) return showModal('Fout', 'Maximale stroom mag niet negatief zijn voor een huis');
             }
 
-            levelTemplate.value.endTime -= 1; // end time of 24 -> 23 since backend endTimes start at 0
             let levelNumber = levelTemplate.value.levelNumber;
             if (await doesLevelExist(levelNumber)) {
                 let templateId = await getTemplateIdFromLevelNumber(levelNumber);
