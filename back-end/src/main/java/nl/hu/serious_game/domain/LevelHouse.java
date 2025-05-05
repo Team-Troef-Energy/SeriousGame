@@ -1,8 +1,6 @@
 package nl.hu.serious_game.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +19,10 @@ public class LevelHouse {
     private DayProfile dayProfile;
     @Setter
     private HouseOptions houseOptions;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @Setter // being set by LevelTransformer's constructor.
+    private LevelTransformer transformer;
 
     public LevelHouse(DayProfile dayProfile, HouseOptions houseOptions) {
         this.dayProfile = dayProfile;

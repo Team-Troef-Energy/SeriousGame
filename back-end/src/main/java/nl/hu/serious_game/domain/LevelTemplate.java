@@ -33,7 +33,7 @@ public class LevelTemplate {
     @Setter
     private Cost cost;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "level")
     private List<LevelTransformer> transformers = new ArrayList<>();
 
     public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost) {
@@ -44,5 +44,9 @@ public class LevelTemplate {
         this.objective = objective;
         this.transformers = transformers;
         this.cost = cost;
+
+        for (var transformer : transformers) {
+            transformer.setLevel(this);
+        }
     }
 }
