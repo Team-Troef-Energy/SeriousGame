@@ -56,7 +56,7 @@ public class LevelTemplateService {
     }
 
     public LevelTemplateDTO updateLevel(long id, LevelTemplateUpdateDTO updateLevel) {
-        LevelTemplate levelTemplate = this.levelTemplateRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        final LevelTemplate levelTemplate = this.levelTemplateRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
         levelTemplate.setStartTime(updateLevel.startTime());
         levelTemplate.setEndTime(updateLevel.endTime());
@@ -78,13 +78,14 @@ public class LevelTemplateService {
                                         updateHouse.maxBatteries()
                                 )
                         )).toList(),
+                        levelTemplate,
                         updateTransformer.maxBatteryCount()
                 )).toList()
         );
 
-        levelTemplate = this.levelTemplateRepository.save(levelTemplate);
+        var savedLevelTemplate = this.levelTemplateRepository.save(levelTemplate);
 
-        return LevelTemplateDTO.fromEntity(levelTemplate);
+        return LevelTemplateDTO.fromEntity(savedLevelTemplate);
     }
 
     public List<LevelTemplateDTO> getAllLevels() {

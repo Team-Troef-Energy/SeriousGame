@@ -40,6 +40,17 @@ public class LevelTransformer {
         }
     }
 
+    public LevelTransformer(Congestion congestion, List<LevelHouse> houses, LevelTemplate levelTemplate, int maxBatteryCount) {
+        this.congestion = congestion;
+        this.houses = houses;
+        this.level = levelTemplate;
+        this.maxBatteryCount = maxBatteryCount;
+
+        for (var house : houses) {
+            house.setTransformer(this);
+        }
+    }
+
     public LevelTransformer(long id, Congestion congestion, List<LevelHouse> houses, int maxBatteryCount) {
         this.id = id;
         this.congestion = congestion;
