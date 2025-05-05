@@ -139,11 +139,7 @@ export default defineComponent({
         transformers: transformers.value.map((transformer) => ({
           id: transformer.id,
           batteries: transformer.batteries.amount,
-          houses: transformer.houses.map((house) => ({
-            id: house.id,
-            batteries: house.batteries.amount,
-            solarpanels: house.solarpanels,
-          })),
+          houses: transformer.houses
         })),
         inputMessage: chatbotInput.value,
         dashboard: dashboardData.value
@@ -232,7 +228,6 @@ export default defineComponent({
 
     const submitChanges = async () => {
       try {
-        // @TRISTAN kijk hiernaar voor python backend gedeelte
         const data = {
           transformers: transformers.value.map((transformer) => ({
             id: transformer.id,
