@@ -36,8 +36,7 @@ export default {
         transformOrigin: "0 0",
         position: "absolute",
         top: `${this.y1}px`,
-        left: `${this.x1}px`,
-        zIndex: "10", // Ensure it's on top
+        left: `${this.x1}px`
       }
     },
     rotationTransform() {
