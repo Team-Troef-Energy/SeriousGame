@@ -20,8 +20,12 @@ public class LevelTransformer {
     @Setter
     private Congestion congestion;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transformer")
     private List<LevelHouse> houses;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @Setter // being set by LevelTemplate's constructor.
+    private LevelTemplate level;
 
     @Setter
     private int maxBatteryCount = 4;
@@ -30,5 +34,9 @@ public class LevelTransformer {
         this.congestion = congestion;
         this.houses = houses;
         this.maxBatteryCount = maxBatteryCount;
+
+        for (var house : houses) {
+            house.setTransformer(this);
+        }
     }
 }

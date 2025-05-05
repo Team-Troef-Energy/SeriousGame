@@ -1,11 +1,11 @@
 ### Get template list
 GET http://localhost:8080/templates
 
-### Get template list
-DELETE http://localhost:8080/templates/delete/5
+### Delete template 1
+DELETE http://localhost:8080/templates/1
 
 ### Create template
-POST http://localhost:8080/templates/create
+POST http://localhost:8080/templates
 Content-Type: application/json
 
 {
@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 
 ### Update template
-POST http://localhost:8080/templates/update/102
+POST http://localhost:8080/templates/102
 Content-Type: application/json
 
 {
@@ -81,6 +81,15 @@ GET http://localhost:8080/levels/start/1
 
 ### Start level 2
 GET http://localhost:8080/levels/start/2
+
+### Start level 3
+GET http://localhost:8080/levels/start/3
+
+### Start level 4
+GET http://localhost:8080/levels/start/4
+
+### Start level 5
+GET http://localhost:8080/levels/start/5
 
 ### Update level 1
 POST http://localhost:8080/levels/update/1
