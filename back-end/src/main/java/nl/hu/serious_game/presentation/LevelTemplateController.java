@@ -37,10 +37,6 @@ public class LevelTemplateController {
 
     @PostMapping("")
     public ResponseEntity<?> createLevelTemplate(@Validated @RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
-        if (levelTemplateCreateDTO.startTime() < 0 || levelTemplateCreateDTO.startTime() > 23 || levelTemplateCreateDTO.endTime() < 0 || levelTemplateCreateDTO.endTime() > 23) {
-            return ResponseEntity.badRequest().body("startTime and endTime must be within 0 and 23");
-        }
-
         try {
             LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateCreateDTO);
             return ResponseEntity.ok(levelTemplate);
@@ -51,10 +47,6 @@ public class LevelTemplateController {
 
     @PostMapping("/{id}")
     public ResponseEntity<?> updateLevelTemplate(@PathVariable long id, @Validated @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
-        if (levelTemplateUpdateDTO.startTime() < 0 || levelTemplateUpdateDTO.startTime() > 23 || levelTemplateUpdateDTO.endTime() < 0 || levelTemplateUpdateDTO.endTime() > 23) {
-            return ResponseEntity.badRequest().body("startTime and endTime must be within 0 and 23");
-        }
-
         try {
             LevelTemplateDTO updatedTemplate = levelTemplateService.updateLevel(id, levelTemplateUpdateDTO);
             return ResponseEntity.ok(updatedTemplate);
