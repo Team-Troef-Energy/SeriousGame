@@ -94,9 +94,9 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
-import { textModal } from '../../types/global/TextModal';
+import { textModal } from '../../types/global/modals/TextModal';
 import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
-import TextModal from '../global/TextModal.vue';
+import TextModal from '../global/modals/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
 
