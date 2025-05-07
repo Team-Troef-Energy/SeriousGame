@@ -10,14 +10,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import TextModal from '../components/global/TextModal.vue';
+import { defineComponent, h, ref } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+import TextModal from '../components/global/modals/TextModal.vue';
 import RaceCreateForm from '../components/race/RaceCreateForm.vue';
-import { textModal } from '../types/textModal';
+import { textModal } from '../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacePage',
-    components: { TextModal },
+    components: { TextModal, RaceCreateForm },
     setup() {
         let isModalVisible = ref(false)
 
@@ -26,9 +27,11 @@ export default defineComponent({
             body: 'Nothing to show'
         });
 
-        const createRace = () => {
-            showModal('Maak race aan', RaceCreateForm);
-        }
+        const createRace = async () => {
+            const raceFormHtml = await renderToString(h(RaceCreateForm));
+            showModal('Maak race aan', raceFormHtml);
+        };
+
 
         const showModal = (header: any, body: any) => {
             modalContent.value.header = header;

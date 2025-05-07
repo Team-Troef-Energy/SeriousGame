@@ -6,14 +6,14 @@
                 <label for="name">Naam</label>
                 <input type="text" id="name" v-model="raceName" />
             </div>
-            <button @click="createRace"> class="btn-create">Maak Race</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
-export default {
+import { defineComponent, ref } from 'vue';
+export default defineComponent( {
+    name: 'RaceCreateForm',
     setup(props, { emit }) {
         const raceName = ref<string>('');
 
@@ -26,7 +26,11 @@ export default {
             createRace
         }
     }
-}
+})
 </script>
 
-<style></style>
+<style>
+label {
+    color: green;
+}
+</style>
