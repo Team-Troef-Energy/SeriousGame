@@ -4,21 +4,19 @@
             <button class="btn-race-create" @click="createRace">Maak race</button>
         </div>
         <Teleport to="body">
-            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
+            <RaceCreateModal :show="isModalVisible" @close="isModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, h, ref } from 'vue';
-import { renderToString } from 'vue/server-renderer';
-import TextModal from '../components/global/modals/TextModal.vue';
-import RaceCreateForm from '../components/race/RaceCreateForm.vue';
+import { defineComponent, ref } from 'vue';
+import RaceCreateModal from '../components/race/RaceCreateModal.vue';
 import { textModal } from '../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacePage',
-    components: { TextModal, RaceCreateForm },
+    components: { RaceCreateModal },
     setup() {
         let isModalVisible = ref(false)
 
@@ -28,17 +26,8 @@ export default defineComponent({
         });
 
         const createRace = async () => {
-            const raceFormHtml = await renderToString(h(RaceCreateForm));
-            showModal('Maak race aan', raceFormHtml);
-        };
-
-
-        const showModal = (header: any, body: any) => {
-            modalContent.value.header = header;
-            modalContent.value.body = body;
             isModalVisible.value = true;
         };
-
 
         return {
             isModalVisible,

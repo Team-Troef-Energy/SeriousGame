@@ -1,17 +1,17 @@
 <template>
-    <HtmlModal :show="isModalVisible" :width="19" :height="11">
+    <HtmlModal :show="show" :width="19" :height="11">
         <template #header>
-            <div class="header slot-content">
+            <div class="header">
                 <h3>{{ content.header }}</h3>
             </div>
         </template>
         <template #body>
-            <div class="body slot-content">
+            <div class="body">
                 <p>{{ content.body }}</p>
             </div>
         </template>
         <template #footer>
-            <div class="footer slot-content">
+            <div class="footer">
                 <p>{{ content.footer }}</p>
                 <button @click="$emit('close')">OK</button>
             </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from "vue";
+import { defineComponent, PropType } from "vue";
 import { textModal } from "../../../types/global/modals/TextModal";
 import HtmlModal from "./HtmlModal.vue";
 
@@ -45,17 +45,7 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const isModalVisible = ref(props.show);
-
-        watch(
-            () => props.show,
-            (newVal) => {
-                isModalVisible.value = newVal;
-            }
-        );
-
         return {
-            isModalVisible,
             content: props.content,
         };
     },
