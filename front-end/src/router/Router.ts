@@ -4,6 +4,7 @@ import Home from "../pages/Home.vue";
 import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
 import LoginPage from "../pages/LoginPage.vue";
+import RacePage from "../pages/RacePage.vue";
 import RegisterPage from "../pages/RegisterPage.vue";
 import TermsPage from "../pages/TermsPage.vue";
 import TutorialPage from "../pages/TutorialPage.vue";
@@ -18,6 +19,7 @@ const routes = [
   { path: "/tutorial", name: "TutorialPage", component: TutorialPage },
   { path: "/login", name: "LoginPage", component: LoginPage },
   { path: "/dashboard", name: "DashboardPage", component: DashboardPage },
+  { path: "/race", name: "RacePage", component: RacePage },
 ];
 
 const router = createRouter({
