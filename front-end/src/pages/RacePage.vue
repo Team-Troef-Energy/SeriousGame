@@ -12,7 +12,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import RaceCreateModal from '../components/race/RaceCreateModal.vue';
-import { textModal } from '../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacePage',
@@ -20,18 +19,12 @@ export default defineComponent({
     setup() {
         let isModalVisible = ref(false)
 
-        let modalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
         const createRace = async () => {
             isModalVisible.value = true;
         };
 
         return {
             isModalVisible,
-            modalContent,
             createRace,
         };
     }
