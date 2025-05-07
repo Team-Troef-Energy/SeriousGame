@@ -75,7 +75,7 @@ const filteredUsers = computed(() => {
         user.email?.toLowerCase().includes(searchQuery.value.toLowerCase())
       );
 
-  return filtered.slice(0, 3);
+  return filtered.slice(0, 20);
 });
 
 onMounted(async () => {
