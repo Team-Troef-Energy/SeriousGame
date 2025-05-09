@@ -1,13 +1,13 @@
 <template>
     <div class="races-page container">
         <div class="header">
-            <button class="btn-race-create" @click="createRace">Maak race</button>
+            <button class="btn-race-create" @click="createRaceModal">Maak race</button>
         </div>
         <div class="content">
-            <RaceBadge :name="'Test Race'" :id="'f47ac10b-58cc-4372-a567-0e02b2c3d479'"></RaceBadge>
-            </div>
+            <RaceBadge v-for="race in races" :key="race.id" :name="race.name" :id="race.id"></RaceBadge>
+        </div>
         <Teleport to="body">
-            <RaceCreateModal :show="isModalVisible" @close="isModalVisible = false" />
+            <RaceCreateModal :show="isModalVisible" @close="isModalVisible = false" @race-create="handleCreateRace" />
         </Teleport>
     </div>
 </template>
@@ -23,13 +23,29 @@ export default defineComponent({
     setup() {
         let isModalVisible = ref(false)
 
-        const createRace = async () => {
+        const createRaceModal = async () => {
             isModalVisible.value = true;
         };
 
+        let races = ref([
+            {
+                id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                name: "test"
+            }
+        ]);
+
+        const handleCreateRace = async (raceName: string) => {
+            races.value.push({
+                id: crypto.randomUUID(),
+                name: raceName
+            });
+        }
+
         return {
             isModalVisible,
-            createRace,
+            races,
+            createRaceModal,
+            handleCreateRace
         };
     }
 });
@@ -55,6 +71,9 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     padding: 2rem 0rem 2rem 0rem;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    column-gap: 3rem;
     flex: 10;
 }
 
