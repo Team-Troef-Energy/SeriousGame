@@ -1,11 +1,12 @@
 <template>
-    <div class="race-badge">
+    <div class="race-badge" @click="navigateToRace">
         <input v-model="raceName" type="text" readonly />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import router from '../../router/Router';
 export default defineComponent({
     name: 'RaceBadge',
     props: {
@@ -25,8 +26,13 @@ export default defineComponent({
     setup(props) {
         const raceName = ref<string>(props.name);
 
+        const navigateToRace = () => {
+            router.push(`/race/${props.id}`);
+        };
+
         return {
-            raceName
+            raceName,
+            navigateToRace
         }
     }
 })
