@@ -18,7 +18,8 @@
             </template>
             <template #footer>
                 <div class="footer">
-                    <button @click="$emit('close')">Maak aan</button>
+                    <button @click="$emit('close')">Annuleer</button>
+                    <button @click="createRace">Maak aan</button>
                 </div>
             </template>
         </HtmlModal>
@@ -43,7 +44,12 @@ export default defineComponent({
         const raceName = ref<string>('');
 
         const createRace = () => {
+            if (raceName.value.trim() === '') {
+                return;
+            }
             emit('race-create', raceName.value);
+            raceName.value = '';
+            emit('close');
         }
 
         return {
@@ -73,19 +79,22 @@ form {
     width: 80%;
 }
 
-label, input {
-    width: 10rem;
+label  {
+    width: 8rem;
 }
-
+input {
+    width: 13rem;
+}
 
 input {
     text-align: center;
-    border: solid 1px rgba(0, 0, 0, .1)  !important;;
+    border: solid 1px rgba(0, 0, 0, .1) !important;
+    ;
 }
 
 .footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 
 .footer button {
