@@ -1,9 +1,9 @@
 <template>
-    <div class="create-race-form">
+    <div class="race-name-change-form">
         <HtmlModal :show="show" :width="30" :height="20">
             <template #header>
                 <div class="header">
-                    <h3 class="title">Race aanmaken</h3>
+                    <h3 class="title">Verander race naam</h3>
                 </div>
             </template>
             <template #body>
@@ -19,7 +19,7 @@
             <template #footer>
                 <div class="footer">
                     <button @click="closeModal">Annuleer</button>
-                    <button @click="createRace">Maak aan</button>
+                    <button @click="changeRaceName">Verander</button>
                 </div>
             </template>
         </HtmlModal>
@@ -30,7 +30,7 @@
 import { defineComponent, ref } from 'vue';
 import HtmlModal from '../global/modals/HtmlModal.vue';
 export default defineComponent({
-    name: 'RaceCreateModal',
+    name: 'RaceNameChangeModal',
     components: {
         HtmlModal,
     },
@@ -45,21 +45,20 @@ export default defineComponent({
             raceName.value = '';
             emit('close');
         }
-
         const raceName = ref<string>('');
 
-        const createRace = () => {
+        const changeRaceName = () => {
             if (raceName.value.trim() === '') {
                 return;
             }
-            emit('race-create', raceName.value);
+            emit('race-name-change', raceName.value);
             closeModal();
         }
 
         return {
             closeModal,
             raceName,
-            createRace
+            changeRaceName
         }
     }
 })
