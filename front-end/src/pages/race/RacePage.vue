@@ -4,6 +4,16 @@
             <button class="btn-back" @click="navigateTo('/race')">Ga terug</button>
         </div>
         <div class="content">
+            <div class="name">
+                <input v-model="raceName" type="text" readonly />
+                <button class="btn-edit-name" @click="createRaceNameChangeModal"
+                    @race-name-change="handleRaceNameChange"><svg width="50%" height="50%" viewBox="0 0 24 24"
+                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18 10L14 6M2.49997 21.5L5.88434 21.124C6.29783 21.078 6.50457 21.055 6.69782 20.9925C6.86926 20.937 7.03242 20.8586 7.18286 20.7594C7.35242 20.6475 7.49951 20.5005 7.7937 20.2063L21 7C22.1046 5.89543 22.1046 4.10457 21 3C19.8954 1.89543 18.1046 1.89543 17 3L3.7937 16.2063C3.49952 16.5005 3.35242 16.6475 3.24061 16.8171C3.1414 16.9676 3.06298 17.1307 3.00748 17.3022C2.94493 17.4954 2.92195 17.7021 2.87601 18.1156L2.49997 21.5Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg></button>
+            </div>
             <div class="navigation">
                 <button class="btn-level-editor" @click="navigateTo(`/race/${raceId}/level-editor`)">
                     <p>Level
@@ -23,20 +33,35 @@
                     </svg>
                 </button>
             </div>
+            <div class="delete">
+            </div>
         </div>
+        <Teleport to="body">
+            <RaceNameChangeModal :show="isModalVisible" @close="isModalVisible = false"
+                @race-name-change="handleRaceNameChange" />
+        </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import router from '../../router/Router';
+import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
 
 export default defineComponent({
     name: 'RacePage',
+    components: {RaceNameChangeModal},
     setup() {
+        let isModalVisible = ref(false)
+
+        const createRaceNameChangeModal = async () => {
+            isModalVisible.value = true;
+        };
+
         const route = useRoute();
         let raceId = route.params.id;
+        let raceName = ref<string>('test');
 
         if (raceId != 'f47ac10b-58cc-4372-a567-0e02b2c3d479') {
             router.push('/');
@@ -46,10 +71,18 @@ export default defineComponent({
             router.push(location);
         };
 
+        const handleRaceNameChange = async (newRaceName: string) => {
+            raceName.value = newRaceName;
+            isModalVisible.value = false;
+        }
 
         return {
+            isModalVisible,
+            createRaceNameChangeModal,
             raceId,
+            raceName,
             navigateTo,
+            handleRaceNameChange,
         };
     }
 });
@@ -73,7 +106,8 @@ export default defineComponent({
 
 .content {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     padding: 2rem 0rem 2rem 0rem;
     flex: 10;
@@ -106,9 +140,35 @@ button {
     margin-right: 5%;
 }
 
-.btn-back:hover {
+button:hover {
     cursor: pointer;
     background-color: #f8f8f8;
+}
+
+.name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 5rem;
+    gap: 1rem;
+}
+
+input {
+    height: 3rem;
+    border-radius: 0.5rem;
+    border: solid 1px rgba(0, 0, 0, .1);
+    text-align: center;
+    width: 16rem;
+}
+
+.btn-edit-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0rem;
 }
 
 @media (min-width: 475px) {
