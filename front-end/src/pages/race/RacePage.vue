@@ -157,7 +157,6 @@ button:hover {
 input {
     height: 3rem;
     border-radius: 0.5rem;
-    background-color: #fbfbfb;
     border: solid 1px rgba(0, 0, 0, .1);
     text-align: center;
     width: 16rem;
