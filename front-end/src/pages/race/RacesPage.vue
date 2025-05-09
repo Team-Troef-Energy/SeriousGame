@@ -1,8 +1,11 @@
 <template>
-    <div class="race-page container">
+    <div class="races-page container">
         <div class="header">
             <button class="btn-race-create" @click="createRace">Maak race</button>
         </div>
+        <div class="content">
+            <RaceBadge :name="'Test Race'" :id="'f47ac10b-58cc-4372-a567-0e02b2c3d479'"></RaceBadge>
+            </div>
         <Teleport to="body">
             <RaceCreateModal :show="isModalVisible" @close="isModalVisible = false" />
         </Teleport>
@@ -11,11 +14,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import RaceCreateModal from '../components/race/RaceCreateModal.vue';
+import RaceCreateModal from '../../components/race/RaceCreateModal.vue';
+import RaceBadge from '../../components/race/RaceBadge.vue'
 
 export default defineComponent({
-    name: 'RacePage',
-    components: { RaceCreateModal },
+    name: 'RacesPage',
+    components: { RaceCreateModal, RaceBadge },
     setup() {
         let isModalVisible = ref(false)
 
@@ -32,10 +36,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.dashboard-page {
+.races-page {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     height: 90vh;
 }
 
@@ -45,6 +48,14 @@ export default defineComponent({
     justify-content: flex-end;
     width: 100%;
     height: 5rem;
+    flex: 1;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0rem 2rem 0rem;
+    flex: 10;
 }
 
 button {
