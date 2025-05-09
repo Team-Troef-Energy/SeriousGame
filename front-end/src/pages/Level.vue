@@ -7,43 +7,46 @@
   <div class="level container">
     <div class="level-container">
       <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
-      <div ref="gameCanvas" class="game-canvas">
-        <div class="connection-line-container">
+      <div class="game-content">
+        <div ref="gameCanvas" class="game-canvas">
+          <div class="connection-line-container">
+            <template v-for="(transformer, transformerIndex) in transformers">
+              <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
+                :key="'connection-' + transformerIndex + '-' + houseIndex"
+                :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
+                :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
+                :x2="(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100"
+                :y2="Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60"
+                :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+                :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
+                @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+            </template>
+          </div>
           <template v-for="(transformer, transformerIndex) in transformers">
-            <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
-              :key="'connection-' + transformerIndex + '-' + houseIndex"
-              :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
-              :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
-              :x2="(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100"
-              :y2="Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60"
-              :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
-              :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
-              @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
+            <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
+              :style="{
+                position: 'absolute',
+                left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
+                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+              }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
+            <House v-for="(house, houseIndex) in transformer.houses"
+              :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
+              :style="{
+                position: 'absolute',
+                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
+                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
+              }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
+              :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
+              :hasBatteries="house.batteries.amount > 0" />
           </template>
+          <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
+            :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
+            :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
+            :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
+            :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
+            :season="dashboardData.season" />
         </div>
-        <template v-for="(transformer, transformerIndex) in transformers">
-          <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
-            :style="{
-              position: 'absolute',
-              left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
-              top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
-            }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
-          <House v-for="(house, houseIndex) in transformer.houses"
-            :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
-            :style="{
-              position: 'absolute',
-              left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
-              top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
-            }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
-            :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
-            :hasBatteries="house.batteries.amount > 0" />
-        </template>
-        <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
-        :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
-        :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
-        :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
-        :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
-        :season="dashboardData.season" />
+        <GameSideBar />
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
       <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
@@ -63,6 +66,7 @@ import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
+import GameSideBar from "../components/GameSideBar.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { house, levelData, transformer } from "../types";
@@ -77,13 +81,13 @@ export default defineComponent({
     NavigateButton,
     Dashboard,
     Notification,
+    GameSideBar,
   },
   setup() {
     const route = useRoute();
     let levelNumber = route.params.levelNmr;
     let gameId = "";
 
-    // this is to fix the typing, levelnumber should never actually be an object.
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
       console.error("multiple level numbers were passed");
@@ -141,17 +145,15 @@ export default defineComponent({
     };
 
     const getResolutionFactor = () => {
-      const baseWidth = 1920;  // Reference width
-      const baseHeight = 1080; // Reference height
+      const baseWidth = 1920;
+      const baseHeight = 1080;
 
-      const viewportWidth = window.innerWidth;   // Current viewport width
-      const viewportHeight = window.innerHeight; // Current viewport height
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
 
-      // Compute width and height factors
       const widthFactor = viewportWidth / baseWidth;
       const heightFactor = viewportHeight / baseHeight;
 
-      // Use the LARGER factor to scale UP for bigger screens
       const factor = Math.max(widthFactor, heightFactor);
 
       return factor;
@@ -187,11 +189,11 @@ export default defineComponent({
 
       lastHourData.transformers.forEach((transformer: transformer) => {
         if (transformer.current.direction === "DEMAND") {
-          totalGreyProduction += transformer.current.amount; // Grey energy from transformers
+          totalGreyProduction += transformer.current.amount;
         }
         transformer.houses.forEach((house: house) => {
           totalConsumption += house.consumption;
-          totalGreenProduction += house.production; // Green energy from houses
+          totalGreenProduction += house.production;
         });
       });
 
@@ -225,7 +227,7 @@ export default defineComponent({
           })),
         };
         const response = await gameLevelService.fetchUpdateLevel(gameId, data);
-        const lastHourData = response.hours[response.hours.length - 1]; // Get the data for the final hour
+        const lastHourData = response.hours[response.hours.length - 1];
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
           lastHourData.transformers.reduce(
@@ -259,14 +261,13 @@ export default defineComponent({
       infoBoxVisible.value = false;
     };
 
-    // When the page loads
     onMounted(async () => {
       try {
         const data = await gameLevelService.fetchStartLevel(levelNumber);
         gameId = data.id;
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;
-        const lastHourData = data.hours[data.hours.length - 1]; // Get the data for the final hour
+        const lastHourData = data.hours[data.hours.length - 1];
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
           lastHourData.transformers.reduce(
@@ -321,32 +322,39 @@ export default defineComponent({
   position: relative;
 }
 
+.game-content {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
 .game-canvas {
+  flex: 1;
   display: flex;
   align-items: end;
-  width: 100%;
   height: 100%;
   position: relative;
-  background: 
+  background:
     linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
     url("/Cartoon_green_texture_grass.jpg");
-  background-size: 200% 200%, 25%; 
-  background-position: 0% 50%, center; 
-  animation: gradientMove 6s infinite linear; 
+  background-size: 200% 200%, 25%;
+  background-position: 0% 50%, center;
+  animation: gradientMove 6s infinite linear;
 }
+
 @keyframes gradientMove {
   0% {
-    background-position: 0% 50%, center; /* Gradient moves, image stays centered */
+    background-position: 0% 50%, center;
   }
+
   50% {
-    background-position: 100% 50%, center; /* Gradient moves to the right */
+    background-position: 100% 50%, center;
   }
+
   100% {
-    background-position: 0% 50%, center; /* Gradient returns to the start */
+    background-position: 0% 50%, center;
   }
 }
-
-
 
 .line-svg {
   width: 100%;
