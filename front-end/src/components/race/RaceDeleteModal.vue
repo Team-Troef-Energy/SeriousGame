@@ -1,25 +1,20 @@
 <template>
-    <div class="race-name-change-modal">
+    <div class="race-delete-modal">
         <HtmlModal :show="show" :width="30" :height="20">
             <template #header>
                 <div class="header">
-                    <h3 class="title">Verander race naam</h3>
+                    <h3 class="title">Race verwijderen</h3>
                 </div>
             </template>
             <template #body>
                 <div class="body">
-                    <form>
-                        <div class="form-group">
-                            <label for="name">Naam</label>
-                            <input type="text" id="name" v-model="raceName" />
-                        </div>
-                    </form>
+                  <p>Weet je zeker dat je deze race wilt verwijderen?</p>
                 </div>
             </template>
             <template #footer>
                 <div class="footer">
-                    <button @click="closeModal">Annuleer</button>
-                    <button @click="changeRaceName">Verander</button>
+                    <button @click="closeModal">Nee</button>
+                    <button @click="deleteRace">Ja</button>
                 </div>
             </template>
         </HtmlModal>
@@ -27,10 +22,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import HtmlModal from '../global/modals/HtmlModal.vue';
 export default defineComponent({
-    name: 'RaceNameChangeModal',
+    name: 'RaceDeleteModal',
     components: {
         HtmlModal,
     },
@@ -42,23 +37,18 @@ export default defineComponent({
     },
     setup(props, { emit }) {
         const closeModal = () => {
-            raceName.value = '';
             emit('close');
         }
-        const raceName = ref<string>('');
 
-        const changeRaceName = () => {
-            if (raceName.value.trim() === '') {
-                return;
-            }
-            emit('race-name-change', raceName.value);
+
+        const deleteRace = () => {
+            emit('race-delete',);
             closeModal();
         }
 
         return {
             closeModal,
-            raceName,
-            changeRaceName
+            deleteRace
         }
     }
 })
@@ -66,35 +56,10 @@ export default defineComponent({
 
 <style scoped>
 .body {
-    height: 60%;
-}
-
-form {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
-}
-
-.form-group {
-    display: flex;
-    align-items: center;
-    width: 80%;
-}
-
-label {
-    width: 8rem;
-}
-
-input {
-    width: 13rem;
-}
-
-input {
-    text-align: center;
-    border: solid 1px rgba(0, 0, 0, .1) !important;
-    ;
+    height: 60%;
 }
 
 .footer {
