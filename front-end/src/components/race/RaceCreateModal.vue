@@ -1,5 +1,5 @@
 <template>
-    <div class="create-race-form">
+    <div class="create-race-modal">
         <HtmlModal :show="show" :width="30" :height="20">
             <template #header>
                 <div class="header">

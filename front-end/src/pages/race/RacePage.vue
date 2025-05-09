@@ -34,11 +34,16 @@
                 </button>
             </div>
             <div class="delete">
+                <button class="btn-delete-race" @click="createDeleteRaceModal">Verwijder race</button>
             </div>
         </div>
         <Teleport to="body">
-            <RaceNameChangeModal :show="isModalVisible" @close="isModalVisible = false"
+            <RaceNameChangeModal :show="isRaceNameChangeModalVisible" @close="isRaceNameChangeModalVisible = false"
                 @race-name-change="handleRaceNameChange" />
+        </Teleport>
+        <Teleport to="body">
+            <RaceDeleteModal :show="isRaceDeleteModalVisible" @close="isRaceDeleteModalVisible = false"
+                @race-delete="handleRaceDelete" />
         </Teleport>
     </div>
 </template>
@@ -48,15 +53,21 @@ import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import router from '../../router/Router';
 import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
+import RaceDeleteModal from '../../components/race/RaceDeleteModal.vue';
 
 export default defineComponent({
     name: 'RacePage',
-    components: {RaceNameChangeModal},
+    components: { RaceNameChangeModal, RaceDeleteModal },
     setup() {
-        let isModalVisible = ref(false)
+        let isRaceNameChangeModalVisible = ref(false)
+        let isRaceDeleteModalVisible = ref(false)
 
         const createRaceNameChangeModal = async () => {
-            isModalVisible.value = true;
+            isRaceNameChangeModalVisible.value = true;
+        };
+
+        const createDeleteRaceModal = async () => {
+            isRaceDeleteModalVisible.value = true;
         };
 
         const route = useRoute();
@@ -73,16 +84,24 @@ export default defineComponent({
 
         const handleRaceNameChange = async (newRaceName: string) => {
             raceName.value = newRaceName;
-            isModalVisible.value = false;
+            isRaceNameChangeModalVisible.value = false;
+        }
+
+        const handleRaceDelete = async () => {
+            isRaceDeleteModalVisible.value = false;
+            navigateTo('/race')
         }
 
         return {
-            isModalVisible,
+            isRaceNameChangeModalVisible,
+            isRaceDeleteModalVisible,
             createRaceNameChangeModal,
+            createDeleteRaceModal,
             raceId,
             raceName,
             navigateTo,
             handleRaceNameChange,
+            handleRaceDelete
         };
     }
 });
@@ -169,6 +188,11 @@ input {
     width: 3rem;
     height: 3rem;
     padding: 0rem;
+}
+
+.btn-delete-race {
+    width: 10rem;
+    white-space: nowrap;
 }
 
 @media (min-width: 475px) {
