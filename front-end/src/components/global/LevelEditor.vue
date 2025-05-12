@@ -100,7 +100,7 @@ import HouseConfiguration from './HouseConfiguration.vue';
 
 export default defineComponent({
     components: { ComponentHolder, HouseConfiguration, TextModal },
-    name: 'LevelEditor',
+    name: 'GlobalLevelEditor',
     props: {
         fetchAllLevels: {
             type: Function,
