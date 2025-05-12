@@ -101,11 +101,20 @@ import HouseConfiguration from './HouseConfiguration.vue';
 export default defineComponent({
     components: { ComponentHolder, HouseConfiguration, TextModal },
     name: 'LevelEditor',
-    setup() {
+    props: {
+        fetchAllLevels: {
+            type: Function,
+            required: true
+        }, fetchStartLevel: {
+            type: Function,
+            required: true
+        },
+    },
+    setup(props, { emit }) {
         let levels = ref<levelTemplate[]>([]);
 
         const fetchAllLevels = async () => {
-            // TODO: fetch all levels prop
+            const fetchedLevels = await props.fetchAllLevels();
             levels.value = [...fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber)];
         };
 
@@ -161,7 +170,7 @@ export default defineComponent({
                 return;
             }
 
-            // TODO: fetch start level prop
+            const startLevelData = await props.fetchStartLevel(savedLevelValue.toString());
 
             clearLevelTemplate();
 
@@ -285,9 +294,14 @@ export default defineComponent({
             let levelNumber = levelTemplate.value.levelNumber;
             if (await doesLevelExist(levelNumber)) {
                 let templateId = await getTemplateIdFromLevelNumber(levelNumber);
-                // TODO: emit event to update level
+                emit('updateLevel', {
+                    id: templateId,
+                    levelTemplate: levelTemplate.value
+                });
             } else {
-                // TODO: emit event to create level
+                emit('createLevel', {
+                    levelTemplate: levelTemplate.value
+                });
             }
         };
 
@@ -295,7 +309,9 @@ export default defineComponent({
             let levelNumber = levelTemplate.value.levelNumber;
             if (!(await doesLevelExist(levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
             let templateId = await getTemplateIdFromLevelNumber(levelNumber);
-            // TODO: emit event to delete level
+            emit('deleteLevel', {
+                id: templateId,
+            });
 
             clearLevelTemplate();
         }
