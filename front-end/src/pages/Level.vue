@@ -1,8 +1,3 @@
-<!-- 
- Code is probably working fine, but this is absolutely un fucking readable.
- We'll gonna need to turn this into a bunch of different components with the same logic,
- and then judge whether it needs improvement or not.
--->
 <template>
   <div class="level container">
     <div class="level-container">
@@ -37,7 +32,8 @@
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
-              :hasBatteries="house.batteries.amount > 0" />
+              :hasBatteries="house.batteries.amount > 0" :solarpanels="house.solarpanels"
+              :batteries="house.batteries" />
           </template>
           <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
             :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
