@@ -34,13 +34,9 @@ public class RaceController {
     }
 
     @GetMapping("/by-email")
-    public ResponseEntity<RaceDTO> getByEmail(@RequestParam String email) {
-        Optional<Race> race = this.raceRepository.findByUserEmail(email);
-        if (race.isPresent()) {
-            return ResponseEntity.ok(RaceDTO.fromEntity(race.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<List<RaceDTO>> getByEmail(@RequestParam String email) {
+        List<Race> race = this.raceRepository.findByUserEmail(email);
+        return ResponseEntity.ok(race.stream().map(RaceDTO::fromEntity).toList());
     }
 
     @GetMapping("/{id}")
