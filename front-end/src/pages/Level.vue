@@ -142,7 +142,8 @@ export default defineComponent({
           houses: transformer.houses
         })),
         inputMessage: chatbotInput.value,
-        dashboard: dashboardData.value
+        dashboard: dashboardData.value,
+        dest: "level"
       };
 
       await gameLevelService.fetchChatBotMessage(data).then((response) => {

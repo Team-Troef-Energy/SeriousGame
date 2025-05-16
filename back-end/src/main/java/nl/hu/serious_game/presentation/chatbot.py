@@ -14,6 +14,16 @@ def get_data():
     """
     # ontvang de data die doorgestuurd wordt
     data = request.get_json()
+
+    match data['dest']:
+        case "level":
+            response = chatbot(data)
+        case "admin":
+            response = level_generation(data)
+
+    return jsonify({"response": f"{response}".strip()})
+
+def chatbot(data: dict) -> str:
     # filter de vraag uit de data
     question = data['inputMessage']
     # maak de context met de data
@@ -34,7 +44,7 @@ Question:
     response = generator(prompt, max_length=50)[0]
     print(response)
 
-    return jsonify({"response": f"{response['generated_text']}".strip()})
+    return response['generated_text']
 
 def create_context(data: dict) -> str:
     """
@@ -70,6 +80,9 @@ current amount CO2: {dashboard['currentCO2']}\
     # de gehele lijst naar een string maken die per entry in de lijst een enter krijgt
     context = "\n".join(context_list_house)
     return context
+
+def level_generation(data: dict) -> str:
+    return -1
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
