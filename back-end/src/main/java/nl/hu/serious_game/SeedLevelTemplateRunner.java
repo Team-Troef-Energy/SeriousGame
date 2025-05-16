@@ -2,6 +2,9 @@ package nl.hu.serious_game;
 
 import java.util.List;
 
+import nl.hu.serious_game.presentation.GameLevelController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import nl.hu.serious_game.domain.Season;
 
 @Component
 public class SeedLevelTemplateRunner implements CommandLineRunner {
+    private final Logger logger = LoggerFactory.getLogger(SeedLevelTemplateRunner.class);
     private final LevelTemplateRepository levelTemplateRepository;
 
     @Autowired
@@ -28,7 +32,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println("Runner started!");
+        logger.info("Runner started!");
         if (levelTemplateRepository.getLevelCount() == 0) {
             levelTemplateRepository.save(createLevel1());
             levelTemplateRepository.save(createLevel2());
@@ -38,7 +42,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
     }
 
     public LevelTemplate createLevel1() {
-        System.out.println("Creating level 1...");
+        logger.info("Creating level 1...");
         // Create objective
         Objective objective = new Objective(1, 20);
 
@@ -52,16 +56,15 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2), 4);
 
-        LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
-        System.out.println("Level 1 created!");
-        System.out.println(level);
+        logger.info("Level 1 created! {}", level);
 
         return level;
     }
 
     public LevelTemplate createLevel2() {
-        System.out.println("Creating level 2...");
+        logger.info("Creating level 2...");
         // Create objective
         Objective objective = new Objective(2, 50);
 
@@ -76,16 +79,15 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3), 4);
 
-        LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
-        System.out.println("Level 2 created!");
-        System.out.println(level);
+        logger.info("Level 2 created! {}", level);
 
         return level;
     }
 
     public LevelTemplate createLevel3() {
-        System.out.println("Creating level 3...");
+        logger.info("Creating level 3...");
         // Create objective
         Objective objective = new Objective(4, 150);
 
@@ -101,16 +103,15 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4), 4);
 
-        LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
-        System.out.println("Level 3 created!");
-        System.out.println(level);
+        logger.info("Level 3 created! {}", level);
 
         return level;
     }
 
     public LevelTemplate createLevel4() {
-        System.out.println("Creating level 4...");
+        logger.info("Creating level 4...");
         // Create objective
         Objective objective = new Objective(5, 100);
 
@@ -127,10 +128,9 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4, house5), 4);
 
-        LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10));
+        LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10, 0.5f));
 
-        System.out.println("Level 4 created!");
-        System.out.println(level);
+        logger.info("Level 4 created! {}", level);
 
         return level;
     }

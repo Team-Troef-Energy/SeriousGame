@@ -1,18 +1,18 @@
 ### Get template list
 GET http://localhost:8080/templates
 
-### Get template list
-DELETE http://localhost:8080/templates/delete/5
+### Delete template 1
+DELETE http://localhost:8080/templates/103
 
 ### Create template
-POST http://localhost:8080/templates/create
+POST http://localhost:8080/templates
 Content-Type: application/json
 
 {
-  "levelNumber": 5,
+  "levelNumber": 6,
   "season": "SUMMER",
-  "startTime": 8,
-  "endTime": 20,
+  "startTime": 0,
+  "endTime": 23,
   "objective": {
     "maxCO2": 2,
     "maxCoins": 2
@@ -37,11 +37,16 @@ Content-Type: application/json
         }
       ]
     }
-  ]
+  ],
+  "cost": {
+    "co2Cost": 1222.0,
+    "solarPanelCost": 111,
+    "batteryCost": 15
+  }
 }
 
 ### Update template
-POST http://localhost:8080/templates/update/102
+POST http://localhost:8080/templates/5
 Content-Type: application/json
 
 {
@@ -73,7 +78,12 @@ Content-Type: application/json
         }
       ]
     }
-  ]
+  ],
+  "cost": {
+    "co2Cost": 1222.0,
+    "solarPanelCost": 111,
+    "batteryCost": 15
+  }
 }
 
 ### Start level 1
@@ -81,6 +91,15 @@ GET http://localhost:8080/levels/start/1
 
 ### Start level 2
 GET http://localhost:8080/levels/start/2
+
+### Start level 3
+GET http://localhost:8080/levels/start/3
+
+### Start level 4
+GET http://localhost:8080/levels/start/4
+
+### Start level 5
+GET http://localhost:8080/levels/start/5
 
 ### Update level 1
 POST http://localhost:8080/levels/update/1

@@ -59,7 +59,7 @@
             </ul>
 
             <h3>8. Contact</h3>
-            <p>Voor vragen over deze voorwaarden kunt u contact opnemen via <a
+            <p>Voor vragen over deze voorwaarden kunt u contact opnemen via <a class="terms-a"
                     href="mailto:energygame@hu.nl">energygame@hu.nl</a>.</p>
 
             <p>Door verder te gaan en een account aan te maken, bevestigt u dat u deze voorwaarden hebt gelezen en ermee
@@ -89,15 +89,40 @@ export default defineComponent({
 
 .terms-content {
     width: 100%;
-    margin-top: 50px;
     max-width: 1100px;
     display: flex;
     align-items: start;
     flex-direction: column;
+    margin-bottom: 50px;
 }
 
 .terms-content ul {
     margin-left: 20px;
     padding: 0 20px;
+}
+
+.terms-content h3 {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.terms-content p {
+    font-weight: normal;
+}
+
+.terms-a {
+    color: var(--troef-blue);
+    text-decoration: none;
+}
+
+.terms-a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 900px) {
+    .terms-content {
+        width: 95%;
+    }
 }
 </style>

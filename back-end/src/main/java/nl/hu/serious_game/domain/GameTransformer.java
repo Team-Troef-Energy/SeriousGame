@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -19,10 +21,16 @@ public class GameTransformer implements Cloneable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @Setter // being set by LevelTransformer's constructor.
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private LevelTransformer template;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @Setter // being set by GameLevel's constructor.
+    private GameLevel level;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transformer")
     private List<GameHouse> houses;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -33,6 +41,21 @@ public class GameTransformer implements Cloneable {
         this.template = template;
         this.houses = houses;
         this.battery = new Battery(batteries);
+
+        for (GameHouse house : houses) {
+            house.setTransformer(this);
+        }
+    }
+
+    public GameTransformer(long id, LevelTransformer template, List<GameHouse> houses, int batteries) {
+        this.id = id;
+        this.template = template;
+        this.houses = houses;
+        this.battery = new Battery(batteries);
+
+        for (GameHouse house : houses) {
+            house.setTransformer(this);
+        }
     }
 
     public Current getCalculatedLeftoverCurrentAtHour(int hour) {

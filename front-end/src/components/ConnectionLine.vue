@@ -1,51 +1,14 @@
 <template>
-  <g>
-    <defs>
-      <marker
-        id="start-arrowhead"
-        markerWidth="5"
-        markerHeight="7"
-        refX="-5"
-        refY="2"
-        orient="auto">
-        <polygon points="0 2, 5 0, 5 4" fill="black" />
-      </marker>
-      <marker id="end-arrowhead" markerWidth="5" markerHeight="7" refX="10" refY="2" orient="auto">
-        <polygon points="0 0, 5 2, 0 4" fill="black" />
-      </marker>
-    </defs>
-    <text
-      class="congestion-text-indicator"
-      v-if="hasCongestion"
-      :x="(x1 + x2) / 2"
-      :y="(y1 + y2) / 2"
-      :transform="rotationTransform"
-      fill="red">
+  <div class="connection-line" :style="containerStyle">
+    <div class="led-strip" :class="{ 'leds-direction-up': isProduction, 'leds-direction-down': !isProduction, }"
+      @mouseover="showInfoBox" @mouseout="hideInfoBox">
+      <div v-for="(led, index) in getLedsForLine" :key="index" class="led" :style="led.style">
+      </div>
+    </div>
+    <div v-if="hasCongestion" class="congestion-text-indicator">
       Congestie
-    </text>
-    <!-- Line with inner and outer colors -->
-    <line
-      :x1="x1"
-      :y1="y1"
-      :x2="x2"
-      :y2="y2"
-      stroke="black"
-      stroke-width="6"
-      :marker-start="current > 0 && isProduction ? 'url(#start-arrowhead)' : ''"
-      :marker-end="current > 0 && !isProduction ? 'url(#end-arrowhead)' : ''" />
-    <line :x1="x1" :y1="y1" :x2="x2" :y2="y2" :stroke="innerLineColor" stroke-width="2" />
-    <!-- Invisible line with margin for easier hovering -->
-    <line
-      class="infoBox-trigger"
-      :x1="x1"
-      :y1="y1"
-      :x2="x2"
-      :y2="y2"
-      stroke="transparent"
-      stroke-width="30"
-      @mouseover="showInfoBox"
-      @mouseout="hideInfoBox" />
-  </g>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -59,8 +22,23 @@ export default {
     maxCurrent: { type: Number, default: 0 },
     isProduction: { type: Boolean, default: false },
     current: { type: Number, default: 0 },
+    maxHouseCurrent: { type: Number, default: 0 }
   },
   computed: {
+    containerStyle(): Record<string, string> {
+      const dx = this.x2 - this.x1;
+      const dy = this.y2 - this.y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      return {
+        width: `${length}px`,
+        transform: `rotate(${angle}deg)`,
+        transformOrigin: "0 0",
+        position: "absolute",
+        top: `${this.y1}px`,
+        left: `${this.x1}px`
+      }
+    },
     rotationTransform() {
       const marginX = 15;
       const marginY = 15;
@@ -81,6 +59,33 @@ export default {
     innerLineColor() {
       return this.hasCongestion ? "red" : "white";
     },
+    maxLedOpacity(): number {
+      return Math.min(1, this.current / this.maxHouseCurrent);
+    },
+
+    getLedsForLine() {
+      const dx = this.x2 - this.x1;
+      const dy = this.y2 - this.y1;
+
+      const lineLength = Math.sqrt(dx * dx + dy * dy);
+      const ledSpacing = 55;
+      const ledCount = Math.max(1, Math.floor(lineLength / ledSpacing));
+
+      const activeDuration = ledCount * 0.5;
+      const totalDuration = activeDuration + 1;
+      const animationDelay = activeDuration / ledCount;
+
+      return Array.from({ length: ledCount }, (_, i) => {
+        return {
+          style: {
+            animation: `pulse ${totalDuration}s infinite`,
+            animationDelay: `${i * animationDelay}s`,
+            backgroundColor: this.isProduction ? "green" : "gray",
+            '--max-led-opacity': this.maxLedOpacity,
+          },
+        };
+      })
+    },
   },
   methods: {
     showInfoBox(event: any) {
@@ -97,9 +102,63 @@ export default {
 };
 </script>
 
-<style scoped>
-.infoBox-trigger {
-  cursor: help;
-  z-index: 1000;
+<style>
+.connection-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.led-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 1.5rem;
+  width: 90%;
+  background: #dddddd;
+  border: 1px solid #000000;
+  border-radius: 1rem;
+  padding: 0rem 0.5rem;
+}
+
+.leds-direction-down {
+  flex-direction: unset;
+}
+
+.leds-direction-up {
+  flex-direction: row-reverse;
+}
+
+.led {
+  height: 0.6rem;
+  width: 0.6rem;
+  margin: 0rem 1rem 0rem 1rem;
+  border-radius: 1rem;
+  animation: pulse 1.4s infinite;
+}
+
+.congestion-text-indicator {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@keyframes pulse {
+
+  0%,
+  20% {
+    opacity: 0.2;
+  }
+
+  30%,
+  70% {
+    opacity: var(--max-led-opacity);
+  }
+
+  80%,
+  100% {
+    opacity: 0.2;
+  }
 }
 </style>

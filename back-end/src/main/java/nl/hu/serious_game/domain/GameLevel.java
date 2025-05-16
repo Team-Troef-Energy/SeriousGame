@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -18,10 +20,11 @@ public class GameLevel implements Cloneable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private LevelTemplate template;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "level")
     private List<GameTransformer> transformers = new ArrayList<>();
     private boolean isCompleted = false;
     private int totalCosts = 0; // Cost in coins
@@ -33,6 +36,10 @@ public class GameLevel implements Cloneable {
             this.transformers = transformers;
         } else {
             throw new IllegalArgumentException("transformers is empty");
+        }
+
+        for (GameTransformer transformer : transformers) {
+            transformer.setLevel(this);
         }
     }
 
@@ -85,7 +92,7 @@ public class GameLevel implements Cloneable {
                     }
 
                     if (netConsumption > 0) {
-                        totalCO2 += netConsumption * this.getTemplate().getCost().getCO2Cost();
+                        totalCO2 += netConsumption * this.getTemplate().getCost().getCo2Cost();
                     }
                 }
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.reactive.TransactionalOperator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class GameLevelInitializationTest {
     @Test
     @DisplayName("Test level initialization")
     public void testLevelInitialization() {
-        GameLevel level = new GameLevel(new LevelTemplate(1, season, startTime, endTime, objective, null, new Cost(5, 10)), transformers);
+        GameLevel level = new GameLevel(new LevelTemplate(1, season, startTime, endTime, objective, List.of(), new Cost(5, 10, 0.5f)), transformers);
 
         assertNotNull(level.getTemplate().getObjective(), "Template objective should be initialized");
         assertEquals(objective, level.getTemplate().getObjective(), "Template objective should match the provided value");

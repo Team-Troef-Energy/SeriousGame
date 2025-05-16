@@ -52,6 +52,10 @@ export default defineComponent({
   height: 100%;
 }
 
+.card {
+  padding: 2em;
+}
+
 .confetti {
   width: 15px;
   height: 15px;
