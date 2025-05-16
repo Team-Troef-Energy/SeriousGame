@@ -1,5 +1,5 @@
 <template>
-    <div class="level-editor">
+    <div class="race-level-editor">
         <GlobalLevelEditor :fetchAllLevels="fetchAllLevels" :fetchStartLevel="fetchStartLevel"
             @createLevel="createLevelTemplate" @updateLevel="updateLevelTemplate" @deleteLevel="deleteLevelTemplate">
         </GlobalLevelEditor>
@@ -20,7 +20,13 @@ import TextModal from '../global/modals/TextModal.vue';
 
 export default defineComponent({
     components: { GlobalLevelEditor, TextModal },
-    name: 'LevelEditor',
+    name: 'RaceLevelEditor',
+        props: {
+        raceId: {
+            type: String,
+            required: true
+        }
+    },
     setup() {
         let isModalVisible = ref(false)
 
@@ -98,4 +104,13 @@ export default defineComponent({
 )
 </script>
 
-<style scoped></style>
+<style scoped>
+.race-level-editor {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+</style>
