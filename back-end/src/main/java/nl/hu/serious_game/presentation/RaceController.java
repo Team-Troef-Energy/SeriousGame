@@ -77,7 +77,7 @@ public class RaceController {
         return ResponseEntity.ok(RaceDTO.fromEntity(race));
     }
 
-    @PutMapping("/{id}/is-email")
+    @GetMapping("/{id}/is-email")
     public ResponseEntity<?> checkIsEmail(@PathVariable Long id, @RequestParam String email) {
         Optional<Race> raceOptional = this.raceRepository.findById(id);
         if (raceOptional.isEmpty()) {
