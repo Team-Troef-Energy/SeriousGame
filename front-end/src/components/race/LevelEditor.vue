@@ -14,6 +14,8 @@ import { defineComponent, ref } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
 import { textModal } from '../../types/global/modals/TextModal';
+import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
+import { templateType } from '../../types/levelTemplate/TemplateType';
 import { templateWrapper } from '../../types/levelTemplate/TemplateWrapper';
 import GlobalLevelEditor from '../global/level-editor/LevelEditor.vue';
 import TextModal from '../global/modals/TextModal.vue';
@@ -21,13 +23,13 @@ import TextModal from '../global/modals/TextModal.vue';
 export default defineComponent({
     components: { GlobalLevelEditor, TextModal },
     name: 'RaceLevelEditor',
-        props: {
+    props: {
         raceId: {
             type: String,
             required: true
         }
     },
-    setup() {
+    setup(props) {
         let isModalVisible = ref(false)
 
         let modalContent = ref<textModal>({
@@ -54,6 +56,7 @@ export default defineComponent({
             if (templateWrapper.template === undefined) {
                 return showModal('Fout', errorMessage);
             }
+            addTypeAndRaceIdToTemplate(templateWrapper.template);
             templateLevelService.createLevelTemplate(templateWrapper.template).then(() => {
                 showModal('Succes', 'Level is succesvol aangemaakt');
             }).catch((error) => {
@@ -67,7 +70,6 @@ export default defineComponent({
             if (templateWrapper.template === undefined || templateWrapper.id === undefined) {
                 return showModal('Fout', errorMessage);
             }
-            console.log(templateWrapper);
             templateLevelService.updateLevelTemplate(templateWrapper.id, templateWrapper.template).then(() => {
                 showModal('Succes', 'Level is succesvol gewijzigd');
             }).catch((error) => {
@@ -87,6 +89,11 @@ export default defineComponent({
                 console.error(error);
                 showModal('Fout', errorMessage);
             });
+        }
+
+        const addTypeAndRaceIdToTemplate = (template: levelTemplate) => {
+            template.type = templateType.RACE;
+            template.raceId = props.raceId;
         }
 
         return {
@@ -112,5 +119,4 @@ export default defineComponent({
     width: 100%;
     overflow-y: auto;
 }
-
 </style>

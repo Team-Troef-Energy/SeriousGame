@@ -14,6 +14,7 @@ import { defineComponent, ref } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
 import { textModal } from '../../types/global/modals/TextModal';
+import { templateType } from '../../types/levelTemplate/TemplateType';
 import { templateWrapper } from '../../types/levelTemplate/TemplateWrapper';
 import GlobalLevelEditor from '../global/level-editor/LevelEditor.vue';
 import TextModal from '../global/modals/TextModal.vue';
@@ -48,6 +49,7 @@ export default defineComponent({
             if (templateWrapper.template === undefined) {
                 return showModal('Fout', errorMessage);
             }
+            templateWrapper.template.type = templateType.GLOBAL;
             templateLevelService.createLevelTemplate(templateWrapper.template).then(() => {
                 showModal('Succes', 'Level is succesvol aangemaakt');
             }).catch((error) => {
@@ -61,7 +63,6 @@ export default defineComponent({
             if (templateWrapper.template === undefined || templateWrapper.id === undefined) {
                 return showModal('Fout', errorMessage);
             }
-            console.log(templateWrapper);
             templateLevelService.updateLevelTemplate(templateWrapper.id, templateWrapper.template).then(() => {
                 showModal('Succes', 'Level is succesvol gewijzigd');
             }).catch((error) => {
