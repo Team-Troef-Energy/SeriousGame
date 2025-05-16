@@ -11,10 +11,10 @@ WORKDIR /app
 # Copy requirements.txt and install first.
 # This way, a code change will not invalidate the cache until the next step.
 # Installing requirements takes a long time, and this allows it to be cached independently.
-COPY ai-back-end/requirements.txt .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the rest.
-COPY ai-back-end .
+COPY . .
 
 CMD ["python3", "src/chatbot.py"]
