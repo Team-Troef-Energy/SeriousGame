@@ -14,7 +14,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+# Disables Flask's debug mode
+ENV FLASK_ENV=production
+# Ensures output is not buffered, which is useful for logs
+ENV PYTHONUNBUFFERED=1
+
 # Copy the rest.
 COPY . .
 
-CMD ["python3", "src/chatbot.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "src.chatbot:app"]
