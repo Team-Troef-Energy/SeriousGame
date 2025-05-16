@@ -3,8 +3,9 @@ package nl.hu.serious_game.application;
 import java.util.List;
 import java.util.Optional;
 
-import nl.hu.serious_game.data.RaceRepository;
 import nl.hu.serious_game.domain.*;
+import nl.hu.serious_game.data.RaceRepository;
+import nl.hu.serious_game.data.LevelTransformerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,12 @@ import nl.hu.serious_game.data.LevelTemplateRepository;
 public class LevelTemplateService {
     private final LevelTemplateRepository levelTemplateRepository;
     private final RaceRepository raceRepository;
+    private final LevelTransformerRepository levelTransformerRepository;
 
     @Autowired
-    public LevelTemplateService(LevelTemplateRepository levelTemplateRepository, RaceRepository raceRepository) {
+    public LevelTemplateService(LevelTemplateRepository levelTemplateRepository, LevelTransformerRepository levelTransformerRepository, RaceRepository raceRepository) {
         this.levelTemplateRepository = levelTemplateRepository;
+        this.levelTransformerRepository = levelTransformerRepository;
         this.raceRepository = raceRepository;
     }
 
@@ -87,6 +90,10 @@ public class LevelTemplateService {
         levelTemplate.setSeason(updateLevel.season());
         levelTemplate.setCost(updateLevel.cost());
 
+        // https://stackoverflow.com/questions/24724152/jpa-clear-collection-and-add-new-items
+        // Related entities must be deleted before being removed from the collection.
+        // I'm not sure why this is.
+        this.levelTransformerRepository.deleteAll(levelTemplate.getTransformers());
         levelTemplate.getTransformers().clear();
         levelTemplate.getTransformers().addAll(
                 updateLevel.transformers().stream().map(updateTransformer -> new LevelTransformer(
