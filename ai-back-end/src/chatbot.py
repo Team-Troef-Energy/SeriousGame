@@ -15,7 +15,7 @@ def get_data():
     # ontvang de data die doorgestuurd wordt
     data = request.get_json()
 
-    match data['dest']:
+    match data['location_request']:
         case "level":
             response = chatbot(data)
         case "admin":
@@ -30,7 +30,7 @@ def chatbot(data: dict) -> str:
     context = create_context(data)
 
     # roep het model aan wat gebruikt wordt
-    generator = pipeline("text2text-generation", model="google/flan-t5-large")
+    generator = pipeline("text2text-generation", model="google/flan-t5-base")
     # maak de prompt aan de hand van de vraag en de context
     prompt = f"""
 Context:
@@ -39,10 +39,8 @@ Context:
 Question:
 {question}
 """
-    print(prompt)
     # roep het model aan 
     response = generator(prompt, max_length=50)[0]
-    print(response)
 
     return response['generated_text']
 
@@ -64,7 +62,6 @@ def create_context(data: dict) -> str:
 , Electricity: {house['current']['direction']}, Consumption: {house['consumption']}"
     for id, house in enumerate(transformer['houses'])
     ]
-    print(dashboard)
     # informatie dashboard pakken en in zinnen zetten
     context_string_dashboard = f"This level has this general information: \ncoins in use is {dashboard['coinsUsed']} and the \
 maximum amount is {dashboard['maxCoins']}\n\

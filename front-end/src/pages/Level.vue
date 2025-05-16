@@ -143,7 +143,7 @@ export default defineComponent({
         })),
         inputMessage: chatbotInput.value,
         dashboard: dashboardData.value,
-        dest: "level"
+        location_request: "level"
       };
 
       await gameLevelService.fetchChatBotMessage(data).then((response) => {
