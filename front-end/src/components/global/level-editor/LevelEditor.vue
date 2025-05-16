@@ -92,9 +92,10 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { textModal } from '../../types/global/modals/TextModal';
-import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
-import TextModal from '../global/modals/TextModal.vue';
+import { textModal } from '../../../types/global/modals/TextModal';
+import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
+import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
+import TextModal from '../modals/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
 
@@ -296,12 +297,12 @@ export default defineComponent({
                 let templateId = await getTemplateIdFromLevelNumber(levelNumber);
                 emit('updateLevel', {
                     id: templateId,
-                    levelTemplate: levelTemplate.value
-                });
+                    template: levelTemplate.value
+                } as templateWrapper);
             } else {
                 emit('createLevel', {
-                    levelTemplate: levelTemplate.value
-                });
+                    template: levelTemplate.value
+                } as templateWrapper);
             }
         };
 
@@ -311,7 +312,7 @@ export default defineComponent({
             let templateId = await getTemplateIdFromLevelNumber(levelNumber);
             emit('deleteLevel', {
                 id: templateId,
-            });
+            } as templateWrapper);
 
             clearLevelTemplate();
         }
