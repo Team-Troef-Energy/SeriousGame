@@ -1,6 +1,9 @@
 <template>
     <div class="race-level-editor-page container">
-      <RaceLevelEditor :raceId="raceId"></RaceLevelEditor>
+        <RaceBackButtonHeader :location="`/race/${raceId}`"></RaceBackButtonHeader>
+        <div class="content">
+            <RaceLevelEditor :raceId="raceId"></RaceLevelEditor>
+        </div>
     </div>
 </template>
 
@@ -8,12 +11,12 @@
 import { defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import RaceLevelEditor from '../../components/race/LevelEditor.vue';
+import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import router from '../../router/Router';
-
 
 export default defineComponent({
     name: 'RacePage',
-    components: { RaceLevelEditor },
+    components: { RaceBackButtonHeader, RaceLevelEditor },
     setup() {
         const route = useRoute();
         let raceId = String(route.params.id);
@@ -22,8 +25,13 @@ export default defineComponent({
             router.push('/');
         }
 
+        const navigateTo = (location: string) => {
+            router.push(location);
+        };
+
         return {
-            raceId
+            raceId,
+            navigateTo
         };
     }
 });
@@ -36,10 +44,11 @@ export default defineComponent({
     height: 90vh;
 }
 
-RaceLevelEditor {
-    flex: 1;
+.content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;align-items: center;
+    padding: 2rem 0rem 2rem 0rem;
+    flex: 10;
 }
 </style>

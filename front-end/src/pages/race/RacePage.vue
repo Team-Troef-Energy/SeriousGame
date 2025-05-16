@@ -1,8 +1,6 @@
 <template>
     <div class="race-page container">
-        <div class="header">
-            <button class="btn-back" @click="navigateTo('/race')">Ga terug</button>
-        </div>
+        <RaceBackButtonHeader :location="`/race`"></RaceBackButtonHeader>
         <div class="content">
             <div class="name">
                 <input v-model="raceName" type="text" readonly />
@@ -51,13 +49,14 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import router from '../../router/Router';
-import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
+import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import RaceDeleteModal from '../../components/race/RaceDeleteModal.vue';
+import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
+import router from '../../router/Router';
 
 export default defineComponent({
     name: 'RacePage',
-    components: { RaceNameChangeModal, RaceDeleteModal },
+    components: { RaceBackButtonHeader, RaceNameChangeModal, RaceDeleteModal },
     setup() {
         let isRaceNameChangeModalVisible = ref(false)
         let isRaceDeleteModalVisible = ref(false)
@@ -114,15 +113,6 @@ export default defineComponent({
     height: 90vh;
 }
 
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
-    height: 5rem;
-    flex: 1;
-}
-
 .content {
     display: flex;
     flex-direction: column;
@@ -153,10 +143,6 @@ button {
     background-color: #fff;
     color: #000;
     cursor: pointer;
-}
-
-.btn-back {
-    margin-right: 5%;
 }
 
 button:hover {
