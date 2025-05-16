@@ -2,6 +2,7 @@ package nl.hu.serious_game.application;
 
 import java.util.List;
 
+import nl.hu.serious_game.data.LevelTransformerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,12 @@ import nl.hu.serious_game.domain.Objective;
 @Service
 public class LevelTemplateService {
     private final LevelTemplateRepository levelTemplateRepository;
+    private final LevelTransformerRepository levelTransformerRepository;
 
     @Autowired
-    public LevelTemplateService(LevelTemplateRepository levelTemplateRepository) {
+    public LevelTemplateService(LevelTemplateRepository levelTemplateRepository, LevelTransformerRepository levelTransformerRepository) {
         this.levelTemplateRepository = levelTemplateRepository;
+        this.levelTransformerRepository = levelTransformerRepository;
     }
 
     public LevelTemplateDTO createLevel(LevelTemplateCreateDTO createLevel) {
@@ -64,6 +67,7 @@ public class LevelTemplateService {
         levelTemplate.setSeason(updateLevel.season());
         levelTemplate.setCost(updateLevel.cost());
 
+        this.levelTransformerRepository.deleteAll(levelTemplate.getTransformers());
         levelTemplate.getTransformers().clear();
         levelTemplate.getTransformers().addAll(
                 updateLevel.transformers().stream().map(updateTransformer -> new LevelTransformer(
