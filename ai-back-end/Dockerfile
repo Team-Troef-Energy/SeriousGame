@@ -18,6 +18,7 @@ RUN pip install -r requirements.txt
 ENV FLASK_ENV=production
 # Ensures output is not buffered, which is useful for logs
 ENV PYTHONUNBUFFERED=1
+ENV PATH=$PATH:/app/.local/bin
 
 # Copy the rest.
 COPY . .
