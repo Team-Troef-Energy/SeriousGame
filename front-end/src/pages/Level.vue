@@ -12,12 +12,13 @@
           <div class="connection-line-container">
             <template v-for="(transformer, transformerIndex) in transformers">
               <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
-                :key="'connection-' + transformerIndex + '-' + houseIndex"
-                :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
-                :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
-                :x2="(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100"
-                :y2="Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60"
-                :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+                :key="'connection-' + transformerIndex + '-' + houseIndex" v-bind="coordinatesWithMargin(
+                  (transformerPositions[transformerIndex] % 10) * 150 + 350,
+                  Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125,
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100,
+                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60,
+                  60
+                )" :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
                 :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
                 @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
             </template>
@@ -61,12 +62,12 @@ import { computed, CSSProperties, defineComponent, onMounted, ref, Ref } from "v
 import { useRoute } from "vue-router";
 import ConnectionLine from "../components/ConnectionLine.vue";
 import Dashboard from "../components/Dashboard.vue";
+import GameSideBar from "../components/GameSideBar.vue";
 import House from "../components/House.vue";
 import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
-import GameSideBar from "../components/GameSideBar.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { house, levelData, transformer } from "../types";
@@ -283,6 +284,21 @@ export default defineComponent({
       }
     });
 
+    const coordinatesWithMargin = (x1: number, y1: number, x2: number, y2: number, margin: number) => {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      if (length === 0) return { x1, y1, x2, y2 };
+      const offsetX = (dx / length) * margin;
+      const offsetY = (dy / length) * margin;
+      return {
+        x1: x1 + offsetX,
+        y1: y1 + offsetY,
+        x2: x2 - offsetX,
+        y2: y2 - offsetY,
+      };
+    }
+
     return {
       gameCanvas,
       transformerPositions,
@@ -304,6 +320,7 @@ export default defineComponent({
       hideInfoBox,
       notificationStatus,
       notificationMessage,
+      coordinatesWithMargin,
     };
   },
 });

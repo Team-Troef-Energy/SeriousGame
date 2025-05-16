@@ -120,14 +120,14 @@ export default {
 
 .led-strip {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   height: 1.5rem;
   width: 90%;
   background: #dddddd;
   border: 1px solid #000000;
   border-radius: 1rem;
-  padding: 0rem 0.5rem;
+  gap: 1rem;
 }
 
 .leds-direction-down {
@@ -142,7 +142,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0rem 1rem 0rem 1rem;
   height: 100%;
   width: 1.2rem;
   transition: opacity 0.2s;
