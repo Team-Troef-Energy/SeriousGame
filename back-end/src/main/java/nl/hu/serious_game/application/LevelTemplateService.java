@@ -1,7 +1,10 @@
 package nl.hu.serious_game.application;
 
 import java.util.List;
+import java.util.Optional;
 
+import nl.hu.serious_game.domain.*;
+import nl.hu.serious_game.data.RaceRepository;
 import nl.hu.serious_game.data.LevelTransformerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,25 +14,43 @@ import nl.hu.serious_game.application.dto.in.LevelTemplateCreateDTO;
 import nl.hu.serious_game.application.dto.in.LevelTemplateUpdateDTO;
 import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
 import nl.hu.serious_game.data.LevelTemplateRepository;
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.LevelHouse;
-import nl.hu.serious_game.domain.LevelTemplate;
-import nl.hu.serious_game.domain.LevelTransformer;
-import nl.hu.serious_game.domain.Objective;
 
 @Service
 public class LevelTemplateService {
     private final LevelTemplateRepository levelTemplateRepository;
+    private final RaceRepository raceRepository;
     private final LevelTransformerRepository levelTransformerRepository;
 
     @Autowired
-    public LevelTemplateService(LevelTemplateRepository levelTemplateRepository, LevelTransformerRepository levelTransformerRepository) {
+    public LevelTemplateService(LevelTemplateRepository levelTemplateRepository, LevelTransformerRepository levelTransformerRepository, RaceRepository raceRepository) {
         this.levelTemplateRepository = levelTemplateRepository;
         this.levelTransformerRepository = levelTransformerRepository;
+        this.raceRepository = raceRepository;
     }
 
     public LevelTemplateDTO createLevel(LevelTemplateCreateDTO createLevel) {
+        Race race;
+        if (createLevel.levelType() == LevelType.GLOBAL) {
+            if (createLevel.raceId() == null) {
+                race = null;
+            } else {
+                throw new IllegalArgumentException("Cannot set raceId when LevelType is GLOBAL");
+            }
+        } else if (createLevel.levelType() == LevelType.RACE) {
+            if (createLevel.raceId() == null) {
+                throw new IllegalArgumentException("Must set raceId when LevelType is RACE");
+            } else {
+                Optional<Race> foundRace = this.raceRepository.findById(createLevel.raceId());
+                if (foundRace.isPresent()) {
+                    race = foundRace.get();
+                } else {
+                    throw new IllegalArgumentException("Race with ID %d is not found".formatted(createLevel.raceId()));
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid LevelType %s".formatted(createLevel.levelType().name()));
+        }
+
         LevelTemplate levelTemplate = new LevelTemplate(
                 createLevel.levelNumber(),
                 createLevel.season(),
@@ -50,7 +71,9 @@ public class LevelTemplateService {
                         )).toList(),
                         createTransformer.maxBatteryCount()
                 )).toList(),
-                createLevel.cost()
+                createLevel.cost(),
+                createLevel.levelType(),
+                race
         );
 
         levelTemplate = levelTemplateRepository.save(levelTemplate);

@@ -46,7 +46,7 @@ public class LevelTemplate {
     @ManyToOne(optional = true)
     private Race race;
 
-    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost) {
+    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost, LevelType type, Race race) {
         if (startTime < 0 || startTime > 23 || endTime < 0 || endTime > 23) {
             throw new IllegalArgumentException("startTime and endTime must be within 0 and 23");
         }
@@ -58,6 +58,8 @@ public class LevelTemplate {
         this.objective = objective;
         this.transformers = transformers;
         this.cost = cost;
+        this.type = type;
+        this.race = race;
 
         for (LevelTransformer transformer : transformers) {
             transformer.setLevel(this);
