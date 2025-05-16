@@ -40,7 +40,7 @@ public class LevelTemplate {
     private List<LevelTransformer> transformers = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("GLOBAL")
+    @ColumnDefault("'GLOBAL'")
     private LevelType type;
 
     @ManyToOne(optional = true)
