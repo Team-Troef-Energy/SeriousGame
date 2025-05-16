@@ -21,5 +21,5 @@ public class Race {
     private String userEmail;
 
     @OneToMany
-    private List<Race> race;
+    private List<LevelTemplate> levels;
 }

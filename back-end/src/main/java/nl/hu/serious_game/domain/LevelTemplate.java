@@ -44,7 +44,6 @@ public class LevelTemplate {
     private LevelType type;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "raceId")
     private Race race;
 
     public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost) {
