@@ -67,6 +67,9 @@ public class LevelTemplateService {
         levelTemplate.setSeason(updateLevel.season());
         levelTemplate.setCost(updateLevel.cost());
 
+        // https://stackoverflow.com/questions/24724152/jpa-clear-collection-and-add-new-items
+        // Related entities must be deleted before being removed from the collection.
+        // I'm not sure why this is.
         this.levelTransformerRepository.deleteAll(levelTemplate.getTransformers());
         levelTemplate.getTransformers().clear();
         levelTemplate.getTransformers().addAll(
