@@ -27,14 +27,14 @@
             <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
               :style="{
                 position: 'absolute',
-                left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
-                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+                left: (transformerPositions[transformerIndex] % 10) * 150 + 650 + 'px',
+                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 50 + 'px',
               }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
             <House v-for="(house, houseIndex) in transformer.houses"
               :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
               :style="{
                 position: 'absolute',
-                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
+                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 'px',
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
