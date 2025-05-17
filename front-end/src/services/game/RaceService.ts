@@ -12,16 +12,13 @@ class RaceService {
         return await httpRequestManager.doFetch(`${BASE_URL}/by-email?email=${encodeURIComponent(email)}`);
     };
 
-
     fetchRaceById = async (id: number) => {
         return await httpRequestManager.doFetch(`${BASE_URL}/${id}`);
     };
 
-
     deleteRace = async (id: number) => {
-        return await httpRequestManager.doFetch(`${BASE_URL}/${id}`, 'DELETE');
+        return await httpRequestManager.doFetch(`${BASE_URL}/${id}`, 'DELETE', null, false);
     };
-
 
     updateRaceName = async (id: number, name: string) => {
         return await httpRequestManager.doFetch(`${BASE_URL}/${id}/name?name=${encodeURIComponent(name)}`, 'PUT');

@@ -36,8 +36,8 @@
             </div>
         </div>
         <Teleport to="body">
-            <RaceNameChangeModal :show="isRaceNameChangeModalVisible" @close="isRaceNameChangeModalVisible = false"
-                @race-name-change="handleRaceNameChange" />
+            <RaceNameChangeModal :show="isRaceNameChangeModalVisible" :previousName="raceName"
+                @close="isRaceNameChangeModalVisible = false" @race-name-change="handleRaceNameChange" />
         </Teleport>
         <Teleport to="body">
             <RaceDeleteModal :show="isRaceDeleteModalVisible" @close="isRaceDeleteModalVisible = false"
@@ -97,13 +97,24 @@ export default defineComponent({
         };
 
         const handleRaceNameChange = async (newRaceName: string) => {
-            raceName.value = newRaceName;
-            isRaceNameChangeModalVisible.value = false;
+            raceService.updateRaceName(raceId, newRaceName)
+                .then(() => {
+                    raceName.value = newRaceName;
+                })
+                .catch((error) => {
+                    showModal('Error', 'Er is een fout opgetreden bij het updaten van de race naam');
+                });
         }
 
         const handleRaceDelete = async () => {
-            isRaceDeleteModalVisible.value = false;
-            navigateTo('/race')
+            raceService.deleteRace(raceId)
+                .then(() => {
+                    navigateTo('/race')
+                })
+                .catch((error) => {
+                    console.error(error);
+                    showModal('Error', 'Er is een fout opgetreden bij het verwijderen van de race');
+                });
         }
 
         onMounted(async () => {
