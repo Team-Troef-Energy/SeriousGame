@@ -25,7 +25,7 @@ export default defineComponent({
     name: 'RaceLevelEditor',
     props: {
         raceId: {
-            type: String,
+            type: Number,
             required: true
         }
     },

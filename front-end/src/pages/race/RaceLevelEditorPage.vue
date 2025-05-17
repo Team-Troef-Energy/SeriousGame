@@ -4,32 +4,57 @@
         <div class="content">
             <RaceLevelEditor :raceId="raceId"></RaceLevelEditor>
         </div>
+        <Teleport to="body">
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
+        </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import TextModal from '../../components/global/modals/TextModal.vue';
 import RaceLevelEditor from '../../components/race/LevelEditor.vue';
 import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import router from '../../router/Router';
+import { raceService } from '../../services/game/RaceService';
+import { textModal } from '../../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacePage',
-    components: { RaceBackButtonHeader, RaceLevelEditor },
+    components: { RaceBackButtonHeader, RaceLevelEditor, TextModal },
     setup() {
-        const route = useRoute();
-        let raceId = String(route.params.id);
+        let isTextModalVisible = ref(false)
 
-        if (raceId != 'f47ac10b-58cc-4372-a567-0e02b2c3d479') {
-            router.push('/');
-        }
+        let textModalContent = ref<textModal>({
+            header: 'Alert',
+            body: 'Nothing to show'
+        });
+
+        const showModal = (header: string, body: string) => {
+            textModalContent.value.header = header;
+            textModalContent.value.body = body;
+            isTextModalVisible.value = true;
+        };
+
+        const route = useRoute();
+        let raceId = Number(route.params.id);
 
         const navigateTo = (location: string) => {
             router.push(location);
         };
 
+        onMounted(async () => {
+            raceService.fetchRaceById(raceId)
+                .catch((error) => {
+                    showModal('Error', 'Er is een fout opgetreden bij het openen van de level-editor van de race');
+                    console.error(error);
+                })
+        });
+
         return {
+            isTextModalVisible,
+            textModalContent,
             raceId,
             navigateTo
         };
@@ -47,7 +72,8 @@ export default defineComponent({
 .content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;align-items: center;
+    justify-content: space-between;
+    align-items: center;
     padding: 2rem 0rem 2rem 0rem;
     flex: 10;
 }
