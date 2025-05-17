@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 @Getter
 @Entity
@@ -37,7 +39,14 @@ public class LevelTemplate {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "level")
     private List<LevelTransformer> transformers = new ArrayList<>();
 
-    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost) {
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'GLOBAL'")
+    private LevelType type;
+
+    @ManyToOne(optional = true)
+    private Race race;
+
+    public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost, LevelType type, Race race) {
         if (startTime < 0 || startTime > 23 || endTime < 0 || endTime > 23) {
             throw new IllegalArgumentException("startTime and endTime must be within 0 and 23");
         }
@@ -49,6 +58,8 @@ public class LevelTemplate {
         this.objective = objective;
         this.transformers = transformers;
         this.cost = cost;
+        this.type = type;
+        this.race = race;
 
         for (LevelTransformer transformer : transformers) {
             transformer.setLevel(this);
