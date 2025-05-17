@@ -232,6 +232,11 @@ export default defineComponent({
           })),
         };
         const response = await gameLevelService.fetchUpdateLevel(gameId, data);
+        // The response is not guaranteed to have the same structure as the initial level data
+        // So the houses are sorted by id to ensure the correct order is used
+        response.hours[response.hours.length - 1].transformers.forEach((transformer: any) => {
+          transformer.houses.sort((a: any, b: any) => a.id - b.id);
+        });
         const lastHourData = response.hours[response.hours.length - 1];
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -361,6 +366,7 @@ export default defineComponent({
   background-size: 200% 200%, 25%;
   background-position: 0% 50%, center;
   animation: gradientMove 6s infinite linear;
+  overflow-x: auto;
 }
 
 @keyframes gradientMove {
