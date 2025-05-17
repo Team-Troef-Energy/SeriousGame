@@ -1,8 +1,6 @@
 <template>
     <div class="race-page container">
-        <div class="header">
-            <button class="btn-back" @click="navigateTo('/race')">Ga terug</button>
-        </div>
+        <RaceBackButtonHeader :location="`/race`"></RaceBackButtonHeader>
         <div class="content">
             <div class="name">
                 <input v-model="raceName" type="text" readonly />
@@ -38,26 +36,33 @@
             </div>
         </div>
         <Teleport to="body">
-            <RaceNameChangeModal :show="isRaceNameChangeModalVisible" @close="isRaceNameChangeModalVisible = false"
-                @race-name-change="handleRaceNameChange" />
+            <RaceNameChangeModal :show="isRaceNameChangeModalVisible" :previousName="raceName"
+                @close="isRaceNameChangeModalVisible = false" @race-name-change="handleRaceNameChange" />
         </Teleport>
         <Teleport to="body">
             <RaceDeleteModal :show="isRaceDeleteModalVisible" @close="isRaceDeleteModalVisible = false"
                 @race-delete="handleRaceDelete" />
         </Teleport>
+        <Teleport to="body">
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
+        </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import router from '../../router/Router';
-import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
+import TextModal from '../../components/global/modals/TextModal.vue';
+import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import RaceDeleteModal from '../../components/race/RaceDeleteModal.vue';
+import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
+import router from '../../router/Router';
+import { raceService } from '../../services/game/RaceService';
+import { textModal } from '../../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacePage',
-    components: { RaceNameChangeModal, RaceDeleteModal },
+    components: { RaceBackButtonHeader, RaceNameChangeModal, RaceDeleteModal, TextModal },
     setup() {
         let isRaceNameChangeModalVisible = ref(false)
         let isRaceDeleteModalVisible = ref(false)
@@ -70,31 +75,64 @@ export default defineComponent({
             isRaceDeleteModalVisible.value = true;
         };
 
-        const route = useRoute();
-        let raceId = route.params.id;
-        let raceName = ref<string>('test');
+        let isTextModalVisible = ref(false)
 
-        if (raceId != 'f47ac10b-58cc-4372-a567-0e02b2c3d479') {
-            router.push('/');
-        }
+        let textModalContent = ref<textModal>({
+            header: 'Alert',
+            body: 'Nothing to show'
+        });
+
+        const showModal = (header: string, body: string) => {
+            textModalContent.value.header = header;
+            textModalContent.value.body = body;
+            isTextModalVisible.value = true;
+        };
+
+        const route = useRoute();
+        let raceId = Number(route.params.id);
+        let raceName = ref<string>('');
 
         const navigateTo = (location: string) => {
             router.push(location);
         };
 
         const handleRaceNameChange = async (newRaceName: string) => {
-            raceName.value = newRaceName;
-            isRaceNameChangeModalVisible.value = false;
+            raceService.updateRaceName(raceId, newRaceName)
+                .then(() => {
+                    raceName.value = newRaceName;
+                })
+                .catch((error) => {
+                    showModal('Error', 'Er is een fout opgetreden bij het updaten van de race naam');
+                });
         }
 
         const handleRaceDelete = async () => {
-            isRaceDeleteModalVisible.value = false;
-            navigateTo('/race')
+            raceService.deleteRace(raceId)
+                .then(() => {
+                    navigateTo('/race')
+                })
+                .catch((error) => {
+                    console.error(error);
+                    showModal('Error', 'Er is een fout opgetreden bij het verwijderen van de race');
+                });
         }
+
+        onMounted(async () => {
+            raceService.fetchRaceById(raceId)
+                .then((response) => {
+                    raceName.value = response.name;
+                })
+                .catch((error) => {
+                    showModal('Error', 'Er is een fout opgetreden bij het ophalen van de race');
+                    console.error(error);
+                })
+        });
 
         return {
             isRaceNameChangeModalVisible,
             isRaceDeleteModalVisible,
+            isTextModalVisible,
+            textModalContent,
             createRaceNameChangeModal,
             createDeleteRaceModal,
             raceId,
@@ -112,15 +150,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     height: 90vh;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
-    height: 5rem;
-    flex: 1;
 }
 
 .content {
@@ -153,10 +182,6 @@ button {
     background-color: #fff;
     color: #000;
     cursor: pointer;
-}
-
-.btn-back {
-    margin-right: 5%;
 }
 
 button:hover {

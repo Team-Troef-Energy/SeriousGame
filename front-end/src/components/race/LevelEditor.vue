@@ -1,5 +1,5 @@
 <template>
-    <div class="level-editor">
+    <div class="race-level-editor">
         <GlobalLevelEditor :fetchAllLevels="fetchAllLevels" :fetchStartLevel="fetchStartLevel"
             @createLevel="createLevelTemplate" @updateLevel="updateLevelTemplate" @deleteLevel="deleteLevelTemplate">
         </GlobalLevelEditor>
@@ -14,6 +14,7 @@ import { defineComponent, ref } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
 import { textModal } from '../../types/global/modals/TextModal';
+import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
 import { templateType } from '../../types/levelTemplate/TemplateType';
 import { templateWrapper } from '../../types/levelTemplate/TemplateWrapper';
 import GlobalLevelEditor from '../global/level-editor/LevelEditor.vue';
@@ -21,8 +22,14 @@ import TextModal from '../global/modals/TextModal.vue';
 
 export default defineComponent({
     components: { GlobalLevelEditor, TextModal },
-    name: 'LevelEditor',
-    setup() {
+    name: 'RaceLevelEditor',
+    props: {
+        raceId: {
+            type: Number,
+            required: true
+        }
+    },
+    setup(props) {
         let isModalVisible = ref(false)
 
         let modalContent = ref<textModal>({
@@ -49,7 +56,7 @@ export default defineComponent({
             if (templateWrapper.template === undefined) {
                 return showModal('Fout', errorMessage);
             }
-            templateWrapper.template.type = templateType.GLOBAL;
+            addTypeAndRaceIdToTemplate(templateWrapper.template);
             templateLevelService.createLevelTemplate(templateWrapper.template).then(() => {
                 showModal('Succes', 'Level is succesvol aangemaakt');
             }).catch((error) => {
@@ -84,6 +91,11 @@ export default defineComponent({
             });
         }
 
+        const addTypeAndRaceIdToTemplate = (template: levelTemplate) => {
+            template.type = templateType.RACE;
+            template.raceId = props.raceId;
+        }
+
         return {
             isModalVisible,
             modalContent,
@@ -99,4 +111,12 @@ export default defineComponent({
 )
 </script>
 
-<style scoped></style>
+<style scoped>
+.race-level-editor {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+</style>

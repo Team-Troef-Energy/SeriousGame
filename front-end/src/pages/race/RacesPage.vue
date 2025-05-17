@@ -7,42 +7,76 @@
             <RaceBadge v-for="race in races" :key="race.id" :name="race.name" :id="race.id"></RaceBadge>
         </div>
         <Teleport to="body">
-            <RaceCreateModal :show="isModalVisible" @close="isModalVisible = false" @race-create="handleCreateRace" />
+            <RaceCreateModal :show="isRaceModalVisible" @close="isRaceModalVisible = false"
+                @race-create="handleCreateRace" />
+        </Teleport>
+        <Teleport to="body">
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, inject, onMounted, ref } from 'vue';
+import TextModal from '../../components/global/modals/TextModal.vue';
+import RaceBadge from '../../components/race/RaceBadge.vue';
 import RaceCreateModal from '../../components/race/RaceCreateModal.vue';
-import RaceBadge from '../../components/race/RaceBadge.vue'
+import { AuthContext } from '../../context/AuthProvider';
+import { raceService } from '../../services/game/RaceService';
+import { race } from '../../types/Race';
+import { createRaceDTO } from '../../types/dto/CreateRaceDTO';
+import { textModal } from '../../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacesPage',
-    components: { RaceCreateModal, RaceBadge },
+    components: { RaceCreateModal, TextModal, RaceBadge },
     setup() {
-        let isModalVisible = ref(false)
+        let isRaceModalVisible = ref(false)
 
         const createRaceModal = async () => {
-            isModalVisible.value = true;
+            isRaceModalVisible.value = true;
         };
 
-        let races = ref([
-            {
-                id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-                name: "test"
-            }
-        ]);
+        let isTextModalVisible = ref(false)
+
+        let textModalContent = ref<textModal>({
+            header: 'Alert',
+            body: 'Nothing to show'
+        });
+
+        const showModal = (header: string, body: string) => {
+            textModalContent.value.header = header;
+            textModalContent.value.body = body;
+            isTextModalVisible.value = true;
+        };
+
+        const authState = inject(AuthContext);
+        const { user }: any = authState;
+
+        let races = ref<race[]>([]);
+
+        const fetchRaces = async () => {
+            races.value = await raceService.fetchRacesByEmail(user.value.email)
+        }
 
         const handleCreateRace = async (raceName: string) => {
-            races.value.push({
-                id: crypto.randomUUID(),
-                name: raceName
+            raceService.createRace({ name: raceName, userEmail: user.value.email } as createRaceDTO).then(() => {
+                fetchRaces()
+            }).catch((error) => {
+                console.error(error);
+                showModal('Fout', 'Er is een fout opgetreden bij het aanmaken van de race');
             });
         }
 
+        onMounted(async () => {
+            if (user)
+                await fetchRaces();
+        });
+
         return {
-            isModalVisible,
+            isRaceModalVisible,
+            isTextModalVisible,
+            textModalContent,
             races,
             createRaceModal,
             handleCreateRace
