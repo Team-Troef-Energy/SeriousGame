@@ -18,7 +18,7 @@
                   // Transformer Y
                   Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5), // <--- controls vertical spacing
                   // House X
-                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 110, // <--- controls horizontal spacing
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 120, // <--- controls horizontal spacing
                   // House Y
                   Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60, // <---controls vertical spacing
                   60 // margin
@@ -38,8 +38,8 @@
               :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
               :style="{
                 position: 'absolute',
-                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 'px',
-                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
+                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 50 + 'px',
+                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
               :hasBatteries="house.batteries.amount > 0" />

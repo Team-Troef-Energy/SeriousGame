@@ -52,8 +52,8 @@ export default {
 
 <style scoped>
 .house {
-  width: 18rem;
-  height: 15rem;
+  width: 13rem;
+  height: 10rem;
 }
 
 img .house {
