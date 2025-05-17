@@ -13,11 +13,15 @@
             <template v-for="(transformer, transformerIndex) in transformers">
               <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
                 :key="'connection-' + transformerIndex + '-' + houseIndex" v-bind="coordinatesWithMargin(
-                  (transformerPositions[transformerIndex] % 10) * 150 + 350,
-                  Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125,
-                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100,
-                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60,
-                  60
+                  // Transformer X
+                  (transformerPositions[transformerIndex] % 10) * 150 + 800 + (houseIndex * 20), // <--- controls horizontal spacing
+                  // Transformer Y
+                  Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5), // <--- controls vertical spacing
+                  // House X
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 90, // <--- controls horizontal spacing
+                  // House Y
+                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 40, // <---controls vertical spacing
+                  60 // margin
                 )" :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
                 :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
                 @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
@@ -27,8 +31,8 @@
             <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
               :style="{
                 position: 'absolute',
-                left: (transformerPositions[transformerIndex] % 10) * 150 + 650 + 'px',
-                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 50 + 'px',
+                left: (transformerPositions[transformerIndex] % 10) * 150 + 720 + 'px',
+                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 75 + 'px',
               }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
             <House v-for="(house, houseIndex) in transformer.houses"
               :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
