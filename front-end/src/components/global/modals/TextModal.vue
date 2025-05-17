@@ -1,5 +1,5 @@
 <template>
-    <HtmlModal :show="show" :width="19" :height="11">
+    <HtmlModal :show="show" :width="19" :height="13">
         <template #header>
             <div class="header">
                 <h3>{{ content.header }}</h3>

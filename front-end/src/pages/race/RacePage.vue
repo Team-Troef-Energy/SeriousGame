@@ -43,20 +43,26 @@
             <RaceDeleteModal :show="isRaceDeleteModalVisible" @close="isRaceDeleteModalVisible = false"
                 @race-delete="handleRaceDelete" />
         </Teleport>
+        <Teleport to="body">
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
+        </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import TextModal from '../../components/global/modals/TextModal.vue';
 import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import RaceDeleteModal from '../../components/race/RaceDeleteModal.vue';
 import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
 import router from '../../router/Router';
+import { raceService } from '../../services/game/RaceService';
+import { textModal } from '../../types/global/modals/TextModal';
 
 export default defineComponent({
     name: 'RacePage',
-    components: { RaceBackButtonHeader, RaceNameChangeModal, RaceDeleteModal },
+    components: { RaceBackButtonHeader, RaceNameChangeModal, RaceDeleteModal, TextModal },
     setup() {
         let isRaceNameChangeModalVisible = ref(false)
         let isRaceDeleteModalVisible = ref(false)
@@ -69,13 +75,22 @@ export default defineComponent({
             isRaceDeleteModalVisible.value = true;
         };
 
-        const route = useRoute();
-        let raceId = route.params.id;
-        let raceName = ref<string>('test');
+        let isTextModalVisible = ref(false)
 
-        if (raceId != 'f47ac10b-58cc-4372-a567-0e02b2c3d479') {
-            router.push('/');
-        }
+        let textModalContent = ref<textModal>({
+            header: 'Alert',
+            body: 'Nothing to show'
+        });
+
+        const showModal = (header: string, body: string) => {
+            textModalContent.value.header = header;
+            textModalContent.value.body = body;
+            isTextModalVisible.value = true;
+        };
+
+        const route = useRoute();
+        let raceId = Number(route.params.id);
+        let raceName = ref<string>('');
 
         const navigateTo = (location: string) => {
             router.push(location);
@@ -91,9 +106,22 @@ export default defineComponent({
             navigateTo('/race')
         }
 
+        onMounted(async () => {
+            raceService.fetchRaceById(raceId)
+                .then((response) => {
+                    raceName.value = response.name;
+                })
+                .catch((error) => {
+                    showModal('Error', 'Er is een fout opgetreden bij het ophalen van de race');
+                    console.error(error);
+                })
+        });
+
         return {
             isRaceNameChangeModalVisible,
             isRaceDeleteModalVisible,
+            isTextModalVisible,
+            textModalContent,
             createRaceNameChangeModal,
             createDeleteRaceModal,
             raceId,
