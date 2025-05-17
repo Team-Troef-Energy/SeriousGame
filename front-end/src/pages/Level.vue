@@ -18,9 +18,9 @@
                   // Transformer Y
                   Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5), // <--- controls vertical spacing
                   // House X
-                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 90, // <--- controls horizontal spacing
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 110, // <--- controls horizontal spacing
                   // House Y
-                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 40, // <---controls vertical spacing
+                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60, // <---controls vertical spacing
                   60 // margin
                 )" :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
                 :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
