@@ -150,7 +150,7 @@ export default defineComponent({
     };
 
     const getResolutionFactor = () => {
-      const factorCorrection = 0.2;
+      const factorCorrection = 0.15;
       const baseWidth = 1920;
       const baseHeight = 1080;
 
