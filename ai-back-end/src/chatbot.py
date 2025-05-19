@@ -81,14 +81,50 @@ current amount CO2: {dashboard['currentCO2']}\
 def level_generation(data: dict) -> str:
     user_input = data['inputMessage']
 
-    generator = pipeline("text2text-generation", model="google/flan-t5-xl")
+    generator = pipeline("text2text-generation", model="google/flan-t5-large")
 
     full_prompt = f"""
-Given the input: '{user_input}', generate a JSON dictionary in this exact format:
-{{"Houses": [{{"house_1": {{"solar_panels": <amount>, "batteries": 0, "has_heatpump": false, "has_car": false}}}}, ...], "Level": {{"max_coins": 0, "max_co2": 0, "start_end_time": "0h - 0h", "season": ""}}}}
-Extract the number of houses and solar panels from the input. Set batteries to 0, has_heatpump to false, has_car to false, and season to "". Output only the JSON dictionary as a string.
+You are an AI that converts natural language into a specific JSON format.
+
+Extract the number of houses and the number of solar panels mentioned in the input. Then generate a JSON dictionary in the following structure:
+
+{{
+  "Houses": [
+    {{ "house_1": {{ "solar_panels": <solar_panel_count>, "batteries": 0, "has_heatpump": false, "has_car": false }} }},
+    {{ "house_2": {{ "solar_panels": <solar_panel_count>, "batteries": 0, "has_heatpump": false, "has_car": false }} }},
+    ...
+  ],
+  "Level": {{
+    "max_coins": 0,
+    "max_co2": 0,
+    "start_end_time": "0h - 0h",
+    "season": ""
+  }}
+}}
+
+Example:
+
+{{
+    "Houses": [
+    {{"house_1": {{"solar_panels: 2, "batteries: 0, "has_heatpump": false, "has_car": false}} }},
+    ...
+    ],
+    "Level": {{
+    "max_coins": 0,
+    "max_co2": 0,
+    "start_end_time": "0h - 0h",
+    "season": ""
+  }}
+}}
+
+Only include as many houses as specified in the input, and set the solar_panels number for each one. Fill in all other fields exactly as shown.
+
+Input: "{user_input}"
 """
     response = generator(full_prompt, max_length=500, num_return_sequences=1)[0]
+
+    print(full_prompt)
+    print(response)
 
     return response['generated_text']
 
