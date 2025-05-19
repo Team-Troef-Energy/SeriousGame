@@ -94,7 +94,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    let gameId = route.params.levelNmr;
+    let gameId = Number(route.params.levelNmr);
 
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);

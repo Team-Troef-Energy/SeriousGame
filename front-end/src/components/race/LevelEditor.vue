@@ -49,7 +49,7 @@ export default defineComponent({
             return race.levels;
         }
 
-        const fetchStartLevel = async (level: string) => {
+        const fetchStartLevel = async (level: number) => {
             return await gameLevelService.fetchStartLevel(level);
         }
 
@@ -94,7 +94,7 @@ export default defineComponent({
         }
 
         const addTypeAndRaceIdToTemplate = (template: levelTemplate) => {
-            template.type = templateType.RACE;
+            template.levelType = templateType.RACE;
             template.raceId = props.raceId;
         }
 

@@ -11,7 +11,7 @@
         Selecteer een level
       </h3>
       <div class="race-level-select-grid">
-        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :level="level.levelNumber"
+        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id" :levelNumber="level.levelNumber"
           class="level-button" />
       </div>
     </div>
@@ -23,7 +23,7 @@ import { defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import LevelSelectButton from "../../components/LevelSelectButton.vue";
 import RaceBackButtonHeader from "../../components/race/RaceBackButtonHeader.vue";
-import { templateLevelService } from "../../services/game/TemplateLevelService";
+import { raceService } from "../../services/game/RaceService";
 import { levelTemplate } from "../../types/levelTemplate/LevelTemplate";
 
 export default defineComponent({
@@ -33,11 +33,12 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    let raceId = String(route.params.id);
+    let raceId = Number(route.params.id);
     let levels = ref<levelTemplate[]>([]);
 
     onMounted(async () => {
-      const fetchedLevels = await templateLevelService.fetchAllLevels();
+      const race = await raceService.fetchRaceById(raceId);
+      const fetchedLevels = race.levels;
       levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
     });
 
@@ -51,20 +52,20 @@ export default defineComponent({
 
 <style scoped>
 .race-level-select-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 90vh;
 }
 
 .race-level-select-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 0rem 2rem 0rem;
-    width: 100%;
-    max-width: 1100px;
-    flex: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0rem 2rem 0rem;
+  width: 100%;
+  max-width: 1100px;
+  flex: 10;
 }
 
 .title {
