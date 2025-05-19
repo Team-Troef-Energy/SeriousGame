@@ -28,10 +28,10 @@ jobs:
       - name: Select config file based on branch
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            cp front-end/config/config.prod.json front-end/src/config.json
+            cp front-end/docker_profiles/config.prod.json front-end/src/config.json
             echo "Using production config"
           else
-            cp front-end/config/config.dev.json front-end/src/config.json
+            cp front-end/docker_profiles/config.dev.json front-end/src/config.json
             echo "Using development config"
           fi
 
