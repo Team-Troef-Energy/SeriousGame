@@ -85,14 +85,11 @@ def level_generation(data: dict) -> str:
     generator = pipeline("text2text-generation", model="google/flan-t5-xl")
 
     full_prompt = f"""
-Given the input: '{user_input}', generate a JSON dictionary with the number of houses specified in the input, each with the specified number of solar panels. Format:
+Given the input: '{user_input}', generate a JSON dictionary in this exact format:
 {{"Houses": [{{"house_1": {{"solar_panels": <amount>, "batteries": 0, "has_heatpump": false, "has_car": false}}}}, ...], "Level": {{"max_coins": 0, "max_co2": 0, "start_end_time": "0h - 0h", "season": ""}}}}
-Extract the number of houses and solar panels from the input. Output only the JSON dictionary.
+Extract the number of houses and solar panels from the input. Set batteries to 0, has_heatpump to false, has_car to false, and season to "". Output only the JSON dictionary as a string.
 """
     response = generator(full_prompt, max_length=500, num_return_sequences=1)[0]
-
-    print(full_prompt)
-    print(response)
 
     return response['generated_text']
 
