@@ -29,7 +29,7 @@ export default defineComponent({
     LevelSelectButton,
   },
   setup() {
-    let levels = ref<levelTemplate[]>([]);
+    let levels: any = ref<levelTemplate[]>([]);
 
     onMounted(async () => {
       const fetchedLevels = await templateLevelService.fetchAllLevels(); 
