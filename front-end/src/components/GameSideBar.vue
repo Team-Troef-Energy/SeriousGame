@@ -4,6 +4,7 @@
         <div class="sidebar-content">
 
             <img src="../../public/batteries.png" alt="Battery">
+            <img src="../../public/solar-panels.png" alt="Solar panel">
 
         </div>
     </div>
@@ -58,5 +59,6 @@ export default defineComponent({
 
 .sidebar-content img {
     width: 100px;
+    margin-bottom: 40px;
 }
 </style>
