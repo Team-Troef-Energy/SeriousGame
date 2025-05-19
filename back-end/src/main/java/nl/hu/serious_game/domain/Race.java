@@ -22,7 +22,7 @@ public class Race {
 
     private String userEmail;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "race")
     private List<LevelTemplate> levels;
 
     public Race(String name, String userEmail, List<LevelTemplate> levels) {
