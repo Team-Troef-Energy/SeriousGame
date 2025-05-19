@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Battery } from '../types';
 
 export default defineComponent({
   props: {
@@ -59,7 +58,7 @@ export default defineComponent({
       default: 0,
     },
     batteries: {
-      type: Object as PropType<Battery>,
+      type: Object as PropType<any>,
       default: () => ({ amount: 0 }),
     },
   },
