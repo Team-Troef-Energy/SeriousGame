@@ -20,7 +20,6 @@ def get_data():
             response = chatbot(data)
         case "admin":
             response = level_generation(data)
-            # response = "working"
 
     return jsonify({"response": f"{response}".strip()})
 

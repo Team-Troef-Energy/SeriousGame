@@ -137,7 +137,6 @@ export default defineComponent({
 
             await pythonService.fetchMessage(data).then((response: any) => {
             promptOutput.value = response.response
-            console.log(response)
             }).catch((error: any) => {
                 console.error(error);
             });

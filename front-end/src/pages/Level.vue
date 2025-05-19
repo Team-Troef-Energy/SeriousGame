@@ -156,7 +156,6 @@ export default defineComponent({
 
       await pythonService.fetchMessage(data).then((response) => {
         chatbotOuput.value = response.response
-        console.log(response)
         }).catch((error) => {
             console.error(error);
         });
