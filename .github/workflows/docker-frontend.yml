@@ -1,7 +1,3 @@
-# This workflow file is based on:
-# https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages
-# Refer to that page for more details.
-
 name: Build and push frontend image
 
 on:
@@ -29,8 +25,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Select config file based on branch
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            cp front-end/docker_profiles/config.prod.json front-end/src/config.json
+            echo "Using production config"
+          else
+            cp front-end/docker_profiles/config.dev.json front-end/src/config.json
+            echo "Using development config"
+          fi
+
       - name: Log in to the Container registry
-        # Pin to a specific commit rather than a tag, which provides better protection against supply chain attacks.
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
           registry: ${{ env.REGISTRY }}

@@ -7,12 +7,17 @@
           <div class="connection-line-container">
             <template v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformerIndex">
               <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
-                :key="'connection-' + transformerIndex + '-' + houseIndex"
-                :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
-                :y1="Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125"
-                :x2="(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100"
-                :y2="Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60"
-                :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+                :key="'connection-' + transformerIndex + '-' + houseIndex" v-bind="coordinatesWithMargin(
+                  // Transformer X
+                  (transformerPositions[transformerIndex] % 10) * 150 + 800 + (houseIndex * 20), // <--- controls horizontal spacing
+                  // Transformer Y
+                  Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5), // <--- controls vertical spacing
+                  // House X
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 120, // <--- controls horizontal spacing
+                  // House Y
+                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60, // <---controls vertical spacing
+                  60 // margin
+                )" :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
                 :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
                 @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
             </template>
@@ -22,19 +27,20 @@
               
               :style="{
                 position: 'absolute',
-                left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
-                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+                left: (transformerPositions[transformerIndex] % 10) * 150 + 720 + 'px',
+                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 75 + 'px',
               }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
             <House v-for="(house, houseIndex) in transformer.houses"
               :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
               :style="{
                 position: 'absolute',
-                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
-                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
+                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 50 + 'px',
+                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" @drop-item="handleDropItem($event, house)"
               :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
-              :hasBatteries="house.batteries.amount > 0" />
+              :hasBatteries="house.batteries.amount > 0" :solarpanels="house.solarpanels"
+              :batteries="house.batteries" />
           </template>
           <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
             :currentCO2="dashboardData.currentCO2" :maxCO2="dashboardData.maxCO2"
@@ -49,6 +55,14 @@
       <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
         :transformers="transformers" @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
+      <div class="chat-bot-message-input">
+          <label for="chat-bot-input">Praat met de chatbot</label>
+          <input v-model="chatbotInput" id="chat-bot-input"/>
+          <button @click="handleChatBotInput">
+            Verstuur bericht
+          </button>
+          <p>{{ chatbotOuput }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -61,9 +75,9 @@ import Dashboard from "../components/Dashboard.vue";
 import House from "../components/House.vue";
 import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
+import GameSideBar from "../components/GameSideBar.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
-import GameSideBar from "../components/GameSideBar.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { house, levelData, transformer } from "../types";
@@ -82,8 +96,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    let levelNumber = route.params.levelNmr;
-    let gameId = "";
+    let gameId = Number(route.params.levelNmr);
 
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
@@ -116,6 +129,8 @@ export default defineComponent({
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
+    const chatbotInput = ref("");
+    const chatbotOuput = ref("");
     const infoBoxStyle: Ref<CSSProperties> = ref({
       position: "absolute",
       top: "0px",
@@ -126,6 +141,26 @@ export default defineComponent({
       borderRadius: "5px",
       pointerEvents: "none",
     });
+
+    const handleChatBotInput = async () => {
+      const data = {
+        transformers: transformers.value.map((transformer) => ({
+          id: transformer.id,
+          batteries: transformer.batteries.amount,
+          houses: transformer.houses
+        })),
+        inputMessage: chatbotInput.value,
+        dashboard: dashboardData.value,
+        location_request: "level"
+      };
+
+      await gameLevelService.fetchChatBotMessage(data).then((response) => {
+        chatbotOuput.value = response.response
+        console.log(response)
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions: number[] = [];
@@ -142,6 +177,7 @@ export default defineComponent({
     };
 
     const getResolutionFactor = () => {
+      const factorCorrection = 0.15;
       const baseWidth = 1920;
       const baseHeight = 1080;
 
@@ -151,8 +187,10 @@ export default defineComponent({
       const widthFactor = viewportWidth / baseWidth;
       const heightFactor = viewportHeight / baseHeight;
 
-      return Math.max(widthFactor, heightFactor);
-    };
+      const factor = Math.max(widthFactor, heightFactor);
+
+      return factor - factorCorrection;
+    }
 
     const getMaxHouseCurrent = computed(() => {
       let maxCurrent = 0;
@@ -245,6 +283,11 @@ export default defineComponent({
           })),
         };
         const response = await gameLevelService.fetchUpdateLevel(gameId, data);
+        // The response is not guaranteed to have the same structure as the initial level data
+        // So the houses are sorted by id to ensure the correct order is used
+        response.hours[response.hours.length - 1].transformers.forEach((transformer: any) => {
+          transformer.houses.sort((a: any, b: any) => a.id - b.id);
+        });
         const lastHourData = response.hours[response.hours.length - 1];
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -283,7 +326,7 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const data = await gameLevelService.fetchStartLevel(levelNumber);
+        const data = await gameLevelService.fetchStartLevel(gameId);
         gameId = data.id;
         solarPanelCost.value = data.cost.solarPanelCost;
         batteryCost.value = data.cost.batteryCost;
@@ -303,7 +346,25 @@ export default defineComponent({
       }
     });
 
+    const coordinatesWithMargin = (x1: number, y1: number, x2: number, y2: number, margin: number) => {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      if (length === 0) return { x1, y1, x2, y2 };
+      const offsetX = (dx / length) * margin;
+      const offsetY = (dy / length) * margin;
+      return {
+        x1: x1 + offsetX,
+        y1: y1 + offsetY,
+        x2: x2 - offsetX,
+        y2: y2 - offsetY,
+      };
+    }
+
     return {
+      chatbotInput,
+      chatbotOuput,
+      handleChatBotInput,
       gameCanvas,
       solarPanelCost,
       batteryCost,
@@ -327,6 +388,7 @@ export default defineComponent({
       hideInfoBox,
       notificationStatus,
       notificationMessage,
+      coordinatesWithMargin,
     };
   },
 });
@@ -358,11 +420,11 @@ export default defineComponent({
   height: 100%;
   position: relative;
   background:
-    linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
-    url("/Cartoon_green_texture_grass.jpg");
-  background-size: 200% 200%, 25%;
-  background-position: 0% 50%, center;
-  animation: gradientMove 6s infinite linear;
+    linear-gradient(rgba(120, 120, 120, 0.55), rgba(120, 120, 120, 0.55)),
+    url("/game.jpg");
+  background-size: cover, cover;
+  background-blend-mode: normal;
+  overflow-x: auto;
 }
 
 @keyframes gradientMove {
