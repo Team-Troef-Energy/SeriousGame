@@ -77,6 +77,7 @@ import Dashboard from "../components/Dashboard.vue";
 import House from "../components/House.vue";
 import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
+import GameSideBar from "../components/GameSideBar.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
