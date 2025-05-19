@@ -98,10 +98,6 @@ export default defineComponent({
     const route = useRoute();
     let gameId = Number(route.params.levelNmr);
 
-    if (typeof levelNumber === "object") {
-      levelNumber = levelNumber[0];
-      console.error("Multiple level numbers were passed");
-    }
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
