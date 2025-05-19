@@ -1,10 +1,35 @@
-let HOST = location.hostname === "localhost" ? "http://localhost:8080" : "http://troefgame.duckdns.org:5001";
 class HTTPRequestManager {
+    private apiUrl: string | null = null;
+
+    constructor() {
+        this.loadConfig();
+    }
+
+    private async loadConfig() {
+        try {
+            // Misschien klopt deze URL niet
+            const response = await fetch('../../docker_profiles/config.json');
+            if (!response.ok) {
+                throw new Error('Failed to load config.json');
+            }
+            const config = await response.json();
+            this.apiUrl = config.apiUrl;
+        } catch (error) {
+            console.error('Error loading config:', error);
+
+            this.apiUrl = 'http://localhost:8080';
+        }
+    }
 
     async doFetch(path: string, method = 'GET', body: any = undefined, hasJsonResponse = true) {
-        let isBodyPresent = !["GET", "HEAD"].includes(method)
 
-        const response = await fetch(`${HOST}${path}`, {
+        if (!this.apiUrl) {
+            await this.loadConfig();
+        }
+
+        const isBodyPresent = !['GET', 'HEAD'].includes(method);
+
+        const response = await fetch(`${this.apiUrl}${path}`, {
             method: method,
             headers: isBodyPresent ? { 'Content-Type': 'application/json;charset=utf-8' } : undefined,
             body: isBodyPresent ? JSON.stringify(body) : undefined
@@ -20,4 +45,4 @@ class HTTPRequestManager {
     }
 }
 
-export const httpRequestManager = new HTTPRequestManager()
+export const httpRequestManager = new HTTPRequestManager();
