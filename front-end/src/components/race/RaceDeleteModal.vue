@@ -42,7 +42,7 @@ export default defineComponent({
 
 
         const deleteRace = () => {
-            emit('race-delete',);
+            emit('race-delete');
             closeModal();
         }
 

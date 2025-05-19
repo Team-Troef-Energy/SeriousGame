@@ -59,7 +59,7 @@ button {
 }
 
 .btn-back {
-    margin-right: 5%;
+    margin: 1rem 5% 0rem 0rem;
 }
 
 button:hover {
