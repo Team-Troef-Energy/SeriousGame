@@ -83,6 +83,15 @@
                 <button class="btn btn-delete" @click.prevent="deleteLevel">Verwijderen</button>
                 <button class="btn btn-save" @click.prevent="saveOrEditLevel">Opslaan</button>
             </div>
+
+            <div class="chat-bot-message-input">
+                <label for="chat-bot-input">Praat met de chatbot</label>
+                <input v-model="userInput" id="chat-bot-input"/>
+                <button @click="handleUserInput">
+                    Verstuur bericht
+                </button>
+                <p>{{ promptOutput }}</p>
+            </div>
         </form>
         <Teleport to="body">
             <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
@@ -95,6 +104,7 @@ import { defineComponent, onMounted, ref } from 'vue';
 import { textModal } from '../../../types/global/modals/TextModal';
 import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
+import { pythonService } from '../../../services/PythonService'
 import TextModal from '../modals/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
@@ -113,6 +123,24 @@ export default defineComponent({
     },
     setup(props, { emit }) {
         let levels = ref<levelTemplate[]>([]);
+        let userInput = ref("");
+        let promptOutput = ref("");
+
+        const handleUserInput = async (e:any) => {
+
+            e.preventDefault();
+
+            const data = {
+                inputMessage: userInput.value,
+                location_request: "admin"
+            };
+
+            await pythonService.fetchMessage(data).then((response: any) => {
+            promptOutput.value = response.response
+            }).catch((error: any) => {
+                console.error(error);
+            });
+        }
 
         const fetchAllLevels = async () => {
             const fetchedLevels = await props.fetchAllLevels();
@@ -336,6 +364,9 @@ export default defineComponent({
         }
 
         return {
+            userInput,
+            handleUserInput,
+            promptOutput,
             levelTemplate,
             updateHouseConfiguration,
             levels,
