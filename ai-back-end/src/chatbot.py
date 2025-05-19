@@ -88,10 +88,6 @@ def level_generation(data: dict) -> str:
 Given the input: '{user_input}', generate a JSON dictionary with the number of houses specified in the input, each with the specified number of solar panels. Format:
 {{"Houses": [{{"house_1": {{"solar_panels": <amount>, "batteries": 0, "has_heatpump": false, "has_car": false}}}}, ...], "Level": {{"max_coins": 0, "max_co2": 0, "start_end_time": "0h - 0h", "season": ""}}}}
 Extract the number of houses and solar panels from the input. Output only the JSON dictionary.
-Example 1 input: 'I want 2 houses with 4 solar panels'
-Example 1 output: {{"Houses": [{{"house_1": {{"solar_panels": 4, "batteries": 0, "has_heatpump": false, "has_car": false}}}}, {{"house_2": {{"solar_panels": 4, "batteries": 0, "has_heatpump": false, "has_car": false}}}}], "Level": {{"max_coins": 0, "max_co2": 0, "start_end_time": "0h - 0h", "season": ""}}}}
-Example 2 input: 'I want 1 house with 5 solar panels'
-Example 2 output: {{"Houses": [{{"house_1": {{"solar_panels": 5, "batteries": 0, "has_heatpump": false, "has_car": false}}}}], "Level": {{"max_coins": 0, "max_co2": 0, "start_end_time": "0h - 0h", "season": ""}}}}
 """
     response = generator(full_prompt, max_length=500, num_return_sequences=1)[0]
 
