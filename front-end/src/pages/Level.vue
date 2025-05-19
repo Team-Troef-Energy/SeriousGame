@@ -1,8 +1,3 @@
-<!-- 
- Code is probably working fine, but this is absolutely un fucking readable.
- We'll gonna need to turn this into a bunch of different components with the same logic,
- and then judge whether it needs improvement or not.
--->
 <template>
   <div class="level container">
     <div class="level-container">
@@ -10,7 +5,7 @@
       <div class="game-content">
         <div ref="gameCanvas" class="game-canvas">
           <div class="connection-line-container">
-            <template v-for="(transformer, transformerIndex) in transformers">
+            <template v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformerIndex">
               <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
                 :key="'connection-' + transformerIndex + '-' + houseIndex"
                 :x1="(transformerPositions[transformerIndex] % 10) * 150 + 350"
@@ -22,8 +17,9 @@
                 @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
             </template>
           </div>
-          <template v-for="(transformer, transformerIndex) in transformers">
-            <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
+          <template v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformerIndex">
+            <Transformer
+              
               :style="{
                 position: 'absolute',
                 left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
@@ -35,22 +31,23 @@
                 position: 'absolute',
                 left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
-              }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
+              }" @click="showHouseDetails(house)" @drop-item="handleDropItem($event, house)"
+              :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
               :hasBatteries="house.batteries.amount > 0" />
           </template>
           <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
-            :currentCO2="dashboardData.currentCO2" :MaxCO2="dashboardData.maxCO2"
+            :currentCO2="dashboardData.currentCO2" :maxCO2="dashboardData.maxCO2"
             :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
             :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
             :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
             :season="dashboardData.season" />
         </div>
-        <GameSideBar />
+        <GameSideBar :solarPanelCost="solarPanelCost" :batteryCost="batteryCost" />
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
       <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
-        :transformers=transformers @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
+        :transformers="transformers" @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
     </div>
   </div>
@@ -90,7 +87,7 @@ export default defineComponent({
 
     if (typeof levelNumber === "object") {
       levelNumber = levelNumber[0];
-      console.error("multiple level numbers were passed");
+      console.error("Multiple level numbers were passed");
     }
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
@@ -108,8 +105,8 @@ export default defineComponent({
       season: "",
     });
 
-    let solarPanelCost = 0;
-    let batteryCost = 0;
+    const solarPanelCost = ref(0);
+    const batteryCost = ref(0);
 
     const popupProperties = ref<PopupProperties | undefined>(undefined);
     const isPopupOpen = ref(false);
@@ -154,10 +151,8 @@ export default defineComponent({
       const widthFactor = viewportWidth / baseWidth;
       const heightFactor = viewportHeight / baseHeight;
 
-      const factor = Math.max(widthFactor, heightFactor);
-
-      return factor;
-    }
+      return Math.max(widthFactor, heightFactor);
+    };
 
     const getMaxHouseCurrent = computed(() => {
       let maxCurrent = 0;
@@ -173,12 +168,35 @@ export default defineComponent({
 
     const showHouseDetails = (house: house) => {
       isPopupOpen.value = true;
-      popupProperties.value = new PopupProperties(house, solarPanelCost, batteryCost);
+      popupProperties.value = new PopupProperties(house, solarPanelCost.value, batteryCost.value);
     };
 
     const showTransformerDetails = (transformer: transformer) => {
       isPopupOpen.value = true;
-      popupProperties.value = new PopupProperties(transformer, solarPanelCost, batteryCost);
+      popupProperties.value = new PopupProperties(transformer, solarPanelCost.value, batteryCost.value);
+    };
+
+    const handleDropItem = async (itemType: string, house: house) => {
+      const coinsUsed = dashboardData.value.coinsUsed;
+      const maxCoins = dashboardData.value.maxCoins;
+      const itemCost = itemType === 'solarPanels' ? solarPanelCost.value : batteryCost.value;
+
+      if (coinsUsed + itemCost > maxCoins) {
+        notificationStatus.value = true;
+        notificationMessage.value = "Niet genoeg coins!";
+        return;
+      }
+
+      if (itemType === 'solarPanels') {
+        house.solarpanels += 1;
+      } else if (itemType === 'batteries') {
+        house.batteries.amount += 1;
+      } else {
+        console.error("Unknown item type:", itemType);
+        return;
+      }
+
+      await submitChanges();
     };
 
     const processDashboardData = (data: levelData) => {
@@ -198,7 +216,7 @@ export default defineComponent({
       });
 
       const totalProduction = totalGreenProduction + totalGreyProduction;
-      const greenProducedEnergyPercentage = totalProduction == 0 ? 0 : (totalGreenProduction / totalProduction) * 100;
+      const greenProducedEnergyPercentage = totalProduction === 0 ? 0 : (totalGreenProduction / totalProduction) * 100;
 
       dashboardData.value = {
         coinsUsed: data.totalCosts,
@@ -246,6 +264,8 @@ export default defineComponent({
         }
       } catch (error) {
         console.error("Failed to submit changes:", error);
+        notificationStatus.value = true;
+        notificationMessage.value = "Fout bij het opslaan van wijzigingen.";
       }
       isPopupOpen.value = false;
     };
@@ -265,8 +285,8 @@ export default defineComponent({
       try {
         const data = await gameLevelService.fetchStartLevel(levelNumber);
         gameId = data.id;
-        solarPanelCost = data.cost.solarPanelCost;
-        batteryCost = data.cost.batteryCost;
+        solarPanelCost.value = data.cost.solarPanelCost;
+        batteryCost.value = data.cost.batteryCost;
         const lastHourData = data.hours[data.hours.length - 1];
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -285,6 +305,8 @@ export default defineComponent({
 
     return {
       gameCanvas,
+      solarPanelCost,
+      batteryCost,
       transformerPositions,
       housePositions,
       transformers,
@@ -296,6 +318,7 @@ export default defineComponent({
       getCumulativeHouseIndex,
       showHouseDetails,
       showTransformerDetails,
+      handleDropItem,
       submitChanges,
       infoBoxVisible,
       infoBoxContents,
