@@ -6,7 +6,7 @@ import { TransformerConfiguration } from "./TransformerConfiguration";
 
 export interface levelTemplate {
     id?: number;
-    type?: templateType;
+    levelType?: templateType;
     raceId?: number;
     levelNumber: number;
     objective: objective;

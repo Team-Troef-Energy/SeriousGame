@@ -94,13 +94,8 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    let levelNumber = route.params.levelNmr;
-    let gameId = "";
+    let gameId = Number(route.params.levelNmr);
 
-    if (typeof levelNumber === "object") {
-      levelNumber = levelNumber[0];
-      console.error("multiple level numbers were passed");
-    }
     const gameCanvas = ref<HTMLDivElement | null>(null);
     const transformerPositions = ref<number[]>([]);
     const housePositions = ref<number[]>([]);
@@ -300,7 +295,7 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const data = await gameLevelService.fetchStartLevel(levelNumber);
+        const data = await gameLevelService.fetchStartLevel(gameId);
         gameId = data.id;
         solarPanelCost = data.cost.solarPanelCost;
         batteryCost = data.cost.batteryCost;

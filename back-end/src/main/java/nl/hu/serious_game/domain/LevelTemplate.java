@@ -21,7 +21,7 @@ public class LevelTemplate {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = false)
     private int levelNumber;
 
     @Setter

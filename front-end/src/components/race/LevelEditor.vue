@@ -12,6 +12,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
+import { raceService } from '../../services/game/RaceService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
 import { textModal } from '../../types/global/modals/TextModal';
 import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
@@ -44,10 +45,11 @@ export default defineComponent({
         };
 
         const fetchAllLevels = async () => {
-            return await templateLevelService.fetchAllLevels();
+            const race = await raceService.fetchRaceById(props.raceId);
+            return race.levels;
         }
 
-        const fetchStartLevel = async (level: string) => {
+        const fetchStartLevel = async (level: number) => {
             return await gameLevelService.fetchStartLevel(level);
         }
 
@@ -92,7 +94,7 @@ export default defineComponent({
         }
 
         const addTypeAndRaceIdToTemplate = (template: levelTemplate) => {
-            template.type = templateType.RACE;
+            template.levelType = templateType.RACE;
             template.raceId = props.raceId;
         }
 

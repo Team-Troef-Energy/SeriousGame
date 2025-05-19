@@ -1,6 +1,7 @@
 <template>
-  <div class="level-select-container">
-    <div class="level-select-content">
+  <div class="race-level-select-container">
+    <RaceBackButtonHeader :location="`/race/${raceId}`"></RaceBackButtonHeader>
+    <div class="race-level-select-content">
       <h3 class="title">
         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -9,7 +10,7 @@
         </svg>
         Selecteer een level
       </h3>
-      <div class="level-select-grid">
+      <div class="race-level-select-grid">
         <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id" :levelNumber="level.levelNumber"
           class="level-button" />
       </div>
@@ -19,24 +20,30 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import LevelSelectButton from "../components/LevelSelectButton.vue";
-import { templateLevelService } from "../services/game/TemplateLevelService";
-import { levelTemplate } from "../types/levelTemplate/LevelTemplate";
+import { useRoute } from "vue-router";
+import LevelSelectButton from "../../components/LevelSelectButton.vue";
+import RaceBackButtonHeader from "../../components/race/RaceBackButtonHeader.vue";
+import { raceService } from "../../services/game/RaceService";
+import { levelTemplate } from "../../types/levelTemplate/LevelTemplate";
 
 export default defineComponent({
-  name: "Level",
+  name: "RaceLevelSelectPage",
   components: {
-    LevelSelectButton,
+    RaceBackButtonHeader, LevelSelectButton,
   },
   setup() {
+    const route = useRoute();
+    let raceId = Number(route.params.id);
     let levels = ref<levelTemplate[]>([]);
 
     onMounted(async () => {
-      const fetchedLevels = await templateLevelService.fetchAllLevels(); 
+      const race = await raceService.fetchRaceById(raceId);
+      const fetchedLevels = race.levels;
       levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
     });
 
     return {
+      raceId,
       levels,
     };
   },
@@ -44,23 +51,21 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.level-select-container {
+.race-level-select-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  align-items: center;
+  height: 90vh;
 }
 
-.level-select-content {
+.race-level-select-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
+  align-items: center;
+  padding: 2rem 0rem 2rem 0rem;
   width: 100%;
-  height: 100%;
   max-width: 1100px;
+  flex: 10;
 }
 
 .title {
@@ -76,10 +81,10 @@ export default defineComponent({
   height: 20px;
 }
 
-.level-select-grid {
+.race-level-select-grid {
   display: flex;
-  flex-wrap: wrap; 
-  width: 100%;
+  flex-wrap: wrap;
   gap: 20px;
+  width: 100%;
 }
 </style>

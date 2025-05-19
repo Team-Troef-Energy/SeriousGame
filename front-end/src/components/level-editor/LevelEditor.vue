@@ -40,7 +40,7 @@ export default defineComponent({
             return await templateLevelService.fetchAllLevels();
         }
 
-        const fetchStartLevel = async (level: string) => {
+        const fetchStartLevel = async (level: number) => {
             return await gameLevelService.fetchStartLevel(level);
         }
 
@@ -49,7 +49,7 @@ export default defineComponent({
             if (templateWrapper.template === undefined) {
                 return showModal('Fout', errorMessage);
             }
-            templateWrapper.template.type = templateType.GLOBAL;
+            templateWrapper.template.levelType = templateType.GLOBAL;
             templateLevelService.createLevelTemplate(templateWrapper.template).then(() => {
                 showModal('Succes', 'Level is succesvol aangemaakt');
             }).catch((error) => {

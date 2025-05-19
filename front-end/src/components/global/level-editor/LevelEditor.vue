@@ -171,7 +171,13 @@ export default defineComponent({
                 return;
             }
 
-            const startLevelData = await props.fetchStartLevel(savedLevelValue.toString());
+            const levelId = await getLevelIdFromLevelNumber(savedLevelValue);
+            
+            if (levelId === undefined) {
+                return;
+            }
+
+            const startLevelData = await props.fetchStartLevel(levelId);
 
             clearLevelTemplate();
 
@@ -258,6 +264,18 @@ export default defineComponent({
         const doesLevelExist = async (levelNumber: number) => {
             fetchAllLevels();
             return levels.value.some(level => level.levelNumber == levelNumber);
+        };
+
+        const getLevelIdFromLevelNumber = async (levelNumber: number) => {
+            fetchAllLevels();
+
+            const level = levels.value.find(level => level.levelNumber == levelNumber);
+
+            if (level?.id) {
+                return level.id;
+            } else {
+                return undefined;
+            }
         };
 
         const getTemplateIdFromLevelNumber = async (levelNumber: number) => {

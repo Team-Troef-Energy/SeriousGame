@@ -10,7 +10,7 @@ public interface LevelTemplateRepository extends JpaRepository<LevelTemplate, Lo
     @Query("select count(*) from LevelTemplate")
     int getLevelCount();
 
-    LevelTemplate getLevelTemplateById(Long id);
+    Optional<LevelTemplate> getLevelTemplateById(Long id);
 
     Optional<LevelTemplate> getLevelTemplateByLevelNumber(int templateNumber);
 }
