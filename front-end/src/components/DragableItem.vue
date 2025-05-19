@@ -5,7 +5,7 @@
       <img :src="imageSrc"
         :alt="itemType"
         class="item-image" />
-      <span>{{ label }} ({{ cost }} coins)</span>
+      <span>{{ label }}</span>
     </div>
   </template>
   

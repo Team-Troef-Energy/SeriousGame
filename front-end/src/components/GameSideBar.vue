@@ -44,19 +44,21 @@
   </script>
   
   <style scoped>
-  .game-sidebar {
+ .game-sidebar {
     width: 250px;
     height: 100%;
     background:
-      linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
-      url("/Cartoon_green_texture_grass.jpg");
+        linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85)),
+        url("/game.jpg");
+    background-size: cover, cover;
+    background-blend-mode: normal;
     border-left: 2px solid #4a4a4a;
     padding: 20px 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     z-index: 1000;
-  }
+}
   
   .sidebar-title {
     font-size: 1.5rem;

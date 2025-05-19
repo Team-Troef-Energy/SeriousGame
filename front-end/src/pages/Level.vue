@@ -358,12 +358,13 @@ export default defineComponent({
   height: 100%;
   position: relative;
   background:
-    linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
-    url("/Cartoon_green_texture_grass.jpg");
-  background-size: 200% 200%, 25%;
-  background-position: 0% 50%, center;
-  animation: gradientMove 6s infinite linear;
+    linear-gradient(rgba(120, 120, 120, 0.55), rgba(120, 120, 120, 0.55)),
+    url("/game.jpg");
+  background-size: cover, cover;
+  background-blend-mode: normal;
+  overflow-x: auto;
 }
+
 
 @keyframes gradientMove {
   0% {
