@@ -10,7 +10,7 @@
         Selecteer een level
       </h3>
       <div class="level-select-grid">
-        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :level="level.levelNumber"
+        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id" :levelNumber="level.levelNumber"
           class="level-button" />
       </div>
     </div>
@@ -32,7 +32,7 @@ export default defineComponent({
     let levels = ref<levelTemplate[]>([]);
 
     onMounted(async () => {
-      const fetchedLevels = await templateLevelService.fetchAllLevels();
+      const fetchedLevels = await templateLevelService.fetchAllLevels(); 
       levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
     });
 
