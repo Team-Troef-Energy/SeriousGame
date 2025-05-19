@@ -13,11 +13,15 @@
             <template v-for="(transformer, transformerIndex) in transformers">
               <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
                 :key="'connection-' + transformerIndex + '-' + houseIndex" v-bind="coordinatesWithMargin(
-                  (transformerPositions[transformerIndex] % 10) * 150 + 350,
-                  Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 125,
-                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 100,
-                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60,
-                  60
+                  // Transformer X
+                  (transformerPositions[transformerIndex] % 10) * 150 + 800 + (houseIndex * 20), // <--- controls horizontal spacing
+                  // Transformer Y
+                  Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5), // <--- controls vertical spacing
+                  // House X
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 120, // <--- controls horizontal spacing
+                  // House Y
+                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60, // <---controls vertical spacing
+                  60 // margin
                 )" :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
                 :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
                 @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
@@ -27,15 +31,15 @@
             <transformer v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformer.id"
               :style="{
                 position: 'absolute',
-                left: (transformerPositions[transformerIndex] % 10) * 150 + 220 + 'px',
-                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() + 30 + 'px',
+                left: (transformerPositions[transformerIndex] % 10) * 150 + 720 + 'px',
+                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 75 + 'px',
               }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
             <House v-for="(house, houseIndex) in transformer.houses"
               :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
               :style="{
                 position: 'absolute',
-                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 150 + 'px',
-                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 'px',
+                left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 50 + 'px',
+                top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
               :hasBatteries="house.batteries.amount > 0" />
@@ -176,6 +180,7 @@ export default defineComponent({
     };
 
     const getResolutionFactor = () => {
+      const factorCorrection = 0.15;
       const baseWidth = 1920;
       const baseHeight = 1080;
 
@@ -187,7 +192,7 @@ export default defineComponent({
 
       const factor = Math.max(widthFactor, heightFactor);
 
-      return factor;
+      return factor - factorCorrection;
     }
 
     const getMaxHouseCurrent = computed(() => {
@@ -258,6 +263,11 @@ export default defineComponent({
           })),
         };
         const response = await gameLevelService.fetchUpdateLevel(gameId, data);
+        // The response is not guaranteed to have the same structure as the initial level data
+        // So the houses are sorted by id to ensure the correct order is used
+        response.hours[response.hours.length - 1].transformers.forEach((transformer: any) => {
+          transformer.houses.sort((a: any, b: any) => a.id - b.id);
+        });
         const lastHourData = response.hours[response.hours.length - 1];
         transformerPositions.value = generatePositions(lastHourData.transformers.length, 20);
         housePositions.value = generatePositions(
@@ -390,6 +400,7 @@ export default defineComponent({
   background-size: 200% 200%, 25%;
   background-position: 0% 50%, center;
   animation: gradientMove 6s infinite linear;
+  overflow-x: auto;
 }
 
 @keyframes gradientMove {
