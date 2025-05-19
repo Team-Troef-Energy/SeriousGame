@@ -74,10 +74,10 @@ import { computed, CSSProperties, defineComponent, onMounted, ref, Ref } from "v
 import { useRoute } from "vue-router";
 import ConnectionLine from "../components/ConnectionLine.vue";
 import Dashboard from "../components/Dashboard.vue";
-import GameSideBar from "../components/GameSideBar.vue";
 import House from "../components/House.vue";
 import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
+import GameSideBar from "../components/GameSideBar.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
@@ -395,11 +395,10 @@ export default defineComponent({
   height: 100%;
   position: relative;
   background:
-    linear-gradient(45deg, rgba(92, 179, 230, 0.5), rgba(115, 193, 119, 0.5)),
-    url("/Cartoon_green_texture_grass.jpg");
-  background-size: 200% 200%, 25%;
-  background-position: 0% 50%, center;
-  animation: gradientMove 6s infinite linear;
+    linear-gradient(rgba(120, 120, 120, 0.55), rgba(120, 120, 120, 0.55)),
+    url("/game.jpg");
+  background-size: cover, cover;
+  background-blend-mode: normal;
   overflow-x: auto;
 }
 
