@@ -104,7 +104,7 @@ import { defineComponent, onMounted, ref } from 'vue';
 import { textModal } from '../../../types/global/modals/TextModal';
 import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
-import { templateLevelService } from '../../../services/game/TemplateLevelService'
+import { pythonService } from '../../../services/PythonService'
 import TextModal from '../modals/TextModal.vue';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
@@ -135,7 +135,7 @@ export default defineComponent({
                 location_request: "admin"
             };
 
-            await templateLevelService.fetchPromptMessage(data).then((response: any) => {
+            await pythonService.fetchMessage(data).then((response: any) => {
             promptOutput.value = response.response
             console.log(response)
             }).catch((error: any) => {

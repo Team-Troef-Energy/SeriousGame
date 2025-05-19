@@ -79,6 +79,7 @@ import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { house, levelData, transformer } from "../types";
+import { pythonService } from "../services/PythonService";
 
 export default defineComponent({
   name: "Level",
@@ -153,7 +154,7 @@ export default defineComponent({
         location_request: "level"
       };
 
-      await gameLevelService.fetchChatBotMessage(data).then((response) => {
+      await pythonService.fetchMessage(data).then((response) => {
         chatbotOuput.value = response.response
         console.log(response)
         }).catch((error) => {
