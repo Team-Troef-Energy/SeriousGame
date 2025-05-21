@@ -69,7 +69,10 @@ export default defineComponent({
     },
   },
   emits: ["drop-item"],
-  setup({ emit }: any) {
+  setup(props, { emit }) {
+
+    props;
+    
     const handleDragOver = (event: DragEvent) => {
       event.preventDefault();
       if (event.dataTransfer) {
