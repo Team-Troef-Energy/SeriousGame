@@ -57,7 +57,7 @@
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
       <div class="chat-bot-message-input">
           <label for="chat-bot-input">Praat met de chatbot</label>
-          <input v-model="chatbotInput" id="chat-bot-input"/>
+          <input v-model="chatbotInput" id="chat-bot-input" @keydown.enter.prevent="handleChatBotInput"/>
           <button @click="handleChatBotInput">
             Verstuur bericht
           </button>
