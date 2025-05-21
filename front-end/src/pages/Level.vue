@@ -147,7 +147,6 @@ export default defineComponent({
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
     const chatbotInput = ref("");
-    const chatbotOutput = ref("");
     const chatWindowOpen = ref(false);
     const messages = ref([
       { text: 'Welkom bij de chatbot!', sender: 'bot' }
@@ -401,7 +400,6 @@ export default defineComponent({
       chatWindowOpen,
       toggleChatWindow,
       chatbotInput,
-      chatbotOutput,
       handleChatBotInput,
       gameCanvas,
       solarPanelCost,
