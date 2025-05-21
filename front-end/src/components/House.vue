@@ -40,7 +40,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { house } from "../types";
 
 export default defineComponent({
   props: {
@@ -70,7 +69,7 @@ export default defineComponent({
     },
   },
   emits: ["drop-item"],
-  setup(props, { emit }) {
+  setup({ emit }: any) {
     const handleDragOver = (event: DragEvent) => {
       event.preventDefault();
       if (event.dataTransfer) {
