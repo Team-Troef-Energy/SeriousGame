@@ -184,13 +184,14 @@ export default defineComponent({
           sender: 'user'
       });
 
+      chatbotInput.value = '';
+
       await pythonService.fetchMessage(data).then((response) => {
         // Simulate bot response (replace with actual bot logic if needed)
         messages.value.push({
           text: `${response.response}`,
           sender: 'bot'
         });
-        chatbotInput.value = '';
         }).catch((error) => {
             console.error(error);
         });
