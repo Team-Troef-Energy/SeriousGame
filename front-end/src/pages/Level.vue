@@ -55,13 +55,33 @@
       <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
         :transformers="transformers" @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
-      <div class="chat-bot-message-input">
-          <label for="chat-bot-input">Praat met de chatbot</label>
-          <input v-model="chatbotInput" id="chat-bot-input"/>
-          <button @click="handleChatBotInput">
-            Verstuur bericht
+
+      <button class="chat-toggle-button" @click="toggleChatWindow">
+        {{ chatWindowOpen ? 'Sluit Chat' : 'Open Chat' }}
+      </button>
+
+      <div v-if="chatWindowOpen" class="chat-window">
+        <div class="chat-messages">
+        <div
+          v-for="(message, index) in messages"
+          :key="index"
+          :class="['message', message.sender === 'user' ? 'user-message' : 'bot-message']"
+        >
+          {{ message.text }}
+        </div>
+      </div>
+        <div class="chat-input-container">
+          <label for="chat-bot-input" class="sr-only">Praat met de chatbot</label>
+          <input
+            v-model="chatbotInput"
+            id="chat-bot-input"
+            placeholder="Typ je bericht..."
+            @keydown.enter.prevent="handleChatBotInput"
+          />
+          <button @click="handleChatBotInput" class="send-button">
+            Verstuur
           </button>
-          <p>{{ chatbotOuput }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -127,7 +147,10 @@ export default defineComponent({
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
     const chatbotInput = ref("");
-    const chatbotOuput = ref("");
+    const chatWindowOpen = ref(false);
+    const messages = ref([
+      { text: 'Welkom bij de chatbot!', sender: 'bot' }
+    ]);
     const infoBoxStyle: Ref<CSSProperties> = ref({
       position: "absolute",
       top: "0px",
@@ -138,6 +161,10 @@ export default defineComponent({
       borderRadius: "5px",
       pointerEvents: "none",
     });
+
+    const toggleChatWindow = async () => {
+      chatWindowOpen.value = !chatWindowOpen.value
+    }
 
     const handleChatBotInput = async () => {
       const data = {
@@ -151,8 +178,20 @@ export default defineComponent({
         location_request: "level"
       };
 
+      // Add user message
+      messages.value.push({
+          text: chatbotInput.value,
+          sender: 'user'
+      });
+
+      chatbotInput.value = '';
+
       await pythonService.fetchMessage(data).then((response) => {
-        chatbotOuput.value = response.response
+        // Simulate bot response (replace with actual bot logic if needed)
+        messages.value.push({
+          text: `${response.response}`,
+          sender: 'bot'
+        });
         }).catch((error) => {
             console.error(error);
         });
@@ -358,8 +397,10 @@ export default defineComponent({
     }
 
     return {
+      messages,
+      chatWindowOpen,
+      toggleChatWindow,
       chatbotInput,
-      chatbotOuput,
       handleChatBotInput,
       gameCanvas,
       solarPanelCost,
@@ -391,6 +432,112 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.chat-toggle-button {
+  position: absolute;
+  top: 10px;
+  right: calc(1% + 250px);
+  padding: 10px 20px;
+  background:
+          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  color: white;
+  border: 2px solid #4a4a4a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 1000;
+}
+
+.chat-toggle-button:hover {
+  background-color: #6e6e6e;
+}
+
+.chat-window {
+  position: absolute;
+  right: calc(1% + 250px);
+  top: 57px;
+  width: 400px;
+  height: 400px;
+  background:
+          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 10px 0px 10px;
+}
+
+.user-message {
+  background:
+          linear-gradient(rgba(82, 82, 82, 0.85), rgba(82, 82, 82, 0.85));
+  margin-left: auto; /* Align to right */
+  border-bottom-right-radius: 4px;
+}
+
+.bot-message {
+  background-color: #8a8a8a;
+  align-self: flex-start; /* Align to left */
+  border-bottom-left-radius: 4px;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background:
+          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  border-top: 2px solid #4a4a4a;
+}
+
+.chat-input-container input {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid #4a4a4a;
+  border-radius: 4px;
+  margin-right: 0px;
+}
+
+.chat-input-container input::placeholder {
+  color: #FFF; /* Placeholder text color, e.g., light gray */
+}
+
+.send-button {
+  padding: 8px 16px;
+  background:
+        linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  color: white;
+  border: 2px solid #4a4a4a;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: #218838;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
 .level {
   height: 94.3vh;
   min-width: 100%;

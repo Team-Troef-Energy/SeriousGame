@@ -24,8 +24,14 @@ def get_data():
     return jsonify({"response": f"{response}".strip()})
 
 def chatbot(data: dict) -> str:
+    # opzetten vertaalmodellen
+    translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
+    translator_en_to_nl = pipeline("translation", model="Helsinki-NLP/opus-mt-en-nl")
+
     # filter de vraag uit de data
     question = data['inputMessage']
+    # zet vraag om naar engels
+    question_english = translator_nl_to_en(question)[0]['translation_text']
     # maak de context met de data
     context = create_context(data)
 
@@ -37,12 +43,16 @@ Context:
 {context}
 
 Question:
-{question}
+{question_english}
 """
     # roep het model aan 
     response = generator(prompt, max_length=50)[0]
+    response_english = response['generated_text']
 
-    return response['generated_text']
+    # vertaal response terug naar nederlands
+    response_dutch = translator_en_to_nl(response_english)[0]['translation_text']
+
+    return response_dutch
 
 def create_context(data: dict) -> str:
     """
