@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from transformers import pipeline
+from jsonformer import Jsonformer
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import json
+
 
 app = Flask(__name__)
 CORS(app)  # Staat alle domeinen toe, pas dit aan als nodig
@@ -91,53 +95,36 @@ current amount CO2: {dashboard['currentCO2']}\
 def level_generation(data: dict) -> str:
     user_input = data['inputMessage']
 
-    generator = pipeline("text2text-generation", model="google/flan-t5-large")
+    translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
+    user_input_english = translator_nl_to_en(user_input)[0]['translation_text']
+
+    generator = pipeline("text2text-generation", model="google/flan-t5-xl")
 
     full_prompt = f"""
-You are an AI that converts natural language into a specific JSON format.
-
-Extract the number of houses and the number of solar panels mentioned in the input. Then generate a JSON dictionary in the following structure:
+Convert the input into a JSON dictionary with the following structure:
 
 {{
   "Houses": [
-    {{ "house_1": {{ "solar_panels": <solar_panel_count>, "batteries": 0, "has_heatpump": false, "has_car": false }} }},
-    {{ "house_2": {{ "solar_panels": <solar_panel_count>, "batteries": 0, "has_heatpump": false, "has_car": false }} }},
-    ...
+    {{ "house_1": {{ "solar_panels": <solar_panel_count>, "batteries": <battery_amount>, "has_heatpump": <has_heat>, "has_car": <has_car> }} }}
   ],
   "Level": {{
-    "max_coins": 0,
-    "max_co2": 0,
-    "start_end_time": "0h - 0h",
-    "season": ""
+    "max_coins": <max_coins_amount>,
+    "max_co2": <max_co2_amount>,
+    "start_end_time": "<start_time>h - <end_time>h",
+    "season": "<season>"
   }}
 }}
 
-Example:
+Extract the number of houses and their attributes from the input. For any missing values, use these defaults:
+- 0 for solar_panels, batteries, max_coins, max_co2.
+- false for has_heatpump, has_car.
+- 0 for start_time, end_time.
+- "" for season.
 
-{{
-    "Houses": [
-    {{"house_1": {{"solar_panels: 2, "batteries: 0, "has_heatpump": false, "has_car": false}} }},
-    ...
-    ],
-    "Level": {{
-    "max_coins": 0,
-    "max_co2": 0,
-    "start_end_time": "0h - 0h",
-    "season": ""
-  }}
-}}
-
-Only include as many houses as specified in the input, and set the solar_panels number for each one. Fill in all other fields exactly as shown.
-
-Input: "{user_input}"
+Input: "{user_input_english}"
 """
-    response = generator(full_prompt, max_length=500, num_return_sequences=1)[0]
-
-    print(full_prompt)
-    print(response)
+    response = generator(full_prompt, max_length=800, num_return_sequences=1)[0]
 
     return response['generated_text']
-
-
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
