@@ -8,7 +8,7 @@ class HTTPRequestManager {
     private async loadConfig() {
         try {
             // Misschien klopt deze URL niet
-            const response = await fetch('../../docker_profiles/config.json');
+            const response = await fetch('../../config.json');
             if (!response.ok) {
                 throw new Error('Failed to load config.json');
             }
