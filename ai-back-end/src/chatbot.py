@@ -98,7 +98,7 @@ def level_generation(data: dict) -> str:
     translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
     user_input_english = translator_nl_to_en(user_input)[0]['translation_text']
 
-    generator = pipeline("text2text-generation", model="google/flan-t5-xl")
+    generator = pipeline("text2text-generation", model="google/flan-t5-large")
 
     full_prompt = f"""
 Convert the input into a JSON dictionary with the following structure:
