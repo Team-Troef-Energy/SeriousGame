@@ -12,7 +12,8 @@ WORKDIR /app
 # This way, a code change will not invalidate the cache until the next step.
 # Installing requirements takes a long time, and this allows it to be cached independently.
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+RUN rm -rf /app/.cache
 
 # Disables Flask's debug mode
 ENV FLASK_ENV=production
