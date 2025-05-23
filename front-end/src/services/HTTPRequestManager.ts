@@ -8,7 +8,7 @@ class HTTPRequestManager {
     private async loadConfig() {
         this.apiUrl = {
             "localhost": 'http://localhost:8080',
-            "frontend.dev.troefgame.jonaqhan.nl": "https://frontend.dev.troefgame.jonaqhan.nl",
+            "frontend.dev.troefgame.jonaqhan.nl": "https://backend.dev.troefgame.jonaqhan.nl",
             "troefgame.duckdns.org": "http://troefgame.duckdns.org:5001",
         }[window.location.hostname] || null; // Hostname does not include port
 
