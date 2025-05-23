@@ -6,6 +6,14 @@ class HTTPRequestManager {
     }
 
     private async loadConfig() {
+        this.apiUrl = {
+            "localhost": 'http://localhost:8080',
+            "frontend.dev.jonaqhan.nl": "https://frontend.dev.jonaqhan.nl",
+            "troefgame.duckdns.org": "http://troefgame.duckdns.org:5001",
+        }[window.location.hostname] || null; // Hostname does not include port
+
+        // Doesn't work, kept for future reference
+        /*
         try {
             // Misschien klopt deze URL niet
             const response = await fetch('../../docker_profiles/config.json');
@@ -18,7 +26,7 @@ class HTTPRequestManager {
             console.error('Error loading config:', error);
 
             this.apiUrl = 'http://localhost:8080';
-        }
+        }*/
     }
 
     async doFetch(path: string, method = 'GET', body: any = undefined, hasJsonResponse = true) {
