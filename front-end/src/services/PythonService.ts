@@ -1,7 +1,13 @@
 class PythonService{
     fetchMessage = async (message: { [key: string]: any }) => {
+        const aiBackendUrl = {
+            "localhost": 'http://localhost:5000',
+            "frontend.dev.troefgame.jonaqhan.nl": "https://ai-backend.dev.troefgame.jonaqhan.nl",
+            "troefgame.duckdns.org": "http://troefgame.duckdns.org:5002",
+        }[window.location.hostname] || null; // Hostname does not include port
+
         try {
-          const response = await fetch("http://localhost:5000/python-data", {
+          const response = await fetch(`${aiBackendUrl}/python-data`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
