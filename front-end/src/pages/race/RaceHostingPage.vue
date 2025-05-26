@@ -9,7 +9,7 @@
             <button class="btn-stop-hosting" @click="stopHosting">Stop hosten</button>
         </div>
         <div class="content"></div>
-         <div class="footer"></div>
+        <div class="footer"></div>
         <Teleport to="body">
             <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
@@ -119,7 +119,8 @@ button {
     border: solid 1px rgba(0, 0, 0, .1);
     background-color: #fff;
     color: #000;
-    cursor: pointer;
+    cursor: default;
+    user-select: text;
 }
 
 .btn-name {
@@ -141,7 +142,7 @@ button {
     height: 4rem;
 }
 
-.button:hover {
+.btn-stop-hosting:hover {
     cursor: pointer;
     background-color: #f8f8f8;
 }
