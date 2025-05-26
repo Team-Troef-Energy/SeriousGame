@@ -128,12 +128,13 @@ button {
     align-items: center;
     width: 15rem;
     text-align: center;
-    overflow-x: auto;
+    overflow-y: hidden;
     gap: 1rem;
 }
 
 .btn-name p {
     text-align: center;
+    white-space: nowrap;
 }
 
 .btn-code {
