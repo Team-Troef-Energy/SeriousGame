@@ -4,7 +4,7 @@
       <div class="sidebar-content">
         <DraggableItem
           itemType="solarPanels"
-          imageSrc="/solar-panels.png"
+          imageSrc="/solarpanel.png"
           label="Solar Panels"
           :cost="solarPanelCost"
         />
