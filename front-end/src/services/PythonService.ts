@@ -2,8 +2,8 @@ class PythonService{
     fetchMessage = async (message: { [key: string]: any }) => {
         const aiBackendUrl = {
             "localhost": 'http://localhost:5000',
-            "frontend.dev.troefgame.jonaqhan.nl": "https://ai-backend.dev.troefgame.jonaqhan.nl",
-            "troefgame.duckdns.org": "http://troefgame.duckdns.org:5002",
+            "dev.troefgame.jonaqhan.nl": "https://dev.troefgame.jonaqhan.nl/ai-backend",
+            "troefgame.duckdns.org": "http://troefgame.duckdns.org/ai-backend",
         }[window.location.hostname] || null; // Hostname does not include port
 
         try {
