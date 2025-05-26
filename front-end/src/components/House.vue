@@ -11,14 +11,14 @@
       <img
         v-for="index in solarpanels"
         :key="'solar-' + index"
-        src="/solar-panels.png"
+        src="/solarpanel.png"
         alt="Solar Panel"
         class="solar-panel"
       />
       <img
         v-for="index in batteries.amount"
         :key="'battery-' + index"
-        src="/batteries.png"
+        src="/battery.png"
         alt="Battery"
         class="battery"
       />
