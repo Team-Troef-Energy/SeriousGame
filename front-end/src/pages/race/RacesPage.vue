@@ -108,6 +108,7 @@ export default defineComponent({
     padding: 0.55rem 5% 0rem 5%;
     width: 100%;
     height: 5rem;
+    gap: 1rem;
     flex: 1;
 }
 
@@ -123,7 +124,7 @@ export default defineComponent({
 
 button {
     width: 8rem;
-    height: 3rem;
+    height: 5rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     border: solid 1px rgba(0, 0, 0, .1);
@@ -142,6 +143,20 @@ button:hover {
 }
 
 .btn-race-join {
-    width: 12rem;
+    width: 14rem;
+}
+
+@media (min-width: 640px) {
+    .header {
+        gap: 0rem;
+    }
+
+    button {
+        height: 3rem;
+    }
+
+    .btn-race-join {
+        width: 12rem;
+    }
 }
 </style>

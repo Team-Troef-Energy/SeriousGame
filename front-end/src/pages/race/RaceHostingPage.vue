@@ -107,12 +107,14 @@ export default defineComponent({
 
 .header {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 0rem 5% 0rem 5%;
-    width: 100%;
-    flex: 1.5;
     border-bottom: rgba(0, 0, 0, .1) solid 1px;
+    padding: 1rem 5% 1rem 5%;
+    width: 100%;
+    gap: 1rem;
+    flex: 1.5;
 }
 
 .content {
@@ -185,5 +187,13 @@ button {
 .btn-stop-hosting:hover {
     cursor: pointer;
     background-color: #f8f8f8;
+}
+
+@media (min-width: 640px) {
+    .header {
+        flex-direction: row;
+        padding: 0rem 5% 0rem 5%;
+        gap: 0rem;
+    }
 }
 </style>
