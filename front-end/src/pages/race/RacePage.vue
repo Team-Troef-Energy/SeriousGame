@@ -30,7 +30,7 @@
                             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
-                <button class="btn-host-race" @click="navigateTo(`/race/${raceId}/levels`)">
+                <button class="btn-host-race" @click="hostRace">
                     <p>Host race</p>
                     <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -125,6 +125,21 @@ export default defineComponent({
                 });
         }
 
+        const generateAlphanumericCode = (): string => {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            const length = 6;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        };
+
+        const hostRace = async () => {
+            const sessionCode = generateAlphanumericCode();
+            navigateTo(`/race/${raceId}/hosting/${sessionCode}`);
+        }
+
         onMounted(async () => {
             raceService.fetchRaceById(raceId)
                 .then((response) => {
@@ -147,7 +162,8 @@ export default defineComponent({
             raceName,
             navigateTo,
             handleRaceNameChange,
-            handleRaceDelete
+            handleRaceDelete,
+            hostRace,
         };
     }
 });

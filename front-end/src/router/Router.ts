@@ -5,6 +5,7 @@ import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
 import LoginPage from "../pages/LoginPage.vue";
 import RaceHostingPage from "../pages/race/RaceHostingPage.vue";
+import RaceJoinPage from "../pages/race/RaceJoinPage.vue";
 import RaceLevelEditorPage from "../pages/race/RaceLevelEditorPage.vue";
 import RaceLevelSelectPage from "../pages/race/RaceLevelSelectPage.vue";
 import RacePage from "../pages/race/RacePage.vue";
@@ -27,7 +28,8 @@ const routes = [
   { path: '/race/:id', component: RacePage },
   { path: '/race/:id/level-editor', component: RaceLevelEditorPage },
   { path: '/race/:id/levels', component: RaceLevelSelectPage },
-  { path: '/race/hosting/:code', component: RaceHostingPage },
+  { path: '/race/:id/hosting/:code', component: RaceHostingPage },
+  { path: '/race/join', component: RaceJoinPage },
 ];
 
 const router = createRouter({
