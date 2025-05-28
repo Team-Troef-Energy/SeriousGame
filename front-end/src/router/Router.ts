@@ -28,7 +28,7 @@ const routes = [
   { path: '/race/:id', component: RacePage },
   { path: '/race/:id/level-editor', component: RaceLevelEditorPage },
   { path: '/race/:id/levels', component: RaceLevelSelectPage },
-  { path: '/race/hosting/:code', component: RaceHostingPage },
+  { path: '/race/:id/hosting/:code', component: RaceHostingPage },
   { path: '/race/join', component: RaceJoinPage },
 ];
 

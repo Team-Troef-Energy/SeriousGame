@@ -1,7 +1,7 @@
 <template>
   <div class="transformer">
     <img class="transformer" src="/transformer.png" alt="Transformer" />
-    <img v-if="hasBatteries" class="batteries" src="/batteries.png" alt="Batteries" />
+    <img v-if="hasBatteries" class="batteries" src="/battery.png" alt="Batteries" />
   </div>
 </template>
 
