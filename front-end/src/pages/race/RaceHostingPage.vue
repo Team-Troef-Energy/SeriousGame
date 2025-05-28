@@ -8,7 +8,14 @@
             <button class="btn-code"> Code: {{ sessionCode }}</button>
             <button class="btn-stop-hosting" @click="stopHosting">Stop hosten</button>
         </div>
-        <div class="content"></div>
+        <div class="content">
+            <div class="users">
+                <p>Deelnemers</p>
+                <div class="users-list">
+                    <RaceUser v-for="user in users" :key="user.username" :username="user.username"></RaceUser>
+                </div>
+            </div>
+        </div>
         <div class="footer"></div>
         <Teleport to="body">
             <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
@@ -23,10 +30,12 @@ import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
 import TextModal from '../../components/global/modals/TextModal.vue';
 import { textModal } from '../../types/global/modals/TextModal';
+import RaceUser from '../../components/race/RaceUser.vue';
+import { raceUser } from '../../types/RaceUser';
 
 export default defineComponent({
     name: 'RaceHostingPage',
-    components: { TextModal },
+    components: { TextModal, RaceUser },
     setup() {
         let isTextModalVisible = ref(false)
 
@@ -45,6 +54,16 @@ export default defineComponent({
         const raceId = Number(route.params.id);
         const sessionCode = route.params.code;
         let raceName = ref<string>('');
+        let users = ref<raceUser[]>([]);
+
+        users.value = [
+            { username: 'Jonathan' },
+            { username: 'Wessel' },
+            { username: 'Dirk' },
+            { username: 'Daan' },
+            { username: 'Jens' },
+            { username: 'Tristan' },
+        ];
 
         const navigateTo = (location: string) => {
             router.push(location);
@@ -72,6 +91,7 @@ export default defineComponent({
             raceId,
             sessionCode,
             raceName,
+            users,
             stopHosting
         };
     }
@@ -102,6 +122,26 @@ export default defineComponent({
     align-items: center;
     padding: 2rem 0rem 2rem 0rem;
     flex: 10;
+}
+
+.users {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.users p {
+    font-size: 1.5rem;
+}
+
+.users-list {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0rem 2rem 0rem;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    column-gap: 3rem;
 }
 
 .footer {
