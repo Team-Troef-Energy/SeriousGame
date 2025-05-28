@@ -6,16 +6,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted} from 'vue';
-import router from '../../router/Router';
 
 export default defineComponent({
     name: 'RaceJoinPage',
     components: {},
     setup() {
-
-        const navigateTo = (location: string) => {
-            router.push(location);
-        };
 
         onMounted(async () => {
         });
