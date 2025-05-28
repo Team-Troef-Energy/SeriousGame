@@ -1,17 +1,16 @@
 <template>
     <div class="game-sidebar">
-      <h2 class="sidebar-title">Game Sidebar</h2>
       <div class="sidebar-content">
         <DraggableItem
           itemType="solarPanels"
           imageSrc="/solarpanel.png"
-          label="Solar Panels"
+          label="Zonnepaneel"
           :cost="solarPanelCost"
         />
         <DraggableItem
           itemType="batteries"
-          imageSrc="/batteries.png"
-          label="Batteries"
+          imageSrc="/battery.png"
+          label="Batterij"
           :cost="batteryCost"
         />
       </div>
@@ -60,23 +59,12 @@
     z-index: 1000;
   }
   
-  .sidebar-title {
-    font-size: 1.5rem;
-    color: #fff;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-    width: 100%;
-    border-bottom: 2px solid #4a4a4a;
-  }
-  
   .sidebar-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-top: 20px;
   }
 
   .sidebar-content img {
