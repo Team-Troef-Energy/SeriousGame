@@ -1,12 +1,18 @@
 <template>
     <div class="race-hosting-page container">
         <div class="header">
-            <button class="btn-name">
-                <p>Race naam:</p>
-                <p>{{ raceName }}</p>
-            </button>
-            <button class="btn-code"> Code: {{ sessionCode }}</button>
-            <button class="btn-stop-hosting" @click="stopHosting">Stop hosten</button>
+            <div class="button-wrapper">
+                <button class="btn-name">
+                    <p>Race naam:</p>
+                    <p>{{ raceName }}</p>
+                </button>
+            </div>
+            <div class="button-wrapper">
+                <button class="btn-code"> Code: {{ sessionCode }}</button>
+            </div>
+            <div class="button-wrapper">
+                <button class="btn-stop-hosting" @click="stopHosting">Stop hosten</button>
+            </div>
         </div>
         <div class="content">
             <div class="users">
@@ -111,7 +117,7 @@ export default defineComponent({
     align-items: center;
     justify-content: space-between;
     border-bottom: rgba(0, 0, 0, .1) solid 1px;
-    padding: 1rem 5% 1rem 5%;
+    padding: 1rem 0rem 1rem 0rem;
     width: 100%;
     gap: 1rem;
     flex: 1.5;
@@ -165,6 +171,12 @@ button {
     user-select: text;
 }
 
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+}
+
 .btn-name {
     display: flex;
     justify-content: space-around;
@@ -192,7 +204,6 @@ button {
 @media (min-width: 640px) {
     .header {
         flex-direction: row;
-        padding: 0rem 5% 0rem 5%;
         gap: 0rem;
     }
 }
