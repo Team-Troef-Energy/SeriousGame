@@ -61,15 +61,16 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   border: 1px solid #4a4a4a;
   border-radius: 5px;
   cursor: move;
+  width: 80%;
   transition: transform 0.2s, background-color 0.2s;
 }
 
 .draggable-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(123, 123, 123, 0.2);
   transform: scale(1.05);
 }
 
@@ -85,12 +86,15 @@ export default defineComponent({
 
 .item-label {
   color: #fff;
-  font-size: 1rem;
+  font-size: 12px;
+  letter-spacing: normal;
   font-weight: bold;
+  font-family: "Press Start 2P";
 }
 
 .item-cost {
   color: #ccc;
-  font-size: 0.8rem;
+  font-size: 9px;
+  font-family: "Press Start 2P";
 }
 </style>
