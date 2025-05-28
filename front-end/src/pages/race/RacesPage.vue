@@ -1,6 +1,8 @@
 <template>
     <div class="races-page container">
         <div class="header">
+            <div class="empty-div"></div>
+            <button class="btn-race-join" @click="navigateTo(`/race/join`)">Deelnemen aan race</button>
             <button class="btn-race-create" @click="createRaceModal">Maak race</button>
         </div>
         <div class="content">
@@ -26,6 +28,7 @@ import { raceService } from '../../services/game/RaceService';
 import { race } from '../../types/Race';
 import { createRaceDTO } from '../../types/dto/CreateRaceDTO';
 import { textModal } from '../../types/global/modals/TextModal';
+import router from '../../router/Router';
 
 export default defineComponent({
     name: 'RacesPage',
@@ -68,6 +71,11 @@ export default defineComponent({
             });
         }
 
+        const navigateTo = (location: string) => {
+            router.push(location);
+        };
+
+
         onMounted(async () => {
             if (user)
                 await fetchRaces();
@@ -79,7 +87,8 @@ export default defineComponent({
             textModalContent,
             races,
             createRaceModal,
-            handleCreateRace
+            handleCreateRace,
+            navigateTo,
         };
     }
 });
@@ -95,7 +104,8 @@ export default defineComponent({
 .header {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+    padding: 0.55rem 5% 0rem 5%;
     width: 100%;
     height: 5rem;
     flex: 1;
@@ -122,12 +132,16 @@ button {
     cursor: pointer;
 }
 
-.btn-race-create {
-    margin: 1rem 5% 0rem 0rem;
-}
-
-.btn-race-create:hover {
+button:hover {
     cursor: pointer;
     background-color: #f8f8f8;
+}
+
+.empty-div {
+    width: 7.5rem;
+}
+
+.btn-race-join {
+    width: 12rem;
 }
 </style>
