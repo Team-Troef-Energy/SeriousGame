@@ -123,7 +123,7 @@ button {
 }
 
 .btn-race-create {
-    margin-right: 5%;
+    margin: 1rem 5% 0rem 0rem;
 }
 
 .btn-race-create:hover {
