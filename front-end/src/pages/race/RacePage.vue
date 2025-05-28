@@ -244,7 +244,7 @@ input {
     white-space: nowrap;
 }
 
-@media (min-width: 475px) {
+@media (min-width: 768px) {
     .navigation {
         gap: 5rem;
     }
