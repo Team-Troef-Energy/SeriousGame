@@ -80,7 +80,14 @@ export default defineComponent({
 
 
         const stopHosting = () => {
-            navigateTo(`/race/${raceId}/`);
+            raceSessionService.deleteSession(sessionId)
+                .then(() => {
+                    navigateTo(`/race/${raceId}/`);
+                })
+                .catch((error) => {
+                    showModal('Error', 'Er is een fout opgetreden bij het stoppen van de race sessie');
+                    console.error(error);
+                });
         }
 
         onMounted(() => {
@@ -90,13 +97,13 @@ export default defineComponent({
                     joinCode.value = response.joinCode;
                 })
                 .catch((error) => {
-                    showModal('Error', 'Er is een fout opgetreden bij het ophalen van de sessie');
+                    showModal('Error', 'Er is een fout opgetreden bij het ophalen van de race sessie');
                     console.error(error);
                 });
 
             raceSessionService.checkIfSessionCorrelatesWithRace(raceId, sessionId)
                 .catch((error) => {
-                    showModal('Error', 'De gemaakte sessie hoort niet bij deze race');
+                    showModal('Error', 'De gemaakte race sessie hoort niet bij deze race');
                     console.error(error);
                 });
 

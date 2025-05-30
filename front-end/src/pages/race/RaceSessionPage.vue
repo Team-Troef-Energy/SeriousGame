@@ -3,7 +3,7 @@
         <div class="content">
             <template v-if="!isInActiveSession()">
                 <template v-if="!isGivenSessionCodeValid">
-                    <RaceSessionInputBox :placeholder="'Sessie code'" :buttonText="'Neem deel'"
+                    <RaceSessionInputBox :placeholder="'Race code'" :buttonText="'Neem deel'"
                         :errorMessage="sessionCodeErrorMessage" @givenInput="handleSessionCode" />
                 </template>
                 <template v-else>
@@ -21,15 +21,14 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import RaceLeave from '../../components/race/RaceLeave.vue';
 import RaceSessionInputBox from '../../components/race/RaceSessionInputBox.vue';
 import router from '../../router/Router';
 import { raceSessionService } from '../../services/game/RaceSessionService';
 import { raceSessionStorageService } from '../../services/game/RaceSessionStorageService';
 
 export default defineComponent({
-    name: 'RaceJoinPage',
-    components: { RaceSessionInputBox, RaceLeave },
+    name: 'RaceSessionPage',
+    components: { RaceSessionInputBox },
     setup() {
         let sessionCode = ref('');
         let isGivenSessionCodeValid = ref(false);
@@ -43,7 +42,7 @@ export default defineComponent({
         };
 
         const handleInvalidSessionCode = (code: string) => {
-            sessionCodeErrorMessage.value = `De sessie code '${code}' is ongeldig. Probeer een andere code te gebruiken.`;
+            sessionCodeErrorMessage.value = `De race code '${code}' is ongeldig. Probeer een andere code te gebruiken.`;
             setTimeout(() => {
                 sessionCodeErrorMessage.value = '';
             }, 100);
@@ -69,7 +68,7 @@ export default defineComponent({
         };
 
         const handleSessionJoinError = () => {
-            sessionJoinErrorMessage.value = `Er is een fout opgetreden bij het deelnemen aan de sessie. Probeer het opnieuw met 
+            sessionJoinErrorMessage.value = `Er is een fout opgetreden bij het deelnemen aan de race. Probeer het opnieuw met 
            een andere gebruikersnaam.`;
             setTimeout(() => {
                 sessionJoinErrorMessage.value = '';
@@ -92,8 +91,8 @@ export default defineComponent({
                     navigateTo(`/levelselect`);
                 })
                 .catch((error) => {
-                    console.error('Error joining session:', error);
                     handleSessionJoinError();
+                    console.error('Error joining race session:', error);
                 });
         };
 
@@ -117,8 +116,8 @@ export default defineComponent({
                     window.location.reload();
                 })
                 .catch((error) => {
-                    console.error('Error leaving session:', error);
                     handleSessionLeaveError('Er is iets verkeerd gegaan met het verlaten van de race. Probeer het later opnieuw.');
+                    console.error('Error leaving race session:', error);
                 });
         };
 

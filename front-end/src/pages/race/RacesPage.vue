@@ -2,7 +2,7 @@
     <div class="races-page container">
         <div class="header">
             <div class="empty-div"></div>
-            <button class="btn-race-join" @click="navigateTo(`/race/join`)">Deelnemen aan race</button>
+            <button class="btn-race-session" @click="navigateTo(`/race/session`)">Race betreden/verlaten</button>
             <button class="btn-race-create" @click="createRaceModal">Maak race</button>
         </div>
         <div class="content">
@@ -142,7 +142,7 @@ button:hover {
     width: 7.5rem;
 }
 
-.btn-race-join {
+.btn-race-session {
     width: 14rem;
 }
 
@@ -153,10 +153,6 @@ button:hover {
 
     button {
         height: 3rem;
-    }
-
-    .btn-race-join {
-        width: 12rem;
     }
 }
 </style>
