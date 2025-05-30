@@ -10,6 +10,9 @@
                     <RaceJoinInput :placeholder="'Gebruikersnaam'" :buttonText="'Start'" @givenInput="handleUsername" />
                 </template>
             </template>
+            <template v-else>
+                <RaceLeave />
+            </template>
         </div>
     </div>
 </template>
@@ -17,12 +20,13 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import RaceJoinInput from '../../components/race/RaceJoinInput.vue';
+import RaceLeave from '../../components/race/RaceLeave.vue';
 import router from '../../router/Router';
 import { raceSessionService } from '../../services/game/RaceSessionService';
 
 export default defineComponent({
     name: 'RaceJoinPage',
-    components: { RaceJoinInput },
+    components: { RaceJoinInput, RaceLeave },
     setup() {
         let sessionCode = ref('');
         let isGivenSessionCodeValid = ref(false);
@@ -64,6 +68,10 @@ export default defineComponent({
         };
 
         onMounted(async () => {
+            const session = raceSessionService.getSession();
+            if (session) {
+                sessionCode.value = session.code;
+            }
         });
 
         return {

@@ -1,7 +1,7 @@
 import { raceSession } from '../../types/RaceSession';
 
 class RaceSessionService {
-    private readonly SESSION_DATA_KEY = 'raceSessionData';
+    private readonly SESSION_DATA_KEY = 'raceSession';
 
     private getSessionData(): raceSession | null {
         const session = sessionStorage.getItem(this.SESSION_DATA_KEY);
