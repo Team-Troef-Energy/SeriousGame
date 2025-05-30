@@ -2,7 +2,7 @@
     <div class="race-join-page container">
         <div class="content">
             <template v-if="!isInActiveSession()">
-                <template v-if="!isSessionCodeValid">
+                <template v-if="!isGivenSessionCodeValid">
                     <RaceJoinInput :placeholder="'Sessie code'" :buttonText="'Neem deel'"
                         :errorMessage="sessionErrorMessage" @givenInput="handleSessionCode" />
                 </template>
@@ -77,7 +77,7 @@ export default defineComponent({
         return {
             sessionErrorMessage,
             sessionCode,
-            isSessionCodeValid: isGivenSessionCodeValid,
+            isGivenSessionCodeValid,
             isInActiveSession,
             handleSessionCode,
             handleUsername,
