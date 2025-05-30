@@ -49,6 +49,9 @@ export default defineComponent({
         };
 
         const handleSessionCode = (code: string) => {
+            if (code.trim() === '') {
+                return;
+            }
             raceSessionService.fetchSessionByJoinCode(code)
                 .then(() => {
                     isGivenSessionCodeValid.value = true;
