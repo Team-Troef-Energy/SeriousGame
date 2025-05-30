@@ -26,8 +26,8 @@
     <img
       v-if="hasElectricCar"
       class="electric-car"
-      src="/electric-car.png"
-      alt="Electric Car"
+      src="/car.png"
+      alt="Auto"
     />
     <img
       v-if="hasHeatPump"
@@ -159,8 +159,7 @@ export default defineComponent({
   position: absolute;
   top: 100%;
   left: 50%;
-  width: 4rem;
-  height: 2rem;
+  height: 5rem;
   transform: translate(-50%, -50%);
   z-index: 2;
 }
