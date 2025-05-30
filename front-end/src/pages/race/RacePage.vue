@@ -66,6 +66,7 @@ import RaceDeleteModal from '../../components/race/RaceDeleteModal.vue';
 import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
 import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
+import { raceSessionService } from '../../services/game/RaceSessionService';
 import { textModal } from '../../types/global/modals/TextModal';
 
 export default defineComponent({
@@ -125,19 +126,16 @@ export default defineComponent({
                 });
         }
 
-        const generateAlphanumericCode = (): string => {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            const length = 6;
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        };
-
         const hostRace = async () => {
-            const sessionCode = generateAlphanumericCode();
-            navigateTo(`/race/${raceId}/hosting/${sessionCode}`);
+            raceSessionService.createSession(raceId)
+                .then((response) => {
+                    const sessionId = response.id;
+                    navigateTo(`/race/${raceId}/hosting/${sessionId}`);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    showModal('Error', 'Er is een fout opgetreden bij het maken van een sessie');
+                });
         }
 
         onMounted(async () => {

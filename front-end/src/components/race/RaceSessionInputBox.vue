@@ -1,7 +1,7 @@
 <template>
-    <div class="race-join-input">
+    <div class="race-session-input-box">
         <form @submit="handleSubmit">
-            <input type="text" v-model="input" :placeholder="placeholder" />
+            <input v-if="placeholder" type="text" v-model="input" :placeholder="placeholder" />
             <button type="submit"> {{ buttonText }}</button>
         </form>
         <Teleport to="body">
@@ -13,16 +13,16 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import TextModal from '../global/modals/TextModal.vue';
 import { textModal } from '../../types/global/modals/TextModal';
+import TextModal from '../global/modals/TextModal.vue';
 
 export default defineComponent({
-    name: 'RaceJoinInput',
+    name: 'RaceSessionInputBox',
     components: { TextModal },
     props: {
         placeholder: {
             type: String,
-            required: true,
+            required: false,
         },
         buttonText: {
             type: String,
@@ -78,7 +78,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.race-join-input {
+.race-session-input-box {
     display: flex;
     align-items: center;
     width: 80%;
@@ -123,7 +123,7 @@ button {
 }
 
 @media (min-width: 475px) {
-    .race-join-input {
+    .race-session-input-box {
         width: 20rem;
     }
 }

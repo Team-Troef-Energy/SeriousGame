@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import router from '../../router/Router';
-import { raceService } from '../../services/game/RaceService';
 import TextModal from '../../components/global/modals/TextModal.vue';
-import { textModal } from '../../types/global/modals/TextModal';
 import RaceUser from '../../components/race/RaceUser.vue';
-import { raceUser } from '../../types/RaceUser';
+import router from '../../router/Router';
+import { raceSessionService } from '../../services/game/RaceSessionService';
+import { textModal } from '../../types/global/modals/TextModal';
+import { raceUser } from '../../types/race/RaceUser';
 
 export default defineComponent({
     name: 'RaceHostingPage',
@@ -57,19 +57,22 @@ export default defineComponent({
         };
 
         const route = useRoute();
-        const raceId = Number(route.params.id);
-        const sessionCode = route.params.code;
+        const raceId = Number(route.params.raceId);
+        const sessionId = Number(route.params.sessionId);
+        const joinCode = ref('');
         let raceName = ref<string>('');
         let users = ref<raceUser[]>([]);
+        let fetchUsersInterval = ref<ReturnType<typeof setInterval> | undefined>(undefined);
 
-        users.value = [
-            { username: 'Jonathan' },
-            { username: 'Wessel' },
-            { username: 'Dirk' },
-            { username: 'Daan' },
-            { username: 'Jens' },
-            { username: 'Tristan' },
-        ];
+        const fetchUsers = async () => {
+            try {
+                let response = await raceSessionService.fetchSessionById(sessionId);
+                users.value = response.users;
+            } catch (error) {
+                showModal('Error', 'Er is een fout opgetreden bij het ophalen van de gebruikers');
+                console.error(error);
+            }
+        };
 
         const navigateTo = (location: string) => {
             router.push(location);
@@ -80,22 +83,39 @@ export default defineComponent({
             navigateTo(`/race/${raceId}/`);
         }
 
-        onMounted(async () => {
-            raceService.fetchRaceById(raceId)
+        onMounted(() => {
+            raceSessionService.fetchSessionById(sessionId)
                 .then((response) => {
-                    raceName.value = response.name;
+                    raceName.value = response.race.name;
+                    joinCode.value = response.joinCode;
                 })
                 .catch((error) => {
-                    showModal('Error', 'Er is een fout opgetreden bij het ophalen van de race');
+                    showModal('Error', 'Er is een fout opgetreden bij het ophalen van de sessie');
                     console.error(error);
-                })
+                });
+
+            raceSessionService.checkIfSessionCorrelatesWithRace(raceId, sessionId)
+                .catch((error) => {
+                    showModal('Error', 'De gemaakte sessie hoort niet bij deze race');
+                    console.error(error);
+                });
+
+
+            fetchUsers();
+            fetchUsersInterval.value = setInterval(fetchUsers, 5000);
+        });
+
+        onUnmounted(() => {
+            if (fetchUsersInterval.value) {
+                clearInterval(fetchUsersInterval.value);
+            }
         });
 
         return {
             isTextModalVisible,
             textModalContent,
             raceId,
-            sessionCode,
+            sessionCode: joinCode,
             raceName,
             users,
             stopHosting

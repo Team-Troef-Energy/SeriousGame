@@ -1,38 +1,36 @@
-import { raceSession } from '../../types/RaceSession';
+import { raceSessionJoin } from '../../types/race/RaceSessionJoin';
+import { httpRequestManager } from '../HTTPRequestManager';
+
+const BASE_URL = '/racesession';
 
 class RaceSessionService {
-    private readonly SESSION_DATA_KEY = 'raceSession';
+    createSession = async (raceId: number) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}?raceId=${raceId}`, 'POST');
+    };
 
-    private getSessionData(): raceSession | null {
-        const session = sessionStorage.getItem(this.SESSION_DATA_KEY);
-        if (!session) return null;
-        try {
-            const parsedSession = JSON.parse(session);
-            if (parsedSession.code && parsedSession.username) {
-                return parsedSession as raceSession;
-            }
-            return null;
-        } catch {
-            return null;
-        }
-    }
+    fetchSessionById = async (sessionId: number) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/${sessionId}`);
+    };
 
-    setSession(session: raceSession) {
-        sessionStorage.setItem(this.SESSION_DATA_KEY, JSON.stringify(session));
-    }
+    fetchSessionByJoinCode = async (joinCode: string) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/by-joincode?joincode=${encodeURIComponent(joinCode)}`);
+    };
 
-    getSession(): raceSession | null {
-        return this.getSessionData();
-    }
+    deleteSession = async (sessionId: number) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/${sessionId}`, 'DELETE');
+    };
 
-    hasSession(): boolean {
-        const session = this.getSessionData();
-        return !!(session?.code && session?.username);
-    }
+    checkIfSessionCorrelatesWithRace = async (sessionId: number, raceId: number) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/${sessionId}/checkRaceId/${raceId}`);
+    };
 
-    clearSession() {
-        sessionStorage.removeItem(this.SESSION_DATA_KEY);
-    }
+    joinSession = async (raceSessionJoin: raceSessionJoin) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/join`, 'POST', raceSessionJoin);
+    };
+
+    leaveSession = async (token: string) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/leave?token=${encodeURIComponent(token)}`, 'POST', null, false);
+    };
 }
 
 export const raceSessionService = new RaceSessionService();

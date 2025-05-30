@@ -24,11 +24,11 @@ import TextModal from '../../components/global/modals/TextModal.vue';
 import RaceBadge from '../../components/race/RaceBadge.vue';
 import RaceCreateModal from '../../components/race/RaceCreateModal.vue';
 import { AuthContext } from '../../context/AuthProvider';
+import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
-import { race } from '../../types/Race';
 import { createRaceDTO } from '../../types/dto/CreateRaceDTO';
 import { textModal } from '../../types/global/modals/TextModal';
-import router from '../../router/Router';
+import { race } from '../../types/race/Race';
 
 export default defineComponent({
     name: 'RacesPage',

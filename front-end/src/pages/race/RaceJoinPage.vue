@@ -3,15 +3,17 @@
         <div class="content">
             <template v-if="!isInActiveSession()">
                 <template v-if="!isGivenSessionCodeValid">
-                    <RaceJoinInput :placeholder="'Sessie code'" :buttonText="'Neem deel'"
-                        :errorMessage="sessionErrorMessage" @givenInput="handleSessionCode" />
+                    <RaceSessionInputBox :placeholder="'Sessie code'" :buttonText="'Neem deel'"
+                        :errorMessage="sessionCodeErrorMessage" @givenInput="handleSessionCode" />
                 </template>
                 <template v-else>
-                    <RaceJoinInput :placeholder="'Gebruikersnaam'" :buttonText="'Start'" @givenInput="handleUsername" />
+                    <RaceSessionInputBox :placeholder="'Gebruikersnaam'" :buttonText="'Start'"
+                        :errorMessage="sessionJoinErrorMessage" @givenInput="handleSessionJoin" />
                 </template>
             </template>
             <template v-else>
-                <RaceLeave />
+                <RaceSessionInputBox :buttonText="'Verlaat race'" :errorMessage="sessionLeaveErrorMessage"
+                    @givenInput="handleSessionLeave" />
             </template>
         </div>
     </div>
@@ -19,68 +21,124 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import RaceJoinInput from '../../components/race/RaceJoinInput.vue';
 import RaceLeave from '../../components/race/RaceLeave.vue';
+import RaceSessionInputBox from '../../components/race/RaceSessionInputBox.vue';
 import router from '../../router/Router';
 import { raceSessionService } from '../../services/game/RaceSessionService';
+import { raceSessionStorageService } from '../../services/game/RaceSessionStorageService';
 
 export default defineComponent({
     name: 'RaceJoinPage',
-    components: { RaceJoinInput, RaceLeave },
+    components: { RaceSessionInputBox, RaceLeave },
     setup() {
         let sessionCode = ref('');
         let isGivenSessionCodeValid = ref(false);
         let givenSessionCode = ref('');
-        let sessionErrorMessage = ref('');
+        let sessionCodeErrorMessage = ref('');
+        let sessionJoinErrorMessage = ref('');
+        let sessionLeaveErrorMessage = ref('');
 
         const isInActiveSession = (): boolean => {
             return sessionCode.value != '';
         };
 
-        const handleNotValidSessionCode = (code: string) => {
-            sessionErrorMessage.value = `De sessie code '${code}' is ongeldig. Probeer het opnieuw.`;
+        const handleInvalidSessionCode = (code: string) => {
+            sessionCodeErrorMessage.value = `De sessie code '${code}' is ongeldig. Probeer een andere code te gebruiken.`;
             setTimeout(() => {
-                sessionErrorMessage.value = '';
+                sessionCodeErrorMessage.value = '';
             }, 100);
         };
 
         const handleSessionCode = (code: string) => {
-            if (code == '666') return handleNotValidSessionCode(code);
-            isGivenSessionCodeValid.value = true;
-            givenSessionCode.value = code;
+            raceSessionService.fetchSessionByJoinCode(code)
+                .then((session) => {
+                    if (session) {
+                        isGivenSessionCodeValid.value = true;
+                        givenSessionCode.value = code;
+                    } else {
+                        handleInvalidSessionCode(code);
+                    }
+                })
+                .catch(() => {
+                    handleInvalidSessionCode(code);
+                });
         };
 
         const navigateTo = (location: string) => {
             router.push(location);
         };
 
-        const handleUsername = (username: string) => {
+        const handleSessionJoinError = () => {
+            sessionJoinErrorMessage.value = `Er is een fout opgetreden bij het deelnemen aan de sessie. Probeer het opnieuw met 
+           een andere gebruikersnaam.`;
+            setTimeout(() => {
+                sessionJoinErrorMessage.value = '';
+            }, 100);
+        };
+
+        const handleSessionJoin = (username: string) => {
             if (username.trim() === '') {
                 return;
             }
 
-            raceSessionService.setSession({
-                code: givenSessionCode.value,
-                username: username,
-            });
+            raceSessionService.joinSession({ joinCode: givenSessionCode.value, username })
+                .then((response) => {
+                    raceSessionStorageService.setSession({
+                        joinCode: givenSessionCode.value,
+                        username: username,
+                        token: response.token,
+                    });
 
-            navigateTo(`/levelselect`);
+                    navigateTo(`/levelselect`);
+                })
+                .catch((error) => {
+                    console.error('Error joining session:', error);
+                    handleSessionJoinError();
+                });
+        };
+
+        const handleSessionLeaveError = (message: string) => {
+            sessionLeaveErrorMessage.value = message;
+            setTimeout(() => {
+                sessionLeaveErrorMessage.value = '';
+            }, 100);
+        };
+
+        const handleSessionLeave = () => {
+            const raceSessionUser = raceSessionStorageService.getSession();
+
+            if (!raceSessionUser) {
+                return handleSessionLeaveError('Er is iets verkeerd gegaan met het inladen van je race sessie gegevens.');
+            }
+
+            raceSessionService.leaveSession(raceSessionUser.token)
+                .then(() => {
+                    raceSessionStorageService.clearSession();
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error leaving session:', error);
+                    handleSessionLeaveError('Er is iets verkeerd gegaan met het verlaten van de race. Probeer het later opnieuw.');
+                });
         };
 
         onMounted(async () => {
-            const session = raceSessionService.getSession();
+            const session = raceSessionStorageService.getSession();
             if (session) {
-                sessionCode.value = session.code;
+                sessionCode.value = session.joinCode;
             }
         });
 
         return {
-            sessionErrorMessage,
+            sessionCodeErrorMessage,
+            sessionJoinErrorMessage,
+            sessionLeaveErrorMessage,
             sessionCode,
             isGivenSessionCodeValid,
             isInActiveSession,
             handleSessionCode,
-            handleUsername,
+            handleSessionJoin,
+            handleSessionLeave,
         };
     }
 });
