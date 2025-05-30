@@ -18,8 +18,10 @@ public class Race {
     private Long id;
 
     @Setter
+    @Column
     private String name;
 
+    @Column
     private String userEmail;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "race")
