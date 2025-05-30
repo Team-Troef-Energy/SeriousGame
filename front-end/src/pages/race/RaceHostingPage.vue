@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="button-wrapper">
-                <button class="btn-code"> Code: {{ sessionCode }}</button>
+                <button class="btn-code"> Code: {{ joinCode }}</button>
             </div>
             <div class="button-wrapper">
                 <button class="btn-stop-hosting" @click="stopHosting">Stop hosten</button>
@@ -107,7 +107,6 @@ export default defineComponent({
                     console.error(error);
                 });
 
-
             fetchUsers();
             fetchUsersInterval.value = setInterval(fetchUsers, 5000);
         });
@@ -122,7 +121,7 @@ export default defineComponent({
             isTextModalVisible,
             textModalContent,
             raceId,
-            sessionCode: joinCode,
+            joinCode,
             raceName,
             users,
             stopHosting

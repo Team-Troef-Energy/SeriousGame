@@ -134,7 +134,7 @@ export default defineComponent({
                 })
                 .catch((error) => {
                     console.error(error);
-                    showModal('Error', 'Er is een fout opgetreden bij het maken van een sessie');
+                    showModal('Error', 'Er is een fout opgetreden bij het maken van een race sessie');
                 });
         }
 
