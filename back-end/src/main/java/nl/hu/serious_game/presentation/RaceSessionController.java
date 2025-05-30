@@ -72,6 +72,16 @@ public class RaceSessionController {
         return ResponseEntity.ok(RaceSessionDTO.fromEntity(sessionOptional.get()));
     }
 
+    @GetMapping("/by-joincode")
+    public ResponseEntity<RaceSessionDTO> getSessionByJoinCode(@RequestParam("joincode") String joinCode) {
+        var sessionOptional = this.raceSessionRepository.findByJoinCode(joinCode);
+        if (sessionOptional.isEmpty()) {
+            return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "RaceSession with joincode %s is not found".formatted(joinCode))).build();
+        }
+
+        return ResponseEntity.ok(RaceSessionDTO.fromEntity(sessionOptional.get()));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSession(@PathVariable("id") long sessionId) {
         var sessionOptional = this.raceSessionRepository.findById(sessionId);

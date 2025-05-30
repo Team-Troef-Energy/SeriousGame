@@ -1,13 +1,16 @@
-### createSession
+### Create session
 POST http://localhost:8080/racesession?raceId=1
 
-### getSession
+### Get session by ID
 GET http://localhost:8080/racesession/2
 
-### deleteSession
+### Get session by joincode
+GET http://localhost:8080/racesession/by-joincode?joincode=RY3AD2
+
+### Delete session
 DELETE http://localhost:8080/racesession/1
 
-### checkIsFromSession
+### Check if Session is of Race
 GET http://localhost:8080/racesession/2/checkRaceId/1
 
 ### Join session
