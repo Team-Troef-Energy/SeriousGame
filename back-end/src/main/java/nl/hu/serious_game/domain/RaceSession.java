@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import nl.hu.serious_game.application.dto.out.RaceSessionUserDTO;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -19,6 +22,9 @@ public class RaceSession {
 
     @Column
     private String joinCode;
+
+    @OneToMany(mappedBy = "raceSession")
+    private List<RaceSessionUser> users;
 
     public RaceSession(Race race, String joinCode) {
         this.race = race;
