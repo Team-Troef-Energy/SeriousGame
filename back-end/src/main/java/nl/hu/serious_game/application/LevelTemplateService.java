@@ -125,4 +125,8 @@ public class LevelTemplateService {
     public void deleteLevel(long id) {
         this.levelTemplateRepository.deleteById(id);
     }
+
+    public List<LevelTemplate> getAllGlobalLevels() {
+        return this.levelTemplateRepository.findAllByType(LevelType.GLOBAL);
+    }
 }
