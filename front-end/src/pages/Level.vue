@@ -563,8 +563,8 @@ export default defineComponent({
   height: 100%;
   position: relative;
   background:
-    linear-gradient(rgba(120, 120, 120, 0.55), rgba(120, 120, 120, 0.55)),
-    url("/game.jpg");
+    linear-gradient(rgba(75, 74, 74, 0.282)),
+    url("/background.png");
   background-size: cover, cover;
   background-blend-mode: normal;
   overflow-x: auto;

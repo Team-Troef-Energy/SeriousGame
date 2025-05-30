@@ -7,7 +7,7 @@
   >
     <img :src="imageSrc" :alt="label" class="item-image" />
     <div class="item-label">{{ label }}</div>
-    <div class="item-cost">Cost: {{ cost }} coins</div>
+    <div class="item-cost"> <img class="coin" src="/coin.png" alt="Coin"> {{ cost }}</div>
   </div>
 </template>
 
@@ -69,6 +69,11 @@ export default defineComponent({
   transition: transform 0.2s, background-color 0.2s;
 }
 
+.coin {
+  width: 16px;
+  margin-top: -3px;
+}
+
 .draggable-item:hover {
   background-color: rgba(123, 123, 123, 0.2);
   transform: scale(1.05);
@@ -95,5 +100,8 @@ export default defineComponent({
   color: #ccc;
   font-size: 9px;
   font-family: "Press Start 2P";
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 </style>
