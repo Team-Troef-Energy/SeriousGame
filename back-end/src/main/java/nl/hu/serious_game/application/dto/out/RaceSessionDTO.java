@@ -16,7 +16,7 @@ public record RaceSessionDTO(
         List<RaceSessionUserDTO> users = null;
 
         if (session.getUsers() != null) {
-            users = session.getUsers().stream().map(RaceSessionUserDTO::fromEntity).toList();
+            users = session.getUsers().stream().map((RaceSessionUser sessionUser) -> RaceSessionUserDTO.fromEntity(sessionUser, false)).toList();
         }
 
         return new RaceSessionDTO(

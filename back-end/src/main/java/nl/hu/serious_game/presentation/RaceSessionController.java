@@ -119,7 +119,7 @@ public class RaceSessionController {
         var sessionUser = new RaceSessionUser(raceSession, joinRaceDTO.username(), token);
         raceSessionUserRepository.save(sessionUser);
 
-        return ResponseEntity.ok(RaceSessionUserDTO.fromEntity(sessionUser));
+        return ResponseEntity.ok(RaceSessionUserDTO.fromEntity(sessionUser, true));
     }
 
     @PostMapping("/leave")

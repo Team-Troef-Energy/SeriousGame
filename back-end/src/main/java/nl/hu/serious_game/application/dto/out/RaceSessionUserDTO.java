@@ -8,12 +8,12 @@ public record RaceSessionUserDTO(
         String username,
         String token
 ) {
-    public static RaceSessionUserDTO fromEntity(RaceSessionUser sessionUser) {
+    public static RaceSessionUserDTO fromEntity(RaceSessionUser sessionUser, boolean includeToken) {
         return new RaceSessionUserDTO(
                 sessionUser.getRaceSession().getRace().getId(),
                 RaceDTO.fromEntity(sessionUser.getRaceSession().getRace()),
                 sessionUser.getUsername(),
-                sessionUser.getToken()
+                includeToken ? sessionUser.getToken() : null
         );
     }
 }
