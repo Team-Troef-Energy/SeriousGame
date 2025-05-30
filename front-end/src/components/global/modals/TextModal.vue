@@ -1,5 +1,5 @@
 <template>
-    <HtmlModal :show="show" :width="19" :height="11">
+    <HtmlModal :show="show" :width="19" :height="14">
         <template #header>
             <div class="header">
                 <h3>{{ content.header }}</h3>
@@ -69,7 +69,11 @@ button {
 }
 
 .body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 1.2rem 0rem 1rem 0rem;
+    height: 50%;
 }
 
 .footer {

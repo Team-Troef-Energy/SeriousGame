@@ -6,21 +6,21 @@ class GameLevelService {
 
     /**
      * Fetches the starting level by level number.
-     * @param levelNumber - The level number to fetch.
+     * @param levelId - The level id to fetch.
      * @returns Promise<any>
      */
-    fetchStartLevel = async (levelNumber: string | string[]) => {
-        return await httpRequestManager.doFetch(`${BASE_URL}/start/${levelNumber}`);
+    fetchStartLevel = async (levelId: number) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/start/${levelId}`);
     };
 
     /**
      * Updates a certain level with the new game information.
-     * @param levelNumber - The level number to update.
+     * @param levelId - The level id to update.
      * @param levelUpdateDto - The update data for the level.
      * @returns Promise<any>
      */
-    fetchUpdateLevel = async (levelNumber: string | string[], levelUpdateDto: any) => {
-        return await httpRequestManager.doFetch(`${BASE_URL}/update/${levelNumber}`, 'POST', levelUpdateDto);
+    fetchUpdateLevel = async (levelId: number, levelUpdateDto: any) => {
+        return await httpRequestManager.doFetch(`${BASE_URL}/update/${levelId}`, 'POST', levelUpdateDto);
     };
 }
 

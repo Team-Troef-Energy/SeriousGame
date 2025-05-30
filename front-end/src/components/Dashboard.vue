@@ -13,7 +13,7 @@
         Huidige CO2-uitstoot: {{ currentCO2.toFixed(2) }} kg
       </div>
       <div class="underline">
-        Max. CO2-uitstoot: {{ MaxCO2.toFixed(2) }} kg
+        Max. CO2-uitstoot: {{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
@@ -49,7 +49,7 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    MaxCO2: {
+    maxCO2: {
       type: Number,
       required: true,
     },

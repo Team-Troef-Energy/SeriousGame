@@ -1,0 +1,4 @@
+{
+    "environment": "local",
+    "apiUrl": "https://localhost:8080/"
+}

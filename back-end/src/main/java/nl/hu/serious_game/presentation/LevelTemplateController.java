@@ -1,6 +1,7 @@
 package nl.hu.serious_game.presentation;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,12 @@ public class LevelTemplateController {
 
     @GetMapping
     public ResponseEntity<List<LevelTemplateDTO>> getAllLevels() {
-        return ResponseEntity.ok(levelTemplateService.getAllLevels());
+        return ResponseEntity.ok(
+                levelTemplateService.getAllGlobalLevels()
+                        .stream()
+                        .map(LevelTemplateDTO::fromEntity)
+                        .toList()
+        );
     }
 
     @PostMapping("")

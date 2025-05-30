@@ -20,11 +20,11 @@ public class GameLevelController {
         this.gameLevelService = gameLevelService;
     }
 
-    @GetMapping("/start/{levelNumber}")
-    public ResponseEntity<GameLevelDTO> startLevel(@PathVariable int levelNumber) {
+    @GetMapping("/start/{levelTemplateId}")
+    public ResponseEntity<GameLevelDTO> startLevel(@PathVariable long levelTemplateId) {
         try {
-            GameLevelDTO level = gameLevelService.startGame(levelNumber);
-            logger.debug("start: levelNumber = {}", levelNumber);
+            GameLevelDTO level = gameLevelService.startGame(levelTemplateId);
+            logger.debug("start: levelTemplateId = {}", levelTemplateId);
             return ResponseEntity.ok(level);
         } catch (IllegalArgumentException e) {
             logger.error("Error starting level", e);
@@ -33,11 +33,11 @@ public class GameLevelController {
         }
     }
 
-    @PostMapping("/update/{levelNumber}")
-    public ResponseEntity<GameLevelDTO> updateLevel(@PathVariable int levelNumber, @RequestBody GameLevelUpdateDTO levelUpdateDTO) {
+    @PostMapping("/update/{gameLevelId}")
+    public ResponseEntity<GameLevelDTO> updateLevel(@PathVariable long gameLevelId, @RequestBody GameLevelUpdateDTO levelUpdateDTO) {
         try {
-            GameLevelDTO updatedLevel = gameLevelService.updateGame(levelNumber, levelUpdateDTO);
-            logger.debug("update: levelNumber = {}", levelNumber);
+            GameLevelDTO updatedLevel = gameLevelService.updateGame(gameLevelId, levelUpdateDTO);
+            logger.debug("update: gameLevelId = {}", gameLevelId);
             return ResponseEntity.ok(updatedLevel);
         } catch (IllegalArgumentException e) {
             logger.error("Error updating level", e);

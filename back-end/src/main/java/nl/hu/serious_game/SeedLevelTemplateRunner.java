@@ -2,6 +2,7 @@ package nl.hu.serious_game;
 
 import java.util.List;
 
+import nl.hu.serious_game.domain.*;
 import nl.hu.serious_game.presentation.GameLevelController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,15 +11,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import nl.hu.serious_game.data.LevelTemplateRepository;
-import nl.hu.serious_game.domain.Congestion;
-import nl.hu.serious_game.domain.Cost;
-import nl.hu.serious_game.domain.DayProfile;
-import nl.hu.serious_game.domain.HouseOptions;
-import nl.hu.serious_game.domain.LevelHouse;
-import nl.hu.serious_game.domain.LevelTemplate;
-import nl.hu.serious_game.domain.LevelTransformer;
-import nl.hu.serious_game.domain.Objective;
-import nl.hu.serious_game.domain.Season;
 
 @Component
 public class SeedLevelTemplateRunner implements CommandLineRunner {
@@ -56,7 +48,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2), 4);
 
-        LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f));
+        LevelTemplate level = new LevelTemplate(1, Season.SUMMER, 10, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f), LevelType.GLOBAL, null);
 
         logger.info("Level 1 created! {}", level);
 
@@ -79,7 +71,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3), 4);
 
-        LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f));
+        LevelTemplate level = new LevelTemplate(2, Season.SUMMER, 8, 15, objective, List.of(transformer), new Cost(5, 10, 0.5f), LevelType.GLOBAL, null);
 
         logger.info("Level 2 created! {}", level);
 
@@ -103,7 +95,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4), 4);
 
-        LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10, 0.5f));
+        LevelTemplate level = new LevelTemplate(3, Season.SUMMER, 11, 19, objective, List.of(transformer), new Cost(5, 10, 0.5f), LevelType.GLOBAL, null);
 
         logger.info("Level 3 created! {}", level);
 
@@ -128,7 +120,7 @@ public class SeedLevelTemplateRunner implements CommandLineRunner {
         // Create a single transformer
         LevelTransformer transformer = new LevelTransformer(new Congestion(false, 0f), List.of(house1, house2, house3, house4, house5), 4);
 
-        LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10, 0.5f));
+        LevelTemplate level = new LevelTemplate(4, Season.SUMMER, 10, 18, objective, List.of(transformer), new Cost(5, 10, 0.5f), LevelType.GLOBAL, null);
 
         logger.info("Level 4 created! {}", level);
 

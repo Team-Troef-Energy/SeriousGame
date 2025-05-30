@@ -29,7 +29,7 @@ class TemplateLevelService {
      * @returns 
      */	
     deleteLevelTemplate = async (templateId:number) => {
-        return await httpRequestManager.doFetch(`${BASE_URL}/${templateId}`, 'DELETE');
+        return await httpRequestManager.doFetch(`${BASE_URL}/${templateId}`, 'DELETE', undefined, false);
     };
 
     /**

@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import HtmlModal from '../global/modals/HtmlModal.vue';
 export default defineComponent({
     name: 'RaceNameChangeModal',
@@ -39,13 +39,19 @@ export default defineComponent({
             type: Boolean,
             required: true,
         },
+        previousName: {
+            type: String,
+            required: false,
+            default: '',
+        },
     },
     setup(props, { emit }) {
+        const raceName = ref<string>('');
+
         const closeModal = () => {
             raceName.value = '';
             emit('close');
         }
-        const raceName = ref<string>('');
 
         const changeRaceName = () => {
             if (raceName.value.trim() === '') {
@@ -54,6 +60,15 @@ export default defineComponent({
             emit('race-name-change', raceName.value);
             closeModal();
         }
+
+        watch(
+            () => props.show,
+            (newVal) => {
+                if (newVal) {
+                    raceName.value = props.previousName;
+                }
+            }
+        );
 
         return {
             closeModal,
