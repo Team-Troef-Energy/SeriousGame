@@ -18,13 +18,15 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import RaceJoinInput from '../../components/race/RaceJoinInput.vue';
 import router from '../../router/Router';
+import { raceSessionService } from '../../services/game/RaceSessionService';
 
 export default defineComponent({
     name: 'RaceJoinPage',
     components: { RaceJoinInput },
     setup() {
         let sessionCode = ref('');
-        let isSessionCodeValid = ref(false);
+        let isGivenSessionCodeValid = ref(false);
+        let givenSessionCode = ref('');
         let sessionErrorMessage = ref('');
 
         const isInActiveSession = (): boolean => {
@@ -40,7 +42,8 @@ export default defineComponent({
 
         const handleSessionCode = (code: string) => {
             if (code == '666') return handleNotValidSessionCode(code);
-            isSessionCodeValid.value = true;
+            isGivenSessionCodeValid.value = true;
+            givenSessionCode.value = code;
         };
 
         const navigateTo = (location: string) => {
@@ -51,6 +54,12 @@ export default defineComponent({
             if (username.trim() === '') {
                 return;
             }
+
+            raceSessionService.setSession({
+                code: givenSessionCode.value,
+                username: username,
+            });
+
             navigateTo(`/levelselect`);
         };
 
@@ -60,7 +69,7 @@ export default defineComponent({
         return {
             sessionErrorMessage,
             sessionCode,
-            isSessionCodeValid,
+            isSessionCodeValid: isGivenSessionCodeValid,
             isInActiveSession,
             handleSessionCode,
             handleUsername,
