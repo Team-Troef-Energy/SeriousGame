@@ -1,0 +1,23 @@
+### createSession
+POST http://localhost:8080/racesession?raceId=1
+
+### getSession
+GET http://localhost:8080/racesession/2
+
+### deleteSession
+DELETE http://localhost:8080/racesession/1
+
+### checkIsFromSession
+GET http://localhost:8080/racesession/2/checkRaceId/1
+
+### Join session
+POST http://localhost:8080/racesession/join
+Content-Type: application/json
+
+{
+  "joinCode": "RY3AD2",
+  "username": "Bla"
+}
+
+### Leave session
+POST http://localhost:8080/racesession/leave?token=Pw%2FLXTtScL7tZBVk5t5Xvak%2FHnI%3D
