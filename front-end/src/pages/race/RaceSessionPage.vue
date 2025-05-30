@@ -50,13 +50,9 @@ export default defineComponent({
 
         const handleSessionCode = (code: string) => {
             raceSessionService.fetchSessionByJoinCode(code)
-                .then((session) => {
-                    if (session) {
-                        isGivenSessionCodeValid.value = true;
-                        givenSessionCode.value = code;
-                    } else {
-                        handleInvalidSessionCode(code);
-                    }
+                .then(() => {
+                    isGivenSessionCodeValid.value = true;
+                    givenSessionCode.value = code;
                 })
                 .catch(() => {
                     handleInvalidSessionCode(code);
@@ -105,9 +101,20 @@ export default defineComponent({
 
         const handleSessionLeave = () => {
             const raceSessionUser = raceSessionStorageService.getSession();
+            let isSessionActive = true;
 
             if (!raceSessionUser) {
-                return handleSessionLeaveError('Er is iets verkeerd gegaan met het inladen van je race sessie gegevens.');
+                return handleSessionLeaveError('Er is iets verkeerd gegaan met het inladen van je lokale race sessie gegevens.');
+            }
+
+            raceSessionService.fetchSessionByJoinCode(raceSessionUser.joinCode).catch(() => {
+                isSessionActive = false;
+            });
+
+            if (!isSessionActive) {
+                raceSessionStorageService.clearSession();
+                window.location.reload();
+                return;
             }
 
             raceSessionService.leaveSession(raceSessionUser.token)
