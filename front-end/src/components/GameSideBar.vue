@@ -47,8 +47,8 @@
     width: 250px;
     height: 100%;
     background:
-          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85)),
-          url("/game.jpg");
+          linear-gradient(rgba(56, 56, 56, 0.423)),
+          url("/sidebar.png");
     background-size: cover, cover;
     background-blend-mode: normal;
     border-left: 2px solid #4a4a4a;
