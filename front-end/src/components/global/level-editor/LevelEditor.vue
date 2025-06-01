@@ -68,6 +68,19 @@
                 </div>
             </div>
             <div class="level-editor-house-button form-row">
+                <div class="level-editor-message-input">
+                    <input 
+                        v-model="userInput"
+                        id="level-editor-input"
+                        placeholder="Typ je bericht..."
+                        @keydown.enter.prevent="handleUserInput"
+                    />
+                    <div class="info-tooltip">
+                         ℹ️
+                    <span class="tooltip-text">Deze input laat je dingen toevoegen aan het level zonder zelf op dingen te hoeven klikken. Zoals: Een huis met maximaal 2 batterijen en 3 zonnepanelen en het level heeft maximaal 30 munten ter beschikking.</span>
+                    </div>
+                    <button class="level-editor-send-button"@click="handleUserInput">Verstuur bericht</button>
+                </div>
                 <button class="btn" @click.prevent="addHouse">Voeg huis toe</button>
             </div>
             <div class="level-editor-house-list">
@@ -82,15 +95,6 @@
                 <button class="btn btn-cancel" @click.prevent="clearLevelTemplate">Annuleren</button>
                 <button class="btn btn-delete" @click.prevent="deleteLevel">Verwijderen</button>
                 <button class="btn btn-save" @click.prevent="saveOrEditLevel">Opslaan</button>
-            </div>
-
-            <div class="chat-bot-message-input">
-                <label for="chat-bot-input">Praat met de chatbot</label>
-                <input v-model="userInput" id="chat-bot-input"/>
-                <button @click="handleUserInput">
-                    Verstuur bericht
-                </button>
-                <p>{{ promptOutput }}</p>
             </div>
         </form>
         <Teleport to="body">
@@ -484,6 +488,59 @@ input[type="checkbox"] {
 
 .btn-save {
     background-color: #28a745;
+}
+
+.level-editor-message-input {
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+.level-editor-message-input input {
+    flex: 1;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+}
+
+.level-editor-send-button {
+    position: relative;
+    top: 0px;
+    left: .5%;
+    border-radius: 0.5rem;
+    border: 1px solid #4a4a4a;
+    padding: 0px 7px;
+}
+
+.info-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #fff;
+    color: black;
+    text-align: left;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.info-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
 
 @media (min-width: 768px) {
