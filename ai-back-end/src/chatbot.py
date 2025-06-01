@@ -1,9 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from transformers import pipeline
-from jsonformer import Jsonformer
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import json
+from openai import OpenAI
 
 
 app = Flask(__name__)
@@ -95,18 +94,18 @@ current amount CO2: {dashboard['currentCO2']}\
 def level_generation(data: dict) -> str:
     user_input = data['inputMessage']
 
-    translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
-    user_input_english = translator_nl_to_en(user_input)[0]['translation_text']
+    # translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
+    # user_input_english = translator_nl_to_en(user_input)[0]['translation_text']
 
-    generator = pipeline("text2text-generation", model="google/flan-t5-large")
+    # generator = pipeline("text2text-generation", model="google/flan-t5-large")
 
     full_prompt = f"""
 Convert the input into a JSON dictionary with the following structure:
 
 {{
-  "Houses": [
+  "Houses":
     {{ "house_1": {{ "solar_panels": <solar_panel_count>, "batteries": <battery_amount>, "has_heatpump": <has_heat>, "has_car": <has_car> }} }}
-  ],
+  ,
   "Level": {{
     "max_coins": <max_coins_amount>,
     "max_co2": <max_co2_amount>,
@@ -120,11 +119,35 @@ Extract the number of houses and their attributes from the input. For any missin
 - false for has_heatpump, has_car.
 - 0 for start_time, end_time.
 - "" for season.
-
-Input: "{user_input_english}"
 """
-    response = generator(full_prompt, max_length=800, num_return_sequences=1)[0]
+    # response = generator(full_prompt, max_length=800, num_return_sequences=1)[0]
 
-    return response['generated_text']
+    with open('ai-back-end/api_key.txt', 'r') as f:
+        key = f.read()
+
+    client = OpenAI(
+        base_url="https://api.studio.nebius.com/v1/",
+        api_key=key
+    )
+
+    response = client.chat.completions.create(
+        model="deepseek-ai/DeepSeek-V3-0324",
+        max_tokens=512,
+        temperature=0.3,
+        top_p=0.95,
+        messages=[
+            {"role": "system", "content": full_prompt},
+            {"role": "user", "content": user_input}
+        ]
+    )
+
+    json_response = json.loads(response.to_json())
+    content = json_response['choices'][0]['message']['content']
+
+    # Strip the ```json markdown and parse the inner JSON
+    inner_json = content.strip('```json\n').strip('```')
+    inner_dict = json.loads(inner_json)
+
+    return inner_dict
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
