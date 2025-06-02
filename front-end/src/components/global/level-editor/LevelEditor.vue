@@ -140,11 +140,13 @@ export default defineComponent({
             };
 
             await pythonService.fetchMessage(data).then((response: any) => {
-
+                // the response is in 'python' code which doesnt work in TypeScript so we have to change the ' to " and lower the False and True
                 const fixed_response = response.response.replace(/'/g, '"')
                                                         .replace(/\bFalse\b/g, 'false')
                                                         .replace(/\bTrue\b/g, 'true');
+                // now we can parse to JSON
                 const generated_content = JSON.parse(fixed_response)
+                // if there are 0 houses skip the generation of houses
                 if (!(Object.keys(generated_content.Houses).length == 0)) {
                     generate_houses(generated_content);
                 }
@@ -156,6 +158,7 @@ export default defineComponent({
         }
 
         const generateLevelTemplate = async (generated_content: any) => {
+            // base values of inputfields
             const base_values: { [key: string]: number | string | boolean}  = {
                 "max_co2": 0,
                 "max_coins": 0,
@@ -170,6 +173,7 @@ export default defineComponent({
                 "max_power_transformer": 0
             }
 
+            // path in the levelTemplate for navigation
             const pathMap: Record<string, string> = {
                 max_co2: 'objective.maxCO2',
                 max_coins: 'objective.maxCoins',
@@ -183,21 +187,25 @@ export default defineComponent({
                 has_congestion_transformer: 'transformers.0.congestion.hasCongestion',
                 max_power_transformer: 'transformers.0.congestion.maxCurrent'
             };
-            
+
             for (const key of Object.keys(base_values)) {
                 if (generated_content.Level[key] !== base_values[key]){
+                    // get the path
                     const keys = pathMap[key].split('.');
                     let current: any = levelTemplate.value;
 
+                    // follow the path
                     for (let i = 0; i < keys.length - 1; i++) {
                         current = current[keys[i]];
                     }
+                    // change the value
                     current[keys[keys.length - 1]] = generated_content.Level[key];
                 }
             }
         }
 
         const generate_houses = async (generated_content: any) => {
+            // for every house in the generated content add a house to the list
             Object.keys(generated_content.Houses).forEach((houseId) => {
                 const house = generated_content.Houses[houseId];
                 levelTemplate.value.transformers[0].houses.push({
