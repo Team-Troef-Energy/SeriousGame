@@ -8,7 +8,7 @@ import java.util.List;
 
 public record RaceSessionDTO(
         Long id,
-        Race race,
+        RaceDTO race,
         String joinCode,
         List<RaceSessionUserDTO> users
 ) {
@@ -21,7 +21,7 @@ public record RaceSessionDTO(
 
         return new RaceSessionDTO(
                 session.getId(),
-                session.getRace(),
+                RaceDTO.fromEntity(session.getRace()),
                 session.getJoinCode(),
                 users
         );
