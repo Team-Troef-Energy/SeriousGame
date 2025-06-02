@@ -90,8 +90,8 @@ export default defineComponent({
                 });
         }
 
-        onMounted(() => {
-            raceSessionService.fetchSessionById(sessionId)
+        onMounted(async () => {
+            await raceSessionService.fetchSessionById(sessionId)
                 .then((response) => {
                     raceName.value = response.race.name;
                     joinCode.value = response.joinCode;
@@ -101,7 +101,7 @@ export default defineComponent({
                     console.error(error);
                 });
 
-            raceSessionService.checkIfSessionCorrelatesWithRace(raceId, sessionId)
+            await raceSessionService.checkIfSessionCorrelatesWithRace(raceId, sessionId)
                 .catch((error) => {
                     showModal('Error', 'De gemaakte race sessie hoort niet bij deze race');
                     console.error(error);

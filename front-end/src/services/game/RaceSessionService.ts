@@ -20,7 +20,7 @@ class RaceSessionService {
         return await httpRequestManager.doFetch(`${BASE_URL}/${sessionId}`, 'DELETE', null, false);
     };
 
-    checkIfSessionCorrelatesWithRace = async (sessionId: number, raceId: number) => {
+    checkIfSessionCorrelatesWithRace = async (raceId: number, sessionId: number) => {
         return await httpRequestManager.doFetch(`${BASE_URL}/${sessionId}/checkRaceId/${raceId}`);
     };
 

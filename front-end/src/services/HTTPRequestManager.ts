@@ -46,7 +46,12 @@ class HTTPRequestManager {
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const error = Object.assign(new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`), {
+                status: response.status,
+                body: errorText
+            });
+
+            throw error;
         }
 
         return hasJsonResponse ? response.json() : response;
