@@ -156,24 +156,35 @@ export default defineComponent({
         }
 
         const generateLevelTemplate = async (generated_content: any) => {
-            const base_values: { [key: string]: number | string }  = {
+            const base_values: { [key: string]: number | string | boolean}  = {
                 "max_co2": 0,
                 "max_coins": 0,
-                "season": "",
-                "start_time": "0",
-                "end_time": "0",
+                "start_time": 0,
+                "end_time": 0,
+                "season": "SPRING",
+                "cost_solar_panel": 0,
+                "cost_battery": 0,
+                "cost_co2": 0,
+                "max_batteries_transformer": 0,
+                "has_congestion_transformer": false,
+                "max_power_transformer": 0
             }
 
             const pathMap: Record<string, string> = {
                 max_co2: 'objective.maxCO2',
                 max_coins: 'objective.maxCoins',
-                season: 'season',
                 start_time: 'startTime',
                 end_time: 'endTime',
+                season: 'season',
+                cost_solar_panel: 'cost.solarPanelCost',
+                cost_battery: 'cost.batteryCost',
+                cost_co2: 'cost.co2Cost',
+                max_batteries_transformer: 'transformers.0.maxBatteryCount',
+                has_congestion_transformer: 'transformers.0.congestion.hasCongestion',
+                max_power_transformer: 'transformers.0.congestion.maxCurrent'
             };
-
+            
             for (const key of Object.keys(base_values)) {
-                console.log(key)
                 if (generated_content.Level[key] !== base_values[key]){
                     const keys = pathMap[key].split('.');
                     let current: any = levelTemplate.value;
@@ -192,13 +203,13 @@ export default defineComponent({
                 levelTemplate.value.transformers[0].houses.push({
                     houseNumber: levelTemplate.value.transformers[0].houses.length + 1,
                     congestion: {
-                        hasCongestion: false,
-                        maxCurrent: 0
+                        hasCongestion: house.has_congestion,
+                        maxCurrent: house.max_power
                     },
                     hasHeatPump: house.has_heatpump,
                     hasElectricVehicle: house.has_car,
-                    maxBatteries: house.batteries,
-                    maxSolarPanels: house.solar_panels
+                    maxBatteries: house.max_batteries,
+                    maxSolarPanels: house.max_solar_panels
                 })
             })
         }

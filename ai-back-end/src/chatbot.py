@@ -104,24 +104,31 @@ Convert the input into a JSON dictionary with the following structure:
 
 {{
   "Houses":
-    {{ "house_1": {{ "solar_panels": <solar_panel_count>, "batteries": <battery_amount>, "has_heatpump": <has_heat>, "has_car": <has_car> }} }}
+    {{ "house_1": {{ "max_solar_panels": <solar_panel_count>, "max_batteries": <battery_amount>, "has_heatpump": <has_heat>, "has_car": <has_car>, "has_congestion": <has_congestion>, "max_power": <max_power> }} }}
   ,
   "Level": {{
     "max_coins": <max_coins_amount>,
     "max_co2": <max_co2_amount>,
     "start_time": "<start_time>",
     "end_time": <end_time>,
-    "season": "<season>"
+    "season": "<season>",
+    "cost_solar_panel": "<cost_solar_panel>",
+    "cost_battery": "<cost_battery>",
+    "cost_co2": "<cost_co2>",
+    "max_batteries_transformer": "<max_batteries_transformer>",
+    "has_congestion_transformer": "<has_congestion_transformer>",
+    "max_power_transformer": "<max_power_transformer>"
   }}
 }}
 
 Extract the number of houses and their attributes from the input. For any missing values, use these defaults:
-- 0 for solar_panels, batteries, max_coins, max_co2.
-- false for has_heatpump, has_car.
+- 0 for max_solar_panels, max_batteries, max_coins, max_co2, cost_solar_panel, cost_battery, cost_co2, max_batteries_transformer, max_power.
+- false for has_heatpump, has_car, has_congestion, has_congestion_transformer.
 - 0 for start_time, end_time.
-- "" for season.
+- SPRING for season.
 
 if there is no number of houses specified in the input, return an empty dictionary for the houses
+give the season in english and full caps
 """
     # response = generator(full_prompt, max_length=800, num_return_sequences=1)[0]
 
