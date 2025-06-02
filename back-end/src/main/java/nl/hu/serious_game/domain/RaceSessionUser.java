@@ -19,7 +19,7 @@ public class RaceSessionUser {
     @Column
     private String username;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private RaceSession raceSession;
 
     @Column

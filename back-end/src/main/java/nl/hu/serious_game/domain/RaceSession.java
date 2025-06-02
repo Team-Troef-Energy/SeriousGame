@@ -23,7 +23,7 @@ public class RaceSession {
     @Column
     private String joinCode;
 
-    @OneToMany(mappedBy = "raceSession")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "raceSession")
     private List<RaceSessionUser> users;
 
     public RaceSession(Race race, String joinCode) {
