@@ -10,8 +10,8 @@
         Selecteer een level
       </h3>
       <div class="level-select-grid">
-        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id" :levelNumber="level.levelNumber"
-          class="level-button" />
+        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id"
+          :levelNumber="level.levelNumber" class="level-button" />
       </div>
     </div>
   </div>
@@ -20,6 +20,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import LevelSelectButton from "../components/LevelSelectButton.vue";
+import { raceSessionService } from "../services/game/RaceSessionService";
+import { raceSessionStorageService } from "../services/game/RaceSessionStorageService";
 import { templateLevelService } from "../services/game/TemplateLevelService";
 import { levelTemplate } from "../types/levelTemplate/LevelTemplate";
 
@@ -30,9 +32,27 @@ export default defineComponent({
   },
   setup() {
     let levels: any = ref<levelTemplate[]>([]);
+    let fetchedLevels: levelTemplate[] = [];
 
     onMounted(async () => {
-      const fetchedLevels = await templateLevelService.fetchAllLevels(); 
+      if (raceSessionStorageService.hasSession()) {
+        const localSavedSession = raceSessionStorageService.getSession();
+        await raceSessionService.fetchSessionByJoinCode(localSavedSession.joinCode)
+          .then((session) => {
+            fetchedLevels = session.race.levels;
+          })
+          .catch(async (error) => {
+            if (error.status == 404) {
+              raceSessionStorageService.clearSession();
+              window.location.reload();
+            } else {
+              fetchedLevels = await templateLevelService.fetchAllLevels();
+              console.error("Error fetching session:", error);
+            }
+          });
+      } else {
+        fetchedLevels = await templateLevelService.fetchAllLevels();
+      }
       levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
     });
 
@@ -78,7 +98,7 @@ export default defineComponent({
 
 .level-select-grid {
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   width: 100%;
   gap: 20px;
 }
