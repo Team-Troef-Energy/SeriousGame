@@ -34,26 +34,36 @@ export default defineComponent({
     let levels: any = ref<levelTemplate[]>([]);
     let fetchedLevels: levelTemplate[] = [];
 
+    const fetchGlobalLevels = async () => {
+      fetchedLevels = await templateLevelService.fetchAllLevels();
+      levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
+    };
+
     onMounted(async () => {
       if (raceSessionStorageService.hasSession()) {
         const localSavedSession = raceSessionStorageService.getSession();
+
+        if (!localSavedSession) {
+          return await fetchGlobalLevels();
+        }
+
         await raceSessionService.fetchSessionByJoinCode(localSavedSession.joinCode)
           .then((session) => {
             fetchedLevels = session.race.levels;
+            levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
           })
           .catch(async (error) => {
             if (error.status == 404) {
               raceSessionStorageService.clearSession();
               window.location.reload();
             } else {
-              fetchedLevels = await templateLevelService.fetchAllLevels();
+              await fetchGlobalLevels();
               console.error("Error fetching session:", error);
             }
           });
       } else {
-        fetchedLevels = await templateLevelService.fetchAllLevels();
+        await fetchGlobalLevels();
       }
-      levels.value = fetchedLevels.sort((a: levelTemplate, b: levelTemplate) => a.levelNumber - b.levelNumber);
     });
 
     return {
