@@ -119,6 +119,8 @@ Extract the number of houses and their attributes from the input. For any missin
 - false for has_heatpump, has_car.
 - 0 for start_time, end_time.
 - "" for season.
+
+if there is no number of houses specified in the input, return an empty dictionary for the houses
 """
     # response = generator(full_prompt, max_length=800, num_return_sequences=1)[0]
 

@@ -140,10 +140,53 @@ export default defineComponent({
             };
 
             await pythonService.fetchMessage(data).then((response: any) => {
-            promptOutput.value = response.response
+
+                const fixed_response = response.response.replace(/'/g, '"')
+                                                        .replace(/\bFalse\b/g, 'false')
+                                                        .replace(/\bTrue\b/g, 'true');
+                const generated_content = JSON.parse(fixed_response)
+                if (!(Object.keys(generated_content.Houses).length == 0)) {
+                    generate_houses(generated_content);
+                }
+                generateLevelTemplate(generated_content)
+
             }).catch((error: any) => {
                 console.error(error);
-            });
+            })
+        }
+
+        const generateLevelTemplate = async (generated_content: any) => {
+            const base_values: { [key: string]: number | string }  = {
+                "max_co2": 0,
+                "max_coins": 0,
+                "season": "",
+                "start_end_time": "0h - 0h"
+            }
+
+            for (const key of Object.keys(base_values)) {
+                console.log(key)
+                if (generated_content.Level[key] !== base_values[key]){
+                    console.log(generated_content.Level[key])
+                    console.log(base_values[key])
+                }
+            }
+        }
+
+        const generate_houses = async (generated_content: any) => {
+            Object.keys(generated_content.Houses).forEach((houseId) => {
+                const house = generated_content.Houses[houseId];
+                levelTemplate.value.transformers[0].houses.push({
+                    houseNumber: levelTemplate.value.transformers[0].houses.length + 1,
+                    congestion: {
+                        hasCongestion: false,
+                        maxCurrent: 0
+                    },
+                    hasHeatPump: house.has_heatpump,
+                    hasElectricVehicle: house.has_car,
+                    maxBatteries: house.batteries,
+                    maxSolarPanels: house.solar_panels
+                })
+            })
         }
 
         const fetchAllLevels = async () => {
@@ -370,6 +413,8 @@ export default defineComponent({
         return {
             userInput,
             handleAiGeneration,
+            generate_houses,
+            generateLevelTemplate,
             promptOutput,
             levelTemplate,
             updateHouseConfiguration,
