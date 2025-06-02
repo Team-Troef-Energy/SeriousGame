@@ -3,7 +3,7 @@ class PythonService{
         const aiBackendUrl = {
             "localhost": 'http://localhost:5000',
             "dev.troefgame.jonaqhan.nl": "https://dev.troefgame.jonaqhan.nl/ai-backend",
-            "troefgame.duckdns.org": "http://troefgame.duckdns.org/ai-backend",
+            "troefgame.duckdns.org": "https://troefgame.duckdns.org/ai-backend",
         }[window.location.hostname] || null; // Hostname does not include port
 
         try {

@@ -1,4 +1,4 @@
 {
     "environment": "production",
-    "apiUrl": "http://troefgame.duckdns.org:5001/"
+    "apiUrl": "https://troefgame.duckdns.org/"
 }

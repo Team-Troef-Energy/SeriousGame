@@ -9,7 +9,7 @@ class HTTPRequestManager {
         this.apiUrl = {
             "localhost": 'http://localhost:8080',
             "dev.troefgame.jonaqhan.nl": "https://dev.troefgame.jonaqhan.nl/backend",
-            "troefgame.duckdns.org": "http://troefgame.duckdns.org/backend",
+            "troefgame.duckdns.org": "https://troefgame.duckdns.org/backend",
         }[window.location.hostname] || null; // Hostname does not include port
 
         // Doesn't work, kept for future reference
