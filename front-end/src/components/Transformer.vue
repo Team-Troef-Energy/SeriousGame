@@ -19,20 +19,18 @@ export default {
 <style scoped>
 .transformer {
   width: 18rem;
-  ;
   height: 9rem;
 }
 
 img .transformer {
   width: 100%;
-  height: 100%;
 }
 
 .batteries {
   position: absolute;
   top: 55%;
   left: 75%;
-  width: 2rem;
-  height: 2rem;
+  width: 3rem;
+  z-index: 1;
 }
 </style>

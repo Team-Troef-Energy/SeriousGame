@@ -161,15 +161,14 @@ export default defineComponent({
   left: 50%;
   height: 5rem;
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 1;
 }
 
 .heat-pump {
   position: absolute;
   top: 66%;
-  left: 73%;
-  width: 3rem;
-  height: 3rem;
+  left: 53%;
+  width: 5rem;
   transform: rotate(0deg);
   z-index: 2;
 }
