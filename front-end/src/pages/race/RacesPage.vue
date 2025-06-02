@@ -2,7 +2,7 @@
     <div class="races-page container">
         <div class="header">
             <div class="empty-div"></div>
-            <button class="btn-race-join" @click="navigateTo(`/race/join`)">Deelnemen aan race</button>
+            <button class="btn-race-session" @click="navigateTo(`/race/session`)">Race betreden/verlaten</button>
             <button class="btn-race-create" @click="createRaceModal">Maak race</button>
         </div>
         <div class="content">
@@ -24,11 +24,11 @@ import TextModal from '../../components/global/modals/TextModal.vue';
 import RaceBadge from '../../components/race/RaceBadge.vue';
 import RaceCreateModal from '../../components/race/RaceCreateModal.vue';
 import { AuthContext } from '../../context/AuthProvider';
+import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
-import { race } from '../../types/Race';
 import { createRaceDTO } from '../../types/dto/CreateRaceDTO';
 import { textModal } from '../../types/global/modals/TextModal';
-import router from '../../router/Router';
+import { race } from '../../types/race/Race';
 
 export default defineComponent({
     name: 'RacesPage',
@@ -142,7 +142,7 @@ button:hover {
     width: 7.5rem;
 }
 
-.btn-race-join {
+.btn-race-session {
     width: 14rem;
 }
 
@@ -153,10 +153,6 @@ button:hover {
 
     button {
         height: 3rem;
-    }
-
-    .btn-race-join {
-        width: 12rem;
     }
 }
 </style>

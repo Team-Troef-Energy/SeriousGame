@@ -1,4 +1,4 @@
-import { levelTemplate } from "./levelTemplate/LevelTemplate";
+import { levelTemplate } from "../levelTemplate/LevelTemplate";
 
 export interface race {
     id: number;
