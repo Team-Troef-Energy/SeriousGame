@@ -34,8 +34,8 @@ public class GameLevelService {
         this.levelTemplateRepository = levelTemplateRepository;
     }
 
-    public GameLevelDTO startGame(int levelNumber) {
-        LevelTemplate levelTemplate = levelTemplateRepository.getLevelTemplateByLevelNumber(levelNumber).orElseThrow(() -> new IllegalArgumentException("Invalid level number"));
+    public GameLevelDTO startGame(long levelTemplateId) {
+        LevelTemplate levelTemplate = levelTemplateRepository.getLevelTemplateById(levelTemplateId).orElseThrow(() -> new IllegalArgumentException("Invalid level number"));
 
         GameLevel level = new GameLevel(
                 levelTemplate,

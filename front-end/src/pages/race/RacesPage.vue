@@ -1,51 +1,94 @@
 <template>
     <div class="races-page container">
         <div class="header">
+            <div class="empty-div"></div>
+            <button class="btn-race-session" @click="navigateTo(`/race/session`)">Race betreden/verlaten</button>
             <button class="btn-race-create" @click="createRaceModal">Maak race</button>
         </div>
         <div class="content">
             <RaceBadge v-for="race in races" :key="race.id" :name="race.name" :id="race.id"></RaceBadge>
         </div>
         <Teleport to="body">
-            <RaceCreateModal :show="isModalVisible" @close="isModalVisible = false" @race-create="handleCreateRace" />
+            <RaceCreateModal :show="isRaceModalVisible" @close="isRaceModalVisible = false"
+                @race-create="handleCreateRace" />
+        </Teleport>
+        <Teleport to="body">
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, inject, onMounted, ref } from 'vue';
+import TextModal from '../../components/global/modals/TextModal.vue';
+import RaceBadge from '../../components/race/RaceBadge.vue';
 import RaceCreateModal from '../../components/race/RaceCreateModal.vue';
-import RaceBadge from '../../components/race/RaceBadge.vue'
+import { AuthContext } from '../../context/AuthProvider';
+import router from '../../router/Router';
+import { raceService } from '../../services/game/RaceService';
+import { createRaceDTO } from '../../types/dto/CreateRaceDTO';
+import { textModal } from '../../types/global/modals/TextModal';
+import { race } from '../../types/race/Race';
 
 export default defineComponent({
     name: 'RacesPage',
-    components: { RaceCreateModal, RaceBadge },
+    components: { RaceCreateModal, TextModal, RaceBadge },
     setup() {
-        let isModalVisible = ref(false)
+        let isRaceModalVisible = ref(false)
 
         const createRaceModal = async () => {
-            isModalVisible.value = true;
+            isRaceModalVisible.value = true;
         };
 
-        let races = ref([
-            {
-                id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-                name: "test"
-            }
-        ]);
+        let isTextModalVisible = ref(false)
+
+        let textModalContent = ref<textModal>({
+            header: 'Alert',
+            body: 'Nothing to show'
+        });
+
+        const showModal = (header: string, body: string) => {
+            textModalContent.value.header = header;
+            textModalContent.value.body = body;
+            isTextModalVisible.value = true;
+        };
+
+        const authState = inject(AuthContext);
+        const { user }: any = authState;
+
+        let races = ref<race[]>([]);
+
+        const fetchRaces = async () => {
+            races.value = await raceService.fetchRacesByEmail(user.value.email)
+        }
 
         const handleCreateRace = async (raceName: string) => {
-            races.value.push({
-                id: crypto.randomUUID(),
-                name: raceName
+            raceService.createRace({ name: raceName, userEmail: user.value.email } as createRaceDTO).then(() => {
+                fetchRaces()
+            }).catch((error) => {
+                console.error(error);
+                showModal('Fout', 'Er is een fout opgetreden bij het aanmaken van de race');
             });
         }
 
+        const navigateTo = (location: string) => {
+            router.push(location);
+        };
+
+
+        onMounted(async () => {
+            if (user)
+                await fetchRaces();
+        });
+
         return {
-            isModalVisible,
+            isRaceModalVisible,
+            isTextModalVisible,
+            textModalContent,
             races,
             createRaceModal,
-            handleCreateRace
+            handleCreateRace,
+            navigateTo,
         };
     }
 });
@@ -61,9 +104,11 @@ export default defineComponent({
 .header {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+    padding: 0.55rem 5% 0rem 5%;
     width: 100%;
     height: 5rem;
+    gap: 1rem;
     flex: 1;
 }
 
@@ -79,7 +124,7 @@ export default defineComponent({
 
 button {
     width: 8rem;
-    height: 3rem;
+    height: 5rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     border: solid 1px rgba(0, 0, 0, .1);
@@ -88,12 +133,26 @@ button {
     cursor: pointer;
 }
 
-.btn-race-create {
-    margin-right: 5%;
-}
-
-.btn-race-create:hover {
+button:hover {
     cursor: pointer;
     background-color: #f8f8f8;
+}
+
+.empty-div {
+    width: 7.5rem;
+}
+
+.btn-race-session {
+    width: 14rem;
+}
+
+@media (min-width: 640px) {
+    .header {
+        gap: 0rem;
+    }
+
+    button {
+        height: 3rem;
+    }
 }
 </style>

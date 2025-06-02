@@ -1,19 +1,18 @@
 <template>
   <div class="dashboard-container">
     <div class="slot">
-      <div>
-        Huidige munten gebruik: {{ coinsUsed }}
-      </div>
-      <div class="underline">
-        Max. aantal munten: {{ maxCoins }}
+      <h3 class="slot-title">Beschikbare munten:</h3>
+      <div class="slot-content">
+        <img src="/coin.png" class="coin" alt="Coin">
+        <span>{{ coinsUsed }}/{{ maxCoins }}</span>
       </div>
     </div>
     <div class="slot">
       <div>
         Huidige CO2-uitstoot: {{ currentCO2.toFixed(2) }} kg
       </div>
-      <div class="underline">
-        Max. CO2-uitstoot: {{ MaxCO2.toFixed(2) }} kg
+      <div>
+        Max. CO2-uitstoot: {{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
@@ -49,7 +48,7 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    MaxCO2: {
+    maxCO2: {
       type: Number,
       required: true,
     },
@@ -81,21 +80,30 @@ export default defineComponent({
 .dashboard-container {
   height: 20vh;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  background-color: rgba(82, 81, 81, 0.384);
+  background-color: #39210a67;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 4px 10px;
 }
 
 .slot {
-  height: 100%;
-  width: 100%;
-  text-align: center;
-  align-items: center;
-  font-weight: bold;
+  letter-spacing: -.03px;
   color: white;
+  font-size: 12px;
+  font-family: "Press Start 2P";
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.underline {
-  text-decoration: underline;
+.slot-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.coin {
+  width: 20px;
+  margin-bottom: 1px;
 }
 </style>

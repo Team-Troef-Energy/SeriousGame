@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="handleClick" class="level-btn">{{ level }}</v-btn>
+  <v-btn @click="handleClick" class="level-btn">{{ levelNumber }}</v-btn>
 </template>
 
 <script lang="ts">
@@ -8,19 +8,23 @@ import router from "../router/Router";
 export default defineComponent({
   name: "LevelSelectButton",
   props: {
-    level: {
+    levelNumber: {
+      type: Number,
+      required: true,
+    },
+    gameId: {
       type: Number,
       required: true,
     },
   },
   methods: {
     handleClick() {
-      router.push(`/level/${this.level}`);
+      router.push(`/level/${this.gameId}`);
     },
   },
   setup(props) {
-    const level = toRefs(props);
-    return level;
+    const gameId = toRefs(props);
+    return gameId;
   },
 });
 </script>

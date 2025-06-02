@@ -17,6 +17,11 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/troef-data
 
+  ai-backend:
+    build: ai-back-end
+    ports:
+      - "5000:5000"
+
   frontend:
     build: front-end
     ports:

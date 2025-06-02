@@ -4,7 +4,11 @@ import Home from "../pages/Home.vue";
 import Level from "../pages/Level.vue";
 import LevelSelect from "../pages/LevelSelect.vue";
 import LoginPage from "../pages/LoginPage.vue";
+import RaceHostingPage from "../pages/race/RaceHostingPage.vue";
+import RaceLevelEditorPage from "../pages/race/RaceLevelEditorPage.vue";
+import RaceLevelSelectPage from "../pages/race/RaceLevelSelectPage.vue";
 import RacePage from "../pages/race/RacePage.vue";
+import RaceSessionPage from "../pages/race/RaceSessionPage.vue";
 import RacesPage from "../pages/race/RacesPage.vue";
 import RegisterPage from "../pages/RegisterPage.vue";
 import TermsPage from "../pages/TermsPage.vue";
@@ -22,6 +26,10 @@ const routes = [
   { path: "/dashboard", name: "DashboardPage", component: DashboardPage },
   { path: "/race", name: "RacePage", component: RacesPage },
   { path: '/race/:id', component: RacePage },
+  { path: '/race/:id/level-editor', component: RaceLevelEditorPage },
+  { path: '/race/:id/levels', component: RaceLevelSelectPage },
+  { path: '/race/:raceId/hosting/:sessionId', component: RaceHostingPage },
+  { path: '/race/session', component: RaceSessionPage },
 ];
 
 const router = createRouter({

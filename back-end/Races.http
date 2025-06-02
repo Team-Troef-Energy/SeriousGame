@@ -1,0 +1,36 @@
+### Create race
+POST http://localhost:8080/races
+Content-Type: application/json
+
+{
+  "name": "Test race 1",
+  "userEmail": "bla@bla.bla"
+}
+
+### Get race by ID
+GET http://localhost:8080/races/1
+
+### Get race by email
+GET http://localhost:8080/races/by-email?email=bla@bla.bla
+
+### Delete race
+DELETE http://localhost:8080/races/1
+
+### Update race name
+PUT http://localhost:8080/races/1/name?name=Test%20race%201%20updated
+
+### Check is email
+GET http://localhost:8080/races/1/is-email?email=bla@bla.bla
+
+
+### Join session
+POST http://localhost:8080/racesession/join
+Content-Type: application/json
+
+{
+  "joinCode": "joinCode",
+  "username": "Bla"
+}
+
+### Leave session
+POST http://localhost:8080/racesession/leave?token=token
