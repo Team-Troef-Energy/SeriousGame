@@ -109,7 +109,8 @@ Convert the input into a JSON dictionary with the following structure:
   "Level": {{
     "max_coins": <max_coins_amount>,
     "max_co2": <max_co2_amount>,
-    "start_end_time": "<start_time>h - <end_time>h",
+    "start_time": "<start_time>",
+    "end_time": <end_time>,
     "season": "<season>"
   }}
 }}

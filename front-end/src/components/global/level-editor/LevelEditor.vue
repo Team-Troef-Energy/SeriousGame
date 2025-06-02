@@ -160,14 +160,28 @@ export default defineComponent({
                 "max_co2": 0,
                 "max_coins": 0,
                 "season": "",
-                "start_end_time": "0h - 0h"
+                "start_time": "0",
+                "end_time": "0",
             }
+
+            const pathMap: Record<string, string> = {
+                max_co2: 'objective.maxCO2',
+                max_coins: 'objective.maxCoins',
+                season: 'season',
+                start_time: 'startTime',
+                end_time: 'endTime',
+            };
 
             for (const key of Object.keys(base_values)) {
                 console.log(key)
                 if (generated_content.Level[key] !== base_values[key]){
-                    console.log(generated_content.Level[key])
-                    console.log(base_values[key])
+                    const keys = pathMap[key].split('.');
+                    let current: any = levelTemplate.value;
+
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        current = current[keys[i]];
+                    }
+                    current[keys[keys.length - 1]] = generated_content.Level[key];
                 }
             }
         }
