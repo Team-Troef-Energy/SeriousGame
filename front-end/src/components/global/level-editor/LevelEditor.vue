@@ -73,13 +73,13 @@
                         v-model="userInput"
                         id="level-editor-input"
                         placeholder="Typ je bericht..."
-                        @keydown.enter.prevent="handleUserInput"
+                        @keydown.enter.prevent="handleAiGeneration"
                     />
                     <div class="info-tooltip">
                          ℹ️
                     <span class="tooltip-text">Deze input laat je dingen toevoegen aan het level zonder zelf op dingen te hoeven klikken. Zoals: Een huis met maximaal 2 batterijen en 3 zonnepanelen en het level heeft maximaal 30 munten ter beschikking.</span>
                     </div>
-                    <button class="level-editor-send-button"@click="handleUserInput">Verstuur bericht</button>
+                    <button class="level-editor-send-button"@click="handleAiGeneration">Verstuur bericht</button>
                 </div>
                 <button class="btn" @click.prevent="addHouse">Voeg huis toe</button>
             </div>
@@ -130,7 +130,7 @@ export default defineComponent({
         let userInput = ref("");
         let promptOutput = ref("");
 
-        const handleUserInput = async (e:any) => {
+        const handleAiGeneration = async (e:any) => {
 
             e.preventDefault();
 
@@ -369,7 +369,7 @@ export default defineComponent({
 
         return {
             userInput,
-            handleUserInput,
+            handleAiGeneration,
             promptOutput,
             levelTemplate,
             updateHouseConfiguration,
