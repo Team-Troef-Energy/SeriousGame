@@ -16,7 +16,11 @@
       </div>
     </div>
     <div class="slot">
-      Totale energieconsumptie: {{ totalEnergyConsumption.toFixed(2) }} kWh
+      Totale energieconsumptie: 
+      <div class="slot-content">
+        <img class="energy-icon" src="/lightning.png" alt="Icon">
+        {{ totalEnergyConsumption.toFixed(2) }} kWh
+      </div>
     </div>
     <div class="slot">
       Groene geproduceerde energiepercentage: {{ greenProducedEnergyPercentage.toFixed(2) }}%
@@ -129,6 +133,11 @@ export default defineComponent({
 .season-icon {
   width: 20px;
   height: 20px;
+}
+
+.energy-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .coin {
