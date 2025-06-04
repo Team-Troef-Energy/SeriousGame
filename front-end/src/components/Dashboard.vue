@@ -25,7 +25,11 @@
       Start- en eindtijd: {{ objectiveStartTime }}h - {{ objectiveEndTime }}h
     </div>
     <div class="slot">
-      Seizoen: {{ season }}
+      Seizoen: 
+      <div class="slot-content">
+        <img class="season-icon" :src="`/${getSeasonIcon(season)}`" alt="Icon">
+        {{ translateSeason(season) }}
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +77,26 @@ export default defineComponent({
       required: true,
     },
   },
+  methods: {
+    translateSeason(season: string): string {
+      switch (season.toLowerCase()) {
+        case 'summer': return 'Zomer';
+        case 'winter': return 'Winter';
+        case 'spring': return 'Lente';
+        case 'fall': return 'Herfst';
+        default: return season;
+      }
+    },
+    getSeasonIcon(season: string): string {
+      switch (season.toLowerCase()) {
+        case 'summer': return 'sun.png';
+        case 'winter': return 'snowflake.png';
+        case 'spring': return 'leaf.png';
+        case 'fall': return 'orange_leaf.png';
+        default: return season;
+      }
+    }
+  }
 });
 </script>
 
@@ -100,6 +124,11 @@ export default defineComponent({
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.season-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .coin {
