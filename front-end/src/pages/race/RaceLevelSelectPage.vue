@@ -11,8 +11,8 @@
         Selecteer een level
       </h3>
       <div class="race-level-select-grid">
-        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id" :levelNumber="level.levelNumber"
-          class="level-button" />
+        <LevelSelectButton v-for="level in levels" :key="level.levelNumber" :gameId="level.id"
+          :levelNumber="level.levelNumber" :referral="`race/${raceId}/levels`" class="level-button" />
       </div>
     </div>
   </div>

@@ -1,7 +1,12 @@
 <template>
   <div class="level container">
     <div class="level-container">
-      <NavigateButton id="navigate-button" label="Verlaat level" to="/levelSelect" backgroundColor="#cc0000" />
+      <NavigateButton
+        id="navigate-button"
+        label="Verlaat level"
+        :to="navigateBackUrl"
+        backgroundColor="#cc0000"
+      />
       <div class="game-content">
         <div ref="gameCanvas" class="game-canvas">
           <div class="connection-line-container">
@@ -92,16 +97,16 @@ import { computed, CSSProperties, defineComponent, onMounted, ref, Ref } from "v
 import { useRoute } from "vue-router";
 import ConnectionLine from "../components/ConnectionLine.vue";
 import Dashboard from "../components/Dashboard.vue";
+import GameSideBar from "../components/GameSideBar.vue";
 import House from "../components/House.vue";
 import NavigateButton from "../components/NavigateButton.vue";
 import Notification from "../components/Notification.vue";
-import GameSideBar from "../components/GameSideBar.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
-import { house, levelData, transformer } from "../types";
 import { pythonService } from "../services/PythonService";
+import { house, levelData, transformer } from "../types";
 
 export default defineComponent({
   name: "Level",
@@ -396,6 +401,11 @@ export default defineComponent({
       };
     }
 
+    const navigateBackUrl = computed(() => {
+      const referral = route.query.referral as string;
+      return referral ? `/${referral}` : "/levelSelect";
+    });
+
     return {
       messages,
       chatWindowOpen,
@@ -426,6 +436,7 @@ export default defineComponent({
       notificationStatus,
       notificationMessage,
       coordinatesWithMargin,
+      navigateBackUrl,
     };
   },
 });

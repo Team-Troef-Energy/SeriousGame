@@ -16,10 +16,18 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    referral: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   methods: {
     handleClick() {
-      router.push(`/level/${this.gameId}`);
+      router.push({
+        path: `/level/${this.gameId}`,
+        query: this.referral ? { referral: this.referral } : {},
+      });
     },
   },
   setup(props) {
