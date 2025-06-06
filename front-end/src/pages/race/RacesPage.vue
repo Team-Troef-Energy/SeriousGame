@@ -34,6 +34,9 @@ export default defineComponent({
     name: 'RacesPage',
     components: { RaceCreateModal, TextModal, RaceBadge },
     setup() {
+        const authState = inject(AuthContext);
+        const { user }: any = authState;
+
         let isRaceModalVisible = ref(false)
 
         const createRaceModal = async () => {
@@ -52,9 +55,6 @@ export default defineComponent({
             textModalContent.value.body = body;
             isTextModalVisible.value = true;
         };
-
-        const authState = inject(AuthContext);
-        const { user }: any = authState;
 
         let races = ref<race[]>([]);
 

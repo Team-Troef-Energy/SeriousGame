@@ -38,11 +38,13 @@ import router from '../../router/Router';
 import { raceSessionService } from '../../services/game/RaceSessionService';
 import { textModal } from '../../types/global/modals/TextModal';
 import { raceUser } from '../../types/race/RaceUser';
+import { useRaceAccessGuard } from './RaceAccessGuard';
 
 export default defineComponent({
     name: 'RaceHostingPage',
     components: { TextModal, RaceUser },
     setup() {
+        useRaceAccessGuard();
         let isTextModalVisible = ref(false)
 
         let textModalContent = ref<textModal>({

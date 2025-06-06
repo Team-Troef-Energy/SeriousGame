@@ -19,11 +19,13 @@ import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue
 import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
 import { textModal } from '../../types/global/modals/TextModal';
+import { useRaceAccessGuard } from './RaceAccessGuard';
 
 export default defineComponent({
     name: 'RacePage',
     components: { RaceBackButtonHeader, RaceLevelEditor, TextModal },
     setup() {
+        useRaceAccessGuard();
         let isTextModalVisible = ref(false)
 
         let textModalContent = ref<textModal>({

@@ -68,11 +68,13 @@ import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
 import { raceSessionService } from '../../services/game/RaceSessionService';
 import { textModal } from '../../types/global/modals/TextModal';
+import { useRaceAccessGuard } from './RaceAccessGuard';
 
 export default defineComponent({
     name: 'RacePage',
     components: { RaceBackButtonHeader, RaceNameChangeModal, RaceDeleteModal, TextModal },
     setup() {
+        useRaceAccessGuard();
         let isRaceNameChangeModalVisible = ref(false)
         let isRaceDeleteModalVisible = ref(false)
 
@@ -139,6 +141,7 @@ export default defineComponent({
         }
 
         onMounted(async () => {
+
             raceService.fetchRaceById(raceId)
                 .then((response) => {
                     raceName.value = response.name;
@@ -146,7 +149,7 @@ export default defineComponent({
                 .catch((error) => {
                     showModal('Error', 'Er is een fout opgetreden bij het ophalen van de race');
                     console.error(error);
-                })
+                });
         });
 
         return {

@@ -25,6 +25,7 @@ import LevelSelectButton from "../../components/LevelSelectButton.vue";
 import RaceBackButtonHeader from "../../components/race/RaceBackButtonHeader.vue";
 import { raceService } from "../../services/game/RaceService";
 import { levelTemplate } from "../../types/levelTemplate/LevelTemplate";
+import { useRaceAccessGuard } from "./RaceAccessGuard";
 
 export default defineComponent({
   name: "RaceLevelSelectPage",
@@ -32,6 +33,7 @@ export default defineComponent({
     RaceBackButtonHeader, LevelSelectButton,
   },
   setup() {
+    useRaceAccessGuard();
     const route = useRoute();
     let raceId = Number(route.params.id);
     let levels: any = ref<levelTemplate[]>([]);
