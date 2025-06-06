@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import { textModal } from '../../types/global/modals/TextModal';
 import TextModal from '../global/modals/TextModal.vue';
+import { useTextModal } from '../global/modals/UseTextModal';
 
 export default defineComponent({
     name: 'RaceSessionInputBox',
@@ -35,18 +35,7 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
-        let isTextModalVisible = ref(false)
-
-        let textModalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
-        const showModal = (header: string, body: string) => {
-            textModalContent.value.header = header;
-            textModalContent.value.body = body;
-            isTextModalVisible.value = true;
-        };
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
 
         const input = ref('');
 

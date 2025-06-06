@@ -21,13 +21,13 @@
 <script lang="ts">
 import { defineComponent, inject, onMounted, ref } from 'vue';
 import TextModal from '../../components/global/modals/TextModal.vue';
+import { useTextModal } from '../../components/global/modals/UseTextModal';
 import RaceBadge from '../../components/race/RaceBadge.vue';
 import RaceCreateModal from '../../components/race/RaceCreateModal.vue';
 import { AuthContext } from '../../context/AuthProvider';
 import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
 import { createRaceDTO } from '../../types/dto/CreateRaceDTO';
-import { textModal } from '../../types/global/modals/TextModal';
 import { race } from '../../types/race/Race';
 
 export default defineComponent({
@@ -43,18 +43,7 @@ export default defineComponent({
             isRaceModalVisible.value = true;
         };
 
-        let isTextModalVisible = ref(false)
-
-        let textModalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
-        const showModal = (header: string, body: string) => {
-            textModalContent.value.header = header;
-            textModalContent.value.body = body;
-            isTextModalVisible.value = true;
-        };
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
 
         let races = ref<race[]>([]);
 

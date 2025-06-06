@@ -96,7 +96,7 @@
             </div>
         </form>
         <Teleport to="body">
-            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
     </div>
 </template>
@@ -104,10 +104,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { pythonService } from '../../../services/PythonService';
-import { textModal } from '../../../types/global/modals/TextModal';
 import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
 import TextModal from '../modals/TextModal.vue';
+import { useTextModal } from '../modals/UseTextModal';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
 
@@ -124,6 +124,7 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
         let levels = ref<levelTemplate[]>([]);
         let userInput = ref("");
         let promptOutput = ref("");
@@ -153,13 +154,6 @@ export default defineComponent({
             await fetchAllLevels();
         });
 
-        let isModalVisible = ref(false)
-
-        let modalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
         let emptyLevelTemplate: levelTemplate = {
             levelNumber: 0,
             objective: {
@@ -187,12 +181,6 @@ export default defineComponent({
         };
 
         let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
-
-        const showModal = (header: string, body: string) => {
-            modalContent.value.header = header;
-            modalContent.value.body = body;
-            isModalVisible.value = true;
-        };
 
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
@@ -373,9 +361,9 @@ export default defineComponent({
             levelTemplate,
             updateHouseConfiguration,
             levels,
-            isModalVisible,
+            isTextModalVisible,
             showModal,
-            modalContent,
+            textModalContent,
             onLevelNumberChange,
             addHouse,
             removeHouse,

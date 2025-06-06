@@ -61,13 +61,13 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import TextModal from '../../components/global/modals/TextModal.vue';
+import { useTextModal } from '../../components/global/modals/UseTextModal';
 import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import RaceDeleteModal from '../../components/race/RaceDeleteModal.vue';
 import RaceNameChangeModal from '../../components/race/RaceNameChangeModal.vue';
 import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
 import { raceSessionService } from '../../services/game/RaceSessionService';
-import { textModal } from '../../types/global/modals/TextModal';
 import { useRaceAccessGuard } from './RaceAccessGuard';
 
 export default defineComponent({
@@ -86,18 +86,7 @@ export default defineComponent({
             isRaceDeleteModalVisible.value = true;
         };
 
-        let isTextModalVisible = ref(false)
-
-        let textModalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
-        const showModal = (header: string, body: string) => {
-            textModalContent.value.header = header;
-            textModalContent.value.body = body;
-            isTextModalVisible.value = true;
-        };
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
 
         const route = useRoute();
         let raceId = Number(route.params.id);

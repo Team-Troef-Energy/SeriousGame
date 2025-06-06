@@ -11,14 +11,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import TextModal from '../../components/global/modals/TextModal.vue';
+import { useTextModal } from '../../components/global/modals/UseTextModal';
 import RaceLevelEditor from '../../components/race/LevelEditor.vue';
 import RaceBackButtonHeader from '../../components/race/RaceBackButtonHeader.vue';
 import router from '../../router/Router';
 import { raceService } from '../../services/game/RaceService';
-import { textModal } from '../../types/global/modals/TextModal';
 import { useRaceAccessGuard } from './RaceAccessGuard';
 
 export default defineComponent({
@@ -26,18 +26,7 @@ export default defineComponent({
     components: { RaceBackButtonHeader, RaceLevelEditor, TextModal },
     setup() {
         useRaceAccessGuard();
-        let isTextModalVisible = ref(false)
-
-        let textModalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
-        const showModal = (header: string, body: string) => {
-            textModalContent.value.header = header;
-            textModalContent.value.body = body;
-            isTextModalVisible.value = true;
-        };
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
 
         const route = useRoute();
         let raceId = Number(route.params.id);
