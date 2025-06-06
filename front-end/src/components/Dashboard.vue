@@ -26,7 +26,11 @@
       Groene geproduceerde energiepercentage: {{ greenProducedEnergyPercentage.toFixed(2) }}%
     </div>
     <div class="slot">
-      Start- en eindtijd: {{ objectiveStartTime }}h - {{ objectiveEndTime }}h
+      Start- en eindtijd:
+      <div class="slot-content">
+        <img src="/clock.png" alt="Clock" class="clock-icon">
+        {{ objectiveStartTime }}:00 - {{ objectiveEndTime }}:00
+      </div>
     </div>
     <div class="slot">
       Seizoen: 
@@ -131,6 +135,11 @@ export default defineComponent({
 }
 
 .season-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.clock-icon {
   width: 20px;
   height: 20px;
 }
