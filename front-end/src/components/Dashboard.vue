@@ -23,7 +23,11 @@
       </div>
     </div>
     <div class="slot">
-      Groene geproduceerde energiepercentage: {{ greenProducedEnergyPercentage.toFixed(2) }}%
+      Groen geproduceerde energie: 
+      <div class="slot-content">
+        <img class="energy-icon" src="/green_electricity.png" alt="Icon">
+        {{ greenProducedEnergyPercentage.toFixed(2) }}%
+      </div>
     </div>
     <div class="slot">
       Start- en eindtijd:
