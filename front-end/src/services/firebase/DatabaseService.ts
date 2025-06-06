@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, setDoc, where, query } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { openDB } from "idb";
 import { firebaseService } from "./FirebaseService";
 
@@ -106,7 +106,7 @@ class DatabaseService {
                         reject(error);
                     }
                 } else {
-                    resolve("user");
+                    resolve("non-authenticated-user");
                 }
             });
         });
