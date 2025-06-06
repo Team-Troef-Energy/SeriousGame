@@ -32,6 +32,14 @@ const routes = [
   { path: '/race/session', component: RaceSessionPage },
 ];
 
+const AuthenticatedUserPaths = [
+  "/race",
+  "/race/:id",
+  "/race/:id/level-editor",
+  "/race/:id/levels",
+  "/race/:raceId/hosting/:sessionId"
+];
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
@@ -42,6 +50,14 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.name === "DashboardPage" && role !== "admin") {
     return next({ name: "Home" }); // redirect non-admins to home
+  }
+
+  const isAuthenticatedUserRoute = AuthenticatedUserPaths.some(path =>
+    to.matched.some(record => record.path === path)
+  );
+  
+  if (isAuthenticatedUserRoute && role === "non-authenticated-user") {
+    return next({ name: "LoginPage" });
   }
 
   next();

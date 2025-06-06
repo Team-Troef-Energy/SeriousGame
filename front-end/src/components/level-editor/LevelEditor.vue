@@ -4,37 +4,26 @@
             @createLevel="createLevelTemplate" @updateLevel="updateLevelTemplate" @deleteLevel="deleteLevelTemplate">
         </GlobalLevelEditor>
         <Teleport to="body">
-            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
-import { textModal } from '../../types/global/modals/TextModal';
 import { templateType } from '../../types/levelTemplate/TemplateType';
 import { templateWrapper } from '../../types/levelTemplate/TemplateWrapper';
 import GlobalLevelEditor from '../global/level-editor/LevelEditor.vue';
 import TextModal from '../global/modals/TextModal.vue';
+import { useTextModal } from '../global/modals/UseTextModal';
 
 export default defineComponent({
     components: { GlobalLevelEditor, TextModal },
     name: 'LevelEditor',
     setup() {
-        let isModalVisible = ref(false)
-
-        let modalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
-        const showModal = (header: string, body: string) => {
-            modalContent.value.header = header;
-            modalContent.value.body = body;
-            isModalVisible.value = true;
-        };
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
 
         const fetchAllLevels = async () => {
             return await templateLevelService.fetchAllLevels();
@@ -85,8 +74,8 @@ export default defineComponent({
         }
 
         return {
-            isModalVisible,
-            modalContent,
+            isTextModalVisible,
+            textModalContent,
             showModal,
             fetchAllLevels,
             fetchStartLevel,

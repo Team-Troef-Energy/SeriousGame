@@ -69,17 +69,15 @@
             </div>
             <div class="level-editor-house-button form-row">
                 <div class="level-editor-message-input">
-                    <input 
-                        v-model="userInput"
-                        id="level-editor-input"
-                        placeholder="Typ je bericht..."
-                        @keydown.enter.prevent="handleAiGeneration"
-                    />
+                    <input v-model="userInput" id="level-editor-input" placeholder="Typ je bericht..."
+                        @keydown.enter.prevent="handleAiGeneration" />
                     <div class="info-tooltip">
-                         ℹ️
-                    <span class="tooltip-text">Deze input laat je dingen toevoegen aan het level zonder zelf op dingen te hoeven klikken. Zoals: Een huis met maximaal 2 batterijen en 3 zonnepanelen en het level heeft maximaal 30 munten ter beschikking.</span>
+                        ℹ️
+                        <span class="tooltip-text">Deze input laat je dingen toevoegen aan het level zonder zelf op
+                            dingen te hoeven klikken. Zoals: Een huis met maximaal 2 batterijen en 3 zonnepanelen en het
+                            level heeft maximaal 30 munten ter beschikking.</span>
                     </div>
-                    <button class="level-editor-send-button"@click="handleAiGeneration">Verstuur bericht</button>
+                    <button class="level-editor-send-button" @click="handleAiGeneration">Verstuur bericht</button>
                 </div>
                 <button class="btn" @click.prevent="addHouse">Voeg huis toe</button>
             </div>
@@ -98,18 +96,18 @@
             </div>
         </form>
         <Teleport to="body">
-            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { textModal } from '../../../types/global/modals/TextModal';
+import { pythonService } from '../../../services/PythonService';
 import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
-import { pythonService } from '../../../services/PythonService'
 import TextModal from '../modals/TextModal.vue';
+import { useTextModal } from '../modals/UseTextModal';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
 
@@ -126,11 +124,12 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
         let levels = ref<levelTemplate[]>([]);
         let userInput = ref("");
         let promptOutput = ref("");
 
-        const handleAiGeneration = async (e:any) => {
+        const handleAiGeneration = async (e: any) => {
 
             e.preventDefault();
 
@@ -140,7 +139,7 @@ export default defineComponent({
             };
 
             await pythonService.fetchMessage(data).then((response: any) => {
-            promptOutput.value = response.response
+                promptOutput.value = response.response
             }).catch((error: any) => {
                 console.error(error);
             });
@@ -152,14 +151,7 @@ export default defineComponent({
         };
 
         onMounted(async () => {
-            fetchAllLevels();
-        });
-
-        let isModalVisible = ref(false)
-
-        let modalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
+            await fetchAllLevels();
         });
 
         let emptyLevelTemplate: levelTemplate = {
@@ -190,12 +182,6 @@ export default defineComponent({
 
         let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
 
-        const showModal = (header: string, body: string) => {
-            modalContent.value.header = header;
-            modalContent.value.body = body;
-            isModalVisible.value = true;
-        };
-
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
 
@@ -204,7 +190,7 @@ export default defineComponent({
             }
 
             const levelId = await getLevelIdFromLevelNumber(savedLevelValue);
-            
+
             if (levelId === undefined) {
                 return;
             }
@@ -294,12 +280,12 @@ export default defineComponent({
         };
 
         const doesLevelExist = async (levelNumber: number) => {
-            fetchAllLevels();
+            await fetchAllLevels();
             return levels.value.some(level => level.levelNumber == levelNumber);
         };
 
         const getLevelIdFromLevelNumber = async (levelNumber: number) => {
-            fetchAllLevels();
+            await fetchAllLevels();
 
             const level = levels.value.find(level => level.levelNumber == levelNumber);
 
@@ -311,7 +297,7 @@ export default defineComponent({
         };
 
         const getTemplateIdFromLevelNumber = async (levelNumber: number) => {
-            fetchAllLevels();
+            await fetchAllLevels();
 
             const level = levels.value.find(level => level.levelNumber == levelNumber);
 
@@ -335,6 +321,7 @@ export default defineComponent({
             if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 23) return showModal('Fout', 'Eind tijd moet tussen 0 en 23 zijn');
             if (levelTemplate.value.startTime >= levelTemplate.value.endTime) return showModal('Fout', 'Start tijd moet voor eind tijd zijn');
             if (levelTemplate.value.transformers[0].houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
+            if (levelTemplate.value.transformers[0].houses.length > 7) return showModal('Fout', 'Er mogen maximaal 7 huizen zijn');
 
             for (const house of levelTemplate.value.transformers[0].houses) {
                 if (house.maxBatteries < 0) return showModal('Fout', 'Maximaal aantal batterijen mag niet negatief zijn voor een huis');
@@ -374,9 +361,9 @@ export default defineComponent({
             levelTemplate,
             updateHouseConfiguration,
             levels,
-            isModalVisible,
+            isTextModalVisible,
             showModal,
-            modalContent,
+            textModalContent,
             onLevelNumberChange,
             addHouse,
             removeHouse,
