@@ -8,11 +8,10 @@
       </div>
     </div>
     <div class="slot">
-      <div>
-        Huidige CO2-uitstoot: {{ currentCO2.toFixed(2) }} kg
-      </div>
-      <div>
-        Max. CO2-uitstoot: {{ maxCO2.toFixed(2) }} kg
+      CO2-uistoot: 
+      <div class="slot-content">
+        <img class="cloud-icon" src="/cloud.png" alt="Cloud">
+        {{ currentCO2.toFixed(2) }} kg - {{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
@@ -143,6 +142,11 @@ export default defineComponent({
   height: 20px;
 }
 
+.cloud-icon {
+  height: 20px;
+  width: 22px;
+}
+  
 .clock-icon {
   width: 20px;
   height: 20px;
