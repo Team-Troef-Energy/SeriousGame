@@ -1,11 +1,13 @@
 package nl.hu.serious_game.presentation;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import nl.hu.serious_game.application.UserService;
+import nl.hu.serious_game.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +27,20 @@ import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
 @RequestMapping("/templates")
 public class LevelTemplateController {
     private final LevelTemplateService levelTemplateService;
+    private final UserService userService;
 
     @Autowired
-    public LevelTemplateController(LevelTemplateService levelTemplateService) {
+    public LevelTemplateController(LevelTemplateService levelTemplateService, UserService userService) {
         this.levelTemplateService = levelTemplateService;
+        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<List<LevelTemplateDTO>> getAllLevels() {
+    public ResponseEntity<List<LevelTemplateDTO>> getAllLevels(Authentication authentication) {
+        User user = userService.getUser(authentication);
+        System.out.println(user.id());
+        System.out.println(user.role());
+
         return ResponseEntity.ok(
                 levelTemplateService.getAllGlobalLevels()
                         .stream()

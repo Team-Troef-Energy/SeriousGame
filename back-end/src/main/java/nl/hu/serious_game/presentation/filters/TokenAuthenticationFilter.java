@@ -37,30 +37,22 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(111);
         String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
-            System.out.println(222);
             String token = authorizationHeader.replace(BEARER_PREFIX, "");
             Optional<String> userId = extractUserIdFromToken(token);
 
             if (userId.isPresent()) {
-                System.out.println(333);
                 String principal = userId.get();
-                System.out.println(principal);
                 var authentication = new UsernamePasswordAuthenticationToken(principal, null, null);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                System.out.println(444);
                 setAuthErrorDetails(response);
                 return;
             }
         }
-        System.out.println(555);
-        System.out.println();
-        System.out.println();
         filterChain.doFilter(request, response);
     }
 
