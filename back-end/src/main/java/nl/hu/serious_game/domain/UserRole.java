@@ -13,6 +13,13 @@ public enum UserRole {
         this.key = key;
     }
 
+    public static boolean allowAccess(UserRole requiredRole, UserRole givenRole) {
+        return switch (requiredRole) {
+            case USER -> true;
+            case ADMIN -> givenRole == ADMIN;
+        };
+    }
+
     public static UserRole fromKey(String key) {
         return switch (key) {
             case "user" -> USER;
