@@ -1,3 +1,6 @@
+import {inject} from "vue";
+import {AuthContext} from "../context/AuthProvider.ts";
+
 class HTTPRequestManager {
     private apiUrl: string | null = null;
 
@@ -35,11 +38,22 @@ class HTTPRequestManager {
             await this.loadConfig();
         }
 
+        const headers: Record<string, string> = {};
+
+        const authState: any = inject(AuthContext);
+        if (authState.user.value) {
+            const idToken = await authState.user.value.getIdToken();
+            headers["Authorization"] = `Bearer ${idToken}`;
+        }
+
         const isBodyPresent = !['GET', 'HEAD'].includes(method);
+        if (isBodyPresent) {
+            headers['Content-Type'] = 'application/json;charset=utf-8';
+        }
 
         const response = await fetch(`${this.apiUrl}${path}`, {
             method: method,
-            headers: isBodyPresent ? { 'Content-Type': 'application/json;charset=utf-8' } : undefined,
+            headers: headers,
             body: isBodyPresent ? JSON.stringify(body) : undefined
         });
 
