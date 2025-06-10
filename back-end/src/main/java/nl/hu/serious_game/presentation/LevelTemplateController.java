@@ -2,12 +2,11 @@ package nl.hu.serious_game.presentation;
 
 import java.util.List;
 
-import nl.hu.serious_game.application.UserService;
-import nl.hu.serious_game.domain.User;
+import nl.hu.serious_game.application.aspect.RequireRole;
+import nl.hu.serious_game.domain.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,20 +26,14 @@ import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
 @RequestMapping("/templates")
 public class LevelTemplateController {
     private final LevelTemplateService levelTemplateService;
-    private final UserService userService;
 
     @Autowired
-    public LevelTemplateController(LevelTemplateService levelTemplateService, UserService userService) {
+    public LevelTemplateController(LevelTemplateService levelTemplateService) {
         this.levelTemplateService = levelTemplateService;
-        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<List<LevelTemplateDTO>> getAllLevels(Authentication authentication) {
-        User user = userService.getUser(authentication);
-        System.out.println(user.id());
-        System.out.println(user.role());
-
+    public ResponseEntity<List<LevelTemplateDTO>> getAllLevels() {
         return ResponseEntity.ok(
                 levelTemplateService.getAllGlobalLevels()
                         .stream()
@@ -50,6 +43,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<?> createLevelTemplate(@Validated @RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
         try {
             LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateCreateDTO);
@@ -60,6 +54,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("/{id}")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<?> updateLevelTemplate(@PathVariable long id, @Validated @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
         try {
             LevelTemplateDTO updatedTemplate = levelTemplateService.updateLevel(id, levelTemplateUpdateDTO);
@@ -71,6 +66,7 @@ public class LevelTemplateController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequireRole(role = UserRole.USER)
     public void deleteLevel(@PathVariable long id) {
         levelTemplateService.deleteLevel(id);
     }

@@ -1,5 +1,6 @@
 package nl.hu.serious_game.presentation;
 
+import nl.hu.serious_game.application.aspect.RequireRole;
 import nl.hu.serious_game.application.dto.in.JoinRaceDTO;
 import nl.hu.serious_game.application.dto.out.RaceSessionDTO;
 import nl.hu.serious_game.application.dto.out.RaceSessionUserDTO;
@@ -8,6 +9,7 @@ import nl.hu.serious_game.data.RaceSessionRepository;
 import nl.hu.serious_game.data.RaceSessionUserRepository;
 import nl.hu.serious_game.domain.RaceSession;
 import nl.hu.serious_game.domain.RaceSessionUser;
+import nl.hu.serious_game.domain.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

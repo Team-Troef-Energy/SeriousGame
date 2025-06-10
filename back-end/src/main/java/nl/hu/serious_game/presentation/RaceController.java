@@ -1,10 +1,12 @@
 package nl.hu.serious_game.presentation;
 
+import nl.hu.serious_game.application.aspect.RequireRole;
 import nl.hu.serious_game.application.dto.in.CreateRaceDTO;
 import nl.hu.serious_game.application.dto.out.LevelTemplateDTO;
 import nl.hu.serious_game.application.dto.out.RaceDTO;
 import nl.hu.serious_game.data.RaceRepository;
 import nl.hu.serious_game.domain.Race;
+import nl.hu.serious_game.domain.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ public class RaceController {
     }
 
     @PostMapping
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<RaceDTO> create(@Validated @RequestBody CreateRaceDTO createRaceDTO) {
         Race race = new Race(createRaceDTO.name(), createRaceDTO.userEmail(), List.of());
         race = this.raceRepository.save(race);
@@ -50,6 +53,7 @@ public class RaceController {
     }
 
     @DeleteMapping("/{id}")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<?> deleteRace(@PathVariable Long id) {
         if (this.raceRepository.findById(id).isPresent()) {
             this.raceRepository.deleteById(id);
@@ -60,6 +64,7 @@ public class RaceController {
     }
 
     @PutMapping("/{id}/name")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<RaceDTO> updateName(@PathVariable Long id, @RequestParam String name) {
         Optional<Race> raceOptional = this.raceRepository.findById(id);
         if (raceOptional.isEmpty()) {
