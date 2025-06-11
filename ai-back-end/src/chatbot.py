@@ -18,44 +18,50 @@ def get_data():
     # ontvang de data die doorgestuurd wordt
     data = request.get_json()
 
+    client = create_client()
+
     match data['location_request']:
         case "level":
-            response = chatbot(data)
+            response = chatbot(data, client)
         case "admin":
-            response = level_generation(data)
+            response = level_generation(data, client)
 
     return jsonify({"response": f"{response}".strip()})
 
-def chatbot(data: dict) -> str:
-    # opzetten vertaalmodellen
-    translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
-    translator_en_to_nl = pipeline("translation", model="Helsinki-NLP/opus-mt-en-nl")
+def create_client():
+    with open('ai-back-end/api_key.txt', 'r') as f:
+        key = f.read()
 
-    # filter de vraag uit de data
+    client = OpenAI(
+        base_url="https://api.studio.nebius.com/v1/",
+        api_key=key
+    )
+    return client
+
+def chatbot(data: dict, client) -> str:
+    # pak vraag uit de data
     question = data['inputMessage']
-    # zet vraag om naar engels
-    question_english = translator_nl_to_en(question)[0]['translation_text']
-    # maak de context met de data
+
+    # maak de context aan
     context = create_context(data)
 
-    # roep het model aan wat gebruikt wordt
-    generator = pipeline("text2text-generation", model="google/flan-t5-base")
-    # maak de prompt aan de hand van de vraag en de context
-    prompt = f"""
-Context:
-{context}
+    # vraag een response aan het model
+    response = client.chat.completions.create(
+            model="deepseek-ai/DeepSeek-V3-0324",
+            max_tokens=512,
+            temperature=0.3,
+            top_p=0.95,
+            messages=[
+                {"role": "system", "content": context},
+                {"role": "user", "content": question}
+            ]
+        )
 
-Question:
-{question_english}
-"""
-    # roep het model aan 
-    response = generator(prompt, max_length=50)[0]
-    response_english = response['generated_text']
+    # pak het antwoord uit de response
+    json_response = json.loads(response.to_json())
+    content = json_response['choices'][0]['message']['content']
 
-    # vertaal response terug naar nederlands
-    response_dutch = translator_en_to_nl(response_english)[0]['translation_text']
-
-    return response_dutch
+    return content
 
 def create_context(data: dict) -> str:
     """
@@ -91,13 +97,8 @@ current amount CO2: {dashboard['currentCO2']}\
     context = "\n".join(context_list_house)
     return context
 
-def level_generation(data: dict) -> str:
+def level_generation(data: dict, client) -> str:
     user_input = data['inputMessage']
-
-    # translator_nl_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-nl-en")
-    # user_input_english = translator_nl_to_en(user_input)[0]['translation_text']
-
-    # generator = pipeline("text2text-generation", model="google/flan-t5-large")
 
     full_prompt = f"""
 Convert the input into a JSON dictionary with the following structure:
@@ -109,15 +110,15 @@ Convert the input into a JSON dictionary with the following structure:
   "Level": {{
     "max_coins": <max_coins_amount>,
     "max_co2": <max_co2_amount>,
-    "start_time": "<start_time>",
+    "start_time": <start_time>,
     "end_time": <end_time>,
     "season": "<season>",
-    "cost_solar_panel": "<cost_solar_panel>",
-    "cost_battery": "<cost_battery>",
-    "cost_co2": "<cost_co2>",
-    "max_batteries_transformer": "<max_batteries_transformer>",
-    "has_congestion_transformer": "<has_congestion_transformer>",
-    "max_power_transformer": "<max_power_transformer>"
+    "cost_solar_panel": <cost_solar_panel>,
+    "cost_battery": <cost_battery>,
+    "cost_co2": <cost_co2>,
+    "max_batteries_transformer": <max_batteries_transformer>,
+    "has_congestion_transformer": <has_congestion_transformer>,
+    "max_power_transformer": <max_power_transformer>
   }}
 }}
 
@@ -128,17 +129,8 @@ Extract the number of houses and their attributes from the input. For any missin
 - SPRING for season.
 
 if there is no number of houses specified in the input, return an empty dictionary for the houses
-give the season in english and full caps
+give the season in english and full caps if the season is FALL, give back AUTUMN instead
 """
-    # response = generator(full_prompt, max_length=800, num_return_sequences=1)[0]
-
-    with open('ai-back-end/api_key.txt', 'r') as f:
-        key = f.read()
-
-    client = OpenAI(
-        base_url="https://api.studio.nebius.com/v1/",
-        api_key=key
-    )
 
     response = client.chat.completions.create(
         model="deepseek-ai/DeepSeek-V3-0324",
