@@ -87,19 +87,6 @@
           </div>
         </v-container>
       </v-card-text>
-
-      <div class="card-footer">
-        <v-col cols="12" class="d-flex justify-center">
-          <v-btn class="header-btn" color="red" @click="closeDialog">
-            Annuleren
-            <v-icon icon="mdi-cancel" end></v-icon>
-          </v-btn>
-          <v-btn class="header-btn" color="green" @click="submitChanges">
-            Toepassen
-            <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
-          </v-btn>
-        </v-col>
-      </div>
     </v-card>
   </v-dialog>
 </template>

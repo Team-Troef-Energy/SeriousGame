@@ -41,27 +41,38 @@
                 left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 50 + 'px',
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" @drop-item="handleDropItem($event, house)"
-              :hasElectricCar="house.hasElectricVehicle"
+               :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
               :hasBatteries="house.batteries.amount > 0" :solarpanels="house.solarpanels"
               :batteries="house.batteries" />
           </template>
-          <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
-            :currentCO2="dashboardData.currentCO2" :maxCO2="dashboardData.maxCO2"
+          <Dashboard
+            :coinsUsed="dashboardData.coinsUsed"
+            :maxCoins="dashboardData.maxCoins"
+            :currentCO2="dashboardData.currentCO2"
+            :maxCO2="dashboardData.maxCO2"
             :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
             :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
-            :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
-            :season="dashboardData.season" />
+            :objectiveStartTime="dashboardData.objectiveStartTime"
+            :objectiveEndTime="dashboardData.objectiveEndTime"
+            :season="dashboardData.season"
+          />
         </div>
         <GameSideBar :solarPanelCost="solarPanelCost" :batteryCost="batteryCost" />
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
-      <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
-        :transformers="transformers" @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
+      <PopupComponent
+        v-if="isPopupOpen"
+        :isOpen="isPopupOpen"
+        :popupProperties="popupProperties"
+        :transformers="transformers"
+        @update:isOpen="isPopupOpen = $event"
+        @submitChanges="submitChanges"
+      />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
 
       <button class="chat-toggle-button" @click="toggleChatWindow">
-        {{ chatWindowOpen ? 'Sluit Chat' : 'Open Chat' }}
+        <img src="/openchat.png" alt="Open chat">
       </button>
 
       <div v-if="chatWindowOpen" class="chat-window">
@@ -160,8 +171,8 @@ export default defineComponent({
     });
 
     const toggleChatWindow = async () => {
-      chatWindowOpen.value = !chatWindowOpen.value
-    }
+      chatWindowOpen.value = !chatWindowOpen.value;
+    };
 
     const handleChatBotInput = async () => {
       const data = {
@@ -175,24 +186,22 @@ export default defineComponent({
         location_request: "level"
       };
 
-      // Add user message
       messages.value.push({
-          text: chatbotInput.value,
-          sender: 'user'
+        text: chatbotInput.value,
+        sender: 'user'
       });
 
       chatbotInput.value = '';
 
       await pythonService.fetchMessage(data).then((response) => {
-        // Simulate bot response (replace with actual bot logic if needed)
         messages.value.push({
           text: `${response.response}`,
           sender: 'bot'
         });
-        }).catch((error) => {
-            console.error(error);
-        });
-    }
+      }).catch((error) => {
+        console.error(error);
+      });
+    };
 
     const generatePositions = (count: number, start: number): number[] => {
       const positions: number[] = [];
@@ -222,7 +231,7 @@ export default defineComponent({
       const factor = Math.max(widthFactor, heightFactor);
 
       return factor - factorCorrection;
-    }
+    };
 
     const getMaxHouseCurrent = computed(() => {
       let maxCurrent = 0;
@@ -261,8 +270,26 @@ export default defineComponent({
         house.solarpanels += 1;
       } else if (itemType === 'batteries') {
         house.batteries.amount += 1;
+      } else if (itemType === 'electricCar') {
+        house.hasElectricVehicle = true;
+      } else if (itemType === 'heatPump') {
+        house.hasHeatpump = true;
+      }
+
+      await submitChanges();
+    };
+
+    const handleRemoveItem = async ({ itemType, index }: { itemType: string; index?: number }, house: house) => {
+      if (itemType === 'solarPanels' && house.solarpanels > 0 && index !== undefined) {
+        house.solarpanels = Math.max(0, house.solarpanels - 1);
+      } else if (itemType === 'batteries' && house.batteries.amount > 0 && index !== undefined) {
+        house.batteries.amount = Math.max(0, house.batteries.amount - 1);
+      } else if (itemType === 'electricCar') {
+        house.hasElectricVehicle = false;
+      } else if (itemType === 'heatPump') {
+        house.hasHeatpump = false;
       } else {
-        console.error("Unknown item type:", itemType);
+        console.error("Unknown item type or invalid removal:", itemType);
         return;
       }
 
@@ -303,7 +330,7 @@ export default defineComponent({
 
     const submitChanges = async () => {
       try {
-        const data = {
+        const data: any = {
           transformers: transformers.value.map((transformer) => ({
             id: transformer.id,
             batteries: transformer.batteries.amount,
@@ -311,12 +338,12 @@ export default defineComponent({
               id: house.id,
               batteries: house.batteries.amount,
               solarpanels: house.solarpanels,
+              hasElectricVehicle: house.hasElectricVehicle,
+              hasHeatpump: house.hasHeatpump,
             })),
-          })),
+          }))
         };
         const response = await gameLevelService.fetchUpdateLevel(gameId, data);
-        // The response is not guaranteed to have the same structure as the initial level data
-        // So the houses are sorted by id to ensure the correct order is used
         response.hours[response.hours.length - 1].transformers.forEach((transformer: any) => {
           transformer.houses.sort((a: any, b: any) => a.id - b.id);
         });
@@ -383,15 +410,15 @@ export default defineComponent({
       const dy = y2 - y1;
       const length = Math.sqrt(dx * dx + dy * dy);
       if (length === 0) return { x1, y1, x2, y2 };
-      const offsetX = (dx / length) * margin;
-      const offsetY = (dy / length) * margin;
+      const unitX = dx / length;
+      const unitY = dy / length;
       return {
-        x1: x1 + offsetX,
-        y1: y1 + offsetY,
-        x2: x2 - offsetX,
-        y2: y2 - offsetY,
+        x1: x1 + unitX * margin,
+        y1: y1 + unitY * margin,
+        x2: x2 - unitX * margin,
+        y2: y2 - unitY * margin,
       };
-    }
+    };
 
     const navigateBackUrl = computed(() => {
       const referral = route.query.referral as string;
@@ -419,6 +446,7 @@ export default defineComponent({
       showHouseDetails,
       showTransformerDetails,
       handleDropItem,
+      handleRemoveItem,
       submitChanges,
       infoBoxVisible,
       infoBoxContents,
@@ -437,21 +465,15 @@ export default defineComponent({
 <style scoped>
 .chat-toggle-button {
   position: absolute;
-  top: 10px;
   right: calc(1% + 250px);
-  padding: 10px 20px;
-  background:
-          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
-  color: white;
-  border: 2px solid #4a4a4a;
-  border-radius: 4px;
+  margin-top: -5px;
+  border: none;
   cursor: pointer;
-  font-size: 16px;
   z-index: 1000;
 }
 
-.chat-toggle-button:hover {
-  background-color: #6e6e6e;
+.chat-toggle-button img {
+  width: 120px;
 }
 
 .chat-window {
@@ -460,8 +482,7 @@ export default defineComponent({
   top: 57px;
   width: 400px;
   height: 400px;
-  background:
-          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  background: linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
   border: 2px solid #4a4a4a;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -485,15 +506,14 @@ export default defineComponent({
 }
 
 .user-message {
-  background:
-          linear-gradient(rgba(82, 82, 82, 0.85), rgba(82, 82, 82, 0.85));
-  margin-left: auto; /* Align to right */
+  background: linear-gradient(rgba(82, 82, 82, 0.85), rgba(82, 82, 82, 0.85));
+  margin-left: auto;
   border-bottom-right-radius: 4px;
 }
 
 .bot-message {
   background-color: #8a8a8a;
-  align-self: flex-start; /* Align to left */
+  align-self: flex-start;
   border-bottom-left-radius: 4px;
 }
 
@@ -501,8 +521,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   padding: 10px;
-  background:
-          linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  background: linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
   border-top: 2px solid #4a4a4a;
 }
 
@@ -515,13 +534,12 @@ export default defineComponent({
 }
 
 .chat-input-container input::placeholder {
-  color: #FFF; /* Placeholder text color, e.g., light gray */
+  color: #FFF;
 }
 
 .send-button {
   padding: 8px 16px;
-  background:
-        linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
+  background: linear-gradient(rgba(120, 120, 120, 0.85), rgba(120, 120, 120, 0.85));
   color: white;
   border: 2px solid #4a4a4a;
   cursor: pointer;
@@ -541,6 +559,7 @@ export default defineComponent({
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
 .level {
   height: 94.3vh;
   min-width: 100%;
@@ -565,9 +584,7 @@ export default defineComponent({
   align-items: end;
   height: 100%;
   position: relative;
-  background:
-    linear-gradient(rgba(75, 74, 74, 0.282)),
-    url("/background.png");
+  background: linear-gradient(rgba(75, 74, 74, 0.282)), url("/background.png");
   background-size: cover, cover;
   background-blend-mode: normal;
   overflow-x: auto;
@@ -577,11 +594,9 @@ export default defineComponent({
   0% {
     background-position: 0% 50%, center;
   }
-
   50% {
     background-position: 100% 50%, center;
   }
-
   100% {
     background-position: 0% 50%, center;
   }
@@ -596,10 +611,12 @@ export default defineComponent({
   z-index: 1000;
 }
 
-#navigate-button {
+#navigate-button img {
   z-index: 1000;
+  width: 110px;
   position: absolute;
-  margin: 10px;
+  margin: 0 10px 10px 10px;
+  cursor: pointer;
 }
 
 .infoBox {
