@@ -107,7 +107,7 @@ import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { pythonService } from "../services/PythonService";
-import { house, transformer } from "../types";
+import { house, levelData, transformer } from "../types";
 
 export default defineComponent({
   name: "Level",
@@ -299,7 +299,7 @@ export default defineComponent({
       await submitChanges();
     };
 
-    const processDashboardData = (data: any) => {
+    const processDashboardData = (data: levelData) => {
       const lastHourData = data.hours[data.hours.length - 1];
       let totalConsumption = 0;
       let totalGreenProduction = 0;
@@ -325,8 +325,8 @@ export default defineComponent({
         maxCO2: data.objective.maxCO2,
         totalEnergyConsumption: totalConsumption,
         greenProducedEnergyPercentage: greenProducedEnergyPercentage,
-        objectiveStartTime: data.objective.startTime,
-        objectiveEndTime: data.objective.endTime,
+        objectiveStartTime: data.startTime,
+        objectiveEndTime: data.endTime,
         season: data.season,
       };
     };
