@@ -42,7 +42,6 @@
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" @drop-item="handleDropItem($event, house)"
               @remove-item="handleRemoveItem($event, house)" :hasElectricCar="house.hasElectricVehicle"
-              :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump"
               :hasSolarPanels="house.solarpanels > 0"
               :hasBatteries="house.batteries.amount > 0"
@@ -117,7 +116,7 @@ import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { pythonService } from "../services/PythonService";
-import { house, transformer } from "../types";
+import { house, levelData, transformer } from "../types";
 
 export default defineComponent({
   name: "Level",
@@ -309,7 +308,7 @@ export default defineComponent({
       await submitChanges();
     };
 
-    const processDashboardData = (data: any) => {
+    const processDashboardData = (data: levelData) => {
       const lastHourData = data.hours[data.hours.length - 1];
       let totalConsumption = 0;
       let totalGreenProduction = 0;
@@ -335,8 +334,8 @@ export default defineComponent({
         maxCO2: data.objective.maxCO2,
         totalEnergyConsumption: totalConsumption,
         greenProducedEnergyPercentage: greenProducedEnergyPercentage,
-        objectiveStartTime: data.objective.startTime,
-        objectiveEndTime: data.objective.endTime,
+        objectiveStartTime: data.startTime,
+        objectiveEndTime: data.endTime,
         season: data.season,
       };
     };
