@@ -262,11 +262,6 @@ export default defineComponent({
       popupProperties.value = new PopupProperties(transformer, solarPanelCost.value, batteryCost.value);
     };
 
-    const handleDragItem = (itemType: string) => {
-      // Optional: Add UI feedback or prepare state for dragging
-      console.log(`Dragging item: ${itemType}`);
-    };
-
     const handleDropItem = async (itemType: string, house: house) => {
       const coinsUsed = dashboardData.value.coinsUsed;
       const maxCoins = dashboardData.value.maxCoins;
@@ -457,7 +452,6 @@ export default defineComponent({
       getCumulativeHouseIndex,
       showHouseDetails,
       showTransformerDetails,
-      handleDragItem,
       handleDropItem,
       handleRemoveItem,
       submitChanges,
