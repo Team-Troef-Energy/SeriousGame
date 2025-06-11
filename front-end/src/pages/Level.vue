@@ -2,7 +2,7 @@
   <div class="level container">
     <div class="level-container">
 
-      <a href="/levelSelect" id="navigate-button">
+      <a :href="navigateBackUrl" id="navigate-button">
         <img src="/verlaat.png" alt="Something">
       </a>
 
@@ -10,82 +10,52 @@
         <div ref="gameCanvas" class="game-canvas">
           <div class="connection-line-container">
             <template v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformerIndex">
-              <ConnectionLine
-                v-for="(house, houseIndex) in transformer.houses"
-                :key="'connection-' + transformerIndex + '-' + houseIndex"
-                v-bind="coordinatesWithMargin(
-                  (transformerPositions[transformerIndex] % 10) * 150 + 800 + (houseIndex * 20),
-                  Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5),
-                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 120,
-                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60,
-                  60
-                )"
-                :hasCongestion="house.hasCongestion"
-                :is-production="house.current.direction === 'PRODUCTION'"
-                :current="house.current.amount"
-                :maxCurrent="house.maxCurrent"
-                :maxHouseCurrent="getMaxHouseCurrent"
-                @show-info-box="showInfoBox"
-                @hide-info-box="hideInfoBox"
-              />
+              <ConnectionLine v-for="(house, houseIndex) in transformer.houses"
+                :key="'connection-' + transformerIndex + '-' + houseIndex" v-bind="coordinatesWithMargin(
+                  // Transformer X
+                  (transformerPositions[transformerIndex] % 10) * 150 + 800 + (houseIndex * 20), // <--- controls horizontal spacing
+                  // Transformer Y
+                  Math.floor(transformerPositions[transformerIndex] / 10) * 100 * getResolutionFactor() + (houseIndex * -5), // <--- controls vertical spacing
+                  // House X
+                  (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 240 + 120, // <--- controls horizontal spacing
+                  // House Y
+                  Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 80 * getResolutionFactor() + 60, // <--- controls vertical spacing
+                  60 // margin
+                )" :hasCongestion="house.hasCongestion" :is-production="house.current.direction === 'PRODUCTION'"
+                :current="house.current.amount" :maxCurrent="house.maxCurrent" :maxHouseCurrent="getMaxHouseCurrent"
+                @show-info-box="showInfoBox" @hide-info-box="hideInfoBox" />
             </template>
           </div>
           <template v-for="(transformer, transformerIndex) in transformers" :key="'transformer-' + transformerIndex">
-            <Transformer
-              :style="{
-                position: 'absolute',
-                left: (transformerPositions[transformerIndex] % 10) * 150 + 720 + 'px',
-                top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 75 + 'px',
-              }"
-              @click="showTransformerDetails(transformer)"
-              :hasBatteries="transformer.batteries.amount > 0"
-            />
-            <House
-              v-for="(house, houseIndex) in transformer.houses"
+            <Transformer :style="{
+              position: 'absolute',
+              left: (transformerPositions[transformerIndex] % 10) * 150 + 720 + 'px',
+              top: Math.floor(transformerPositions[transformerIndex] / 10) * 80 * getResolutionFactor() - 75 + 'px',
+            }" @click="showTransformerDetails(transformer)" :hasBatteries="transformer.batteries.amount > 0" />
+            <House v-for="(house, houseIndex) in transformer.houses"
               :key="'house-' + (houseIndex + transformers.slice(0, transformerIndex).reduce((acc, t) => acc + t.houses.length, 0))"
               :style="{
                 position: 'absolute',
                 left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 50 + 'px',
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
-              }"
-              @click="showHouseDetails(house)"
-              @drop-item="handleDropItem($event, house)"
-              @remove-item="handleRemoveItem($event, house)"
-              :hasElectricCar="house.hasElectricVehicle"
-              :hasHeatPump="house.hasHeatpump"
-              :hasSolarPanels="house.solarpanels > 0"
-              :hasBatteries="house.batteries.amount > 0"
-              :solarpanels="house.solarpanels"
-              :batteries="house.batteries"
-            />
+              }" @click="showHouseDetails(house)" @drop-item="handleDropItem($event, house)"
+              @remove-item="handleRemoveItem($event, house)" :hasElectricCar="house.hasElectricVehicle"
+              :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
+              :hasBatteries="house.batteries.amount > 0" :solarpanels="house.solarpanels"
+              :batteries="house.batteries" />
           </template>
-          <Dashboard
-            :coinsUsed="dashboardData.coinsUsed"
-            :maxCoins="dashboardData.maxCoins"
-            :currentCO2="dashboardData.currentCO2"
-            :maxCO2="dashboardData.maxCO2"
+          <Dashboard :coinsUsed="dashboardData.coinsUsed" :maxCoins="dashboardData.maxCoins"
+            :currentCO2="dashboardData.currentCO2" :maxCO2="dashboardData.maxCO2"
             :totalEnergyConsumption="dashboardData.totalEnergyConsumption"
             :greenProducedEnergyPercentage="dashboardData.greenProducedEnergyPercentage"
-            :objectiveStartTime="dashboardData.objectiveStartTime"
-            :objectiveEndTime="dashboardData.objectiveEndTime"
-            :season="dashboardData.season"
-          />
+            :objectiveStartTime="dashboardData.objectiveStartTime" :objectiveEndTime="dashboardData.objectiveEndTime"
+            :season="dashboardData.season" />
         </div>
-        <GameSideBar
-          :solarPanelCost="solarPanelCost"
-          :batteryCost="batteryCost"
-          @drag-item="handleDragItem"
-        />
+        <GameSideBar :solarPanelCost="solarPanelCost" :batteryCost="batteryCost" @drag-item="handleDragItem" />
       </div>
       <div v-if="infoBoxVisible" :style="infoBoxStyle" class="infoBox" v-html="infoBoxContents"></div>
-      <PopupComponent
-        v-if="isPopupOpen"
-        :isOpen="isPopupOpen"
-        :popupProperties="popupProperties"
-        :transformers="transformers"
-        @update:isOpen="isPopupOpen = $event"
-        @submitChanges="submitChanges"
-      />
+      <PopupComponent v-if="isPopupOpen" :isOpen="isPopupOpen" :popupProperties="popupProperties"
+        :transformers="transformers" @update:isOpen="isPopupOpen = $event" @submitChanges="submitChanges" />
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
 
       <button class="chat-toggle-button" @click="toggleChatWindow">
@@ -94,22 +64,15 @@
 
       <div v-if="chatWindowOpen" class="chat-window">
         <div class="chat-messages">
-          <div
-            v-for="(message, index) in messages"
-            :key="index"
-            :class="['message', message.sender === 'user' ? 'user-message' : 'bot-message']"
-          >
+          <div v-for="(message, index) in messages" :key="index"
+            :class="['message', message.sender === 'user' ? 'user-message' : 'bot-message']">
             {{ message.text }}
           </div>
         </div>
         <div class="chat-input-container">
           <label for="chat-bot-input" class="sr-only">Praat met de chatbot</label>
-          <input
-            v-model="chatbotInput"
-            id="chat-bot-input"
-            placeholder="Typ je bericht..."
-            @keydown.enter.prevent="handleChatBotInput"
-          />
+          <input v-model="chatbotInput" id="chat-bot-input" placeholder="Typ je bericht..."
+            @keydown.enter.prevent="handleChatBotInput" />
           <button @click="handleChatBotInput" class="send-button">
             Verstuur
           </button>
@@ -325,7 +288,7 @@ export default defineComponent({
       await submitChanges();
     };
 
-    const processDashboardData = (data: any) => {
+    const processDashboardData = (data: levelData) => {
       const lastHourData = data.hours[data.hours.length - 1];
       let totalConsumption = 0;
       let totalGreenProduction = 0;
@@ -351,8 +314,8 @@ export default defineComponent({
         maxCO2: data.objective.maxCO2,
         totalEnergyConsumption: totalConsumption,
         greenProducedEnergyPercentage: greenProducedEnergyPercentage,
-        objectiveStartTime: data.objective.startTime,
-        objectiveEndTime: data.objective.endTime,
+        objectiveStartTime: data.startTime,
+        objectiveEndTime: data.endTime,
         season: data.season,
       };
     };
@@ -624,9 +587,11 @@ export default defineComponent({
   0% {
     background-position: 0% 50%, center;
   }
+
   50% {
     background-position: 100% 50%, center;
   }
+
   100% {
     background-position: 0% 50%, center;
   }
