@@ -9,28 +9,18 @@
     <img class="house-image" src="/house.png" alt="House" />
     <div class="add-ons">
       <img
-        v-for="(panel, index) in solarpanels"
+        v-for="index in solarpanels"
         :key="'solar-' + index"
         src="/solarpanel.png"
         alt="Solar Panel"
         class="solar-panel"
-        :style="{
-          left: (1 + (index % 4) * 3) + 'rem',
-          top: (index < 4 ? '1rem' : '4rem'),
-          right: ((panel))
-        }"
-        draggable="true"
-        @dragstart="handleDragStart('solarPanels', index)"
       />
       <img
-        v-for="(battery, index) in batteries.amount"
+        v-for="index in batteries.amount"
         :key="'battery-' + index"
         src="/battery.png"
         alt="Battery"
         class="battery"
-        :style="{ left: (1 + index * 3) + 'rem', bottom: '1rem', top: (battery) }"
-        draggable="true"
-        @dragstart="handleDragStart('batteries', index)"
       />
     </div>
     <img
@@ -38,16 +28,12 @@
       class="electric-car"
       src="/car.png"
       alt="Auto"
-      draggable="true"
-      @dragstart="handleDragStart('electricCar')"
     />
     <img
       v-if="hasHeatPump"
       class="heat-pump"
       src="/heat-pump.png"
       alt="Heat Pump"
-      draggable="true"
-      @dragstart="handleDragStart('heatPump')"
     />
   </div>
 </template>
@@ -82,8 +68,11 @@ export default defineComponent({
       default: () => ({ amount: 0 }),
     },
   },
-  emits: ["drop-item", "remove-item"],
+  emits: ["drop-item"],
   setup(props, { emit }) {
+
+    props;
+    
     const handleDragOver = (event: DragEvent) => {
       event.preventDefault();
       if (event.dataTransfer) {
@@ -107,18 +96,11 @@ export default defineComponent({
       }
     };
 
-    const handleDragStart = (itemType: string, index?: number) => {
-      const x: any = event;
-      x?.dataTransfer?.setData("text/plain", itemType);
-      emit("remove-item", { itemType, index });
-    };
-
     return {
       handleDragOver,
       handleDragEnter,
       handleDragLeave,
       handleDrop,
-      handleDragStart,
     };
   },
 });
@@ -151,21 +133,26 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   z-index: 2;
 }
 
-.solar-panel {
-  width: 3rem;
-  height: 3rem;
-  position: absolute;
-  cursor: move;
-}
-
+.solar-panel,
 .battery {
   width: 2rem;
   height: 2rem;
-  position: absolute;
-  cursor: move;
+}
+
+.solar-panel {
+  transform: rotate(27deg);
+}
+
+.battery {
+  transform: rotate(14deg);
 }
 
 .electric-car {
@@ -175,15 +162,14 @@ export default defineComponent({
   height: 5rem;
   transform: translate(-50%, -50%);
   z-index: 1;
-  cursor: move;
 }
 
 .heat-pump {
   position: absolute;
-  top: 80%;
-  left: 75%;
-  width: 4rem;
+  top: 66%;
+  left: 53%;
+  width: 5rem;
+  transform: rotate(0deg);
   z-index: 2;
-  cursor: move;
 }
 </style>

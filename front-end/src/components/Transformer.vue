@@ -18,7 +18,8 @@ export default {
 
 <style scoped>
 .transformer {
-  height: 13rem;
+  width: 18rem;
+  height: 9rem;
 }
 
 img .transformer {
