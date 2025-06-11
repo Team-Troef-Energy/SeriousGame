@@ -133,7 +133,7 @@ import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { pythonService } from "../services/PythonService";
-import { house, levelData, transformer } from "../types";
+import { house, transformer } from "../types";
 
 export default defineComponent({
   name: "Level",

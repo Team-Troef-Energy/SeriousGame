@@ -16,7 +16,8 @@
         class="solar-panel"
         :style="{
           left: (1 + (index % 4) * 3) + 'rem',
-          top: (index < 4 ? '1rem' : '4rem')
+          top: (index < 4 ? '1rem' : '4rem'),
+          right: ((panel))
         }"
         draggable="true"
         @dragstart="handleDragStart('solarPanels', index)"
@@ -27,7 +28,7 @@
         src="/battery.png"
         alt="Battery"
         class="battery"
-        :style="{ left: (1 + index * 3) + 'rem', bottom: '1rem' }"
+        :style="{ left: (1 + index * 3) + 'rem', bottom: '1rem', top: (battery) }"
         draggable="true"
         @dragstart="handleDragStart('batteries', index)"
       />
