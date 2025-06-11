@@ -19,7 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
 
@@ -58,7 +63,8 @@ public class RaceSessionController {
 
         var session = this.raceSessionRepository.save(new RaceSession(
                 raceOptional.get(),
-                joinCode
+                joinCode,
+                Instant.now().plus(1, ChronoUnit.HOURS)
         ));
 
         return ResponseEntity.ok(RaceSessionDTO.fromEntity(session));
@@ -71,6 +77,10 @@ public class RaceSessionController {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "RaceSession with ID %s is not found".formatted(sessionId))).build();
         }
 
+        if (Instant.now().isAfter(sessionOptional.get().getExpiration())) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(RaceSessionDTO.fromEntity(sessionOptional.get()));
     }
 
@@ -81,6 +91,10 @@ public class RaceSessionController {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "RaceSession with joincode %s is not found".formatted(joinCode))).build();
         }
 
+        if (Instant.now().isAfter(sessionOptional.get().getExpiration())) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(RaceSessionDTO.fromEntity(sessionOptional.get()));
     }
 
@@ -89,6 +103,10 @@ public class RaceSessionController {
         var sessionOptional = this.raceSessionRepository.findById(sessionId);
         if (sessionOptional.isEmpty()) {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "RaceSession with ID %s is not found".formatted(sessionId))).build();
+        }
+
+        if (Instant.now().isAfter(sessionOptional.get().getExpiration())) {
+            return ResponseEntity.notFound().build();
         }
 
         this.raceSessionRepository.delete(sessionOptional.get());
@@ -102,17 +120,25 @@ public class RaceSessionController {
             return ResponseEntity.notFound().build();
         }
 
+        if (Instant.now().isAfter(sessionOptional.get().getExpiration())) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(sessionOptional.get().getRace().getId().equals(raceId));
     }
 
     @PostMapping("/join")
     public ResponseEntity<RaceSessionUserDTO> joinSession(@Validated @RequestBody JoinRaceDTO joinRaceDTO) {
-        Optional<RaceSession> raceSessionOptional = this.raceSessionRepository.findByJoinCode(joinRaceDTO.joinCode());
-        if (raceSessionOptional.isEmpty()) {
+        Optional<RaceSession> sessionOptional = this.raceSessionRepository.findByJoinCode(joinRaceDTO.joinCode());
+        if (sessionOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        RaceSession raceSession = raceSessionOptional.get();
+        if (Instant.now().isAfter(sessionOptional.get().getExpiration())) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RaceSession raceSession = sessionOptional.get();
         Random random = new Random();
         byte[] tokenData = new byte[20];
         random.nextBytes(tokenData);
