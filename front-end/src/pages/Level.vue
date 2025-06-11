@@ -107,7 +107,7 @@ import Transformer from "../components/Transformer.vue";
 import { PopupProperties } from "../objects/PopupProperties";
 import { gameLevelService } from "../services/game/GameLevelService";
 import { pythonService } from "../services/PythonService";
-import { house, levelData, transformer } from "../types";
+import { house, transformer } from "../types";
 
 export default defineComponent({
   name: "Level",
@@ -253,6 +253,11 @@ export default defineComponent({
       popupProperties.value = new PopupProperties(transformer, solarPanelCost.value, batteryCost.value);
     };
 
+    const handleDragItem = (itemType: string) => {
+      // Optional: Add UI feedback or prepare state for dragging
+      console.log(`Dragging item: ${itemType}`);
+    };
+
     const handleDropItem = async (itemType: string, house: house) => {
       const coinsUsed = dashboardData.value.coinsUsed;
       const maxCoins = dashboardData.value.maxCoins;
@@ -294,7 +299,7 @@ export default defineComponent({
       await submitChanges();
     };
 
-    const processDashboardData = (data: levelData) => {
+    const processDashboardData = (data: any) => {
       const lastHourData = data.hours[data.hours.length - 1];
       let totalConsumption = 0;
       let totalGreenProduction = 0;
@@ -320,8 +325,8 @@ export default defineComponent({
         maxCO2: data.objective.maxCO2,
         totalEnergyConsumption: totalConsumption,
         greenProducedEnergyPercentage: greenProducedEnergyPercentage,
-        objectiveStartTime: data.startTime,
-        objectiveEndTime: data.endTime,
+        objectiveStartTime: data.objective.startTime,
+        objectiveEndTime: data.objective.endTime,
         season: data.season,
       };
     };
@@ -443,6 +448,7 @@ export default defineComponent({
       getCumulativeHouseIndex,
       showHouseDetails,
       showTransformerDetails,
+      handleDragItem,
       handleDropItem,
       handleRemoveItem,
       submitChanges,
