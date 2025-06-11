@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from transformers import pipeline
 import json
 from openai import OpenAI
 
