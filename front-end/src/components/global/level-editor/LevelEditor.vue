@@ -188,8 +188,6 @@ export default defineComponent({
                 max_power_transformer: 'transformers.0.congestion.maxCurrent'
             };
 
-            console.log(generated_content)
-
             for (const key of Object.keys(base_values)) {
                 if (generated_content.Level[key] !== base_values[key]){
                     // get the path
