@@ -41,7 +41,6 @@
                 left: (housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] % 10) * 220 + 50 + 'px',
                 top: Math.floor(housePositions[getCumulativeHouseIndex(transformerIndex, houseIndex)] / 10) * 90 * getResolutionFactor() + 'px',
               }" @click="showHouseDetails(house)" @drop-item="handleDropItem($event, house)"
-              @remove-item="handleRemoveItem($event, house)" :hasElectricCar="house.hasElectricVehicle"
               :hasElectricCar="house.hasElectricVehicle"
               :hasHeatPump="house.hasHeatpump" :hasSolarPanels="house.solarpanels > 0"
               :hasBatteries="house.batteries.amount > 0" :solarpanels="house.solarpanels"
