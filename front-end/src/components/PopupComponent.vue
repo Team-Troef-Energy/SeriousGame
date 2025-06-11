@@ -61,8 +61,11 @@
           <!-- Zonnepanelen -->
           <div v-if="properties.type !== 'transformator'" class="section solar-section mt-4">
             <v-row class="align-center">
-              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ properties.solarPanelCost
-              }})</v-col>
+              <v-col cols="6" class="text-left"><strong>Zonnepanelen</strong></v-col>
+              <v-col cols="4">
+                <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
+                <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
+              </v-col>
               <v-col cols="2" class="text-end highlight">{{ properties.solarPanels }}</v-col>
             </v-row>
           </div>
@@ -70,7 +73,11 @@
           <!-- Accu's -->
           <div class="section battery-section mt-4">
             <v-row class="align-center">
-              <v-col cols="6" class="text-center"><strong>Accu’s</strong> (💰{{ properties.batteries.cost }})</v-col>
+              <v-col cols="6" class="text-left"><strong>Accu’s</strong></v-col>
+              <v-col cols="4">
+                <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
+                <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
+              </v-col>
               <v-col cols="2" class="text-end highlight">{{ properties.batteries.amount }}</v-col>
             </v-row>
             <v-row>
@@ -311,6 +318,10 @@ export default defineComponent({
 .details-section {
   background-color: #fff3e0;
   /* Lichtoranje */
+}
+
+.text-left {
+  text-align: left;
 }
 
 .solar-section {
