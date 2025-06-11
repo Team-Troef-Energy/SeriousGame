@@ -7,10 +7,7 @@
   >
     <img :src="imageSrc" :alt="label" class="item-image" />
     <div class="item-label">{{ label }}</div>
-    <div class="item-cost">
-      <img class="coin" src="/coin.png" alt="Coin" />
-      {{ cost }}
-    </div>
+    <div class="item-cost"> <img class="coin" src="/coin.png" alt="Coin"> {{ cost }}</div>
   </div>
 </template>
 
@@ -37,14 +34,12 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["drag-item"],
-  setup(props, { emit }) {
+  setup(props) {
     const handleDragStart = (event: any) => {
       if (event.dataTransfer) {
         event.dataTransfer.setData("text/plain", props.itemType);
         event.dataTransfer.effectAllowed = "move";
         event.target.classList.add("dragging");
-        emit("drag-item", props.itemType);
       }
     };
 
