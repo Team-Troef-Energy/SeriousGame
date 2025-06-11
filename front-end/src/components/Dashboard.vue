@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="slot">
-      <h3 class="slot-title">Beschikbare munten:</h3>
+      Beschikbare munten:
       <div class="slot-content">
         <img src="/coin.png" class="coin" alt="Coin">
         <span>{{ coinsUsed }}/{{ maxCoins }}</span>
@@ -115,7 +115,7 @@ export default defineComponent({
 .dashboard-container {
   height: 20vh;
   width: 100%;
-  background-color: #39210a67;
+  background-color: #00000037;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   padding: 4px 10px;
