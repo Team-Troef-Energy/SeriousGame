@@ -139,10 +139,85 @@ export default defineComponent({
             };
 
             await pythonService.fetchMessage(data).then((response: any) => {
-                promptOutput.value = response.response
+                // the response is in 'python' code which doesnt work in TypeScript so we have to change the ' to " and lower the False and True
+                const fixed_response = response.response.replace(/'/g, '"')
+                                                        .replace(/\bFalse\b/g, 'false')
+                                                        .replace(/\bTrue\b/g, 'true');
+                // now we can parse to JSON
+                const generated_content = JSON.parse(fixed_response)
+                // if there are 0 houses skip the generation of houses
+                if (!(Object.keys(generated_content.Houses).length == 0)) {
+                    generate_houses(generated_content);
+                }
+                generateLevelTemplate(generated_content)
             }).catch((error: any) => {
                 console.error(error);
-            });
+            })
+        }
+
+        const generateLevelTemplate = async (generated_content: any) => {
+            // base values of inputfields
+            const base_values: { [key: string]: number | string | boolean}  = {
+                "max_co2": 0,
+                "max_coins": 0,
+                "start_time": 0,
+                "end_time": 0,
+                "season": "SPRING",
+                "cost_solar_panel": 0,
+                "cost_battery": 0,
+                "cost_co2": 0,
+                "max_batteries_transformer": 0,
+                "has_congestion_transformer": false,
+                "max_power_transformer": 0
+            }
+
+            // path in the levelTemplate for navigation
+            const pathMap: Record<string, string> = {
+                max_co2: 'objective.maxCO2',
+                max_coins: 'objective.maxCoins',
+                start_time: 'startTime',
+                end_time: 'endTime',
+                season: 'season',
+                cost_solar_panel: 'cost.solarPanelCost',
+                cost_battery: 'cost.batteryCost',
+                cost_co2: 'cost.co2Cost',
+                max_batteries_transformer: 'transformers.0.maxBatteryCount',
+                has_congestion_transformer: 'transformers.0.congestion.hasCongestion',
+                max_power_transformer: 'transformers.0.congestion.maxCurrent'
+            };
+
+            for (const key of Object.keys(base_values)) {
+                if (generated_content.Level[key] !== base_values[key]){
+                    // get the path
+                    const keys = pathMap[key].split('.');
+                    let current: any = levelTemplate.value;
+
+                    // follow the path
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        current = current[keys[i]];
+                    }
+                    // change the value
+                    current[keys[keys.length - 1]] = generated_content.Level[key];
+                }
+            }
+        }
+
+        const generate_houses = async (generated_content: any) => {
+            // for every house in the generated content add a house to the list
+            Object.keys(generated_content.Houses).forEach((houseId) => {
+                const house = generated_content.Houses[houseId];
+                levelTemplate.value.transformers[0].houses.push({
+                    houseNumber: levelTemplate.value.transformers[0].houses.length + 1,
+                    congestion: {
+                        hasCongestion: house.has_congestion,
+                        maxCurrent: house.max_power
+                    },
+                    hasHeatPump: house.has_heatpump,
+                    hasElectricVehicle: house.has_car,
+                    maxBatteries: house.max_batteries,
+                    maxSolarPanels: house.max_solar_panels
+                })
+            })
         }
 
         const fetchAllLevels = async () => {
@@ -357,6 +432,8 @@ export default defineComponent({
         return {
             userInput,
             handleAiGeneration,
+            generate_houses,
+            generateLevelTemplate,
             promptOutput,
             levelTemplate,
             updateHouseConfiguration,
