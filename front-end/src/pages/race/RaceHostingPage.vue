@@ -33,29 +33,20 @@
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import TextModal from '../../components/global/modals/TextModal.vue';
+import { useTextModal } from '../../components/global/modals/UseTextModal';
 import RaceUser from '../../components/race/RaceUser.vue';
 import router from '../../router/Router';
 import { raceSessionService } from '../../services/game/RaceSessionService';
-import { textModal } from '../../types/global/modals/TextModal';
 import { raceUser } from '../../types/race/RaceUser';
+import { useRaceAccessGuard } from './RaceAccessGuard';
 
 export default defineComponent({
     name: 'RaceHostingPage',
     components: { TextModal, RaceUser },
     setup() {
-        let isTextModalVisible = ref(false)
-
-        let textModalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
-        });
-
-        const showModal = (header: string, body: string) => {
-            textModalContent.value.header = header;
-            textModalContent.value.body = body;
-            isTextModalVisible.value = true;
-        };
-
+        useRaceAccessGuard();
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
+        
         const route = useRoute();
         const raceId = Number(route.params.raceId);
         const sessionId = Number(route.params.sessionId);
@@ -90,8 +81,8 @@ export default defineComponent({
                 });
         }
 
-        onMounted(() => {
-            raceSessionService.fetchSessionById(sessionId)
+        onMounted(async () => {
+            await raceSessionService.fetchSessionById(sessionId)
                 .then((response) => {
                     raceName.value = response.race.name;
                     joinCode.value = response.joinCode;
@@ -101,7 +92,7 @@ export default defineComponent({
                     console.error(error);
                 });
 
-            raceSessionService.checkIfSessionCorrelatesWithRace(raceId, sessionId)
+            await raceSessionService.checkIfSessionCorrelatesWithRace(raceId, sessionId)
                 .catch((error) => {
                     showModal('Error', 'De gemaakte race sessie hoort niet bij deze race');
                     console.error(error);

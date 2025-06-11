@@ -102,15 +102,16 @@ export default defineComponent({
             }, 100);
         };
 
-        const handleSessionLeave = () => {
+        const handleSessionLeave = async () => {
             const raceSessionUser = raceSessionStorageService.getSession();
             let isSessionActive = true;
 
             if (!raceSessionUser) {
+                raceSessionStorageService.clearSession();
                 return handleSessionLeaveError('Er is iets verkeerd gegaan met het inladen van je lokale race sessie gegevens.');
             }
 
-            raceSessionService.fetchSessionByJoinCode(raceSessionUser.joinCode).catch(() => {
+            await raceSessionService.fetchSessionByJoinCode(raceSessionUser.joinCode).catch(() => {
                 isSessionActive = false;
             });
 
@@ -126,6 +127,7 @@ export default defineComponent({
                     window.location.reload();
                 })
                 .catch((error) => {
+                    raceSessionStorageService.clearSession();
                     handleSessionLeaveError('Er is iets verkeerd gegaan met het verlaten van de race. Probeer het later opnieuw.');
                     console.error('Error leaving race session:', error);
                 });

@@ -9,7 +9,7 @@ class HTTPRequestManager {
         this.apiUrl = {
             "localhost": 'http://localhost:8080',
             "dev.troefgame.jonaqhan.nl": "https://dev.troefgame.jonaqhan.nl/backend",
-            "troefgame.duckdns.org": "http://troefgame.duckdns.org/backend",
+            "troefgame.duckdns.org": "https://troefgame.duckdns.org/backend",
         }[window.location.hostname] || null; // Hostname does not include port
 
         // Doesn't work, kept for future reference
@@ -46,7 +46,12 @@ class HTTPRequestManager {
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const error = Object.assign(new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`), {
+                status: response.status,
+                body: errorText
+            });
+
+            throw error;
         }
 
         return hasJsonResponse ? response.json() : response;

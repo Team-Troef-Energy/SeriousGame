@@ -56,18 +56,23 @@ export default defineComponent({
         const permission = ref(false);
         const email = ref('');
         const password = ref('');
+        const noPermissionMessage = 'Je moet akkoord gaan met de voorwaarden.';
+
+        const goToHomePage = () => {
+            window.location.assign('/');
+        };
 
         function handleRegister(e: any) {
             e.preventDefault();
 
             if (!permission.value) {
-                window.alert('You have to check permission.');
+                window.alert(noPermissionMessage);
                 return;
             }
 
             authenticationService.signUpEmailAndPassword(email.value, password.value)
                 .then(() => {
-                    window.location.assign("/login");
+                    goToHomePage();
                 })
                 .catch((error: any) => {
                     window.alert(error);
@@ -78,12 +83,13 @@ export default defineComponent({
             e.preventDefault();
 
             if (!permission.value) {
-                window.alert('You have to check permission.');
+                window.alert(noPermissionMessage);
                 return;
             }
 
             try {
                 await authenticationService.registerWithGoogle();
+                goToHomePage();
             } catch (error) {
                 window.alert(error);
             }
@@ -93,13 +99,13 @@ export default defineComponent({
             e.preventDefault();
 
             if (!permission.value) {
-                window.alert('You have to check permission.');
+                window.alert(noPermissionMessage);
                 return;
             }
 
             try {
                 await authenticationService.registerWithGitHub();
-                window.location.reload();
+                goToHomePage();
             } catch (error) {
                 window.alert(error);
             }

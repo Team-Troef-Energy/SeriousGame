@@ -1,32 +1,46 @@
 <template>
   <div class="dashboard-container">
     <div class="slot">
-      <div>
-        Huidige munten gebruik: {{ coinsUsed }}
-      </div>
-      <div class="underline">
-        Max. aantal munten: {{ maxCoins }}
-      </div>
-    </div>
-    <div class="slot">
-      <div>
-        Huidige CO2-uitstoot: {{ currentCO2.toFixed(2) }} kg
-      </div>
-      <div class="underline">
-        Max. CO2-uitstoot: {{ maxCO2.toFixed(2) }} kg
+      Beschikbare munten:
+      <div class="slot-content">
+        <img src="/coin.png" class="coin" alt="Coin">
+        <span>{{ coinsUsed }}/{{ maxCoins }}</span>
       </div>
     </div>
     <div class="slot">
-      Totale energieconsumptie: {{ totalEnergyConsumption.toFixed(2) }} kWh
+      CO2-uistoot: 
+      <div class="slot-content">
+        <img class="cloud-icon" src="/cloud.png" alt="Cloud">
+        {{ currentCO2.toFixed(2) }} kg - {{ maxCO2.toFixed(2) }} kg
+      </div>
     </div>
     <div class="slot">
-      Groene geproduceerde energiepercentage: {{ greenProducedEnergyPercentage.toFixed(2) }}%
+      Totale energieconsumptie: 
+      <div class="slot-content">
+        <img class="energy-icon" src="/lightning.png" alt="Icon">
+        {{ totalEnergyConsumption.toFixed(2) }} kWh
+      </div>
     </div>
     <div class="slot">
-      Start- en eindtijd: {{ objectiveStartTime }}h - {{ objectiveEndTime }}h
+      Groen geproduceerde energie: 
+      <div class="slot-content">
+        <img class="energy-icon" src="/green_electricity.png" alt="Icon">
+        {{ greenProducedEnergyPercentage.toFixed(2) }}%
+      </div>
     </div>
     <div class="slot">
-      Seizoen: {{ season }}
+      Start- en eindtijd:
+      <div class="slot-content">
+        <img src="/clock.png" alt="Clock" class="clock-icon">
+        {{ objectiveStartTime }}:00 - {{ objectiveEndTime }}:00
+      </div>
+    </div>
+    <div class="slot">
+      Seizoen: 
+      <div class="slot-content">
+        <img class="season-icon" :src="`/${getSeasonIcon(season)}`" alt="Icon">
+        {{ translateSeason(season) }}
+      </div>
     </div>
   </div>
 </template>
@@ -74,6 +88,26 @@ export default defineComponent({
       required: true,
     },
   },
+  methods: {
+    translateSeason(season: string): string {
+      switch (season.toLowerCase()) {
+        case 'summer': return 'Zomer';
+        case 'winter': return 'Winter';
+        case 'spring': return 'Lente';
+        case 'fall': return 'Herfst';
+        default: return season;
+      }
+    },
+    getSeasonIcon(season: string): string {
+      switch (season.toLowerCase()) {
+        case 'summer': return 'sun.png';
+        case 'winter': return 'snowflake.png';
+        case 'spring': return 'leaf.png';
+        case 'fall': return 'orange_leaf.png';
+        default: return season;
+      }
+    }
+  }
 });
 </script>
 
@@ -81,21 +115,50 @@ export default defineComponent({
 .dashboard-container {
   height: 20vh;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  background-color: rgba(82, 81, 81, 0.384);
+  background-color: #00000037;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 4px 10px;
 }
 
 .slot {
-  height: 100%;
-  width: 100%;
-  text-align: center;
-  align-items: center;
-  font-weight: bold;
+  letter-spacing: -.03px;
   color: white;
+  font-size: 12px;
+  font-family: "Press Start 2P";
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.underline {
-  text-decoration: underline;
+.slot-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.season-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.cloud-icon {
+  height: 20px;
+  width: 22px;
+}
+  
+.clock-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.energy-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.coin {
+  width: 20px;
+  margin-bottom: 1px;
 }
 </style>
