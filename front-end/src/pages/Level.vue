@@ -260,15 +260,6 @@ export default defineComponent({
     };
 
     const handleDropItem = async (itemType: string, house: house) => {
-      const coinsUsed = dashboardData.value.coinsUsed;
-      const maxCoins = dashboardData.value.maxCoins;
-      const itemCost = itemType === 'solarPanels' ? solarPanelCost.value : batteryCost.value;
-
-      if (coinsUsed + itemCost > maxCoins) {
-        notificationStatus.value = true;
-        notificationMessage.value = "Niet genoeg coins!";
-        return;
-      }
 
       switch (itemType) {
         case 'solarPanels':
