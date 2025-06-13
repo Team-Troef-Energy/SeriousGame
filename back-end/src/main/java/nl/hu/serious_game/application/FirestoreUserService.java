@@ -22,7 +22,7 @@ public class FirestoreUserService implements UserService {
     public User getUser(Authentication authentication) {
         return new User(
                 authentication.getName(),
-                UserRole.USER //getUserRoleFromFirestore(authentication.getName())
+                getUserRoleFromFirestore(authentication.getName())
         );
     }
 
