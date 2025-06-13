@@ -1,5 +1,5 @@
-import {inject} from "vue";
-import {AuthContext} from "../context/AuthProvider.ts";
+import { inject } from "vue";
+import { AuthContext } from "../context/AuthProvider.ts";
 
 class HTTPRequestManager {
     private apiUrl: string | null = null;
@@ -41,7 +41,7 @@ class HTTPRequestManager {
         const headers: Record<string, string> = {};
 
         const authState: any = inject(AuthContext);
-        if (authState.user.value) {
+        if (authState?.user?.value) {
             const idToken = await authState.user.value.getIdToken();
             headers["Authorization"] = `Bearer ${idToken}`;
         }
