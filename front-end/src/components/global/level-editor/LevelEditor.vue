@@ -69,17 +69,15 @@
             </div>
             <div class="level-editor-house-button form-row">
                 <div class="level-editor-message-input">
-                    <input 
-                        v-model="userInput"
-                        id="level-editor-input"
-                        placeholder="Typ je bericht..."
-                        @keydown.enter.prevent="handleAiGeneration"
-                    />
+                    <input v-model="userInput" id="level-editor-input" placeholder="Typ je bericht..."
+                        @keydown.enter.prevent="handleAiGeneration" />
                     <div class="info-tooltip">
-                         ℹ️
-                    <span class="tooltip-text">Deze input laat je dingen toevoegen aan het level zonder zelf op dingen te hoeven klikken. Zoals: Een huis met maximaal 2 batterijen en 3 zonnepanelen en het level heeft maximaal 30 munten ter beschikking.</span>
+                        ℹ️
+                        <span class="tooltip-text">Deze input laat je dingen toevoegen aan het level zonder zelf op
+                            dingen te hoeven klikken. Zoals: Een huis met maximaal 2 batterijen en 3 zonnepanelen en het
+                            level heeft maximaal 30 munten ter beschikking.</span>
                     </div>
-                    <button class="level-editor-send-button"@click="handleAiGeneration">Verstuur bericht</button>
+                    <button class="level-editor-send-button" @click="handleAiGeneration">Verstuur bericht</button>
                 </div>
                 <button class="btn" @click.prevent="addHouse">Voeg huis toe</button>
             </div>
@@ -98,18 +96,18 @@
             </div>
         </form>
         <Teleport to="body">
-            <TextModal :show="isModalVisible" :content="modalContent" @close="isModalVisible = false" />
+            <TextModal :show="isTextModalVisible" :content="textModalContent" @close="isTextModalVisible = false" />
         </Teleport>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { textModal } from '../../../types/global/modals/TextModal';
+import { pythonService } from '../../../services/PythonService';
 import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
-import { pythonService } from '../../../services/PythonService'
 import TextModal from '../modals/TextModal.vue';
+import { useTextModal } from '../modals/UseTextModal';
 import ComponentHolder from './ComponentHolder.vue';
 import HouseConfiguration from './HouseConfiguration.vue';
 
@@ -126,11 +124,12 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
+        const { isTextModalVisible, textModalContent, showModal } = useTextModal();
         let levels = ref<levelTemplate[]>([]);
         let userInput = ref("");
         let promptOutput = ref("");
 
-        const handleAiGeneration = async (e:any) => {
+        const handleAiGeneration = async (e: any) => {
 
             e.preventDefault();
 
@@ -140,10 +139,85 @@ export default defineComponent({
             };
 
             await pythonService.fetchMessage(data).then((response: any) => {
-            promptOutput.value = response.response
+                // the response is in 'python' code which doesnt work in TypeScript so we have to change the ' to " and lower the False and True
+                const fixed_response = response.response.replace(/'/g, '"')
+                                                        .replace(/\bFalse\b/g, 'false')
+                                                        .replace(/\bTrue\b/g, 'true');
+                // now we can parse to JSON
+                const generated_content = JSON.parse(fixed_response)
+                // if there are 0 houses skip the generation of houses
+                if (!(Object.keys(generated_content.Houses).length == 0)) {
+                    generate_houses(generated_content);
+                }
+                generateLevelTemplate(generated_content)
             }).catch((error: any) => {
                 console.error(error);
-            });
+            })
+        }
+
+        const generateLevelTemplate = async (generated_content: any) => {
+            // base values of inputfields
+            const base_values: { [key: string]: number | string | boolean}  = {
+                "max_co2": 0,
+                "max_coins": 0,
+                "start_time": 0,
+                "end_time": 0,
+                "season": "SPRING",
+                "cost_solar_panel": 0,
+                "cost_battery": 0,
+                "cost_co2": 0,
+                "max_batteries_transformer": 0,
+                "has_congestion_transformer": false,
+                "max_power_transformer": 0
+            }
+
+            // path in the levelTemplate for navigation
+            const pathMap: Record<string, string> = {
+                max_co2: 'objective.maxCO2',
+                max_coins: 'objective.maxCoins',
+                start_time: 'startTime',
+                end_time: 'endTime',
+                season: 'season',
+                cost_solar_panel: 'cost.solarPanelCost',
+                cost_battery: 'cost.batteryCost',
+                cost_co2: 'cost.co2Cost',
+                max_batteries_transformer: 'transformers.0.maxBatteryCount',
+                has_congestion_transformer: 'transformers.0.congestion.hasCongestion',
+                max_power_transformer: 'transformers.0.congestion.maxCurrent'
+            };
+
+            for (const key of Object.keys(base_values)) {
+                if (generated_content.Level[key] !== base_values[key]){
+                    // get the path
+                    const keys = pathMap[key].split('.');
+                    let current: any = levelTemplate.value;
+
+                    // follow the path
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        current = current[keys[i]];
+                    }
+                    // change the value
+                    current[keys[keys.length - 1]] = generated_content.Level[key];
+                }
+            }
+        }
+
+        const generate_houses = async (generated_content: any) => {
+            // for every house in the generated content add a house to the list
+            Object.keys(generated_content.Houses).forEach((houseId) => {
+                const house = generated_content.Houses[houseId];
+                levelTemplate.value.transformers[0].houses.push({
+                    houseNumber: levelTemplate.value.transformers[0].houses.length + 1,
+                    congestion: {
+                        hasCongestion: house.has_congestion,
+                        maxCurrent: house.max_power
+                    },
+                    hasHeatPump: house.has_heatpump,
+                    hasElectricVehicle: house.has_car,
+                    maxBatteries: house.max_batteries,
+                    maxSolarPanels: house.max_solar_panels
+                })
+            })
         }
 
         const fetchAllLevels = async () => {
@@ -152,14 +226,7 @@ export default defineComponent({
         };
 
         onMounted(async () => {
-            fetchAllLevels();
-        });
-
-        let isModalVisible = ref(false)
-
-        let modalContent = ref<textModal>({
-            header: 'Alert',
-            body: 'Nothing to show'
+            await fetchAllLevels();
         });
 
         let emptyLevelTemplate: levelTemplate = {
@@ -190,12 +257,6 @@ export default defineComponent({
 
         let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
 
-        const showModal = (header: string, body: string) => {
-            modalContent.value.header = header;
-            modalContent.value.body = body;
-            isModalVisible.value = true;
-        };
-
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
 
@@ -204,7 +265,7 @@ export default defineComponent({
             }
 
             const levelId = await getLevelIdFromLevelNumber(savedLevelValue);
-            
+
             if (levelId === undefined) {
                 return;
             }
@@ -294,12 +355,12 @@ export default defineComponent({
         };
 
         const doesLevelExist = async (levelNumber: number) => {
-            fetchAllLevels();
+            await fetchAllLevels();
             return levels.value.some(level => level.levelNumber == levelNumber);
         };
 
         const getLevelIdFromLevelNumber = async (levelNumber: number) => {
-            fetchAllLevels();
+            await fetchAllLevels();
 
             const level = levels.value.find(level => level.levelNumber == levelNumber);
 
@@ -311,7 +372,7 @@ export default defineComponent({
         };
 
         const getTemplateIdFromLevelNumber = async (levelNumber: number) => {
-            fetchAllLevels();
+            await fetchAllLevels();
 
             const level = levels.value.find(level => level.levelNumber == levelNumber);
 
@@ -335,6 +396,7 @@ export default defineComponent({
             if (levelTemplate.value.endTime < 0 || levelTemplate.value.endTime > 23) return showModal('Fout', 'Eind tijd moet tussen 0 en 23 zijn');
             if (levelTemplate.value.startTime >= levelTemplate.value.endTime) return showModal('Fout', 'Start tijd moet voor eind tijd zijn');
             if (levelTemplate.value.transformers[0].houses.length === 0) return showModal('Fout', 'Er moet minimaal 1 huis zijn');
+            if (levelTemplate.value.transformers[0].houses.length > 7) return showModal('Fout', 'Er mogen maximaal 7 huizen zijn');
 
             for (const house of levelTemplate.value.transformers[0].houses) {
                 if (house.maxBatteries < 0) return showModal('Fout', 'Maximaal aantal batterijen mag niet negatief zijn voor een huis');
@@ -370,13 +432,15 @@ export default defineComponent({
         return {
             userInput,
             handleAiGeneration,
+            generate_houses,
+            generateLevelTemplate,
             promptOutput,
             levelTemplate,
             updateHouseConfiguration,
             levels,
-            isModalVisible,
+            isTextModalVisible,
             showModal,
-            modalContent,
+            textModalContent,
             onLevelNumberChange,
             addHouse,
             removeHouse,

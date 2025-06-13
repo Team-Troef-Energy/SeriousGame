@@ -61,25 +61,16 @@
           <!-- Zonnepanelen -->
           <div v-if="properties.type !== 'transformator'" class="section solar-section mt-4">
             <v-row class="align-center">
-              <v-col cols="4">
-                <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
-                <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
-              </v-col>
-              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ properties.solarPanelCost
-              }})</v-col>
-              <v-col cols="2" class="text-end highlight">{{ properties.solarPanels }}</v-col>
+              <v-col cols="6" class="text-left"><strong>Zonnepanelen</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ properties.solarPanels }}</v-col>
             </v-row>
           </div>
 
           <!-- Accu's -->
           <div class="section battery-section mt-4">
             <v-row class="align-center">
-              <v-col cols="4">
-                <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
-                <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
-              </v-col>
-              <v-col cols="6" class="text-center"><strong>Accu’s</strong> (💰{{ properties.batteries.cost }})</v-col>
-              <v-col cols="2" class="text-end highlight">{{ properties.batteries.amount }}</v-col>
+              <v-col cols="6" class="text-left"><strong>Accu's</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ properties.batteries.amount }}</v-col>
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Totale accu lading:</strong></v-col>
@@ -88,19 +79,6 @@
           </div>
         </v-container>
       </v-card-text>
-
-      <div class="card-footer">
-        <v-col cols="12" class="d-flex justify-center">
-          <v-btn class="header-btn" color="red" @click="closeDialog">
-            Annuleren
-            <v-icon icon="mdi-cancel" end></v-icon>
-          </v-btn>
-          <v-btn class="header-btn" color="green" @click="submitChanges">
-            Toepassen
-            <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
-          </v-btn>
-        </v-col>
-      </div>
     </v-card>
   </v-dialog>
 </template>
