@@ -53,6 +53,7 @@ public class RaceSessionController {
     }
 
     @PostMapping
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<RaceSessionDTO> createSession(@RequestParam("raceId") long raceId) {
         var raceOptional = this.raceRepository.findById(raceId);
         if (raceOptional.isEmpty()) {
@@ -71,13 +72,14 @@ public class RaceSessionController {
     }
 
     @GetMapping("/{id}")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<RaceSessionDTO> getSession(@PathVariable("id") long sessionId) {
         var sessionOptional = this.raceSessionRepository.findById(sessionId);
         if (sessionOptional.isEmpty()) {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "RaceSession with ID %s is not found".formatted(sessionId))).build();
         }
 
-        if (Instant.now().isAfter(sessionOptional.get().getExpiration())) {
+        if (sessionOptional.get().getExpiration() != null && Instant.now().isAfter(sessionOptional.get().getExpiration())) {
             return ResponseEntity.notFound().build();
         }
 
@@ -85,6 +87,7 @@ public class RaceSessionController {
     }
 
     @GetMapping("/by-joincode")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<RaceSessionDTO> getSessionByJoinCode(@RequestParam("joincode") String joinCode) {
         var sessionOptional = this.raceSessionRepository.findByJoinCode(joinCode);
         if (sessionOptional.isEmpty()) {
@@ -99,6 +102,7 @@ public class RaceSessionController {
     }
 
     @DeleteMapping("/{id}")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<?> deleteSession(@PathVariable("id") long sessionId) {
         var sessionOptional = this.raceSessionRepository.findById(sessionId);
         if (sessionOptional.isEmpty()) {
@@ -114,6 +118,7 @@ public class RaceSessionController {
     }
 
     @GetMapping("/{id}/checkRaceId/{raceId}")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<Boolean> checkIsFromSession(@PathVariable("id") long sessionId, @PathVariable("raceId") long raceId) {
         var sessionOptional = this.raceSessionRepository.findById(sessionId);
         if (sessionOptional.isEmpty()) {
@@ -128,6 +133,7 @@ public class RaceSessionController {
     }
 
     @PostMapping("/join")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<RaceSessionUserDTO> joinSession(@Validated @RequestBody JoinRaceDTO joinRaceDTO) {
         Optional<RaceSession> sessionOptional = this.raceSessionRepository.findByJoinCode(joinRaceDTO.joinCode());
         if (sessionOptional.isEmpty()) {
@@ -151,6 +157,7 @@ public class RaceSessionController {
     }
 
     @PostMapping("/leave")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<?> leaveSession(@RequestParam("token") String token) {
         Optional<RaceSessionUser> raceSessionUserOptional = this.raceSessionUserRepository.findByToken(token);
         if (raceSessionUserOptional.isEmpty()) {

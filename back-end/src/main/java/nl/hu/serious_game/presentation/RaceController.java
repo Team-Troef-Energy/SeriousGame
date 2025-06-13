@@ -37,12 +37,14 @@ public class RaceController {
     }
 
     @GetMapping("/by-email")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<List<RaceDTO>> getByEmail(@RequestParam String email) {
         List<Race> race = this.raceRepository.findByUserEmail(email);
         return ResponseEntity.ok(race.stream().map(RaceDTO::fromEntity).toList());
     }
 
     @GetMapping("/{id}")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<RaceDTO> getById(@PathVariable Long id) {
         Optional<Race> race = this.raceRepository.findById(id);
         if (race.isPresent()) {
@@ -79,6 +81,7 @@ public class RaceController {
     }
 
     @GetMapping("/{id}/is-email")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<?> checkIsEmail(@PathVariable Long id, @RequestParam String email) {
         Optional<Race> raceOptional = this.raceRepository.findById(id);
         if (raceOptional.isEmpty()) {

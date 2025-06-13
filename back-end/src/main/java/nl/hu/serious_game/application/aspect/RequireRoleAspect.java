@@ -26,14 +26,20 @@ public class RequireRoleAspect {
 
     @Before(value = "@annotation(RequireRole)")
     public void evaluateRole(JoinPoint joinPoint) {
+        UserRole givenRole;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.getUser(authentication);
+        if (authentication == null) {
+            givenRole = UserRole.ANONYMOUS;
+        } else {
+            User user = userService.getUser(authentication);
+            givenRole = user.role();
+        }
 
         // https://www.lenar.io/aspectj-get-annotation-parameters/
         UserRole requiredRole = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(RequireRole.class).role();
-        if (!UserRole.allowAccess(requiredRole, user.role())) {
+        if (!UserRole.allowAccess(requiredRole, givenRole)) {
             logger.warn("Blocking request that does not meet required role");
-            throw new AccessDeniedException("Request requires role %s, %s given".formatted(requiredRole.getKey(), user.role().getKey()));
+            throw new AccessDeniedException("Request requires role %s, %s given".formatted(requiredRole.getKey(), givenRole.getKey()));
         }
     }
 }

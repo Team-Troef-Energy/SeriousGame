@@ -32,7 +32,7 @@ public class FirestoreUserService implements UserService {
             // If the collection is not found an exception should be thrown
             String roleKey = firestore.collection("users").document(userId).get().get().getString("role");
             if (roleKey == null) {
-                return UserRole.USER;
+                return UserRole.ANONYMOUS;
             }
             return UserRole.fromKey(roleKey);
         } catch (InterruptedException | ExecutionException e) {

@@ -33,6 +33,7 @@ public class LevelTemplateController {
     }
 
     @GetMapping
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<List<LevelTemplateDTO>> getAllLevels() {
         return ResponseEntity.ok(
                 levelTemplateService.getAllGlobalLevels()

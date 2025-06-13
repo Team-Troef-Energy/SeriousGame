@@ -53,6 +53,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
         }
+
         filterChain.doFilter(request, response);
     }
 
