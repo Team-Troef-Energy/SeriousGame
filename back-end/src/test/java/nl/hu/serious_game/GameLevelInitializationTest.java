@@ -1,5 +1,6 @@
 package nl.hu.serious_game;
 
+import nl.hu.serious_game.application.SeedLevelSource;
 import nl.hu.serious_game.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +14,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+//@SpringBootTest
 public class GameLevelInitializationTest {
+    private final SeedLevelSource seedLevelSource = new SeedLevelSource();
 
     private Season season;
     private int startTime;
@@ -61,14 +63,10 @@ public class GameLevelInitializationTest {
         assertFalse(transformer.getHouses().isEmpty(), "Transformer should have at least one house");
     }
 
-    // Test level initialization through the runner
-    @Autowired
-    private SeedLevelTemplateRunner seedLevelTemplateRunner;
-
     @Test
     @DisplayName("Test createLevel1 method of runner")
     void testCreateLevel1() {
-        LevelTemplate level = seedLevelTemplateRunner.createLevel1();
+        LevelTemplate level = seedLevelSource.createLevel1();
 
         assertNotNull(level, "Level should not be null");
         assertEquals(Season.SUMMER, level.getSeason(), "Season should be SUMMER");
