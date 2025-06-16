@@ -12,16 +12,21 @@ import org.springframework.core.io.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 // https://www.baeldung.com/spring-security-firebase-authentication
 @Configuration
 public class FirebaseAuthentication {
-    @Value("classpath:/private-key.json")
-    private Resource privateKey;
+    @Value("${firebase.keyfile}")
+    private String privateKeyPath;
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        InputStream credentials = new ByteArrayInputStream(privateKey.getContentAsByteArray());
+        if (privateKeyPath == null || privateKeyPath.isBlank()) {
+            privateKeyPath = "firebase-key.json";
+        }
+        InputStream credentials = new ByteArrayInputStream(Files.readAllBytes(Path.of(privateKeyPath)));
         FirebaseOptions firebaseOptions = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(credentials))
                 .build();
