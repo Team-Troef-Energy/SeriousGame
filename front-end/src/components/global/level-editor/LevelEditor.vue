@@ -229,13 +229,13 @@ export default defineComponent({
             await fetchAllLevels();
         });
 
-        let emptyLevelTemplate: levelTemplate = {
+        let baseLevelTemplate: levelTemplate = {
             levelNumber: 0,
             objective: {
                 maxCO2: 1,
                 maxCoins: 20
             },
-            season: 'SPRING',
+            season: 'SUMMER',
             transformers: [
                 {
                     maxBatteryCount: 4,
@@ -243,7 +243,30 @@ export default defineComponent({
                         hasCongestion: false,
                         maxCurrent: 0,
                     },
-                    houses: [],
+                    houses: [
+                        {
+                            houseNumber: 1,
+                            congestion: {
+                                hasCongestion: false,
+                                maxCurrent: 0
+                            },
+                            hasHeatPump: false,
+                            hasElectricVehicle: false,
+                            maxBatteries: 2,
+                            maxSolarPanels: 14,
+                        },
+                        {
+                            houseNumber: 2,
+                            congestion: {
+                                hasCongestion: false,
+                                maxCurrent: 0
+                            },
+                            hasHeatPump: false,
+                            hasElectricVehicle: false,
+                            maxBatteries: 2,
+                            maxSolarPanels: 14,
+                        }
+                    ],
                 }
             ],
             cost: {
@@ -255,7 +278,7 @@ export default defineComponent({
             endTime: 15
         };
 
-        let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
+        let levelTemplate = ref<levelTemplate>({ ...baseLevelTemplate });
 
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
@@ -325,7 +348,7 @@ export default defineComponent({
 
         const clearLevelTemplate = () => {
             levelTemplate.value.transformers[0].houses = [];
-            levelTemplate.value = { ...emptyLevelTemplate };
+            levelTemplate.value = { ...baseLevelTemplate };
         };
 
         const addHouse = () => {
