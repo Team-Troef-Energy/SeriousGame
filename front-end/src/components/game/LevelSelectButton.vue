@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from "vue";
-import router from "../router/Router";
+import router from "../../router/Router";
 export default defineComponent({
   name: "LevelSelectButton",
   props: {

@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { databaseService } from '../services/firebase/DatabaseService';
+import { databaseService } from '../../services/firebase/DatabaseService';
 
 const users = ref<any[]>([]);
 const searchQuery = ref('');

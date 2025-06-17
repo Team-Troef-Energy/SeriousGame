@@ -96,14 +96,14 @@
 <script lang="ts">
 import { computed, CSSProperties, defineComponent, onMounted, ref, Ref } from "vue";
 import { useRoute } from "vue-router";
-import ConnectionLine from "../../components/ConnectionLine.vue";
-import Dashboard from "../../components/Dashboard.vue";
-import GameSideBar from "../../components/GameSideBar.vue";
-import House from "../../components/House.vue";
-import NavigateButton from "../../components/NavigateButton.vue";
-import Notification from "../../components/Notification.vue";
-import PopupComponent from "../../components/PopupComponent.vue";
-import Transformer from "../../components/Transformer.vue";
+import ConnectionLine from "../../components/game/ConnectionLine.vue";
+import Dashboard from "../../components/game/Dashboard.vue";
+import GameSideBar from "../../components/game/GameSideBar.vue";
+import House from "../../components/game/House.vue";
+import NavigateButton from "../../components/game/NavigateButton.vue";
+import Notification from "../../components/game/Notification.vue";
+import PopupComponent from "../../components/game/PopupComponent.vue";
+import Transformer from "../../components/game/Transformer.vue";
 import { PopupProperties } from "../../objects/PopupProperties";
 import { gameLevelService } from "../../services/game/GameLevelService";
 import { pythonService } from "../../services/PythonService";

@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavigateButton from "../components/NavigateButton.vue";
+import NavigateButton from "./NavigateButton.vue";
 
 export default defineComponent({
   name: "Notification",
