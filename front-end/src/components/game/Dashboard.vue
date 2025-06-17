@@ -11,7 +11,7 @@
       CO2-uistoot: 
       <div class="slot-content">
         <img class="cloud-icon" src="/cloud.png" alt="Cloud">
-        {{ currentCO2.toFixed(2) }} kg - {{ maxCO2.toFixed(2) }} kg
+        {{ currentCO2.toFixed(2) }}/{{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
