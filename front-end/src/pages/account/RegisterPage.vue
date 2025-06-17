@@ -29,11 +29,11 @@
             <p class="or">OF</p>
             <div class="providers-container">
                 <button @click="handleGoogleRegister">
-                    <img src="../assets/google_icon.png" alt="Google icon">
+                    <img src="../../assets/google_icon.png" alt="Google icon">
                     Registreer met Google
                 </button>
                 <button @click="handleGitHubRegister">
-                    <img src="../assets/github_icon.png" alt="GitHub icon">
+                    <img src="../../assets/github_icon.png" alt="GitHub icon">
                     Registreer met GitHub
                 </button>
             </div>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { authenticationService } from '../services/firebase/AuthenticationService';
+import { authenticationService } from '../../services/firebase/AuthenticationService';
 
 export default defineComponent({
     name: 'RegisterPage',
