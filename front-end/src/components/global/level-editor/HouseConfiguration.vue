@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, reactive, watch } from "vue";
-import { houseConfiguration } from "../../../types/levelTemplate/HouseConfiguration";
+import { houseConfiguration } from "../../../types/game/levelTemplate/HouseConfiguration";
 
 export default defineComponent({
     name: "HouseConfiguration",

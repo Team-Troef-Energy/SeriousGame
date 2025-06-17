@@ -86,7 +86,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, ref } from "vue";
 import { PopupProperties } from "../objects/PopupProperties";
-import { house, transformer } from "../types";
+import { house, transformer } from "../types/game";
 
 export default defineComponent({
   name: "PopupComponent",
