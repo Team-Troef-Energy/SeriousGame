@@ -232,13 +232,13 @@ export default defineComponent({
         let emptyLevelTemplate: levelTemplate = {
             levelNumber: 0,
             objective: {
-                maxCO2: 0,
-                maxCoins: 0
+                maxCO2: 1,
+                maxCoins: 20
             },
             season: 'SPRING',
             transformers: [
                 {
-                    maxBatteryCount: 0,
+                    maxBatteryCount: 4,
                     congestion: {
                         hasCongestion: false,
                         maxCurrent: 0,
@@ -247,12 +247,12 @@ export default defineComponent({
                 }
             ],
             cost: {
-                batteryCost: 0,
-                solarPanelCost: 0,
-                co2Cost: 0,
+                batteryCost: 10,
+                solarPanelCost: 5,
+                co2Cost: 0.5,
             },
-            startTime: 0,
-            endTime: 0
+            startTime: 10,
+            endTime: 15
         };
 
         let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
