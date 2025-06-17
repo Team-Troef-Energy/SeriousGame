@@ -3,42 +3,42 @@
     <div class="slot">
       Beschikbare munten:
       <div class="slot-content">
-        <img src="/coin.png" class="coin" alt="Coin">
+        <img src="/images/game/coin.png" class="coin" alt="Coin">
         <span>{{ coinsUsed }}/{{ maxCoins }}</span>
       </div>
     </div>
     <div class="slot">
       CO2-uistoot: 
       <div class="slot-content">
-        <img class="cloud-icon" src="/cloud.png" alt="Cloud">
+        <img class="cloud-icon" src="/images/game/cloud.png" alt="Cloud">
         {{ currentCO2.toFixed(2) }}/{{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
       Totale energieconsumptie: 
       <div class="slot-content">
-        <img class="energy-icon" src="/lightning.png" alt="Icon">
+        <img class="energy-icon" src="/images/game/lightning.png" alt="Icon">
         {{ totalEnergyConsumption.toFixed(2) }} kWh
       </div>
     </div>
     <div class="slot">
       Groen geproduceerde energie: 
       <div class="slot-content">
-        <img class="energy-icon" src="/green_electricity.png" alt="Icon">
+        <img class="energy-icon" src="/images/game/green_electricity.png" alt="Icon">
         {{ greenProducedEnergyPercentage.toFixed(2) }}%
       </div>
     </div>
     <div class="slot">
       Start- en eindtijd:
       <div class="slot-content">
-        <img src="/clock.png" alt="Clock" class="clock-icon">
+        <img src="/images/game/clock.png" alt="Clock" class="clock-icon">
         {{ objectiveStartTime }}:00 - {{ objectiveEndTime }}:00
       </div>
     </div>
     <div class="slot">
       Seizoen: 
       <div class="slot-content">
-        <img class="season-icon" :src="`/${getSeasonIcon(season)}`" alt="Icon">
+        <img class="season-icon" :src="`/images/game/${getSeasonIcon(season)}`" alt="Icon">
         {{ translateSeason(season) }}
       </div>
     </div>
@@ -125,7 +125,6 @@ export default defineComponent({
   letter-spacing: -.03px;
   color: white;
   font-size: 12px;
-  font-family: "Press Start 2P";
   display: flex;
   align-items: center;
   flex-direction: column;

@@ -3,7 +3,7 @@
     <div class="level-container">
 
       <a :href="navigateBackUrl" id="navigate-button">
-        <img src="/verlaat.png" alt="Something">
+        <img src="/images/game/verlaat.png" alt="Something">
       </a>
 
       <div class="game-content">
@@ -70,7 +70,7 @@
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" :showConfetti="notificationShowConfetti" :navigateBackUrl="navigateBackUrl" />
 
       <button class="chat-toggle-button" @click="toggleChatWindow">
-        <img src="/openchat.png" alt="Open chat">
+        <img src="/images/game/openchat.png" alt="Open chat">
       </button>
 
       <div v-if="chatWindowOpen" class="chat-window">
@@ -591,7 +591,7 @@ export default defineComponent({
   align-items: end;
   height: 100%;
   position: relative;
-  background: linear-gradient(rgba(75, 74, 74, 0.282)), url("/background.png");
+  background: linear-gradient(rgba(75, 74, 74, 0.282)), url("/images/game/background.png");
   background-size: cover, cover;
   background-blend-mode: normal;
   overflow-x: auto;
