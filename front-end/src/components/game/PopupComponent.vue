@@ -86,7 +86,6 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, ref } from "vue";
 import { PopupProperties } from "../../objects/PopupProperties";
-import { house, transformer } from "../../types/game";
 
 export default defineComponent({
   name: "PopupComponent",
@@ -97,11 +96,7 @@ export default defineComponent({
     popupProperties: {
       type: Object as PropType<PopupProperties>,
       required: false,
-    },
-    transformers: {
-      type: Array as PropType<transformer[]>,
-      required: true,
-    },
+    }
   },
   setup(props, { emit }) {
     const properties = ref<PopupProperties>({
