@@ -125,7 +125,6 @@ export default defineComponent({
   letter-spacing: -.03px;
   color: white;
   font-size: 12px;
-  font-family: "Press Start 2P";
   display: flex;
   align-items: center;
   flex-direction: column;
