@@ -29,11 +29,11 @@
             <p class="or">OF</p>
             <div class="providers-container">
                 <button @click="handleGoogleRegister">
-                    <img src="../../assets/google_icon.png" alt="Google icon">
+                    <img src="/images/account/google_icon.png" alt="Google icon">
                     Registreer met Google
                 </button>
                 <button @click="handleGitHubRegister">
-                    <img src="../../assets/github_icon.png" alt="GitHub icon">
+                    <img src="/images/account/github_icon.png" alt="GitHub icon">
                     Registreer met GitHub
                 </button>
             </div>

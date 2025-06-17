@@ -3,7 +3,7 @@
         <div class="header-grid">
 
             <a href="/" class="header-logo">
-                <img src="/troef-logo.png" alt="TROEF Energy logo." />
+                <img src="/images/logo/troef.png" alt="TROEF Energy logo." />
             </a>
 
             <div class="header-links">

@@ -8,7 +8,7 @@
     <img :src="imageSrc" :alt="label" class="item-image" />
     <div class="item-label">{{ label }}</div>
     <div class="item-cost">
-      <img class="coin" src="/coin.png" alt="Coin" />
+      <img class="coin" src="/images/game/coin.png" alt="Coin" />
       {{ cost }}
     </div>
   </div>
