@@ -9,3 +9,6 @@
 .idea
 /target/
 .DS_Store
+
+## FireStore Private Key
+/src/main/resources/private-key.json
