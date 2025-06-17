@@ -3,10 +3,10 @@ import DashboardPage from "../pages/account/DashboardPage.vue";
 import LoginPage from "../pages/account/LoginPage.vue";
 import RegisterPage from "../pages/account/RegisterPage.vue";
 import TermsPage from "../pages/account/TermsPage.vue";
-import Level from "../pages/game/LevelPage.vue";
-import LevelSelect from "../pages/game/LevelSelectPage.vue";
+import LevelPage from "../pages/game/LevelPage.vue";
+import LevelSelectPage from "../pages/game/LevelSelectPage.vue";
 import TutorialPage from "../pages/game/TutorialPage.vue";
-import Home from "../pages/Home.vue";
+import HomePage from "../pages/HomePage.vue";
 import RaceHostingPage from "../pages/race/RaceHostingPage.vue";
 import RaceLevelEditorPage from "../pages/race/RaceLevelEditorPage.vue";
 import RaceLevelSelectPage from "../pages/race/RaceLevelSelectPage.vue";
@@ -16,9 +16,9 @@ import RacesPage from "../pages/race/RacesPage.vue";
 import { databaseService } from "../services/firebase/DatabaseService";
 
 const routes = [
-  { path: "/", name: "Home", component: Home },
-  { path: "/level/:levelNmr", name: "Level", component: Level },
-  { path: "/levelSelect", name: "levelSelect", component: LevelSelect },
+  { path: "/", name: "Home", component: HomePage },
+  { path: "/level/:levelNmr", name: "Level", component: LevelPage },
+  { path: "/levelSelect", name: "levelSelect", component: LevelSelectPage },
   { path: "/register", name: "RegisterPage", component: RegisterPage },
   { path: "/terms", name: "TermsPage", component: TermsPage },
   { path: "/tutorial", name: "TutorialPage", component: TutorialPage },

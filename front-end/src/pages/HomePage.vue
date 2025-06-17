@@ -43,7 +43,7 @@ import { defineComponent } from "vue";
 import NavigateButton from "../components/game/NavigateButton.vue";
 
 export default defineComponent({
-  name: "Home",
+  name: "HomePage",
   components: {
     NavigateButton,
   },
