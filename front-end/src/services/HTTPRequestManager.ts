@@ -1,3 +1,5 @@
+import {userGlobal} from "../context/AuthProvider.ts";
+
 class HTTPRequestManager {
     private apiUrl: string | null = null;
 
@@ -35,11 +37,21 @@ class HTTPRequestManager {
             await this.loadConfig();
         }
 
+        const headers: Record<string, string> = {};
+
+        if (userGlobal?.value) {
+            const idToken = await userGlobal.value.getIdToken();
+            headers["Authorization"] = `Bearer ${idToken}`;
+        }
+
         const isBodyPresent = !['GET', 'HEAD'].includes(method);
+        if (isBodyPresent) {
+            headers['Content-Type'] = 'application/json;charset=utf-8';
+        }
 
         const response = await fetch(`${this.apiUrl}${path}`, {
             method: method,
-            headers: isBodyPresent ? { 'Content-Type': 'application/json;charset=utf-8' } : undefined,
+            headers: headers,
             body: isBodyPresent ? JSON.stringify(body) : undefined
         });
 

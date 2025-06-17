@@ -1,8 +1,10 @@
 package nl.hu.serious_game.presentation;
 
 import nl.hu.serious_game.application.GameLevelService;
+import nl.hu.serious_game.application.aspect.RequireRole;
 import nl.hu.serious_game.application.dto.in.GameLevelUpdateDTO;
 import nl.hu.serious_game.application.dto.out.GameLevelDTO;
+import nl.hu.serious_game.domain.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ public class GameLevelController {
     }
 
     @GetMapping("/start/{levelTemplateId}")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<GameLevelDTO> startLevel(@PathVariable long levelTemplateId) {
         try {
             GameLevelDTO level = gameLevelService.startGame(levelTemplateId);
@@ -34,6 +37,7 @@ public class GameLevelController {
     }
 
     @PostMapping("/update/{gameLevelId}")
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<GameLevelDTO> updateLevel(@PathVariable long gameLevelId, @RequestBody GameLevelUpdateDTO levelUpdateDTO) {
         try {
             GameLevelDTO updatedLevel = gameLevelService.updateGame(gameLevelId, levelUpdateDTO);

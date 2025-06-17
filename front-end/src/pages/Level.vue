@@ -67,7 +67,7 @@
         @update:isOpen="isPopupOpen = $event"
         @submitChanges="submitChanges"
       />
-      <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" />
+      <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" :showConfetti="notificationShowConfetti" :navigateBackUrl="navigateBackUrl" />
 
       <button class="chat-toggle-button" @click="toggleChatWindow">
         <img src="/openchat.png" alt="Open chat">
@@ -149,6 +149,7 @@ export default defineComponent({
 
     const notificationStatus = ref(false);
     const notificationMessage = ref("");
+    const notificationShowConfetti = ref(false);
 
     const infoBoxVisible = ref(false);
     const infoBoxContents = ref("");
@@ -259,24 +260,24 @@ export default defineComponent({
     };
 
     const handleDropItem = async (itemType: string, house: house) => {
-      const coinsUsed = dashboardData.value.coinsUsed;
-      const maxCoins = dashboardData.value.maxCoins;
-      const itemCost = itemType === 'solarPanels' ? solarPanelCost.value : batteryCost.value;
 
-      if (coinsUsed + itemCost > maxCoins) {
-        notificationStatus.value = true;
-        notificationMessage.value = "Niet genoeg coins!";
-        return;
-      }
-
-      if (itemType === 'solarPanels') {
-        house.solarpanels += 1;
-      } else if (itemType === 'batteries') {
-        house.batteries.amount += 1;
-      } else if (itemType === 'electricCar') {
-        house.hasElectricVehicle = true;
-      } else if (itemType === 'heatPump') {
-        house.hasHeatpump = true;
+      switch (itemType) {
+        case 'solarPanels':
+          if (house.solarpanels < house.maxSolarPanelCount) {
+            house.solarpanels += 1;
+          }
+          break;
+        case 'batteries':
+          if (house.batteries.amount < house.maxBatteryCount) {
+            house.batteries.amount += 1;
+          }
+          break;
+        case 'electricCar':
+          house.hasElectricVehicle = true;
+          break;
+        case 'heatPump':
+          house.hasHeatpump = true;
+          break;
       }
 
       await submitChanges();
@@ -365,6 +366,7 @@ export default defineComponent({
 
         if (response.isCompleted === true) {
           notificationStatus.value = true;
+          notificationShowConfetti.value = true;
           notificationMessage.value = "Level is behaald! 🥳";
         }
       } catch (error) {
@@ -459,6 +461,7 @@ export default defineComponent({
       hideInfoBox,
       notificationStatus,
       notificationMessage,
+      notificationShowConfetti,
       coordinatesWithMargin,
       navigateBackUrl,
     };

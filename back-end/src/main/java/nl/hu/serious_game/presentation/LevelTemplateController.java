@@ -1,8 +1,9 @@
 package nl.hu.serious_game.presentation;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import nl.hu.serious_game.application.aspect.RequireRole;
+import nl.hu.serious_game.domain.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class LevelTemplateController {
     }
 
     @GetMapping
+    @RequireRole(role = UserRole.ANONYMOUS)
     public ResponseEntity<List<LevelTemplateDTO>> getAllLevels() {
         return ResponseEntity.ok(
                 levelTemplateService.getAllGlobalLevels()
@@ -42,6 +44,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<?> createLevelTemplate(@Validated @RequestBody LevelTemplateCreateDTO levelTemplateCreateDTO) {
         try {
             LevelTemplateDTO levelTemplate = levelTemplateService.createLevel(levelTemplateCreateDTO);
@@ -52,6 +55,7 @@ public class LevelTemplateController {
     }
 
     @PostMapping("/{id}")
+    @RequireRole(role = UserRole.USER)
     public ResponseEntity<?> updateLevelTemplate(@PathVariable long id, @Validated @RequestBody LevelTemplateUpdateDTO levelTemplateUpdateDTO) {
         try {
             LevelTemplateDTO updatedTemplate = levelTemplateService.updateLevel(id, levelTemplateUpdateDTO);
@@ -63,6 +67,7 @@ public class LevelTemplateController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequireRole(role = UserRole.USER)
     public void deleteLevel(@PathVariable long id) {
         levelTemplateService.deleteLevel(id);
     }
