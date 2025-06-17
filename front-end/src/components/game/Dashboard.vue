@@ -94,7 +94,7 @@ export default defineComponent({
         case 'summer': return 'Zomer';
         case 'winter': return 'Winter';
         case 'spring': return 'Lente';
-        case 'fall': return 'Herfst';
+        case 'autumn': return 'Herfst';
         default: return season;
       }
     },
@@ -103,7 +103,7 @@ export default defineComponent({
         case 'summer': return 'sun.png';
         case 'winter': return 'snowflake.png';
         case 'spring': return 'leaf.png';
-        case 'fall': return 'orange_leaf.png';
+        case 'autumn': return 'orange_leaf.png';
         default: return season;
       }
     }
