@@ -32,7 +32,7 @@
       </div>
 
       <div class="home-right">
-          <img src="../assets/laptop_with_game.png" alt="A laptop with the TROEF Energy Serious game on the display. In the game there are a few houses, a transformater, and a dashboard.">
+          <img src="/images/laptop_with_game.png" alt="A laptop with the TROEF Energy Serious game on the display. In the game there are a few houses, a transformater, and a dashboard.">
       </div>
     </div>
   </div>
@@ -40,10 +40,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavigateButton from "../components/NavigateButton.vue";
+import NavigateButton from "../components/game/NavigateButton.vue";
 
 export default defineComponent({
-  name: "Home",
+  name: "HomePage",
   components: {
     NavigateButton,
   },

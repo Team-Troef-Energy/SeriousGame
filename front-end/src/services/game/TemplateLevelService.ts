@@ -1,5 +1,5 @@
 
-import { levelTemplate } from '../../types/levelTemplate/LevelTemplate';
+import { levelTemplate } from '../../types/game/levelTemplate/LevelTemplate';
 import { httpRequestManager } from '../HTTPRequestManager';
 const BASE_URL = '/templates';
 

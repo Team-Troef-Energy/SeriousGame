@@ -104,8 +104,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { pythonService } from '../../../services/PythonService';
-import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
-import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
+import { levelTemplate } from '../../../types/game/levelTemplate/LevelTemplate';
+import { templateWrapper } from '../../../types/game/levelTemplate/TemplateWrapper';
 import TextModal from '../modals/TextModal.vue';
 import { useTextModal } from '../modals/UseTextModal';
 import ComponentHolder from './ComponentHolder.vue';

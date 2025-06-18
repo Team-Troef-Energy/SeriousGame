@@ -3,13 +3,13 @@
       <div class="sidebar-content">
         <DraggableItem
           itemType="solarPanels"
-          imageSrc="/solarpanel.png"
+          imageSrc="/images/game/solarpanel.png"
           label="Zonnepaneel"
           :cost="solarPanelCost"
         />
         <DraggableItem
           itemType="batteries"
-          imageSrc="/battery.png"
+          imageSrc="/images/game/battery.png"
           label="Batterij"
           :cost="batteryCost"
         />
@@ -48,7 +48,7 @@
     height: 100%;
     background:
           linear-gradient(rgba(56, 56, 56, 0.423)),
-          url("/sidebar.png");
+          url("/images/game/sidebar.png");
     background-size: cover, cover;
     background-blend-mode: normal;
     border-left: 2px solid #4a4a4a;

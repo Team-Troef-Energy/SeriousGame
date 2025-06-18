@@ -6,12 +6,12 @@
     @dragleave.prevent="handleDragLeave"
     @drop.prevent="handleDrop"
   >
-    <img class="house-image" src="/house.png" alt="House" />
+    <img class="house-image" src="/images/game/house.png" alt="House" />
     <div class="add-ons">
       <img
         v-for="(panel, index) in solarpanels"
         :key="'solar-' + index"
-        src="/solarpanel.png"
+        src="/images/game/solarpanel.png"
         alt="Solar Panel"
         class="solar-panel"
         @click="() => panel"
@@ -25,7 +25,7 @@
       <img
         v-for="(battery, index) in batteries.amount"
         :key="'battery-' + index"
-        src="/battery.png"
+        src="/images/game/battery.png"
         alt="Battery"
         class="battery"
         @click="() => battery"
@@ -37,7 +37,7 @@
     <img
       v-if="hasElectricCar"
       class="electric-car"
-      src="/car.png"
+      src="/images/game/car.png"
       alt="Auto"
       draggable="true"
       @dragstart="handleDragStart('electricCar')"
@@ -45,7 +45,7 @@
     <img
       v-if="hasHeatPump"
       class="heat-pump"
-      src="/heat-pump.png"
+      src="/images/game/heat-pump.png"
       alt="Heat Pump"
       draggable="true"
       @dragstart="handleDragStart('heatPump')"

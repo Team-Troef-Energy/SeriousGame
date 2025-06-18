@@ -19,14 +19,14 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import LevelSelectButton from "../components/LevelSelectButton.vue";
-import { raceSessionService } from "../services/game/RaceSessionService";
-import { raceSessionStorageService } from "../services/game/RaceSessionStorageService";
-import { templateLevelService } from "../services/game/TemplateLevelService";
-import { levelTemplate } from "../types/levelTemplate/LevelTemplate";
+import LevelSelectButton from "../../components/game/LevelSelectButton.vue";
+import { raceSessionService } from "../../services/game/RaceSessionService";
+import { raceSessionStorageService } from "../../services/game/RaceSessionStorageService";
+import { templateLevelService } from "../../services/game/TemplateLevelService";
+import { levelTemplate } from "../../types/game/levelTemplate/LevelTemplate";
 
 export default defineComponent({
-  name: "Level",
+  name: "LevelSelectPage",
   components: {
     LevelSelectButton,
   },

@@ -3,7 +3,7 @@
     <div class="level-container">
 
       <a :href="navigateBackUrl" id="navigate-button">
-        <img src="/verlaat.png" alt="Something">
+        <img src="/images/game/verlaat.png" alt="Something">
       </a>
 
       <div class="game-content">
@@ -70,7 +70,7 @@
       <Notification v-if="notificationStatus" :status="notificationStatus" :message="notificationMessage" :showConfetti="notificationShowConfetti" :navigateBackUrl="navigateBackUrl" />
 
       <button class="chat-toggle-button" @click="toggleChatWindow">
-        <img src="/openchat.png" alt="Open chat">
+        <img src="/images/game/openchat.png" alt="Open chat">
       </button>
 
       <div v-if="chatWindowOpen" class="chat-window">
@@ -96,18 +96,18 @@
 <script lang="ts">
 import { computed, CSSProperties, defineComponent, onMounted, ref, Ref } from "vue";
 import { useRoute } from "vue-router";
-import ConnectionLine from "../components/ConnectionLine.vue";
-import Dashboard from "../components/Dashboard.vue";
-import GameSideBar from "../components/GameSideBar.vue";
-import House from "../components/House.vue";
-import NavigateButton from "../components/NavigateButton.vue";
-import Notification from "../components/Notification.vue";
-import PopupComponent from "../components/PopupComponent.vue";
-import Transformer from "../components/Transformer.vue";
-import { PopupProperties } from "../objects/PopupProperties";
-import { gameLevelService } from "../services/game/GameLevelService";
-import { pythonService } from "../services/PythonService";
-import { house, levelData, transformer } from "../types";
+import ConnectionLine from "../../components/game/ConnectionLine.vue";
+import Dashboard from "../../components/game/Dashboard.vue";
+import GameSideBar from "../../components/game/GameSideBar.vue";
+import House from "../../components/game/House.vue";
+import NavigateButton from "../../components/game/NavigateButton.vue";
+import Notification from "../../components/game/Notification.vue";
+import PopupComponent from "../../components/game/PopupComponent.vue";
+import Transformer from "../../components/game/Transformer.vue";
+import { PopupProperties } from "../../objects/PopupProperties";
+import { gameLevelService } from "../../services/game/GameLevelService";
+import { pythonService } from "../../services/PythonService";
+import { house, levelData, transformer } from "../../types/game";
 
 export default defineComponent({
   name: "Level",
@@ -591,7 +591,7 @@ export default defineComponent({
   align-items: end;
   height: 100%;
   position: relative;
-  background: linear-gradient(rgba(75, 74, 74, 0.282)), url("/background.png");
+  background: linear-gradient(rgba(75, 74, 74, 0.282)), url("/images/game/background.png");
   background-size: cover, cover;
   background-blend-mode: normal;
   overflow-x: auto;

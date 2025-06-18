@@ -18,11 +18,6 @@ body {
   --basic-white: #fff;
   --basic-black: #000;
 
-  /* 
-  What's the point of this?
-  I let these stand here due to the previous group working on it, 
-  but I have no fucking clue why it's there as there were no comments. 
-  */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -33,8 +28,6 @@ body {
   height: 100%;
 
 }
-
-/* No idea what these elements should do. */
 
 main {
   flex: 1;

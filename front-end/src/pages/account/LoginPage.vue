@@ -29,11 +29,11 @@
       <p class="or">OF</p>
       <div class="providers-container">
         <button @click="handleGoogleLogin">
-          <img src="../assets/google_icon.png" alt="Google icon" />
+          <img src="/images/account/google_icon.png" alt="Google icon" />
           Login met Google
         </button>
         <button @click="handleGitHubLogin">
-          <img src="../assets/github_icon.png" alt="GitHub icon" />
+          <img src="/images/account/github_icon.png" alt="GitHub icon" />
           Login met GitHub
         </button>
       </div>
@@ -43,8 +43,8 @@
 
 <script setup>
 import { inject, ref } from 'vue';
-import { AuthContext } from '../context/AuthProvider';
-import { authenticationService } from '../services/firebase/AuthenticationService';
+import { AuthContext } from '../../context/AuthProvider';
+import { authenticationService } from '../../services/firebase/AuthenticationService';
 
 const authState = inject(AuthContext);
 
