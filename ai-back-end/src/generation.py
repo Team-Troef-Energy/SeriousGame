@@ -23,7 +23,7 @@ Convert the input into a JSON dictionary with the following structure:
     "has_congestion_transformer": <has_congestion_transformer>,
     "max_power_transformer": <max_power_transformer>
   }},
-  Reset: <want_to_reset>
+  wantReset: <want_to_reset>
 }}
 
 Extract the number of houses and their attributes from the input. For any missing values, use these defaults:
@@ -33,6 +33,7 @@ Extract the number of houses and their attributes from the input. For any missin
 - SPRING for season.
 
 if there is a mention of the word reset in the input, put Reset to true
+if the input is talking about emptying also turn Reset to true
 if there is no number of houses specified in the input, return an empty dictionary for the houses
 give the season in english and full caps if the season is FALL, give back AUTUMN instead
 """
@@ -54,3 +55,5 @@ give the season in english and full caps if the season is FALL, give back AUTUMN
     # Strip the ```json markdown and parse the inner JSON
     inner_json = content.strip('```json\n').strip('```')
     inner_dict = json.loads(inner_json)
+
+    return inner_dict

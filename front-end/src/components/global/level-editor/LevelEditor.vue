@@ -145,11 +145,16 @@ export default defineComponent({
                                                         .replace(/\bTrue\b/g, 'true');
                 // now we can parse to JSON
                 const generated_content = JSON.parse(fixed_response)
-                // if there are 0 houses skip the generation of houses
-                if (!(Object.keys(generated_content.Houses).length == 0)) {
-                    generate_houses(generated_content);
+                if (generated_content.wantReset){
+                    clearLevelTemplate()
                 }
-                generateLevelTemplate(generated_content)
+                else {
+                    // if there are 0 houses skip the generation of houses
+                    if (!(Object.keys(generated_content.Houses).length == 0)) {
+                        generate_houses(generated_content);
+                    }
+                    generateLevelTemplate(generated_content)
+                }
             }).catch((error: any) => {
                 console.error(error);
             })
@@ -255,7 +260,7 @@ export default defineComponent({
             endTime: 0
         };
 
-        let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
+        let levelTemplate = ref<levelTemplate>(structuredClone(emptyLevelTemplate));
 
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
@@ -324,8 +329,7 @@ export default defineComponent({
         };
 
         const clearLevelTemplate = () => {
-            levelTemplate.value.transformers[0].houses = [];
-            levelTemplate.value = { ...emptyLevelTemplate };
+            levelTemplate.value = structuredClone(emptyLevelTemplate);
         };
 
         const addHouse = () => {
