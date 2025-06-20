@@ -4,7 +4,7 @@
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level nummer</label>
-                    <input id="levelNumber" list="levelNumbers" v-model="levelTemplate.levelNumber"
+                    <input id="levelNumber" list="levelNumbers" v-model="levelNumberProxy"
                         @change="onLevelNumberChange" min="0" />
                     <datalist id="levelNumbers">
                         <option v-for="level in levels" :key="level.levelNumber" :value="level.levelNumber">
@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { pythonService } from '../../../services/PythonService';
 import { levelTemplate } from '../../../types/game/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/game/levelTemplate/TemplateWrapper';
@@ -235,7 +235,7 @@ export default defineComponent({
         });
 
         let baseLevelTemplate: levelTemplate = {
-            levelNumber: undefined,
+            levelNumber: NaN,
             objective: {
                 maxCO2: 1,
                 maxCoins: 20
@@ -412,7 +412,7 @@ export default defineComponent({
         };
 
         const saveOrEditLevel = async () => {
-            if (levelTemplate.value.levelNumber === undefined || String(levelTemplate.value.levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
+            if (Number.isNaN(levelTemplate.value.levelNumber) || String(levelTemplate.value.levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
@@ -448,7 +448,7 @@ export default defineComponent({
 
         const deleteLevel = async () => {
             let levelNumber = levelTemplate.value.levelNumber;
-            if (levelNumber === undefined || String(levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
+            if (Number.isNaN(levelNumber) || String(levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
             if (!(await doesLevelExist(levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
             let templateId = await getTemplateIdFromLevelNumber(levelNumber);
             emit('deleteLevel', {
@@ -457,6 +457,15 @@ export default defineComponent({
 
             clearLevelTemplate();
         }
+
+        const levelNumberProxy = computed({
+            get() {
+                return Number.isNaN(levelTemplate.value.levelNumber) ? '' : levelTemplate.value.levelNumber;
+            },
+            set(val) {
+                levelTemplate.value.levelNumber = val === '' ? NaN : Number(val);
+            }
+        });
 
         return {
             userInput,
@@ -475,7 +484,8 @@ export default defineComponent({
             removeHouse,
             clearLevelTemplate,
             saveOrEditLevel,
-            deleteLevel
+            deleteLevel,
+            levelNumberProxy,
         };
     }
 });
