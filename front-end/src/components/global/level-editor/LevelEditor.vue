@@ -4,7 +4,7 @@
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level nummer</label>
-                    <input id="levelNumber" list="levelNumbers" v-model="levelTemplate.levelNumber"
+                    <input id="levelNumber" list="levelNumbers" v-model="levelNumberProxy"
                         @change="onLevelNumberChange" min="0" />
                     <datalist id="levelNumbers">
                         <option v-for="level in levels" :key="level.levelNumber" :value="level.levelNumber">
@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { pythonService } from '../../../services/PythonService';
 import { levelTemplate } from '../../../types/game/levelTemplate/LevelTemplate';
 import { templateWrapper } from '../../../types/game/levelTemplate/TemplateWrapper';
@@ -141,11 +141,11 @@ export default defineComponent({
             await pythonService.fetchMessage(data).then((response: any) => {
                 // the response is in 'python' code which doesnt work in TypeScript so we have to change the ' to " and lower the False and True
                 const fixed_response = response.response.replace(/'/g, '"')
-                                                        .replace(/\bFalse\b/g, 'false')
-                                                        .replace(/\bTrue\b/g, 'true');
+                    .replace(/\bFalse\b/g, 'false')
+                    .replace(/\bTrue\b/g, 'true');
                 // now we can parse to JSON
                 const generated_content = JSON.parse(fixed_response)
-                if (generated_content.wantReset){
+                if (generated_content.wantReset) {
                     clearLevelTemplate()
                 }
                 else {
@@ -162,7 +162,7 @@ export default defineComponent({
 
         const generateLevelTemplate = async (generated_content: any) => {
             // base values of inputfields
-            const base_values: { [key: string]: number | string | boolean}  = {
+            const base_values: { [key: string]: number | string | boolean } = {
                 "max_co2": 0,
                 "max_coins": 0,
                 "start_time": 0,
@@ -192,7 +192,7 @@ export default defineComponent({
             };
 
             for (const key of Object.keys(base_values)) {
-                if (generated_content.Level[key] !== base_values[key]){
+                if (generated_content.Level[key] !== base_values[key]) {
                     // get the path
                     const keys = pathMap[key].split('.');
                     let current: any = levelTemplate.value;
@@ -235,7 +235,7 @@ export default defineComponent({
         });
 
         let baseLevelTemplate: levelTemplate = {
-            levelNumber: 0,
+            levelNumber: NaN,
             objective: {
                 maxCO2: 1,
                 maxCoins: 20
@@ -412,6 +412,7 @@ export default defineComponent({
         };
 
         const saveOrEditLevel = async () => {
+            if (Number.isNaN(levelTemplate.value.levelNumber) || String(levelTemplate.value.levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
@@ -447,6 +448,7 @@ export default defineComponent({
 
         const deleteLevel = async () => {
             let levelNumber = levelTemplate.value.levelNumber;
+            if (Number.isNaN(levelNumber) || String(levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
             if (!(await doesLevelExist(levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
             let templateId = await getTemplateIdFromLevelNumber(levelNumber);
             emit('deleteLevel', {
@@ -455,6 +457,15 @@ export default defineComponent({
 
             clearLevelTemplate();
         }
+
+        const levelNumberProxy = computed({
+            get() {
+                return Number.isNaN(levelTemplate.value.levelNumber) ? '' : levelTemplate.value.levelNumber;
+            },
+            set(val) {
+                levelTemplate.value.levelNumber = val === '' ? NaN : Number(val);
+            }
+        });
 
         return {
             userInput,
@@ -473,7 +484,8 @@ export default defineComponent({
             removeHouse,
             clearLevelTemplate,
             saveOrEditLevel,
-            deleteLevel
+            deleteLevel,
+            levelNumberProxy,
         };
     }
 });
