@@ -364,8 +364,8 @@ export default defineComponent({
                 },
                 hasHeatPump: false,
                 hasElectricVehicle: false,
-                maxBatteries: 0,
-                maxSolarPanels: 0,
+                maxBatteries: 2,
+                maxSolarPanels: 14,
             });
         };
 
