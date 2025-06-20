@@ -8,21 +8,21 @@
       </div>
     </div>
     <div class="slot">
-      CO2-uistoot: 
+      CO2-uistoot:
       <div class="slot-content">
         <img class="cloud-icon" src="/images/game/cloud.png" alt="Cloud">
         {{ currentCO2.toFixed(2) }}/{{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
-      Totale energieconsumptie: 
+      Totale energieconsumptie:
       <div class="slot-content">
         <img class="energy-icon" src="/images/game/lightning.png" alt="Icon">
         {{ totalEnergyConsumption.toFixed(2) }} kWh
       </div>
     </div>
     <div class="slot">
-      Groen geproduceerde energie: 
+      Groen geproduceerde energie:
       <div class="slot-content">
         <img class="energy-icon" src="/images/game/green_electricity.png" alt="Icon">
         {{ greenProducedEnergyPercentage.toFixed(2) }}%
@@ -36,9 +36,9 @@
       </div>
     </div>
     <div class="slot">
-      Seizoen: 
+      Seizoen:
       <div class="slot-content">
-        <img class="season-icon" :src="`/images/game/${getSeasonIcon(season)}`" alt="Icon">
+        <img v-if="season" class="season-icon" :src="`/images/game/${getSeasonIcon(season)}`" alt="Icon">
         {{ translateSeason(season) }}
       </div>
     </div>
@@ -146,7 +146,7 @@ export default defineComponent({
   height: 20px;
   width: 22px;
 }
-  
+
 .clock-icon {
   width: 20px;
   height: 20px;
