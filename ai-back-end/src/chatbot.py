@@ -3,7 +3,9 @@ from openai import OpenAI
 
 def chatbot(data: dict, client) -> str:
     """
-    krijgt een data object en een client, waarmee een context gemaakt kan worden en het antwoord gevraagt kan worden
+    Krijgt een data object en een client, waarmee een context gemaakt kan worden en het antwoord gevraagt kan worden.
+    In het data object zit een JSON format van alle huizen die bij een transformator horen + alles wat er bij die specifieke huizen hoort,
+    en alle informatie over het level.
 
     return: antwoord op de vraag van de gebruiker
     """
