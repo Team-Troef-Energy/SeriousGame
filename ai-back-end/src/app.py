@@ -29,6 +29,11 @@ def get_data():
     return jsonify({"response": f"{response}".strip()})
 
 def create_client():
+    """
+    maakt een client aan om de modellen mee aan te kunnen roepen
+
+    returns: client
+    """
     with open('ai-back-end/api_key.txt', 'r') as f:
         key = f.read()
 

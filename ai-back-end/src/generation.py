@@ -1,6 +1,11 @@
 import json
 
 def level_generation(data: dict, client) -> str:
+    """
+    Krijgt een data object en een client, en vult een JSON schema in om zo een level te genereren
+
+    returns: string van JSON format om te gebruiken in front end 
+    """
     user_input = data['inputMessage']
 
     full_prompt = f"""

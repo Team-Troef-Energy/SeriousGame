@@ -2,6 +2,11 @@ import json
 from openai import OpenAI
 
 def chatbot(data: dict, client) -> str:
+    """
+    krijgt een data object en een client, waarmee een context gemaakt kan worden en het antwoord gevraagt kan worden
+
+    return: antwoord op de vraag van de gebruiker
+    """
     # pak vraag uit de data
     question = data['inputMessage']
 
