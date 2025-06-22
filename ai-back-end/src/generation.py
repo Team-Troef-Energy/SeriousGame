@@ -2,7 +2,8 @@ import json
 
 def level_generation(data: dict, client) -> str:
     """
-    Krijgt een data object en een client, en vult een JSON schema in om zo een level te genereren
+    Krijgt een data object en een client, en vult een JSON schema in om zo een level te genereren.
+    In het data object zit alleen de input message van de gebruiker, aangezien er geen andere informatie nodig is voor het genereren. 
 
     returns: string van JSON format om te gebruiken in front end 
     """
