@@ -61,25 +61,16 @@
           <!-- Zonnepanelen -->
           <div v-if="properties.type !== 'transformator'" class="section solar-section mt-4">
             <v-row class="align-center">
-              <v-col cols="4">
-                <v-btn class="popup-btn" icon @click="decreaseValue('solarPanels')">➖</v-btn>
-                <v-btn class="popup-btn" icon @click="increaseValue('solarPanels')">➕</v-btn>
-              </v-col>
-              <v-col cols="6" class="text-center"><strong>Zonnepanelen</strong> (💰{{ properties.solarPanelCost
-              }})</v-col>
-              <v-col cols="2" class="text-end highlight">{{ properties.solarPanels }}</v-col>
+              <v-col cols="6" class="text-left"><strong>Zonnepanelen</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ properties.solarPanels }}</v-col>
             </v-row>
           </div>
 
           <!-- Accu's -->
           <div class="section battery-section mt-4">
             <v-row class="align-center">
-              <v-col cols="4">
-                <v-btn class="popup-btn" icon @click="decreaseValue('batteries')">➖</v-btn>
-                <v-btn class="popup-btn" icon @click="increaseValue('batteries')">➕</v-btn>
-              </v-col>
-              <v-col cols="6" class="text-center"><strong>Accu’s</strong> (💰{{ properties.batteries.cost }})</v-col>
-              <v-col cols="2" class="text-end highlight">{{ properties.batteries.amount }}</v-col>
+              <v-col cols="6" class="text-left"><strong>Accu's</strong></v-col>
+              <v-col cols="6" class="text-end highlight">{{ properties.batteries.amount }}</v-col>
             </v-row>
             <v-row>
               <v-col cols="6"><strong>Totale accu lading:</strong></v-col>
@@ -88,27 +79,13 @@
           </div>
         </v-container>
       </v-card-text>
-
-      <div class="card-footer">
-        <v-col cols="12" class="d-flex justify-center">
-          <v-btn class="header-btn" color="red" @click="closeDialog">
-            Annuleren
-            <v-icon icon="mdi-cancel" end></v-icon>
-          </v-btn>
-          <v-btn class="header-btn" color="green" @click="submitChanges">
-            Toepassen
-            <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
-          </v-btn>
-        </v-col>
-      </div>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, ref } from "vue";
-import { PopupProperties } from "../objects/PopupProperties";
-import { house, transformer } from "../types";
+import { PopupProperties } from "../../objects/PopupProperties";
 
 export default defineComponent({
   name: "PopupComponent",
@@ -119,14 +96,9 @@ export default defineComponent({
     popupProperties: {
       type: Object as PropType<PopupProperties>,
       required: false,
-    },
-    transformers: {
-      type: Array as PropType<transformer[]>,
-      required: true,
-    },
+    }
   },
   setup(props, { emit }) {
-    const transformers = ref<transformer[]>(props.transformers);
     const properties = ref<PopupProperties>({
       title: "", type: "", energyProduction: 0, energyConsumption: 0, heatPump: false, electricVehicle: false, solarPanels: 0, batteries: { amount: 0, totalCharge: 0, cost: 0 }, totalPowerCost: 0, solarPanelCost: 0,
       isOpen: false
@@ -149,110 +121,19 @@ export default defineComponent({
       properties.value.type === "transformator" ? "Energie aan huizen vanuit net" : "Energie consumptie"
     );
 
-    let popupTitleValue = parseInt(properties.value.title.split(" ")[1]);
-    let solarPanelsAmount: number | null = null;
-    let batteriesAmount: number | null = null;
-
-    const findHouse = (houseId: number) => {
-      return transformers.value
-        .map((t: transformer) => t.houses)  // Extract houses arrays
-        .reduce((acc, houses) => acc.concat(houses), []) // Flatten them
-        .find((h: house) => h.id === houseId);
-
-    };
-
-    const findTransformer = (transformerId: number) => {
-      return transformers.value.find((t: transformer) => t.id === transformerId);
-    };
-
-    const increaseValue = (property: string) => {
-      popupTitleValue = parseInt(properties.value.title.split(" ")[1]);
-      const house = findHouse(popupTitleValue);
-      const transformer = findTransformer(popupTitleValue);
-
-      correctLocalSavedNumbers();
-
-      if (solarPanelsAmount === null || batteriesAmount === null) {
-        return;
-      }
-
-      const canIncreaseSolarPanels = (house: house) => house && solarPanelsAmount !== null && solarPanelsAmount < house.maxSolarPanelCount;
-      const canIncreaseBatteries = (maxCount: number) => batteriesAmount !== null && batteriesAmount < maxCount;
-
-      if (property === "solarPanels" && house && canIncreaseSolarPanels(house)) {
-        solarPanelsAmount += 1;
-        properties.value.solarPanels = (properties.value.solarPanels ?? 0) + 1;
-        return;
-      }
-
-      if (property === "batteries") {
-        if (properties.value.type === "huis" && house && canIncreaseBatteries(house.maxBatteryCount)) {
-          batteriesAmount += 1;
-          properties.value.batteries.amount += 1;
-        } else if (properties.value.type === "transformator" && transformer && canIncreaseBatteries(transformer.maxBatteryCount)) {
-          batteriesAmount += 1;
-          properties.value.batteries.amount += 1;
-        }
-      }
-    };
-
-    const correctLocalSavedNumbers = () => {
-      popupTitleValue = parseInt(properties.value.title.split(" ")[1]);
-      const house = findHouse(popupTitleValue);
-      const transformer = findTransformer(popupTitleValue);
-      solarPanelsAmount = solarPanelsAmount === null ? house?.solarpanels ?? 0 : solarPanelsAmount;
-
-      properties.value.type == "huis" ?
-        batteriesAmount = batteriesAmount === null ? house?.batteries.amount ?? 0 : batteriesAmount :
-        batteriesAmount = batteriesAmount === null ? transformer?.batteries.amount ?? 0 : batteriesAmount;
-    }
-
-    const decreaseValue = (property: string) => {
-      correctLocalSavedNumbers();
-
-      if (solarPanelsAmount === null || batteriesAmount === null) {
-        return;
-      }
-
-      if (property === "solarPanels" && solarPanelsAmount > 0) {
-        solarPanelsAmount -= 1;
-        properties.value.solarPanels = (properties.value.solarPanels ?? 0) - 1;
-      } else if (property === "batteries" && batteriesAmount > 0) {
-        batteriesAmount -= 1;
-        properties.value.batteries.amount -= 1;
-      }
-    };
-
-    const closeDialog = () => {
-      emit("update:isOpen", false);
-    };
-
-    const submitChanges = () => {
-      if (properties.value.type === "huis") {
-        const house = findHouse(popupTitleValue);
-        if (house) {
-          house.solarpanels = properties.value.solarPanels ?? 0;
-          house.batteries.amount = properties.value.batteries.amount;
-        }
-      } else if (properties.value.type === "transformator") {
-        const transformer = findTransformer(popupTitleValue);
-        if (transformer) {
-          transformer.batteries.amount = properties.value.batteries.amount;
-        }
-      }
-      emit("submitChanges");
-    };
-
-
-    const createPopup = (givenProperties: PopupProperties | undefined) => {
+    const createDialog = (givenProperties: PopupProperties | undefined) => {
       if (!givenProperties) {
         return;
       }
       properties.value = JSON.parse(JSON.stringify(givenProperties));
     };
 
+    const closeDialog = () => {
+      emit("update:isOpen", false);
+    };
+
     onMounted(() => {
-      createPopup(props.popupProperties);
+      createDialog(props.popupProperties);
     });
 
     return {
@@ -266,10 +147,7 @@ export default defineComponent({
       electricVehicleDisplay,
       energyConsumptionLabel,
       energyProductionLabel,
-      increaseValue,
-      decreaseValue,
       closeDialog,
-      submitChanges,
     };
   },
 });

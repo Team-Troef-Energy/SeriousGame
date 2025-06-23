@@ -1,3 +1,5 @@
+import {userGlobal} from "../context/AuthProvider.ts";
+
 class HTTPRequestManager {
     private apiUrl: string | null = null;
 
@@ -9,6 +11,7 @@ class HTTPRequestManager {
         this.apiUrl = {
             "localhost": 'http://localhost:8080',
             "dev.troefgame.jonaqhan.nl": "https://dev.troefgame.jonaqhan.nl/backend",
+            "troefgamedev.duckdns.org": "https://troefgamedev.duckdns.org/backend",
             "troefgame.duckdns.org": "https://troefgame.duckdns.org/backend",
         }[window.location.hostname] || null; // Hostname does not include port
 
@@ -35,11 +38,21 @@ class HTTPRequestManager {
             await this.loadConfig();
         }
 
+        const headers: Record<string, string> = {};
+
+        if (userGlobal?.value) {
+            const idToken = await userGlobal.value.getIdToken();
+            headers["Authorization"] = `Bearer ${idToken}`;
+        }
+
         const isBodyPresent = !['GET', 'HEAD'].includes(method);
+        if (isBodyPresent) {
+            headers['Content-Type'] = 'application/json;charset=utf-8';
+        }
 
         const response = await fetch(`${this.apiUrl}${path}`, {
             method: method,
-            headers: isBodyPresent ? { 'Content-Type': 'application/json;charset=utf-8' } : undefined,
+            headers: headers,
             body: isBodyPresent ? JSON.stringify(body) : undefined
         });
 

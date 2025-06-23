@@ -9,3 +9,4 @@
 .idea
 /target/
 .DS_Store
+firebase-key.json

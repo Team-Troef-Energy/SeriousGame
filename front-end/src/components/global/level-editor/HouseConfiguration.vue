@@ -2,7 +2,7 @@
     <div class="house-configuration">
         <form class="house-configuration-form">
             <div class="form-house-icon form-row">
-                <img src="/icons/house.png" alt="house" />
+                <img src="/images/level-editor/house.png" alt="house" />
             </div>
             <div class="house-configuration-form-inputs">
                 <div class="form-row">
@@ -37,7 +37,7 @@
             </div>
             <div class="form-cross form-row">
                 <button class="button" @click="removeHouse">
-                    <img src="/icons/cross.png" alt="delete" />
+                    <img src="/images/level-editor/cross.png" alt="delete" />
                 </button>
             </div>
         </form>
@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, reactive, watch } from "vue";
-import { houseConfiguration } from "../../../types/levelTemplate/HouseConfiguration";
+import { houseConfiguration } from "../../../types/game/levelTemplate/HouseConfiguration";
 
 export default defineComponent({
     name: "HouseConfiguration",

@@ -13,8 +13,8 @@
 import { defineComponent } from 'vue';
 import { gameLevelService } from '../../services/game/GameLevelService';
 import { templateLevelService } from '../../services/game/TemplateLevelService';
-import { templateType } from '../../types/levelTemplate/TemplateType';
-import { templateWrapper } from '../../types/levelTemplate/TemplateWrapper';
+import { templateType } from '../../types/game/levelTemplate/TemplateType';
+import { templateWrapper } from '../../types/game/levelTemplate/TemplateWrapper';
 import GlobalLevelEditor from '../global/level-editor/LevelEditor.vue';
 import TextModal from '../global/modals/TextModal.vue';
 import { useTextModal } from '../global/modals/UseTextModal';

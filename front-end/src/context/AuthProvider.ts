@@ -5,6 +5,11 @@ import { firebaseService } from '../services/firebase/FirebaseService';
 
 export const AuthContext = Symbol('AuthContext');
 
+// Try to avoid using this one wherever possible.
+// Always inject the AuthContext and access its user instead
+// This should be removed when we have time to refactor it.
+export const userGlobal = ref<User | null>(null);
+
 export default defineComponent({
   name: 'AuthProvider',
   setup(_, { slots }) {
@@ -14,6 +19,7 @@ export default defineComponent({
 
     const setUser = async (newUser: User | null) => {
       user.value = newUser;
+      userGlobal.value = newUser;
       if (newUser) {
         const userDocRef = doc(firebaseService.db, 'users', newUser.email!);
         const userDoc = await getDoc(userDocRef);

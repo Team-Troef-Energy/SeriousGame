@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nl.hu.serious_game.application.dto.out.RaceSessionUserDTO;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -26,8 +29,13 @@ public class RaceSession {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "raceSession")
     private List<RaceSessionUser> users;
 
-    public RaceSession(Race race, String joinCode) {
+    @Column
+    @Setter
+    private Instant expiration;
+
+    public RaceSession(Race race, String joinCode, Instant expiration) {
         this.race = race;
         this.joinCode = joinCode;
+        this.expiration = expiration;
     }
 }

@@ -101,7 +101,7 @@ class DatabaseService {
                 if (user) {
                     try {
                         const userWithRole: any = await databaseService.getUserByEmail(user.email);
-                        resolve(userWithRole.role);
+                        resolve(userWithRole?.role ?? "user");
                     } catch (error) {
                         reject(error);
                     }

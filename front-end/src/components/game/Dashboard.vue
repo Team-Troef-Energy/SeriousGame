@@ -1,44 +1,44 @@
 <template>
   <div class="dashboard-container">
     <div class="slot">
-      <h3 class="slot-title">Beschikbare munten:</h3>
+      Beschikbare munten:
       <div class="slot-content">
-        <img src="/coin.png" class="coin" alt="Coin">
+        <img src="/images/game/coin.png" class="coin" alt="Coin">
         <span>{{ coinsUsed }}/{{ maxCoins }}</span>
       </div>
     </div>
     <div class="slot">
-      CO2-uistoot: 
+      CO2-uistoot:
       <div class="slot-content">
-        <img class="cloud-icon" src="/cloud.png" alt="Cloud">
-        {{ currentCO2.toFixed(2) }} kg - {{ maxCO2.toFixed(2) }} kg
+        <img class="cloud-icon" src="/images/game/cloud.png" alt="Cloud">
+        {{ currentCO2.toFixed(2) }}/{{ maxCO2.toFixed(2) }} kg
       </div>
     </div>
     <div class="slot">
-      Totale energieconsumptie: 
+      Totale energieconsumptie:
       <div class="slot-content">
-        <img class="energy-icon" src="/lightning.png" alt="Icon">
+        <img class="energy-icon" src="/images/game/lightning.png" alt="Icon">
         {{ totalEnergyConsumption.toFixed(2) }} kWh
       </div>
     </div>
     <div class="slot">
-      Groen geproduceerde energie: 
+      Groen geproduceerde energie:
       <div class="slot-content">
-        <img class="energy-icon" src="/green_electricity.png" alt="Icon">
+        <img class="energy-icon" src="/images/game/green_electricity.png" alt="Icon">
         {{ greenProducedEnergyPercentage.toFixed(2) }}%
       </div>
     </div>
     <div class="slot">
       Start- en eindtijd:
       <div class="slot-content">
-        <img src="/clock.png" alt="Clock" class="clock-icon">
+        <img src="/images/game/clock.png" alt="Clock" class="clock-icon">
         {{ objectiveStartTime }}:00 - {{ objectiveEndTime }}:00
       </div>
     </div>
     <div class="slot">
-      Seizoen: 
+      Seizoen:
       <div class="slot-content">
-        <img class="season-icon" :src="`/${getSeasonIcon(season)}`" alt="Icon">
+        <img v-if="season" class="season-icon" :src="`/images/game/${getSeasonIcon(season)}`" alt="Icon">
         {{ translateSeason(season) }}
       </div>
     </div>
@@ -94,7 +94,7 @@ export default defineComponent({
         case 'summer': return 'Zomer';
         case 'winter': return 'Winter';
         case 'spring': return 'Lente';
-        case 'fall': return 'Herfst';
+        case 'autumn': return 'Herfst';
         default: return season;
       }
     },
@@ -103,7 +103,7 @@ export default defineComponent({
         case 'summer': return 'sun.png';
         case 'winter': return 'snowflake.png';
         case 'spring': return 'leaf.png';
-        case 'fall': return 'orange_leaf.png';
+        case 'autumn': return 'orange_leaf.png';
         default: return season;
       }
     }
@@ -115,7 +115,7 @@ export default defineComponent({
 .dashboard-container {
   height: 20vh;
   width: 100%;
-  background-color: #39210a67;
+  background-color: #00000037;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   padding: 4px 10px;
@@ -146,7 +146,7 @@ export default defineComponent({
   height: 20px;
   width: 22px;
 }
-  
+
 .clock-icon {
   width: 20px;
   height: 20px;

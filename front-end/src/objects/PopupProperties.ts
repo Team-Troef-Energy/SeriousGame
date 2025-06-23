@@ -1,4 +1,4 @@
-import { batteries, house, popupProperties, transformer } from "../types";
+import { batteries, house, popupProperties, transformer } from "../types/game";
 
 export class PopupProperties implements popupProperties {
     isOpen: boolean;

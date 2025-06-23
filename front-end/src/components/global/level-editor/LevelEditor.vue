@@ -4,7 +4,7 @@
             <div class="level-editor-form-global-inputs">
                 <div class="form-level-input form-row">
                     <label for="levelNumber">Level nummer</label>
-                    <input id="levelNumber" list="levelNumbers" v-model="levelTemplate.levelNumber"
+                    <input id="levelNumber" list="levelNumbers" v-model="levelNumberProxy"
                         @change="onLevelNumberChange" min="0" />
                     <datalist id="levelNumbers">
                         <option v-for="level in levels" :key="level.levelNumber" :value="level.levelNumber">
@@ -102,10 +102,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { pythonService } from '../../../services/PythonService';
-import { levelTemplate } from '../../../types/levelTemplate/LevelTemplate';
-import { templateWrapper } from '../../../types/levelTemplate/TemplateWrapper';
+import { levelTemplate } from '../../../types/game/levelTemplate/LevelTemplate';
+import { templateWrapper } from '../../../types/game/levelTemplate/TemplateWrapper';
 import TextModal from '../modals/TextModal.vue';
 import { useTextModal } from '../modals/UseTextModal';
 import ComponentHolder from './ComponentHolder.vue';
@@ -139,10 +139,90 @@ export default defineComponent({
             };
 
             await pythonService.fetchMessage(data).then((response: any) => {
-                promptOutput.value = response.response
+                // the response is in 'python' code which doesnt work in TypeScript so we have to change the ' to " and lower the False and True
+                const fixed_response = response.response.replace(/'/g, '"')
+                    .replace(/\bFalse\b/g, 'false')
+                    .replace(/\bTrue\b/g, 'true');
+                // now we can parse to JSON
+                const generated_content = JSON.parse(fixed_response)
+                if (generated_content.wantReset) {
+                    clearLevelTemplate()
+                }
+                else {
+                    // if there are 0 houses skip the generation of houses
+                    if (!(Object.keys(generated_content.Houses).length == 0)) {
+                        generate_houses(generated_content);
+                    }
+                    generateLevelTemplate(generated_content)
+                }
             }).catch((error: any) => {
                 console.error(error);
-            });
+            })
+        }
+
+        const generateLevelTemplate = async (generated_content: any) => {
+            // base values of inputfields
+            const base_values: { [key: string]: number | string | boolean } = {
+                "max_co2": 0,
+                "max_coins": 0,
+                "start_time": 0,
+                "end_time": 0,
+                "season": "SPRING",
+                "cost_solar_panel": 0,
+                "cost_battery": 0,
+                "cost_co2": 0,
+                "max_batteries_transformer": 0,
+                "has_congestion_transformer": false,
+                "max_power_transformer": 0
+            }
+
+            // path in the levelTemplate for navigation
+            const pathMap: Record<string, string> = {
+                max_co2: 'objective.maxCO2',
+                max_coins: 'objective.maxCoins',
+                start_time: 'startTime',
+                end_time: 'endTime',
+                season: 'season',
+                cost_solar_panel: 'cost.solarPanelCost',
+                cost_battery: 'cost.batteryCost',
+                cost_co2: 'cost.co2Cost',
+                max_batteries_transformer: 'transformers.0.maxBatteryCount',
+                has_congestion_transformer: 'transformers.0.congestion.hasCongestion',
+                max_power_transformer: 'transformers.0.congestion.maxCurrent'
+            };
+
+            for (const key of Object.keys(base_values)) {
+                if (generated_content.Level[key] !== base_values[key]) {
+                    // get the path
+                    const keys = pathMap[key].split('.');
+                    let current: any = levelTemplate.value;
+
+                    // follow the path
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        current = current[keys[i]];
+                    }
+                    // change the value
+                    current[keys[keys.length - 1]] = generated_content.Level[key];
+                }
+            }
+        }
+
+        const generate_houses = async (generated_content: any) => {
+            // for every house in the generated content add a house to the list
+            Object.keys(generated_content.Houses).forEach((houseId) => {
+                const house = generated_content.Houses[houseId];
+                levelTemplate.value.transformers[0].houses.push({
+                    houseNumber: levelTemplate.value.transformers[0].houses.length + 1,
+                    congestion: {
+                        hasCongestion: house.has_congestion,
+                        maxCurrent: house.max_power
+                    },
+                    hasHeatPump: house.has_heatpump,
+                    hasElectricVehicle: house.has_car,
+                    maxBatteries: house.max_batteries,
+                    maxSolarPanels: house.max_solar_panels
+                })
+            })
         }
 
         const fetchAllLevels = async () => {
@@ -154,33 +234,56 @@ export default defineComponent({
             await fetchAllLevels();
         });
 
-        let emptyLevelTemplate: levelTemplate = {
-            levelNumber: 0,
+        let baseLevelTemplate: levelTemplate = {
+            levelNumber: NaN,
             objective: {
-                maxCO2: 0,
-                maxCoins: 0
+                maxCO2: 1,
+                maxCoins: 20
             },
-            season: 'SPRING',
+            season: 'SUMMER',
             transformers: [
                 {
-                    maxBatteryCount: 0,
+                    maxBatteryCount: 4,
                     congestion: {
                         hasCongestion: false,
                         maxCurrent: 0,
                     },
-                    houses: [],
+                    houses: [
+                        {
+                            houseNumber: 1,
+                            congestion: {
+                                hasCongestion: false,
+                                maxCurrent: 0
+                            },
+                            hasHeatPump: false,
+                            hasElectricVehicle: false,
+                            maxBatteries: 2,
+                            maxSolarPanels: 14,
+                        },
+                        {
+                            houseNumber: 2,
+                            congestion: {
+                                hasCongestion: false,
+                                maxCurrent: 0
+                            },
+                            hasHeatPump: false,
+                            hasElectricVehicle: false,
+                            maxBatteries: 2,
+                            maxSolarPanels: 14,
+                        }
+                    ],
                 }
             ],
             cost: {
-                batteryCost: 0,
-                solarPanelCost: 0,
-                co2Cost: 0,
+                batteryCost: 10,
+                solarPanelCost: 5,
+                co2Cost: 0.5,
             },
-            startTime: 0,
-            endTime: 0
+            startTime: 10,
+            endTime: 15
         };
 
-        let levelTemplate = ref<levelTemplate>({ ...emptyLevelTemplate });
+        let levelTemplate = ref<levelTemplate>(structuredClone(baseLevelTemplate));
 
         const onLevelNumberChange = async () => {
             const savedLevelValue = levelTemplate.value.levelNumber;
@@ -249,8 +352,7 @@ export default defineComponent({
         };
 
         const clearLevelTemplate = () => {
-            levelTemplate.value.transformers[0].houses = [];
-            levelTemplate.value = { ...emptyLevelTemplate };
+            levelTemplate.value = structuredClone(baseLevelTemplate);
         };
 
         const addHouse = () => {
@@ -262,8 +364,8 @@ export default defineComponent({
                 },
                 hasHeatPump: false,
                 hasElectricVehicle: false,
-                maxBatteries: 0,
-                maxSolarPanels: 0,
+                maxBatteries: 2,
+                maxSolarPanels: 14,
             });
         };
 
@@ -310,6 +412,7 @@ export default defineComponent({
         };
 
         const saveOrEditLevel = async () => {
+            if (Number.isNaN(levelTemplate.value.levelNumber) || String(levelTemplate.value.levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
             if (levelTemplate.value.objective.maxCoins < 0) return showModal('Fout', 'Maximaal aantal munten mag niet negatief zijn');
             if (levelTemplate.value.objective.maxCO2 < 0) return showModal('Fout', 'Maximale Co2 mag niet negatief zijn');
             if (levelTemplate.value.transformers[0].maxBatteryCount < 0) return showModal('Fout', 'Maximaal aantal batterijen voor transformator mag niet negatief zijn');
@@ -345,6 +448,7 @@ export default defineComponent({
 
         const deleteLevel = async () => {
             let levelNumber = levelTemplate.value.levelNumber;
+            if (Number.isNaN(levelNumber) || String(levelNumber) == "") return showModal('Fout', 'Level nummer mag niet leeg zijn');
             if (!(await doesLevelExist(levelNumber))) return showModal('Fout', 'Kan geen nieuw level verwijderen');
             let templateId = await getTemplateIdFromLevelNumber(levelNumber);
             emit('deleteLevel', {
@@ -354,9 +458,20 @@ export default defineComponent({
             clearLevelTemplate();
         }
 
+        const levelNumberProxy = computed({
+            get() {
+                return Number.isNaN(levelTemplate.value.levelNumber) ? '' : levelTemplate.value.levelNumber;
+            },
+            set(val) {
+                levelTemplate.value.levelNumber = val === '' ? NaN : Number(val);
+            }
+        });
+
         return {
             userInput,
             handleAiGeneration,
+            generate_houses,
+            generateLevelTemplate,
             promptOutput,
             levelTemplate,
             updateHouseConfiguration,
@@ -369,7 +484,8 @@ export default defineComponent({
             removeHouse,
             clearLevelTemplate,
             saveOrEditLevel,
-            deleteLevel
+            deleteLevel,
+            levelNumberProxy,
         };
     }
 });

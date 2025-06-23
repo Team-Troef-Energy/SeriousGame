@@ -24,7 +24,7 @@ public class Race {
     @Column
     private String userEmail;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "race")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "race", cascade = CascadeType.REMOVE)
     private List<LevelTemplate> levels;
 
     public Race(String name, String userEmail, List<LevelTemplate> levels) {

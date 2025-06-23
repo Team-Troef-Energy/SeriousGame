@@ -1,6 +1,6 @@
 # We cannot use Alpine because Torch requires glibc; Alpine uses musl instead.
 # Python 3.12 must be used because PyO3 does not support newer versions.
-FROM python:3.12-bookworm
+FROM python:3-bookworm
 
 # Create a new user (app) with a home directory (/app), so that pip can work properly.
 # We'll install the app to that directory as well.
@@ -19,9 +19,10 @@ RUN rm -rf /app/.cache
 ENV FLASK_ENV=production
 # Ensures output is not buffered, which is useful for logs
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/src
 ENV PATH=$PATH:/app/.local/bin
 
 # Copy the rest.
 COPY . .
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "src.chatbot:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "src.app:app"]

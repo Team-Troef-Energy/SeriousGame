@@ -28,8 +28,8 @@
   
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import LevelEditor from '../components/level-editor/LevelEditor.vue';
-  import UsersSearchList from '../components/users-search-list.vue';
+  import LevelEditor from '../../components/account/LevelEditor.vue';
+  import UsersSearchList from '../../components/account/UsersSearchList.vue';
   
   export default defineComponent({
     name: 'DashboardPage',

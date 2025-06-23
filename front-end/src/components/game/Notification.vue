@@ -6,7 +6,7 @@
           {{ message }}
         </v-card-text>
         <v-card-actions class="justify-end">
-          <NavigateButton to="/levelSelect" label="Ga terug" />
+          <NavigateButton :to="navigateBackUrl" label="Ga terug" />
         </v-card-actions>
       </v-card>
       <div v-if="showConfetti" class="container">
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavigateButton from "../components/NavigateButton.vue";
+import NavigateButton from "./NavigateButton.vue";
 
 export default defineComponent({
   name: "Notification",
@@ -36,7 +36,11 @@ export default defineComponent({
     },
     showConfetti: {
       type: Boolean,
-      default: true,
+      default: false,
+    },
+    navigateBackUrl: {
+      type: String,
+      required: true,
     },
   },
 });

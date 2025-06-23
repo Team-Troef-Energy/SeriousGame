@@ -1,7 +1,7 @@
 <template>
   <div class="transformer">
-    <img class="transformer" src="/transformer.png" alt="Transformer" />
-    <img v-if="hasBatteries" class="batteries" src="/battery.png" alt="Batteries" />
+    <img class="transformer" src="/images/game/transformer.png" alt="Transformer" />
+    <img v-if="hasBatteries" class="batteries" src="/images/game/battery.png" alt="Batteries" />
   </div>
 </template>
 
@@ -18,8 +18,7 @@ export default {
 
 <style scoped>
 .transformer {
-  width: 18rem;
-  height: 9rem;
+  height: 13rem;
 }
 
 img .transformer {
