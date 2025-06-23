@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class LevelTemplate {
     private LevelType type;
 
     @ManyToOne(optional = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Race race;
 
     public LevelTemplate(int levelNumber, Season season, int startTime, int endTime, Objective objective, List<LevelTransformer> transformers, Cost cost, LevelType type, Race race) {
