@@ -484,6 +484,7 @@ export default defineComponent({
 }
 
 .chat-window {
+z-index: 999;
   position: absolute;
   right: calc(1% + 250px);
   top: 57px;
