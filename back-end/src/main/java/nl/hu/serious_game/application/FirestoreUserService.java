@@ -1,5 +1,6 @@
 package nl.hu.serious_game.application;
 
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
@@ -28,9 +29,12 @@ public class FirestoreUserService implements UserService {
 
     private UserRole getUserRoleFromFirestore(String userId) {
         try {
-            // TODO what happens if this document/key is not found?
             // If the collection is not found an exception should be thrown
-            String roleKey = firestore.collection("users").document(userId).get().get().getString("role");
+            DocumentSnapshot userDocument = firestore.collection("users").document(userId).get().get();
+            if (!userDocument.exists()) {
+                return UserRole.ANONYMOUS;
+            }
+            String roleKey = userDocument.getString("role");
             if (roleKey == null) {
                 return UserRole.ANONYMOUS;
             }
