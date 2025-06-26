@@ -11,6 +11,9 @@ import nl.hu.serious_game.domain.exceptions.DoesNotExistException;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+/// GameLevels, GameTransformers, and GameHouses contain information on an ongoing game. See the comment on
+/// LevelTemplate.
+/// Level* entities contain transformer lists and slot counts, while Game* entities specify what's in those slots.
 @Getter
 @Entity
 @NoArgsConstructor

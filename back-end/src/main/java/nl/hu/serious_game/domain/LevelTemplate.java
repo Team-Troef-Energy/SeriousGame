@@ -8,12 +8,15 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
+/// LevelTemplate is a level visible from the level selection screen. When someone starts a game, a GameLevel is created
+/// based on the LevelTemplate they select.
+/// LevelTemplates have LevelTransformers, which have LevelHouses.
+/// These map to GameLevels, GameTransformers, and GameHouses.
+/// You can think of Level* entities and Game* entities as classes and objects, respectively.
 @Getter
 @Entity
 @NoArgsConstructor
