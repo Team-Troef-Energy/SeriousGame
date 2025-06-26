@@ -23,6 +23,8 @@ import nl.hu.serious_game.domain.GameTransformer;
 import nl.hu.serious_game.domain.LevelTemplate;
 import nl.hu.serious_game.domain.Season;
 
+/// Game initialization and update logic.
+/// The update logic is performed after every operation from the user.
 @Service
 public class GameLevelService {
     private final GameLevelRepository gameLevelRepository;
