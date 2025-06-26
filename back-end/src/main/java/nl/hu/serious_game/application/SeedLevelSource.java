@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/// Provides LevelTemplates for seeding the database.
+/// Also used for verifying these levels in unit tests.
 @Component
 public class SeedLevelSource {
     private final Logger logger = LoggerFactory.getLogger(SeedLevelSource.class);
